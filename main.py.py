@@ -13,7 +13,8 @@ def run():
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print('Device:', device)
-
+    PATH = './cifar_net.pth'
+    batch_size = 4
 
 
     def load_CIFAR_10(batch_size=4):
@@ -44,6 +45,12 @@ def run():
         testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size, shuffle=False, num_workers=2)
 
         classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
+
+        return trainset, testset, trainloader, testloader, classes
+
+    def load_random_images():
+        images = 
+
 
     # Show some training images
     def imshow(img):
@@ -116,79 +123,89 @@ def run():
         hook_conv2 = net.conv2.register_forward_hook(hook_conv2_fn)
         hook_conv3 = net.conv3.register_forward_hook(hook_conv3_fn)
 
+    def train_network_on_CIFAR_10(trainloader):
+        net = Net().to(device)
+        import torch.optim as optim
 
+        criterion = nn.CrossEntropyLoss()
+        optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 
-    import torch.optim as optim
+        epochs = 2
+        for epoch in range(epochs):
+            running_loss = 0.0
+            for i, data in enumerate(trainloader, 0):
+                # get the inputs; data is a list [inputs, labels]
+                inputs, labels = data
+                inputs = inputs.to(device)
+                labels = labels.to(device)
 
-    criterion = nn.CrossEntropyLoss()
-    optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
+                # zero the param gradients
+                optimizer.zero_grad()
 
-    epochs = 2
-    for epoch in range(epochs):
-        running_loss = 0.0
-        for i, data in enumerate(trainloader, 0):
-            # get the inputs; data is a list [inputs, labels]
-            inputs, labels = data
-            inputs = inputs.to(device)
-            labels = labels.to(device)
+                # forward + backward + optimize
+                outputs = net(inputs)
+                loss = criterion(outputs, labels)
+                loss.backward()
+                optimizer.step()
 
-            # zero the param gradients
-            optimizer.zero_grad()
+                # print statistics
+                running_loss += loss.item()
+                if i % 2000 == 1999:
+                    print('[%d, %5d] loss: %.3f' % (epoch+1, i + 1, running_loss/2000))
+                    running_loss = 0.0
+        print('Finished Training')
+        torch.save(net.state_dict(), PATH)
 
-            # forward + backward + optimize
-            outputs = net(inputs)
-            loss = criterion(outputs, labels)
-            loss.backward()
-            optimizer.step()
+    def assess_accuracy(testloader, classes):
+        dataiter = iter(testloader)
+        images, labels = dataiter.next()
+        imshow(torchvision.utils.make_grid(images))
+        print("Ground Truth: ", " ".join('%5s' % classes[labels[j]] for j in range(4)))
 
-            # print statistics
-            running_loss += loss.item()
-            if i % 2000 == 1999:
-                print('[%d, %5d] loss: %.3f' % (epoch+1, i + 1, running_loss/2000))
-                running_loss = 0.0
-    print('Finished Training')
-    PATH = './cifar_net.pth'
-    torch.save(net.state_dict(), PATH)
+        net = Net().to(device)
+        net.load_state_dict(torch.load(PATH))
+        outputs = net(images.to(device))
+        _, predicted = torch.max(outputs, 1)
+        print('Predicted: ', ' '.join('%5s' % classes[predicted[j]] for j in range(4)))
 
-    dataiter = iter(testloader)
-    images, labels = dataiter.next()
-    imshow(torchvision.utils.make_grid(images))
-    print("Ground Truth: ", " ".join('%5s' % classes[labels[j]] for j in range(4)))
+        correct = 0
+        total = 0
 
-    net = Net().to(device)
-    net.load_state_dict(torch.load(PATH))
-    outputs = net(images.to(device))
-    _, predicted = torch.max(outputs, 1)
-    print('Predicted: ', ' '.join('%5s' % classes[predicted[j]] for j in range(4)))
+        with torch.no_grad():
+            for data in testloader:
+                images, labels = data[0].to(device), data[1].to(device)
+                outputs = net(images)
+                _, predicted = torch.max(outputs.data, 1)
+                total += labels.size(0)
+                correct += (predicted==labels).sum().item()
+        print('Accuracy of the network on the 10000 test images: %d %%' % (100 * correct/total))
 
-    correct = 0
-    total = 0
+        correct_pred = {classname: 0 for classname in classes}
+        total_pred = {classname: 0 for classname in classes}
 
-    with torch.no_grad():
-        for data in testloader:
-            images, labels = data[0].to(device), data[1].to(device)
-            outputs = net(images)
-            _, predicted = torch.max(outputs.data, 1)
-            total += labels.size(0)
-            correct += (predicted==labels).sum().item()
-    print('Accuracy of the network on the 10000 test images: %d %%' % (100 * correct/total))
+        with torch.no_grad():
+            for data in testloader:
+                images, labels = data[0].to(device), data[1].to(device)
+                outputs = net(images)
+                _, predictions = torch.max(outputs, 1)
+                for label, prediction in zip(labels, predictions):
+                    if label == prediction:
+                        correct_pred[classes[label]] += 1
+                    total_pred[classes[label]] += 1
 
-    correct_pred = {classname: 0 for classname in classes}
-    total_pred = {classname: 0 for classname in classes}
+        for classname, correct_count in correct_pred.items():
+            accuracy = 100 * float(correct_count) / total_pred[classname]
+            print("Accuracy for class {:5s} is: {:.1f} %".format(classname, accuracy))
 
-    with torch.no_grad():
-        for data in testloader:
-            images, labels = data[0].to(device), data[1].to(device)
-            outputs = net(images)
-            _, predictions = torch.max(outputs, 1)
-            for label, prediction in zip(labels, predictions):
-                if label == prediction:
-                    correct_pred[classes[label]] += 1
-                total_pred[classes[label]] += 1
+    trainset, testset, trainloader, testloader, classes = load_CIFAR_10(batch_size)
+    load_and_show_some_images(trainloader, classes, batch_size)
 
-    for classname, correct_count in correct_pred.items():
-        accuracy = 100 * float(correct_count) / total_pred[classname]
-        print("Accuracy for class {:5s} is: {:.1f} %".format(classname, accuracy))
+    train_network_on_CIFAR_10(trainloader)
+    assess_accuracy(testloader, classes)
+
+    trainloader = load_random_images()
+    get_activations
+
 
 if __name__ == '__main__':
     run()
