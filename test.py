@@ -115,8 +115,12 @@ def run():
             output = F.log_softmax(x, dim=1)
             return output
 
-    def get_activations(trainloader):
-        net = Net().to(device)
+    def get_activations(trainloader, filters):
+        net = Net()
+        net.conv1.weight.data = filters[0]
+        net.conv2.weight.data = filters[1]
+        net.conv3.weight.data = filters[2]
+        net = net.to(device)
 
         global view_conv1
         def hook_conv1_fn(module, input, output):
@@ -135,18 +139,31 @@ def run():
         hook_conv2 = net.conv2.register_forward_hook(hook_conv2_fn)
         hook_conv3 = net.conv3.register_forward_hook(hook_conv3_fn)
 
-        activations = {"conv1": [], "conv2": [], "conv3": []}
+        activations_dict = {"conv1": [], "conv2": [], "conv3": []}
         for i, data in enumerate(trainloader, 0):
             inputs, labels = data
             inputs = np.transpose(inputs, (0, 3, 2, 1)).float()
             inputs = inputs.to(device)
             # labels = labels.to(device)
             outputs = net(inputs)
-            activations['conv1'].append(view_conv1.cpu().detach().numpy())
-            activations['conv2'].append(view_conv2.cpu().detach().numpy())
-            activations['conv3'].append(view_conv3.cpu().detach().numpy())
+            activations_dict['conv1'].append(view_conv1.cpu().detach().numpy())
+            activations_dict['conv2'].append(view_conv2.cpu().detach().numpy())
+            activations_dict['conv3'].append(view_conv3.cpu().detach().numpy())
+
+            activations = list(activations_dict.items())
+            activations = np.array(activations)
+            activations = [np.array(a[1]) for a in activations]
         
         return activations
+
+    def get_random_filters():
+        net = Net().to(device)
+
+        filters_1 = net.conv1.weight.data.cpu().detach()
+        filters_2 = net.conv2.weight.data.cpu().detach()
+        filters_3 = net.conv3.weight.data.cpu().detach()
+
+        return np.array([filters_1, filters_2, filters_3])
 
     def train_network_on_CIFAR_10(trainloader):
         net = Net().to(device)
@@ -231,9 +248,13 @@ def run():
     random_image_paths = create_random_images()
     print(random_image_paths)
     trainloader = load_random_images(random_image_paths)
-    activations = get_activations(trainloader)
-    for k, v in activations.items():
-        print(np.array(v).shape)
+    filters = get_random_filters()
+    for f in filters:
+        print(f.shape)
+    activations = get_activations(trainloader, filters)
+    # print(activations)
+    for a in activations:
+        print(a[1].shape)
 
 
 if __name__ == '__main__':
