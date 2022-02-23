@@ -8,7 +8,7 @@ import pickle
 def run():
     torch.multiprocessing.freeze_support()
     pickled_filters = {}
-    experiment_name = "mutation_multiplier_small"
+    experiment_name = "mutation_multiplier_small_3conv_3fc"
 
     
     # get filters from pickle file
@@ -25,6 +25,7 @@ def run():
     overall_accuracy_record_no_conv = {}
     classwise_accuracy_record_no_conv = {}
     classlist = np.array(classes)
+    epochs = 16
     
     # run training and evaluation and record metrics in above variables
     for name in pickled_filters.keys():
@@ -36,7 +37,7 @@ def run():
                 run_num = np.where(pickled_filters[name] == filters_list)[0][0]
                 save_path = "trained_models/no_conv_training/e{}_n{}_r{}_g{}.pth".format(experiment_name, name, run_num, i)
                 print('Training and Evaluating: {} Gen: {} Run: {}'.format(name, i, run_num))
-                record_progress = helper.train_network_on_CIFAR_10(trainloader=trainloader, filters=filters_list[i], epochs=2, save_path=save_path, no_conv=True)
+                record_progress = helper.train_network_on_CIFAR_10(trainloader=trainloader, filters=filters_list[i], epochs=epochs, save_path=save_path, no_conv=True)
                 record_accuracy_no_conv = helper.assess_accuracy(testloader=testloader, classes=classes, save_path=save_path, filters=filters_list[i])
                 training_record[name][run_num][i] = record_progress
                 overall_accuracy_record_no_conv[name][run_num][i] = record_accuracy_no_conv['overall']

@@ -8,7 +8,7 @@ import pickle
 def run():
     torch.multiprocessing.freeze_support()
     pickled_filters = {}
-    experiment_name = "mutation_multiplier_small"
+    experiment_name = "mutation_multiplier_small_3conv_3fc"
     
     # get filters from pickle file
     with open("output/" + experiment_name + "/solutions_over_time.pickle", 'rb') as f:
@@ -24,6 +24,7 @@ def run():
     overall_accuracy_record_trainall = {}
     classwise_accuracy_record_trainall = {}
     classlist = np.array(classes)
+    epochs = 16
     
     
     
@@ -37,7 +38,7 @@ def run():
                 run_num = np.where(pickled_filters[name] == filters_list)[0][0]
                 save_path = "trained_models/all_layers_trained/e{}_n{}_r{}_g{}.pth".format(experiment_name, name, run_num, i)
                 print('Training and Evaluating: {} Gen: {} Run: {}'.format(name, i, run_num))
-                record_progress = helper.train_network_on_CIFAR_10(trainloader=trainloader, filters=filters_list[i], epochs=2, save_path=save_path)
+                record_progress = helper.train_network_on_CIFAR_10(trainloader=trainloader, filters=filters_list[i], epochs=epochs, save_path=save_path)
                 record_accuracy_trainall = helper.assess_accuracy(testloader=testloader, classes=classes, save_path=save_path)
                 training_record[name][run_num][i] = record_progress
                 overall_accuracy_record_trainall[name][run_num][i] = record_accuracy_trainall['overall']
