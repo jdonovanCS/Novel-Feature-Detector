@@ -1,0 +1,9 @@
+run_name, run_num, time, fittest individual
+fitness, 0, 1003.6103870868683, 292.01844787597656run_name, run_num, time, fittest individual
+fitness, 1, 1012.003112077713, 309.0983428955078run_name, run_num, time, fittest individual
+random, 0, 930.2627511024475, 76.16315174102783run_name, run_num, time, fittest individual
+random, 1, 935.0723915100098, 75.89682054519653run_name, run_num, time, fittest individual
+fitness, 0, 1018.1894369125366, 300.8171844482422run_name, run_num, time, fittest individual
+fitness, 1, 1014.875084400177, 324.12267303466797run_name, run_num, time, fittest individual
+random, 0, 930.999885559082, 76.9699764251709run_name, run_num, time, fittest individual
+random, 1, 953.9321250915527, 77.21264839172363
