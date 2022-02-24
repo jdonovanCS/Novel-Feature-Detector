@@ -162,7 +162,7 @@ def get_random_filters():
 
     filters = []
     for i in range(len(net.conv_layers)):
-        filters[i] = net.conv_layers[i].weight.data.cpu().detach()
+        filters.append(net.conv_layers[i].weight.data.cpu().detach())
     return np.array(filters)
 
 
