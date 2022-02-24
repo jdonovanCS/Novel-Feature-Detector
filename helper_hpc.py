@@ -139,7 +139,7 @@ def get_activations(trainloader, filters):
     activations = {}
     def get_features(name):
         def hook(model, input, output):
-            if activations[name] == None:
+            if name not in activations.keys():
                 activations[name] = []
             activations[name].append(output.detach())
         return hook
