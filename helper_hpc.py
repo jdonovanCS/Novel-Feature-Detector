@@ -154,7 +154,7 @@ def get_activations(trainloader, filters):
         # labels = labels.to(device)
         outputs = net(inputs)
     
-    print(activations.shape)
+    # print(activations)
     return activations
 
 def get_random_filters():
