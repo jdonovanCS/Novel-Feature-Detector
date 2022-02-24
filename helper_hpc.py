@@ -95,7 +95,7 @@ class Net(nn.Module):
         self.dropout1 = nn.Dropout2d(0.05)
         self.dropout2 = nn.Dropout2d(0.1)
         self.conv_layers = [self.conv1, self.conv2, self.conv3, self.conv4, self.conv5, self.conv6]
-        print(self.conv1.weight.shape)
+        # print(self.conv1.weight.shape)
 
     def forward(self, x):
         x = self.conv1(x)

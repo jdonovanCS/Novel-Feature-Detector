@@ -14,6 +14,7 @@ warnings.filterwarnings('ignore') # Danger, Will Robinson! (not a scalable hack,
 import helper_hpc as helper
 import torch
 import pickle
+import tqdm
 
 class Model(object):
     def __init__(self):
@@ -40,9 +41,9 @@ def mutate(filters):
     selected_dims = []
     for v in list(filters[selected_layer].shape)[0:2]:
         selected_dims.append(random.randint(0,v-1))
-    print('selected_layer', selected_layer, 'selected_dims', selected_dims)
+    # print('selected_layer', selected_layer, 'selected_dims', selected_dims)
     selected_filter = filters[selected_layer][selected_dims[0]][selected_dims[1]]
-    print(selected_filter.shape)
+    # print(selected_filter.shape)
     # create new random filter to replace the selected filter
 #   selected_filter = torch.tensor(np.random.rand(3,3), device=helper.device)
     # modify the entire layer / filters by a small amount
@@ -81,7 +82,7 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
         
     # Carry out evolution in cycles. Each cycle produces a model and removes
     # another.
-    for i in range(generations):
+    for i in tqdm(range(generations)):
         
         parents = []  
         while len(parents) < num_children and evolution_type != "random":
