@@ -248,7 +248,7 @@ def run():
     global PATH
     PATH = './cifar_net.pth'
     global batch_size
-    batch_size = 4
+    batch_size = 64
 
 
     
