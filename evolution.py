@@ -31,7 +31,7 @@ def compute_feature_novelty(activations):
                 if str(i) not in dist:
                     dist[str(i)] = []
                 dist[str(i)].append(np.abs(a2 - a))
-        avg_dist[str(i)] = np.mean(dist[str(i)])
+        avg_dist[str(i)] = torch.mean(dist[str(i)]).numpy()
     return(sum(avg_dist.values()))
 
 def mutate(filters):
