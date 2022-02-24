@@ -141,7 +141,7 @@ def get_activations(trainloader, filters):
         def hook(model, input, output):
             if name not in activations.keys():
                 activations[name] = []
-            activations[name].append(output.detach())
+            activations[name].append(output.cpu().detach())
         return hook
 
     for i in range (len(net.conv_layers)):
