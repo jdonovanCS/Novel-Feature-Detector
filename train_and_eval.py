@@ -24,7 +24,7 @@ def run():
     overall_accuracy_record_trainall = {}
     classwise_accuracy_record_trainall = {}
     classlist = np.array(classes)
-    epochs = 16
+    epochs = 32
     
     
     
