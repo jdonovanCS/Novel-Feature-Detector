@@ -9,6 +9,7 @@ def run():
     torch.multiprocessing.freeze_support()
     pickled_filters = {}
     experiment_name = "mutation_multiplier_small_3conv_3fc"
+    just_train_using_final_generation_filters = True
 
     
     # get filters from pickle file
@@ -28,13 +29,15 @@ def run():
     epochs = 16
     
     # run training and evaluation and record metrics in above variables
-    for name in pickled_filters.keys():
+    for name in pickled_filters.keys(): # names of evolutionary generators (random, fitness, etc.)
         overall_accuracy_record_no_conv[name] = np.zeros((len(pickled_filters[name]), len(pickled_filters[name][0])))
         classwise_accuracy_record_no_conv[name] = np.zeros((len(pickled_filters[name]), len(pickled_filters[name][0]), len(classlist)))
         training_record[name] = np.array([[dict for i in range(len(pickled_filters[name][0]))]for j in range(len(pickled_filters[name]))], dtype=dict)
-        for filters_list in pickled_filters[name]:
-            for i in range (len(filters_list)):
-                run_num = np.where(pickled_filters[name] == filters_list)[0][0]
+        for filters_list in pickled_filters[name]: # filters for each run
+            run_num = np.where(pickled_filters[name] == filters_list)[0][0]
+            for i in range (len(filters_list)): # for each group of filters in this run (for each generation)
+                if just_train_using_final_generation_filters:
+                    i = len(filters_list)-1
                 save_path = "trained_models/no_conv_training/e{}_n{}_r{}_g{}.pth".format(experiment_name, name, run_num, i)
                 print('Training and Evaluating: {} Gen: {} Run: {}'.format(name, i, run_num))
                 record_progress = helper.train_network_on_CIFAR_10(trainloader=trainloader, filters=filters_list[i], epochs=epochs, save_path=save_path, no_conv=True)

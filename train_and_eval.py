@@ -9,6 +9,7 @@ def run():
     torch.multiprocessing.freeze_support()
     pickled_filters = {}
     experiment_name = "mutation_multiplier_small_3conv_3fc"
+    just_train_using_final_generation_filters = True
     
     # get filters from pickle file
     with open("output/" + experiment_name + "/solutions_over_time.pickle", 'rb') as f:
@@ -35,6 +36,8 @@ def run():
         training_record[name] = np.array([[dict for i in range(len(pickled_filters[name][0]))]for j in range(len(pickled_filters[name]))], dtype=dict)
         for filters_list in pickled_filters[name]:
             for i in range (len(filters_list)):
+                if just_train_using_final_generation_filters:
+                    i = len(filters_list)-1
                 run_num = np.where(pickled_filters[name] == filters_list)[0][0]
                 save_path = "trained_models/all_layers_trained/e{}_n{}_r{}_g{}.pth".format(experiment_name, name, run_num, i)
                 print('Training and Evaluating: {} Gen: {} Run: {}'.format(name, i, run_num))

@@ -111,6 +111,7 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
         
         if evolution_type == 'random':
             population = [sorted(population, key=lambda i: i.fitness, reverse=True)[0]]
+            return population[0]
             while len(population) < population_size:
                 model = Model()
                 model.filters = helper.get_random_filters()
