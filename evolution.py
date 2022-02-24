@@ -37,7 +37,6 @@ def compute_feature_novelty(activations):
 
 def mutate(filters):
     # select a single 3x3 filter in one of the convolutional layers and replace it with a random new filter.
-    filters = filters.numpy()
     selected_layer = random.randint(0,len(filters)-1)
     selected_dims = []
     for v in list(filters[selected_layer].shape)[0:2]:
@@ -48,14 +47,15 @@ def mutate(filters):
     # create new random filter to replace the selected filter
 #   selected_filter = torch.tensor(np.random.rand(3,3), device=helper.device)
     # modify the entire layer / filters by a small amount
-    selected_filter += np.random.rand(selected_filter.shape[0], selected_filter.shape[1])*2-1
+    selected_filter += torch.rand(selected_filter.shape[0], selected_filter.shape[1])*2-1
     # normalize entire filter so that values are between -1 and 1
     # selected_filter = (selected_filter/np.linalg.norm(selected_filter))*2
     # normalize just the values that are outside of -1, 1 range
-    selected_filter[(selected_filter > 1) | (selected_filter < -1)] /= np.amax(np.absolute(selected_filter))
+    selected_filter[(selected_filter > 1) | (selected_filter < -1)] /= torch.amax(torch.absolute(selected_filter))
     filters[selected_layer][selected_dims[0]][selected_dims[1]] = selected_filter
-    return torch.tensor(filters)
+    return filters
 
+    
 def evolution(generations, population_size, num_children, tournament_size, num_winners=1, evolution_type="fitness"):
     """Evolutionary Algorithm
 
