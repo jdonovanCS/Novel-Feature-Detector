@@ -9,6 +9,7 @@ class RandomDataset(torch.utils.data.Dataset):
         return len(self.image_paths)
 
     def __getitem__(self, idx):
+        # Maybe load these into memory to speed up
         image_filepath = self.image_paths[idx]
         image = cv2.imread(image_filepath)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)

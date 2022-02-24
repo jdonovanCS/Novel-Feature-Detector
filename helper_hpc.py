@@ -182,7 +182,9 @@ def train_network_on_CIFAR_10(trainloader, filters=None, epochs=2, save_path=Non
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
     record_progress = {}
+    record_progress['running_loss'] = []
 
+    # Load all images and labels into memory, then send to device instead of loading by batch from drive->mem->device.
     epochs = epochs
     for epoch in range(epochs):
         running_loss = 0.0
@@ -202,7 +204,6 @@ def train_network_on_CIFAR_10(trainloader, filters=None, epochs=2, save_path=Non
             optimizer.step()
 
             # print statistics
-            record_progress['running_loss'] = []
             running_loss += loss.item()
             if i % 2000 == 1999:
                 print('[%d, %5d] loss: %.3f' % (epoch+1, i + 1, running_loss/2000))
@@ -240,8 +241,9 @@ def assess_accuracy(testloader, classes, filters=None, save_path=None):
 
     with torch.no_grad():
         for data in testloader:
-            images, labels = data[0].to(device), data[1].to(device)
-            outputs = net(images)
+            images, labels = data
+            # images, labels = data[0].to(device), data[1].to(device)
+            outputs = net(images.to(device))
             _, predicted = torch.max(outputs.data, 1)
             total += labels.size(0)
             correct += (predicted==labels).sum().item()
@@ -253,8 +255,9 @@ def assess_accuracy(testloader, classes, filters=None, save_path=None):
 
     with torch.no_grad():
         for data in testloader:
-            images, labels = data[0].to(device), data[1].to(device)
-            outputs = net(images)
+            # images, labels = data[0].to(device), data[1].to(device)
+            images, labels = data
+            outputs = net(images.to(device))
             _, predictions = torch.max(outputs, 1)
             for label, prediction in zip(labels, predictions):
                 if label == prediction:
