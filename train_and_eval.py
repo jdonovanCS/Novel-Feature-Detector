@@ -47,11 +47,11 @@ def run():
                 overall_accuracy_record_trainall[name][run_num][i] = record_accuracy_trainall['overall']
                 for c in classlist:
                     classwise_accuracy_record_trainall[name][run_num][i][np.where(classlist==c)[0][0]] = record_accuracy_trainall[c]
-    with open('output/' + experiment_name + '/training_over_time.pickle_2', 'wb') as f:
+    with open('output/' + experiment_name + '/training_over_time.pickle', 'wb') as f:
         pickle.dump(training_record, f)
-    with open('output/' + experiment_name + '/overall_accuracy_trainall_over_time_2.pickle', 'wb') as f:
+    with open('output/' + experiment_name + '/overall_accuracy_trainall_over_time.pickle', 'wb') as f:
         pickle.dump(overall_accuracy_record_trainall,f)
-    with open('output/' + experiment_name + '/classwise_accuracy_trainall_over_time_2.pickle', 'wb') as f:
+    with open('output/' + experiment_name + '/classwise_accuracy_trainall_over_time.pickle', 'wb') as f:
         pickle.dump(classwise_accuracy_record_trainall,f)
 
     cut_off_beginning = 0

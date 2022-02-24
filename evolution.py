@@ -55,7 +55,7 @@ def mutate(filters):
     filters[selected_layer][selected_dims[0]][selected_dims[1]] = selected_filter
     return filters
 
-    
+
 def evolution(generations, population_size, num_children, tournament_size, num_winners=1, evolution_type="fitness"):
     """Evolutionary Algorithm
 
@@ -115,7 +115,6 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
         
         if evolution_type == 'random':
             population = [sorted(population, key=lambda i: i.fitness, reverse=True)[0]]
-            return population[0]
             while len(population) < population_size:
                 model = Model()
                 model.filters = helper.get_random_filters()
@@ -211,12 +210,13 @@ def run():
     fitness_results = {}
     solution_results = {}
 
-    for run_name in ['fitness', 'random']:
+    for run_name in ['fitness']:
         fitness_results[run_name] = np.zeros((num_runs, n_iters))
         solution_results[run_name] = np.array([[Model() for i in range(n_iters)]for j in range(num_runs)], dtype=object)
         # new_output_path = os.path.join(output_path, run_name + "evolution")
         # os.makedirs(os.path.join(new_output_path), exist_ok=True)
-        for run_num in range(num_runs):
+        print("Running Evolution for {}".format(run_name))
+        for run_num in tqdm(range(num_runs)):
             start_time = time.time()
             solution_over_time, fitness_over_time = evolution(generations=n_iters, population_size=pop_size, num_children=num_children, tournament_size=tournament_size, num_winners=num_winners, evolution_type=run_name)
             fitness_results[run_name][run_num] = fitness_over_time
