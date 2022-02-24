@@ -79,29 +79,52 @@ class Net(nn.Module):
     def __init__(self):
         super().__init__()
         self.conv1 = nn.Conv2d(3, 32, 3)
+        self.BatchNorm1 = nn.BatchNorm2d(32)
         self.conv2 = nn.Conv2d(32, 64, 3)
         self.conv3 = nn.Conv2d(64, 128, 3)
+        self.BatchNorm2 = nn.BatchNorm2d(128)
+        self.conv4 = nn.Conv2d(128, 128, 3)
+        self.conv5 = nn.Conv2d(128, 256, 3)
+        self.BatchNorm3 = nn.BatchNorm(256)
+        self.conv6 = nn.Conv2d(256, 256, 3)
         self.pool = nn.MaxPool2d(2,2)
-        self.fc1 = nn.Linear(21632, 512)
-        self.fc2 = nn.Linear(512, 10)
+        self.fc1 = nn.Linear(4096, 1024)
+        self.fc2 = nn.Linear(1024, 512)
+        self.fc3 = nn.Linear(512, 10)
         # self.fc3 = nn.Linear(84, 10)
-        self.dropout1 = nn.Dropout2d(0.25)
-        self.dropout2 = nn.Dropout2d(0.5)
+        self.dropout1 = nn.Dropout2d(0.05)
+        self.dropout2 = nn.Dropout2d(0.1)
+        self.conv_layers = [self.conv1, self.conv2, self.conv3, self.conv4, self.conv5, self.conv6]
+        print(self.conv1.weight.shape)
 
     def forward(self, x):
         x = self.conv1(x)
+        x = self.BatchNorm1(x)
         x = F.relu(x)
         x = self.conv2(x)
         x = F.relu(x)
+        x = self.pool(x)
         x = self.conv3(x)
+        x = self.BatchNorm2(x)
+        x = F.relu(x)
+        x = self.conv4(x)
         x = F.relu(x)
         x = self.pool(x)
         x = self.dropout1(x)
+        x = self.conv5(x)
+        x = self.BatchNorm3(x)
+        x = F.relu(x)
+        x = self.conv6(x)
+        x = F.relu(x)
+        x = self.pool(x)
         x = torch.flatten(x, 1)
+        x = self.dropout2(x)
         x = self.fc1(x)
         x = F.relu(x)
-        x = self.dropout2(x)
         x = self.fc2(x)
+        x = F.relu(x)
+        x = self.dropout2(x)
+        x = self.fc3(x)
         return x
 
         output = F.log_softmax(x, dim=1)
@@ -109,69 +132,55 @@ class Net(nn.Module):
 
 def get_activations(trainloader, filters):
     net = Net()
-    net.conv1.weight.data = filters[0]
-    net.conv2.weight.data = filters[1]
-    net.conv3.weight.data = filters[2]
+    for i in range (len(net.conv_layers)):
+        net.conv_layers[i].weight.data = filters[i]
     net = net.to(device)
 
-    global view_conv1
-    def hook_conv1_fn(module, input, output):
-        global view_conv1
-        view_conv1 = output
-    global view_conv2
-    def hook_conv2_fn(module, input, output):
-        global view_conv2
-        view_conv2 = output
-    global view_conv3
-    def hook_conv3_fn(module, input, output):
-        global view_conv3
-        view_conv3 = output
+    activations = {}
+    def get_features(name):
+        def hook(model, input, output):
+            if activations[name] == None:
+                activations[name] = []
+            activations[name].append(output.detach())
+        return hook
 
-    hook_conv1 = net.conv1.register_forward_hook(hook_conv1_fn)
-    hook_conv2 = net.conv2.register_forward_hook(hook_conv2_fn)
-    hook_conv3 = net.conv3.register_forward_hook(hook_conv3_fn)
+    for i in range (len(net.conv_layers)):
+        net.conv_layers[i].register_forward_hook(get_features(i))
 
-    activations_dict = {"conv1": [], "conv2": [], "conv3": []}
     for i, data in enumerate(trainloader, 0):
         inputs, labels = data
         inputs = np.transpose(inputs, (0, 3, 2, 1)).float()
         inputs = inputs.to(device)
         # labels = labels.to(device)
         outputs = net(inputs)
-        activations_dict['conv1'].append(view_conv1.cpu().detach().numpy())
-        activations_dict['conv2'].append(view_conv2.cpu().detach().numpy())
-        activations_dict['conv3'].append(view_conv3.cpu().detach().numpy())
-
-        activations = list(activations_dict.items())
-        activations = np.array(activations)
-        activations = [np.array(a[1]) for a in activations]
     
+    print(activations)
     return activations
 
 def get_random_filters():
     net = Net().to(device)
 
-    filters_1 = net.conv1.weight.data.cpu().detach()
-    filters_2 = net.conv2.weight.data.cpu().detach()
-    filters_3 = net.conv3.weight.data.cpu().detach()
-
-    return np.array([filters_1, filters_2, filters_3])
+    filters = []
+    for i in range(len(net.conv_layers)):
+        filters[i] = net.conv_layers[i].weight.data.cpu().detach()
+    return np.array(filters)
 
 
 def train_network_on_CIFAR_10(trainloader, filters=None, epochs=2, save_path=None, no_conv=False):
     net = Net()
     if filters is not None:
-        net.conv1.weight.data = torch.tensor(filters[0])
-        net.conv2.weight.data = torch.tensor(filters[1])
-        net.conv3.weight.data = torch.tensor(filters[2])
+        for i in range(len(net.conv_layers)):
+            net.conv_layers[i].weight.data = torch.tensor(filters[i])
+            if no_conv:
+                for param in net.conv_layers[i].parameters():
+                    param.requires_grad = False
+
     net = net.to(device)
 
     import torch.optim as optim
 
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
-    if no_conv:
-        optimizer = optim.SGD(list(net.fc1.parameters()) + list(net.fc2.parameters()) + list(net.pool.parameters()) + list(net.dropout1.parameters()) + list(net.dropout2.parameters()), lr=0.001, momentum=0.9)
     record_progress = {}
 
     epochs = epochs
@@ -217,9 +226,8 @@ def assess_accuracy(testloader, classes, filters=None, save_path=None):
         save_path = PATH
     net.load_state_dict(torch.load(save_path))
     if filters is not None:
-        net.conv1.weight.data = filters[0]
-        net.conv2.weight.data = filters[1]
-        net.conv3.weight.data = filters[2]
+        for i in range(len(net.conv_layers)):
+            net.conv_layers[i].weight.data = filters[i]
     net = net.to(device)
     outputs = net(images.to(device))
     _, predicted = torch.max(outputs, 1)
@@ -320,7 +328,7 @@ def run():
     global PATH
     PATH = './cifar_net.pth'
     global batch_size
-    batch_size = 4
+    batch_size = 16
 
 
     

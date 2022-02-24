@@ -42,6 +42,7 @@ def mutate(filters):
         selected_dims.append(random.randint(0,v-1))
     print('selected_layer', selected_layer, 'selected_dims', selected_dims)
     selected_filter = filters[selected_layer][selected_dims[0]][selected_dims[1]]
+    print(selected_filter.shape)
     # create new random filter to replace the selected filter
 #   selected_filter = torch.tensor(np.random.rand(3,3), device=helper.device)
     # modify the entire layer / filters by a small amount
