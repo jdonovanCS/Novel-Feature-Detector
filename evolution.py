@@ -23,13 +23,15 @@ class Model(object):
         # self.novelty = None
 
 def compute_feature_novelty(activations):
-    dist = {0: [], 1: [], 2: []}
-    avg_dist = {0: None, 1: None, 2: None}
+    dist = {}
+    avg_dist = {}
     for i in range(len(activations)):
         for a in activations[i]:
             for a2 in activations[i]:
-                dist[i].append(np.abs(a2 - a))
-        avg_dist[i] = np.mean(dist[i])
+                if str(i) not in dist:
+                    dist[str(i)] = []
+                dist[str(i)].append(np.abs(a2 - a))
+        avg_dist[str(i)] = np.mean(dist[str(i)])
     return(sum(avg_dist.values()))
 
 def mutate(filters):
@@ -39,11 +41,15 @@ def mutate(filters):
     for v in list(filters[selected_layer].shape)[0:2]:
         selected_dims.append(random.randint(0,v-1))
     print('selected_layer', selected_layer, 'selected_dims', selected_dims)
-    # TODO: modify the entire layer / filters by a small amount
     selected_filter = filters[selected_layer][selected_dims[0]][selected_dims[1]]
+    # create new random filter to replace the selected filter
 #   selected_filter = torch.tensor(np.random.rand(3,3), device=helper.device)
+    # modify the entire layer / filters by a small amount
     selected_filter += np.random.rand(selected_filter.shape[0], selected_filter.shape[1])*2-1
-    selected_filter = (selected_filter/np.linalg.norm(selected_filter))*2
+    # normalize entire filter so that values are between -1 and 1
+    # selected_filter = (selected_filter/np.linalg.norm(selected_filter))*2
+    # normalize just the values that are outside of -1, 1 range
+    selected_filter[(selected_filter > 1) | selected_filter < -1] /= np.max(np.absolute(selected_filter))
     filters[selected_layer][selected_dims[0]][selected_dims[1]] = selected_filter
     return filters
 
@@ -175,26 +181,26 @@ def run():
     global trainloader
     trainloader = helper.load_random_images(random_image_paths)
     global experiment_name
-    experiment_name = "mutation_multiplier_small"
+    experiment_name = "mutation_multiplier_small_edited_pop20_gen50"
     # filters = helper.get_random_filters()
     # activations = helper.get_activations(trainloader, filters)
     # for a in activations:
     #     print(a.shape)
 
     # num_runs = 20
-    num_runs = 2
+    num_runs = 5
     run_id = 0
     # n_iters = 100
-    n_iters = 10
+    n_iters = 50
     output_path = './'
     # pop_size = 50
-    pop_size = 10
+    pop_size = 20
     # tournament_size = 10
-    tournament_size = 2
+    tournament_size = 4
     # num_children = 50
-    num_children = 10
+    num_children = 20
     # num_winners = 5
-    num_winners = 1
+    num_winners = 2
 
     fitness_results = {}
     solution_results = {}
@@ -214,6 +220,8 @@ def run():
             with open('output.txt', 'a+') as f:
                 f.write('run_name, run_num, time, fittest individual\n{}, {}, {}, {}'.format(run_name, run_num, time.time()-start_time, fitness_over_time[-1]))
 
+    if not os.path.isdir('output/' + experiment_name):
+        os.mkdir('output/' + experiment_name)
     with open('output/' + experiment_name + '/solutions_over_time.pickle', 'wb') as f:
         pickle.dump(solution_results, f)
     with open('output/' + experiment_name + '/fitness_over_time.txt', 'a+') as f:
