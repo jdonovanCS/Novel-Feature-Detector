@@ -76,15 +76,10 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
     # Initialize the population with random models.
     print("Initializing")
     for i in tqdm(range(population_size)): #while len(population) < population_size:
-        print(time.time())
         model = Model()
-        print(time.time())
         model.filters = helper.get_random_filters()
-        print(time.time())
         model.activations = helper.get_activations(trainloader, model.filters)
-        print(time.time())
         model.fitness = compute_feature_novelty(model.activations)
-        print(time.time())
         population.append(model)
         
     # Carry out evolution in cycles. Each cycle produces a model and removes
