@@ -14,7 +14,7 @@ warnings.filterwarnings('ignore') # Danger, Will Robinson! (not a scalable hack,
 import helper_hpc as helper
 import torch
 import pickle
-import tqdm
+from tqdm import tqdm
 
 class Model(object):
     def __init__(self):
