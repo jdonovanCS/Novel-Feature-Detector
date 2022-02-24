@@ -51,7 +51,7 @@ def mutate(filters):
     # normalize entire filter so that values are between -1 and 1
     # selected_filter = (selected_filter/np.linalg.norm(selected_filter))*2
     # normalize just the values that are outside of -1, 1 range
-    selected_filter[(selected_filter > 1) | (selected_filter < -1)] /= np.max(np.absolute(selected_filter))
+    selected_filter[(selected_filter > 1) | (selected_filter < -1)] /= np.amax(np.absolute(selected_filter))
     filters[selected_layer][selected_dims[0]][selected_dims[1]] = selected_filter
     return filters
 
