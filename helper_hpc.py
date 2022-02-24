@@ -55,7 +55,7 @@ def create_random_images(num_images=200):
 
 def load_random_images(random_image_paths):
     train_dataset = rd.RandomDataset(random_image_paths)
-    train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=4, shuffle=True, num_workers=2)
+    train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=2)
     return train_loader
 
 # Show some training images
@@ -162,7 +162,7 @@ def get_random_filters():
 
     filters = []
     for i in range(len(net.conv_layers)):
-        filters.append(net.conv_layers[i].weight.data.cpu().detach().numpy())
+        filters.append(net.conv_layers[i].weight.data.cpu().detach())
     return np.array(filters)
 
 

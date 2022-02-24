@@ -37,6 +37,7 @@ def compute_feature_novelty(activations):
 
 def mutate(filters):
     # select a single 3x3 filter in one of the convolutional layers and replace it with a random new filter.
+    filters = filters.numpy()
     selected_layer = random.randint(0,len(filters)-1)
     selected_dims = []
     for v in list(filters[selected_layer].shape)[0:2]:
@@ -53,7 +54,7 @@ def mutate(filters):
     # normalize just the values that are outside of -1, 1 range
     selected_filter[(selected_filter > 1) | (selected_filter < -1)] /= np.amax(np.absolute(selected_filter))
     filters[selected_layer][selected_dims[0]][selected_dims[1]] = selected_filter
-    return filters
+    return torch.tensor(filters)
 
 def evolution(generations, population_size, num_children, tournament_size, num_winners=1, evolution_type="fitness"):
     """Evolutionary Algorithm
@@ -75,10 +76,15 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
     # Initialize the population with random models.
     print("Initializing")
     for i in tqdm(range(population_size)): #while len(population) < population_size:
+        print(time.time())
         model = Model()
+        print(time.time())
         model.filters = helper.get_random_filters()
+        print(time.time())
         model.activations = helper.get_activations(trainloader, model.filters)
+        print(time.time())
         model.fitness = compute_feature_novelty(model.activations)
+        print(time.time())
         population.append(model)
         
     # Carry out evolution in cycles. Each cycle produces a model and removes
@@ -182,7 +188,7 @@ def plot_mean_and_bootstrapped_ci_multiple(input_data = None, title = 'overall',
 def run():
     torch.multiprocessing.freeze_support()
     helper.run()
-    random_image_paths = helper.create_random_images()
+    random_image_paths = helper.create_random_images(64)
     global trainloader
     trainloader = helper.load_random_images(random_image_paths)
     global experiment_name
