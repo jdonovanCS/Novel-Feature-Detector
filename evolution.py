@@ -16,6 +16,9 @@ import torch
 import pickle
 from tqdm import tqdm
 
+
+# TODO: Why not use gradient descent since fitness function is differentiable. Should probably compare to that.
+
 class Model(object):
     def __init__(self):
         self.filters = None
@@ -26,13 +29,18 @@ class Model(object):
 def compute_feature_novelty(activations):
     dist = {}
     avg_dist = {}
-    for i in range(len(activations)):
-        for a in activations[i]:
-            for a2 in activations[i]:
-                if str(i) not in dist:
-                    dist[str(i)] = []
-                dist[str(i)].append(np.abs(a2 - a))
-        avg_dist[str(i)] = np.mean(dist[str(i)])
+    # for each conv layer
+    for layer in activations:
+        # for each activation 3d(batch, h, w)
+        for batch in activations[layer]:
+            # for each activation
+            for ind_activation in batch:
+                
+                for ind_activation2 in batch:
+                    if str(layer) not in dist:
+                        dist[str(layer)] = []
+                    dist[str(layer)].append(np.abs(ind_activation2 - ind_activation))
+        avg_dist[str(layer)] = np.mean(dist[str(layer)])
     return(sum(avg_dist.values()))
 
 def mutate(filters):
