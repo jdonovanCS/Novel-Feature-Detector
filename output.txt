@@ -6,4 +6,12 @@ random, 1, 935.0723915100098, 75.89682054519653run_name, run_num, time, fittest 
 fitness, 0, 1018.1894369125366, 300.8171844482422run_name, run_num, time, fittest individual
 fitness, 1, 1014.875084400177, 324.12267303466797run_name, run_num, time, fittest individual
 random, 0, 930.999885559082, 76.9699764251709run_name, run_num, time, fittest individual
-random, 1, 953.9321250915527, 77.21264839172363
+random, 1, 953.9321250915527, 77.21264839172363run_name, run_num, time, fittest individual
+fitness, 0, 1903.237940788269, 175.54521718621254run_name, run_num, time, fittest individual
+fitness, 1, 1899.2795226573944, 190.90993696451187run_name, run_num, time, fittest individual
+fitness, 2, 1906.5518028736115, 187.66058695316315run_name, run_num, time, fittest individual
+fitness, 0, 1911.8503777980804, 183.60603961348534run_name, run_num, time, fittest individual
+fitness, 1, 5958.870468854904, 174.76690751314163run_name, run_num, time, fittest individual
+fitness, 2, 1901.1606476306915, 178.30890476703644run_name, run_num, time, fittest individual
+fitness, 3, 1899.467685699463, 175.93346786499023run_name, run_num, time, fittest individual
+fitness, 4, 1900.5781438350677, 176.24405798316002

@@ -14,7 +14,7 @@ warnings.filterwarnings('ignore')
 
 # Need to separate this file into functions and classes
 
-def load_CIFAR_10(batch_size=4):
+def load_CIFAR_10(batch_size=64):
     transform = transforms.Compose(
         [transforms.ToTensor(),
         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))]
@@ -130,7 +130,7 @@ class Net(nn.Module):
         output = F.log_softmax(x, dim=1)
         return output
 
-def get_activations(trainloader, filters):
+def get_activations(trainloader, filters, num_ims_used=64):
     net = Net()
     for i in range (len(net.conv_layers)):
         net.conv_layers[i].weight.data = filters[i]
@@ -147,12 +147,16 @@ def get_activations(trainloader, filters):
     for i in range (len(net.conv_layers)):
         net.conv_layers[i].register_forward_hook(get_features(i))
 
+    total = 0
     for i, data in enumerate(trainloader, 0):
+        if total >= num_ims_used:
+            return activations
         inputs, labels = data
         inputs = np.transpose(inputs, (0, 3, 2, 1)).float()
         inputs = inputs.to(device)
         # labels = labels.to(device)
         outputs = net(inputs)
+        total += labels.size(0)
     
     # print(activations)
     return activations
@@ -166,7 +170,7 @@ def get_random_filters():
     return np.array(filters)
 
 
-def train_network_on_CIFAR_10(trainloader, filters=None, epochs=2, save_path=None, no_conv=False):
+def train_network_on_CIFAR_10(trainloader, testloader, classes, filters=None, epochs=2, save_path=None, no_conv=False):
     net = Net()
     if filters is not None:
         for i in range(len(net.conv_layers)):
@@ -183,11 +187,14 @@ def train_network_on_CIFAR_10(trainloader, filters=None, epochs=2, save_path=Non
     optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
     record_progress = {}
     record_progress['running_loss'] = []
+    record_progress['running_acc'] = []
 
     # Load all images and labels into memory, then send to device instead of loading by batch from drive->mem->device.
     epochs = epochs
     for epoch in range(epochs):
         running_loss = 0.0
+        correct = 0.0
+        total = 0
         for i, data in enumerate(trainloader, 0):
             # get the inputs; data is a list [inputs, labels]
             inputs, labels = data
@@ -209,6 +216,20 @@ def train_network_on_CIFAR_10(trainloader, filters=None, epochs=2, save_path=Non
                 print('[%d, %5d] loss: %.3f' % (epoch+1, i + 1, running_loss/2000))
                 record_progress['running_loss'].append({'epoch': epoch+1, 'iter': i+1, 'running_loss': running_loss/2000})
                 running_loss = 0.0
+
+            _, predicted = torch.max(outputs.data, 1)
+            correct += (predicted==labels).sum().item()
+            total += labels.size(0)
+        accuracy = 100 * correct / total
+        print('Accuracy of the network on training set at epoch %d: %d %%' % (epoch+1, accuracy))
+        record_progress['running_acc'].append({'epoch': epoch+1, 'accuracy': accuracy})
+        
+        # run to compare the accuracy of network on test set.
+        # if save_path is None:
+        #     save_path = PATH
+        # torch.save(net.state_dict(), save_path)
+        # assess_accuracy(testloader, classes, save_path)
+
     print('Finished Training')
     if save_path is None:
         save_path = PATH
@@ -216,7 +237,7 @@ def train_network_on_CIFAR_10(trainloader, filters=None, epochs=2, save_path=Non
     torch.save(net.state_dict(), save_path)
     return record_progress
 
-def assess_accuracy(testloader, classes, filters=None, save_path=None):
+def assess_accuracy(testloader, classes, save_path=None):
     dataiter = iter(testloader)
     images, labels = dataiter.next()
     # imshow(torchvision.utils.make_grid(images))
@@ -226,9 +247,6 @@ def assess_accuracy(testloader, classes, filters=None, save_path=None):
     if save_path is None:
         save_path = PATH
     net.load_state_dict(torch.load(save_path))
-    if filters is not None:
-        for i in range(len(net.conv_layers)):
-            net.conv_layers[i].weight.data = filters[i]
     net = net.to(device)
     outputs = net(images.to(device))
     _, predicted = torch.max(outputs, 1)
@@ -241,9 +259,9 @@ def assess_accuracy(testloader, classes, filters=None, save_path=None):
 
     with torch.no_grad():
         for data in testloader:
-            images, labels = data
+            images, labels = data[0].to(device), data[1].to(device)
             # images, labels = data[0].to(device), data[1].to(device)
-            outputs = net(images.to(device))
+            outputs = net(images)
             _, predicted = torch.max(outputs.data, 1)
             total += labels.size(0)
             correct += (predicted==labels).sum().item()
@@ -255,9 +273,8 @@ def assess_accuracy(testloader, classes, filters=None, save_path=None):
 
     with torch.no_grad():
         for data in testloader:
-            # images, labels = data[0].to(device), data[1].to(device)
-            images, labels = data
-            outputs = net(images.to(device))
+            images, labels = data[0].to(device), data[1].to(device)
+            outputs = net(images)
             _, predictions = torch.max(outputs, 1)
             for label, prediction in zip(labels, predictions):
                 if label == prediction:
@@ -321,6 +338,7 @@ def plot_mean_and_bootstrapped_ci_multiple(input_data = None, title = 'overall',
 
     # plt.savefig('plots/fitness_over_time_plot_with_CIs.png')
     plt.show()
+    
 
 def run():
     torch.multiprocessing.freeze_support()
@@ -331,7 +349,7 @@ def run():
     global PATH
     PATH = './cifar_net.pth'
     global batch_size
-    batch_size = 16
+    batch_size = 64
 
 
     

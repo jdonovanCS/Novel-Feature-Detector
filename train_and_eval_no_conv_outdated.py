@@ -35,9 +35,9 @@ def run():
         training_record[name] = np.array([[dict for i in range(len(pickled_filters[name][0]))]for j in range(len(pickled_filters[name]))], dtype=dict)
         for filters_list in pickled_filters[name]: # filters for each run
             run_num = np.where(pickled_filters[name] == filters_list)[0][0]
+            if just_train_using_final_generation_filters:
+                filters_list = filters_list[-1]
             for i in range (len(filters_list)): # for each group of filters in this run (for each generation)
-                if just_train_using_final_generation_filters:
-                    i = len(filters_list)-1
                 save_path = "trained_models/no_conv_training/e{}_n{}_r{}_g{}.pth".format(experiment_name, name, run_num, i)
                 print('Training and Evaluating: {} Gen: {} Run: {}'.format(name, i, run_num))
                 record_progress = helper.train_network_on_CIFAR_10(trainloader=trainloader, filters=filters_list[i], epochs=epochs, save_path=save_path, no_conv=True)
@@ -46,7 +46,7 @@ def run():
                 overall_accuracy_record_no_conv[name][run_num][i] = record_accuracy_no_conv['overall']
                 for c in classlist:
                     classwise_accuracy_record_no_conv[name][run_num][i][np.where(classlist==c)[0][0]] = record_accuracy_no_conv[c]
-    with open('output/' + experiment_name + '/training_over_time.pickle', 'wb') as f:
+    with open('output/' + experiment_name + '/training_no_conv_over_time.pickle', 'wb') as f:
         pickle.dump(training_record, f)
     with open('output/' + experiment_name + '/overall_accuracy_no_conv_over_time.pickle', 'wb') as f:
         pickle.dump(overall_accuracy_record_no_conv,f)
