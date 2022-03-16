@@ -14,4 +14,9 @@ fitness, 0, 1911.8503777980804, 183.60603961348534run_name, run_num, time, fitte
 fitness, 1, 5958.870468854904, 174.76690751314163run_name, run_num, time, fittest individual
 fitness, 2, 1901.1606476306915, 178.30890476703644run_name, run_num, time, fittest individual
 fitness, 3, 1899.467685699463, 175.93346786499023run_name, run_num, time, fittest individual
-fitness, 4, 1900.5781438350677, 176.24405798316002
+fitness, 4, 1900.5781438350677, 176.24405798316002run_name, run_num, time, fittest individual
+fitness, 0, 35513.091027498245, 7.20253312587738run_name, run_num, time, fittest individual
+fitness, 1, 37359.3759868145, 7.718740105628967run_name, run_num, time, fittest individual
+fitness, 2, 38022.46705698967, 7.350194871425629run_name, run_num, time, fittest individual
+fitness, 3, 36420.15890097618, 7.381876587867737run_name, run_num, time, fittest individual
+fitness, 4, 47620.9212744236, 7.166131973266602

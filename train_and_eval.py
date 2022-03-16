@@ -4,6 +4,7 @@ warnings.filterwarnings('ignore') # Danger, Will Robinson! (not a scalable hack,
 import helper_hpc as helper
 import torch
 import pickle
+import os
 
 def save_final_accuracy_of_trained_models(pickle_path, save_path):
 
@@ -26,7 +27,7 @@ def save_final_accuracy_of_trained_models(pickle_path, save_path):
 def run():
     torch.multiprocessing.freeze_support()
     pickled_filters = {}
-    experiment_name = "mutation_multiplier_small_edited_pop20_gen50"
+    experiment_name = "mutation_multiplier_cifar10novelty_pop20_gen50"
     just_train_using_final_generation_filters = True
     no_conv = True
     
@@ -35,7 +36,8 @@ def run():
         pickled_filters = pickle.load(f)
     
     helper.run()
-    
+    # experiment_name = "mutation_multiplier_small_edited_cifar100_pop20_gen50"
+
     # get loader for train and test images and classes
     trainset, testset, trainloader, testloader, classes = helper.load_CIFAR_10(helper.batch_size)
     
@@ -44,7 +46,7 @@ def run():
     overall_accuracy_record = {}
     classwise_accuracy_record = {}
     classlist = np.array(classes)
-    epochs = 96
+    epochs = 1024
     
     
     
@@ -72,7 +74,7 @@ def run():
                 # else train the network and collect the metrics
                 save_path = "trained_models/trained/conv{}_e{}_n{}_r{}_g{}.pth".format(not no_conv, experiment_name, name, run_num, i)
                 print('Training and Evaluating: {} Gen: {} Run: {}'.format(name, i, run_num))
-                record_progress = helper.train_network_on_CIFAR_10(trainloader=trainloader, filters=filters_list[i], epochs=epochs, testloader=testloader, classes=classes, save_path=save_path, no_conv=no_conv)
+                record_progress = helper.train_network(trainloader=trainloader, filters=filters_list[i], epochs=epochs, testloader=testloader, classes=classes, save_path=save_path, no_conv=no_conv)
                 record_accuracy = helper.assess_accuracy(testloader=testloader, classes=classes, save_path=save_path)
                 training_record[name][run_num][i] = record_progress
                 overall_accuracy_record[name][run_num][i] = record_accuracy['overall']
@@ -80,6 +82,8 @@ def run():
                     classwise_accuracy_record[name][run_num][i][np.where(classlist==c)[0][0]] = record_accuracy[c]
     name_add = ''
     if no_conv: name_add = 'no_conv_'
+    if not os.path.isdir('output/' + experiment_name):
+        os.mkdir('output/' + experiment_name)
     with open('output/' + experiment_name + '/training_{}over_time.pickle'.format(name_add), 'wb') as f:
         pickle.dump(training_record, f)
     with open('output/' + experiment_name + '/overall_accuracy_{}over_time.pickle'.format(name_add), 'wb') as f:

@@ -195,7 +195,7 @@ def run():
     # trainloader = helper.load_random_images(random_image_paths)
     trainloader = helper.load_CIFAR_10()[2]
     global experiment_name
-    experiment_name = "mutation_multiplier_small_edited_pop20_gen50"
+    experiment_name = "mutation_multiplier_cifar10novelty_pop20_gen50"
     # filters = helper.get_random_filters()
     # activations = helper.get_activations(trainloader, filters)
     # for a in activations:
