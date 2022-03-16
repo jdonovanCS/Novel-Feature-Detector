@@ -45,6 +45,45 @@ def load_CIFAR_10(batch_size=64):
 
     return trainset, testset, trainloader, testloader, classes
 
+def load_CIFAR_100(batch_size=64):
+    stats = ((0.5074,0.4867,0.4411),(0.2011,0.1987,0.2025))
+    train_transform = transforms.Compose([
+        transforms.RandomHorizontalFlip(),
+        transforms.RandomCrop(32,padding=4,padding_mode="reflect"),
+        transforms.ToTensor(),
+        transforms.Normalize(*stats)
+    ])
+
+    test_transform = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Normalize(*stats)
+    ])
+
+    batch_size = batch_size
+
+    # Dowload training data
+    trainset = torchvision.datasets.CIFAR100(
+        root="data",
+        train=True,
+        download=True,
+        transform=train_transform
+    )
+
+    trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=2)
+
+    testset = torchvision.datasets.CIFAR100(
+        root="data",
+        train=False,
+        download=True,
+        transform=test_transform
+    )
+
+    testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size, shuffle=False, num_workers=2)
+
+    classes = tuple(trainset.classes)
+
+    return trainset, testset, trainloader, testloader, classes
+
 def create_random_images(num_images=200):
     paths = []
     for i in range(num_images):
@@ -76,7 +115,7 @@ def load_and_show_some_images(trainloader, classes, batch_size):
 # DEFINE a CONV NN
 
 class Net(nn.Module):
-    def __init__(self):
+    def __init__(self, num_classes=10):
         super().__init__()
         self.conv1 = nn.Conv2d(3, 32, 3, padding=1)
         self.BatchNorm1 = nn.BatchNorm2d(32)
@@ -90,7 +129,7 @@ class Net(nn.Module):
         self.pool = nn.MaxPool2d(2,2)
         self.fc1 = nn.Linear(4096, 1024)
         self.fc2 = nn.Linear(1024, 512)
-        self.fc3 = nn.Linear(512, 10)
+        self.fc3 = nn.Linear(512, num_classes)
         # self.fc3 = nn.Linear(84, 10)
         self.dropout1 = nn.Dropout2d(0.05)
         self.dropout2 = nn.Dropout2d(0.1)
@@ -152,12 +191,13 @@ def get_activations(trainloader, filters, num_ims_used=64):
         if total >= num_ims_used:
             return activations
         inputs, labels = data
-        inputs = np.transpose(inputs, (0, 3, 2, 1)).float()
+        # inputs = np.transpose(inputs, (0, 3, 2, 1)).float()
+        inputs = inputs.float()
         inputs = inputs.to(device)
         # labels = labels.to(device)
         outputs = net(inputs)
-        total += labels.size(0)
-    
+        
+        total += np.array(labels).size
     # print(activations)
     return activations
 
@@ -170,8 +210,8 @@ def get_random_filters():
     return np.array(filters)
 
 
-def train_network_on_CIFAR_10(trainloader, testloader, classes, filters=None, epochs=2, save_path=None, no_conv=False):
-    net = Net()
+def train_network(trainloader, testloader, classes, filters=None, epochs=2, save_path=None, no_conv=False):
+    net = Net(num_classes=len(list(classes)))
     if filters is not None:
         for i in range(len(net.conv_layers)):
             net.conv_layers[i].weight.data = torch.tensor(filters[i])
@@ -243,7 +283,7 @@ def assess_accuracy(testloader, classes, save_path=None):
     # imshow(torchvision.utils.make_grid(images))
     print("Ground Truth: ", " ".join('%5s' % classes[labels[j]] for j in range(4)))
     
-    net = Net()
+    net = Net(num_classes=len(list(classes)))
     if save_path is None:
         save_path = PATH
     net.load_state_dict(torch.load(save_path))
@@ -288,7 +328,7 @@ def assess_accuracy(testloader, classes, save_path=None):
 
     return record_accuracy
 
-def plot_mean_and_bootstrapped_ci_multiple(input_data = None, title = 'overall', name = "change this", x_label = "x", y_label = "y", save_name="", compute_CI=True, maximum_possible=None):
+def plot_mean_and_bootstrapped_ci_multiple(input_data = None, title = 'overall', name = "change this", x_label = "x", y_label = "y", save_name="", compute_CI=True, maximum_possible=None, show=None):
     """ 
      
     parameters:  
@@ -336,8 +376,10 @@ def plot_mean_and_bootstrapped_ci_multiple(input_data = None, title = 'overall',
         ax.hlines(y=maximum_possible, xmin=0, xmax=generations, linewidth=2, color='r', linestyle='--', label='best poss. acc.')
         ax.legend()
 
-    # plt.savefig('plots/fitness_over_time_plot_with_CIs.png')
-    plt.show()
+    if save_name != "":
+        plt.savefig('plots/' + save_name)
+    if show != None:
+        plt.show()
     
 
 def run():

@@ -11,9 +11,10 @@ def run():
     helper.run()
     random_image_paths = helper.create_random_images(64)
     global trainloader
-    trainloader = helper.load_random_images(random_image_paths)
+    # trainloader = helper.load_random_images(random_image_paths)
+    trainloader = helper.load_CIFAR_10()[2]
     global experiment_name
-    experiment_name = "mutation_multiplier_small_edited_pop20_gen50"
+    experiment_name = "mutation_multiplier_cifar10novelty_pop20_gen50"
     population_size = 50
     population = []
 
@@ -21,8 +22,8 @@ def run():
         model = evol.Model()
         model.filters = helper.get_random_filters()
         # model.filters = evol.mutate(model.filters)
-        # model.activations = helper.get_activations(trainloader, model.filters)
-        # model.fitness = evol.compute_feature_novelty(model.activations)
+        model.activations = helper.get_activations(trainloader, model.filters)
+        model.fitness = evol.compute_feature_novelty(model.activations)
         population.append(model)
         
     sols = [p.filters for p in population]
@@ -43,8 +44,10 @@ def run():
     with open('output/' + experiment_name + '/random_gen_fitnesses.txt', 'a+') as f:
         f.write(str(fitnesses))
 
-    # cut_off_beginning = 0
-    # helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[cut_off_beginning:] for x in fitnesses], name=[i for i in range(len(fitnesses))], x_label="Generation", y_label="Fitness", compute_CI=True)
+    fitnesses = np.array([fitnesses])
+    cut_off_beginning = 0
+    helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[cut_off_beginning:] for x in fitnesses], name=[i for i in range(len(fitnesses))], x_label="Generation", y_label="Fitness", compute_CI=True)
+
 
 
 if __name__ == '__main__':

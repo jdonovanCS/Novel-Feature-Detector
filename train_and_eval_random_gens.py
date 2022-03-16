@@ -3,6 +3,7 @@ import helper_hpc as helper
 import torch
 import numpy as np
 import random
+import os
 
 def save_final_accuracy_of_trained_models(pickle_path, save_path):
 
@@ -26,7 +27,7 @@ def save_final_accuracy_of_trained_models(pickle_path, save_path):
 # get the filters for random gens
 def run():
     torch.multiprocessing.freeze_support()
-    experiment_name = "mutation_multiplier_small_edited_pop20_gen50"
+    experiment_name = "mutation_multiplier_cifar10novelty_pop20_gen50"
     just_train_using_final_generation_filters = True
     no_conv = True
     
@@ -39,6 +40,8 @@ def run():
     name = 'random'
 
     helper.run()
+    # experiment_name = "mutation_multiplier_small_edited_cifar100_pop20_gen50"
+
     
     # get loader for train and test images and classes
     trainset, testset, trainloader, testloader, classes = helper.load_CIFAR_10(helper.batch_size)
@@ -48,7 +51,7 @@ def run():
     overall_accuracy_record = {}
     classwise_accuracy_record = {}
     classlist = np.array(classes)
-    epochs = 96
+    epochs = 1024
 
 
     overall_accuracy_record[name] = np.zeros((num_to_train, 1))
@@ -61,7 +64,7 @@ def run():
         # train that network
         save_path = "trained_models/trained/conv{}_e{}_n{}_r{}.pth".format(not no_conv, experiment_name, name, i)
         print('Training and Evaluating: {} Run: {}'.format(name, i))
-        record_progress = helper.train_network_on_CIFAR_10(trainloader=trainloader, filters=solutions[i], epochs=epochs, testloader=testloader, classes=classes, save_path=save_path, no_conv=no_conv)
+        record_progress = helper.train_network(trainloader=trainloader, filters=solutions[i], epochs=epochs, testloader=testloader, classes=classes, save_path=save_path, no_conv=no_conv)
         record_accuracy = helper.assess_accuracy(testloader=testloader, classes=classes, save_path=save_path)
         training_record[name][i][0] = record_progress
         overall_accuracy_record[name][i][0] = record_accuracy['overall']
@@ -72,6 +75,8 @@ def run():
     # save as pickle files
     name_add = ''
     if no_conv: name_add = 'no_conv_'
+    if not os.path.isdir('output/' + experiment_name):
+        os.mkdir('output/' + experiment_name)
     with open('output/' + experiment_name + '/training_{}_{}over_time.pickle'.format(name, name_add), 'wb') as f:
         pickle.dump(training_record, f)
     with open('output/' + experiment_name + '/overall_accuracy_{}_{}over_time.pickle'.format(name, name_add), 'wb') as f:

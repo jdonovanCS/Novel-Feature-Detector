@@ -2,7 +2,7 @@ import helper_hpc as helper
 import pickle
 import numpy as np
 
-experiment_name = "mutation_multiplier_small_edited_pop20_gen50"
+experiment_name = "mutation_multiplier_cifar10novelty_pop20_gen50"
 name = 'random'
 no_conv = True
 name_add = ''
@@ -18,4 +18,4 @@ first.update(second)
 first['random initialization'] = first.pop('random')
 first['novel-activation initialization'] = first.pop('fitness')
 cut_off_beginning = 0
-helper.plot_mean_and_bootstrapped_ci_multiple(title='Accuracy of networks on CIFAR-10 training data, fixed convolutional weights', input_data=[np.transpose(x)[cut_off_beginning:] for k, x in first.items()], name=[k for k,x in first.items()], x_label="Epoch", y_label="Accuracy", compute_CI=True)
+helper.plot_mean_and_bootstrapped_ci_multiple(title='Accuracy of networks on CIFAR-10 training data using CIFAR-10 for novelty, fixed conv layers', input_data=[np.transpose(x)[cut_off_beginning:] for k, x in first.items()], name=[k for k,x in first.items()], x_label="Epoch", y_label="Accuracy", compute_CI=True, show=True)
