@@ -14,6 +14,5 @@ with open(args.input, 'rb') as f:
     print(pickled_metrics)
 
 if type(pickled_metrics) == dict:
-    helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x) for k, x in pickled_metrics.items()], name=[k for k,x in pickled_metrics.items()], x_label="Generation", y_label="Fitness", compute_CI=True)
+    helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x) for k, x in pickled_metrics.items()], name=[k for k,x in pickled_metrics.items()], x_label="Generation", y_label="Fitness", compute_CI=True, show=True)
 
-    
