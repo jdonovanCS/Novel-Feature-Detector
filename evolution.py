@@ -7,8 +7,6 @@ from copy import deepcopy
 import os
 import numpy as np
 import collections
-import matplotlib.pyplot as plt
-import scikits.bootstrap as bootstrap
 import warnings
 warnings.filterwarnings('ignore') # Danger, Will Robinson! (not a scalable hack, and may surpress other helpful warning other than for ill-conditioned bootstrapped CI distributions)
 import helper_hpc as helper
@@ -49,17 +47,21 @@ def mutate(filters):
     selected_dims = []
     for v in list(filters[selected_layer].shape)[0:2]:
         selected_dims.append(random.randint(0,v-1))
-    # print('selected_layer', selected_layer, 'selected_dims', selected_dims)
+    
     selected_filter = filters[selected_layer][selected_dims[0]][selected_dims[1]]
-    # print(selected_filter.shape)
+    
     # create new random filter to replace the selected filter
-#   selected_filter = torch.tensor(np.random.rand(3,3), device=helper.device)
+    # selected_filter = torch.tensor(np.random.rand(3,3), device=helper.device)
+    
     # modify the entire layer / filters by a small amount
     selected_filter += torch.rand(selected_filter.shape[0], selected_filter.shape[1])*2-1
+    
     # normalize entire filter so that values are between -1 and 1
     # selected_filter = (selected_filter/np.linalg.norm(selected_filter))*2
+    
     # normalize just the values that are outside of -1, 1 range
     selected_filter[(selected_filter > 1) | (selected_filter < -1)] /= torch.amax(torch.absolute(selected_filter))
+    
     filters[selected_layer][selected_dims[0]][selected_dims[1]] = selected_filter
     return filters
 
@@ -90,8 +92,6 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
         model.fitness = compute_feature_novelty(model.activations)
         population.append(model)
         
-    # Carry out evolution in cycles. Each cycle produces a model and removes
-    # another.
     print("Generations")
     for i in tqdm(range(generations)):
         
@@ -100,9 +100,7 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
         # Sample randomly chosen models from the current population.
             tournament = []
             while len(tournament) < tournament_size:
-            # Inefficient, but written this way for clarity. In the case of neural
-            # nets, the efficiency of this line is irrelevant because training neural
-            # nets is the rate-determining step.
+            
                 candidate = random.choice(list(population))
                 tournament.append(candidate)
 
@@ -121,75 +119,15 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
         if evolution_type == 'fitness':
             population = sorted(population, key=lambda i: i.fitness, reverse=True)[:population_size]
         
-        if evolution_type == 'random':
-            population = [sorted(population, key=lambda i: i.fitness, reverse=True)[0]]
-            while len(population) < population_size:
-                model = Model()
-                model.filters = helper.get_random_filters()
-                model.activations = helper.get_activations(trainloader, model.filters)
-                model.fitness = compute_feature_novelty(model.activations)
-                population.append(model)
-        
         fitness_over_time.append((sorted(population, key=lambda i: i.fitness, reverse=True)[0].fitness))
         solutions_over_time.append((sorted(population, key=lambda i: i.fitness, reverse=True)[0].filters))
         
     return solutions_over_time, np.array(fitness_over_time)
 
-def plot_mean_and_bootstrapped_ci_multiple(input_data = None, title = 'overall', name = "change this", x_label = "x", y_label = "y", save_name="", compute_CI=True, maximum_possible=None):
-    """ 
-     
-    parameters:  
-    input_data: (numpy array of numpy arrays of shape (max_k, num_repitions)) solution met
-    name: numpy array of string names for legend 
-    x_label: (string) x axis label 
-    y_label: (string) y axis label 
-     
-    returns: 
-    None 
-    """ 
- 
-    generations = len(input_data[0])
- 
-    fig, ax = plt.subplots() 
-    ax.set_xlabel(x_label) 
-    ax.set_ylabel(y_label) 
-    ax.set_title(title) 
-    for i in range(len(input_data)): 
-        CIs = [] 
-        mean_values = [] 
-        for j in range(generations): 
-            mean_values.append(np.mean(input_data[i][j])) 
-            if compute_CI:
-                CIs.append(bootstrap.ci(input_data[i][j], statfunction=np.mean)) 
-        mean_values=np.array(mean_values) 
- 
-        high = [] 
-        low = [] 
-        if compute_CI:
-            for j in range(len(CIs)): 
-                low.append(CIs[j][0]) 
-                high.append(CIs[j][1]) 
- 
-        low = np.array(low) 
-        high = np.array(high) 
-
-        y = range(0, generations) 
-        ax.plot(y, mean_values, label=name[i])
-        if compute_CI:
-            ax.fill_between(y, high, low, alpha=.2) 
-        ax.legend()
-    
-    if maximum_possible:
-        ax.hlines(y=maximum_possible, xmin=0, xmax=generations, linewidth=2, color='r', linestyle='--', label='best poss. acc.')
-        ax.legend()
-
-    plt.savefig('fitness_over_time_plot_with_CIs.png')
-    plt.show()
-    
-
 def run():
     torch.multiprocessing.freeze_support()
     helper.run()
+    
     random_image_paths = helper.create_random_images(64)
     global trainloader
     # trainloader = helper.load_random_images(random_image_paths)
@@ -198,8 +136,6 @@ def run():
     experiment_name = "mutation_multiplier_cifar10novelty_pop20_gen50"
     # filters = helper.get_random_filters()
     # activations = helper.get_activations(trainloader, filters)
-    # for a in activations:
-    #     print(a.shape)
 
     # num_runs = 20
     num_runs = 5
@@ -222,9 +158,9 @@ def run():
     for run_name in ['fitness']:
         fitness_results[run_name] = np.zeros((num_runs, n_iters))
         solution_results[run_name] = np.array([[Model() for i in range(n_iters)]for j in range(num_runs)], dtype=object)
-        # new_output_path = os.path.join(output_path, run_name + "evolution")
-        # os.makedirs(os.path.join(new_output_path), exist_ok=True)
+        
         print("Running Evolution for {}".format(run_name))
+        
         for run_num in tqdm(range(num_runs)):
             start_time = time.time()
             solution_over_time, fitness_over_time = evolution(generations=n_iters, population_size=pop_size, num_children=num_children, tournament_size=tournament_size, num_winners=num_winners, evolution_type=run_name)
@@ -245,7 +181,7 @@ def run():
         with open('output/' + experiment_name + '/solutions_over_time_{}.npy'.format(k), 'wb') as f:
             np.save(f, v)
     cut_off_beginning = 0
-    plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[cut_off_beginning:] for k, x in fitness_results.items()], name=[k for k,x in fitness_results.items()], x_label="Generation", y_label="Fitness", compute_CI=True)
+    helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[cut_off_beginning:] for k, x in fitness_results.items()], name=[k for k,x in fitness_results.items()], x_label="Generation", y_label="Fitness", compute_CI=True, show=True)
 
 
 if __name__ == '__main__':

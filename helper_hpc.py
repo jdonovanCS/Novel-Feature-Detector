@@ -12,6 +12,7 @@ import scikits.bootstrap as bootstrap
 import warnings
 warnings.filterwarnings('ignore')
 
+
 # Need to separate this file into functions and classes
 
 def load_CIFAR_10(batch_size=64):
@@ -186,10 +187,10 @@ def get_activations(trainloader, filters, num_ims_used=64):
     for i in range (len(net.conv_layers)):
         net.conv_layers[i].register_forward_hook(get_features(i))
 
+    #TODO: The below code is far too slow
     total = 0
-    for i, data in enumerate(trainloader, 0):
-        if total >= num_ims_used:
-            return activations
+    while total < num_ims_used:
+        data = next(iter(trainloader))
         inputs, labels = data
         # inputs = np.transpose(inputs, (0, 3, 2, 1)).float()
         inputs = inputs.float()
@@ -210,12 +211,12 @@ def get_random_filters():
     return np.array(filters)
 
 
-def train_network(trainloader, testloader, classes, filters=None, epochs=2, save_path=None, no_conv=False):
+def train_network(trainloader, testloader, classes, filters=None, epochs=2, save_path=None, fixed_conv=False):
     net = Net(num_classes=len(list(classes)))
     if filters is not None:
         for i in range(len(net.conv_layers)):
             net.conv_layers[i].weight.data = torch.tensor(filters[i])
-            if no_conv:
+            if fixed_conv:
                 for param in net.conv_layers[i].parameters():
                     param.requires_grad = False
 
@@ -382,7 +383,7 @@ def plot_mean_and_bootstrapped_ci_multiple(input_data = None, title = 'overall',
         plt.show()
     
 
-def run():
+def run(batch_size_input=64):
     torch.multiprocessing.freeze_support()
 
     global device
@@ -391,7 +392,7 @@ def run():
     global PATH
     PATH = './cifar_net.pth'
     global batch_size
-    batch_size = 64
+    batch_size = batch_size_input
 
 
     
