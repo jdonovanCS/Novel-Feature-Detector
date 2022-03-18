@@ -43,8 +43,8 @@ def run():
     solutions = np.array([[evol.Model() for i in range(population_size)]for j in range(1)], dtype=object)
     for i in range(1):
         solutions[i] = sols
-    # solutions = solutions[0]
-    sol_dict = {'random': solutions}
+    solutions = solutions[0]
+    sol_dict = {'random': [solutions]}
     fitnesses = [p.fitness for p in population]
 
     if not os.path.isdir('output/' + experiment_name):
