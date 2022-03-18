@@ -56,8 +56,10 @@ def run():
         pickled_filters = pickle.load(f)
 
     if args.random:
-        print(type(pickled_filters))
         pickled_filters['random'][0] = random.shuffle(pickled_filters['random'][0])
+        pickled_filters['random'] = np.array(pickled_filters['random'])
+        print(pickled_filters['random'])
+
     
     helper.run()
 
