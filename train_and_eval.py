@@ -5,6 +5,19 @@ import helper_hpc as helper
 import torch
 import pickle
 import os
+import argparse
+import random
+
+parser=argparse.ArgumentParser(description="Process some input files")
+parser.add_argument('--dataset', help='which dataset should be used for novelty metric, choices are: cifar-10, cifar-100', default='random')
+parser.add_argument('--experiment_name', help='experiment name for saving data related to training')
+parser.add_argument('--fixed_conv', help='Should the convolutional layers stay fixed, or alternatively be trained', action='store_true')
+parser.add_argument('--training_interval', help='How often should the network be trained. Values should be supplied as a fraction and will relate to the generations from evolution' +
+'For example if 1 is given the filters generated from the final generation of evolution will be the only ones trained. If 0.5 is given then the halfway point of evolutionary generations and the final generation will be trained. ' +
+'If 0 is given, the filters from every generation will be trained', type=float, default=1.)
+parser.add_argument('--epochs', help="Number of epochos to train for", type=int, default=64)
+parser.add_argument('--random', action='store_true')
+args = parser.parse_args()
 
 def save_final_accuracy_of_trained_models(pickle_path, save_path):
 
@@ -26,27 +39,41 @@ def save_final_accuracy_of_trained_models(pickle_path, save_path):
 
 def run():
     torch.multiprocessing.freeze_support()
-    pickled_filters = {}
-    experiment_name = "mutation_multiplier_cifar10novelty_pop20_gen50"
-    just_train_using_final_generation_filters = True
-    no_conv = True
     
+    pickled_filters = {}
+    
+    experiment_name = args.experiment_name
+    training_interval = args.training_interval
+    fixed_conv = args.fixed_conv
+    filename = ''
+    if args.random:
+        filename = 'output/' + experiment_name + '/random_gen_solutions.pickle'
+    else:
+        filename = "output/" + experiment_name + "/solutions_over_time.pickle"
+
     # get filters from pickle file
-    with open("output/" + experiment_name + "/solutions_over_time.pickle", 'rb') as f:
+    with open(filename, 'rb') as f:
         pickled_filters = pickle.load(f)
+
+    if args.random:
+        print(type(pickled_filters))
+        pickled_filters['random'][0] = random.shuffle(pickled_filters['random'][0])
     
     helper.run()
-    # experiment_name = "mutation_multiplier_small_edited_cifar100_pop20_gen50"
 
     # get loader for train and test images and classes
-    trainset, testset, trainloader, testloader, classes = helper.load_CIFAR_10(helper.batch_size)
+    if args.dataset.lower() == 'cifar-100':
+        trainset, testset, trainloader, testloader, classes = helper.load_CIFAR_100(helper.batch_size)
+    else:
+        trainset, testset, trainloader, testloader, classes = helper.load_CIFAR_10(helper.batch_size)
+    
     
     # create variables for holding metric
     training_record = {}
     overall_accuracy_record = {}
     classwise_accuracy_record = {}
     classlist = np.array(classes)
-    epochs = 1024
+    epochs = args.epochs
     
     
     
@@ -64,24 +91,24 @@ def run():
             for i in range (len(filters_list)):
                 # if we only want to train the solution from the final generation
                 # put zeros in the metric dictionaries if this isn't the final generation
-                if just_train_using_final_generation_filters and i != len(filters_list)-1:
+                if ((i+1)*1.0)/(len(filters_list)) % training_interval != 0:
                     overall_accuracy_record[name][run_num][i] = 0
                     for c in classlist:
                         classwise_accuracy_record[name][run_num][i][np.where(classlist==c)[0][0]] = 0
                     training_record[name][run_num][i] = {'running_acc': [], 'running_loss': []}
                     continue
-                
                 # else train the network and collect the metrics
-                save_path = "trained_models/trained/conv{}_e{}_n{}_r{}_g{}.pth".format(not no_conv, experiment_name, name, run_num, i)
+                save_path = "trained_models/trained/conv{}_e{}_n{}_r{}_g{}.pth".format(not fixed_conv, experiment_name, name, run_num, i)
                 print('Training and Evaluating: {} Gen: {} Run: {}'.format(name, i, run_num))
-                record_progress = helper.train_network(trainloader=trainloader, filters=filters_list[i], epochs=epochs, testloader=testloader, classes=classes, save_path=save_path, no_conv=no_conv)
+                record_progress = helper.train_network(trainloader=trainloader, filters=filters_list[i], epochs=epochs, testloader=testloader, classes=classes, save_path=save_path, fixed_conv=fixed_conv)
                 record_accuracy = helper.assess_accuracy(testloader=testloader, classes=classes, save_path=save_path)
                 training_record[name][run_num][i] = record_progress
                 overall_accuracy_record[name][run_num][i] = record_accuracy['overall']
                 for c in classlist:
                     classwise_accuracy_record[name][run_num][i][np.where(classlist==c)[0][0]] = record_accuracy[c]
     name_add = ''
-    if no_conv: name_add = 'no_conv_'
+    if args.random: name_add += 'random_'
+    if fixed_conv: name_add += 'fixed_conv_'
     if not os.path.isdir('output/' + experiment_name):
         os.mkdir('output/' + experiment_name)
     with open('output/' + experiment_name + '/training_{}over_time.pickle'.format(name_add), 'wb') as f:

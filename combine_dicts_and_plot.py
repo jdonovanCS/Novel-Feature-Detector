@@ -1,39 +1,44 @@
 import helper_hpc as helper
 import pickle
 import numpy as np
+import argparse
 
-experiment_name = "mutation_multiplier_cifar10novelty_pop20_gen50"
-experiment_name2 = "mutation_multiplier_small_edited_pop20_gen50"
-name = 'random'
-no_conv = True
+parser=argparse.ArgumentParser(description="Process some input files")
+parser.add_argument('--experiment_name', help='experiment names for accessing data (separate with comma and space) (ie. exp1, exp2)', default='')
+parser.add_argument('--fixed_conv', help="Get data related to when the convolutional layers are fixed", default=False)
+parser.add_argument('--plot_label', help="For each experiment supply a plot label (separate with command and space as in experiment_name", default='')
+args = parser.parse_args()
+
+if args.experiment_name == '':
+    print("Please supply experiment name")
+    exit()
+
+experiment_names = args.experiment_name.split(', ')
+if args.plot_label != '':
+    plot_labels = args.plot_labels.split(', ')
+else:
+    plot_labels = experiment_names
+fixed_conv = args.fixed_conv
 name_add = ''
-if no_conv: name_add = 'no_conv_'
-with open('output/' + experiment_name + '/final_accuracies_{}_{}over_training_time.pickle'.format(name, name_add), 'rb') as f:
-    first = pickle.load(f)
+if fixed_conv: name_add = 'fixed_conv_'
 
-name = 'fitness'
-with open('output/' + experiment_name + '/final_accuracies_{}over_training_time.pickle'.format(name_add), 'rb') as f:
-    second = pickle.load(f)
+all = {}
+for i in range(len(experiment_names)):
 
-if experiment_name2 != None:
-    name='fitness'
-    with open('output/' + experiment_name2 + '/final_accuracies_{}over_training_time.pickle'.format(name_add), 'rb') as f:
-        third = pickle.load(f)
-        
-    name = 'random'
-    with open('output/' + experiment_name2 + '/final_accuracies_{}_{}over_training_time.pickle'.format(name, name_add), 'rb') as f:
-        fourth = pickle.load(f)
-    
-
-    third['novel-activation initilization, random noise for novelty'] = third.pop('fitness')
-    fourth['random initilization, random noise for novelty'] = fourth.pop('random')
-    second.update(third)
-    second.update(fourth)
+    with open('output/' + experiment_names[i] + '/final_accuracies_{}_{}over_training_time.pickle'.format('random', name_add), 'rb') as f:
+        first = pickle.load(f)
+        print(first)
 
 
-first.update(second)
-first['random initialization'] = first.pop('random')
-first['novel-activation initialization'] = first.pop('fitness')
-print(first)
+    with open('output/' + experiment_names[i] + '/final_accuracies_{}over_training_time.pickle'.format(name_add), 'rb') as f:
+        second = pickle.load(f)
+        print(second)
+
+    first['random init ' + plot_labels[i]] = first.pop('random')
+    second['novel-activation init ' + plot_labels[i]] = second.pop('fitness')
+    all.update(first)
+    all.update(second)
+
+# print(first)
 cut_off_beginning = 0
-helper.plot_mean_and_bootstrapped_ci_multiple(title='Accuracy of networks on CIFAR-10 training data, fixed conv layers', input_data=[np.transpose(x)[cut_off_beginning:] for k, x in first.items()], name=[k for k,x in first.items()], x_label="Epoch", y_label="Accuracy", compute_CI=True, show=True)
+helper.plot_mean_and_bootstrapped_ci_multiple(title='Accuracy of networks on CIFAR-10 training data, fixed conv layers', input_data=[np.transpose(x)[cut_off_beginning:] for k, x in all.items()], name=[k for k,x in all.items()], x_label="Epoch", y_label="Accuracy", compute_CI=True, show=True)

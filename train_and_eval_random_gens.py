@@ -4,6 +4,16 @@ import torch
 import numpy as np
 import random
 import os
+import argparse
+
+parser=argparse.ArgumentParser(description="Process some input files")
+parser.add_argument('--dataset', help='which dataset should be used for novelty metric, choices are: random, cifar-10', default='random')
+parser.add_argument('--experiment_name', help='experiment name for saving data related to training', default='')
+parser.add_argument('--fixed_conv', help='Should the convolutional layers stay fixed, or alternatively be trained', default=False)
+parser.add_argument('--training_interval', help='How often should the network be trained. Values should be supplied as a fraction and will relate to the generations from evolution' +
+'For example if 1 is given the filters generated from the final generation of evolution will be the only ones trained. If 0.5 is given then the halfway point of evolutionary generations and the final generation will be trained. ' +
+'If 0 is given, the filters from every generation will be trained', default=1.)
+args = parser.parse_args()
 
 def save_final_accuracy_of_trained_models(pickle_path, save_path):
 
@@ -27,9 +37,10 @@ def save_final_accuracy_of_trained_models(pickle_path, save_path):
 # get the filters for random gens
 def run():
     torch.multiprocessing.freeze_support()
-    experiment_name = "mutation_multiplier_cifar10novelty_pop20_gen50"
-    just_train_using_final_generation_filters = True
-    no_conv = True
+    
+    experiment_name = args.experiment_name
+    trainin_interval = args.training_interval
+    fixed_conv = True
     
     with open('output/' + experiment_name + '/random_gen_solutions.pickle', 'rb') as f:
         solutions = pickle.load(f)
@@ -62,9 +73,9 @@ def run():
     for i in range (num_to_train):
 
         # train that network
-        save_path = "trained_models/trained/conv{}_e{}_n{}_r{}.pth".format(not no_conv, experiment_name, name, i)
+        save_path = "trained_models/trained/conv{}_e{}_n{}_r{}.pth".format(not fixed_conv, experiment_name, name, i)
         print('Training and Evaluating: {} Run: {}'.format(name, i))
-        record_progress = helper.train_network(trainloader=trainloader, filters=solutions[i], epochs=epochs, testloader=testloader, classes=classes, save_path=save_path, no_conv=no_conv)
+        record_progress = helper.train_network(trainloader=trainloader, filters=solutions[i], epochs=epochs, testloader=testloader, classes=classes, save_path=save_path, fixed_conv=fixed_conv)
         record_accuracy = helper.assess_accuracy(testloader=testloader, classes=classes, save_path=save_path)
         training_record[name][i][0] = record_progress
         overall_accuracy_record[name][i][0] = record_accuracy['overall']
@@ -74,7 +85,7 @@ def run():
 
     # save as pickle files
     name_add = ''
-    if no_conv: name_add = 'no_conv_'
+    if fixed_conv: name_add = 'fixed_conv_'
     if not os.path.isdir('output/' + experiment_name):
         os.mkdir('output/' + experiment_name)
     with open('output/' + experiment_name + '/training_{}_{}over_time.pickle'.format(name, name_add), 'wb') as f:
