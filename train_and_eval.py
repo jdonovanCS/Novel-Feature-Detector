@@ -56,9 +56,8 @@ def run():
         pickled_filters = pickle.load(f)
 
     if args.random:
-        pickled_filters['random'][0] = random.shuffle(pickled_filters['random'][0])
+        random.shuffle(pickled_filters['random'][0])
         pickled_filters['random'] = np.array(pickled_filters['random'])
-        print(pickled_filters['random'])
 
     
     helper.run()
@@ -93,12 +92,13 @@ def run():
             for i in range (len(filters_list)):
                 # if we only want to train the solution from the final generation
                 # put zeros in the metric dictionaries if this isn't the final generation
-                if ((i+1)*1.0)/(len(filters_list)) % training_interval != 0:
+                if training_interval != 0 and ((i+1)*1.0)/(len(filters_list)) % training_interval != 0:
                     overall_accuracy_record[name][run_num][i] = 0
                     for c in classlist:
                         classwise_accuracy_record[name][run_num][i][np.where(classlist==c)[0][0]] = 0
                     training_record[name][run_num][i] = {'running_acc': [], 'running_loss': []}
                     continue
+
                 # else train the network and collect the metrics
                 save_path = "trained_models/trained/conv{}_e{}_n{}_r{}_g{}.pth".format(not fixed_conv, experiment_name, name, run_num, i)
                 print('Training and Evaluating: {} Gen: {} Run: {}'.format(name, i, run_num))
