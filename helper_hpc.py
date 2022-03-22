@@ -334,7 +334,7 @@ def assess_accuracy(testloader, classes, save_path=None):
 
     return record_accuracy
 
-def plot_mean_and_bootstrapped_ci_multiple(input_data = None, title = 'overall', name = "change this", x_label = "x", y_label = "y", save_name="", compute_CI=True, maximum_possible=None, show=None):
+def plot_mean_and_bootstrapped_ci_multiple(input_data = None, title = 'overall', name = "change this", x_label = "x", y_label = "y", save_name="", compute_CI=True, maximum_possible=None, show=None, sample_interval=None):
     """ 
      
     parameters:  
@@ -372,7 +372,9 @@ def plot_mean_and_bootstrapped_ci_multiple(input_data = None, title = 'overall',
         low = np.array(low) 
         high = np.array(high) 
 
-        y = range(0, generations) 
+        y = range(0, generations)
+        if (sample_interval != None):
+            y = np.array(y)*sample_interval 
         ax.plot(y, mean_values, label=name[i])
         if compute_CI:
             ax.fill_between(y, high, low, alpha=.2) 
