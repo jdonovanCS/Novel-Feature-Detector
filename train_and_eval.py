@@ -17,6 +17,7 @@ parser.add_argument('--training_interval', help='How often should the network be
 'If 0 is given, the filters from every generation will be trained', type=float, default=1.)
 parser.add_argument('--epochs', help="Number of epochos to train for", type=int, default=64)
 parser.add_argument('--random', action='store_true')
+parser.add_argument('--novelty_interval', help='How often should a novelty score be captured during training?', default=0)
 args = parser.parse_args()
 
 def save_final_accuracy_of_trained_models(pickle_path, save_path):
@@ -24,13 +25,34 @@ def save_final_accuracy_of_trained_models(pickle_path, save_path):
     # read in the saved training record
     with open(pickle_path, 'rb') as f:
         pickled_metrics = pickle.load(f)
+    
+    #     REMOVE
+    #     for i, s in enumerate(pickled_metrics['random'][0]):
+    #         if len(s['running_acc']) > 2:
+    #             print(i)
+
+    # numbers = [9, 19, 29, 39, 49]
+    # for num in numbers:
+    #     if round((((num+1)*1.0)/(50))*10) % (args.training_interval * 10) == 0:
+    #         print(num)
+    #     else:
+    #         print(num)
+    #         print(round((((num+1)*1.0)/(50))*10))
+    #         print(round((((num+1)*1.0)/(50))*10) % (args.training_interval * 10))
+
 
     modified_accuracies = {}
     for key in pickled_metrics:
-        modified_accuracies[key] = np.zeros((len(pickled_metrics[key]), len(pickled_metrics[key][0][-1]['running_acc'])))
-        for i in range(len(pickled_metrics[key])):
-            modified_accuracies[key][i] = [p['accuracy'] for p in pickled_metrics[key][i][-1]['running_acc']]
-    
+        modified_accuracies[key] = np.zeros((len(pickled_metrics[key])*int(1/args.training_interval), len(pickled_metrics[key][0][-1]['running_acc'])))
+        for i in range(len(pickled_metrics[key])*int(1/args.training_interval)):
+            if args.training_interval == 1:
+                modified_accuracies[key][i] = [p['accuracy'] for p in pickled_metrics[key][i][int(len(pickled_metrics[key][i])/(int(1/args.training_interval))-1)]['running_acc']]
+            elif args.random:
+                modified_accuracies[key][i] = [p['accuracy'] for p in pickled_metrics[key][0][int(len(pickled_metrics[key][0])/(int(1/args.training_interval))*i-1)]['running_acc']]
+            elif args.random != True and args.training_interval != 1:
+                for j in range(int(1/args.training_interval)):
+                    modified_accuracies[key][i*len(pickled_metrics[key])+j] = [p['accuracy'] for p in pickled_metrics[key][i][int(len(pickled_metrics[key][i])/(int(1/args.training_interval))*j-1)]['running_acc']]
+
     with open(save_path, 'wb') as f:
         pickle.dump(modified_accuracies, f)
     
@@ -38,8 +60,16 @@ def save_final_accuracy_of_trained_models(pickle_path, save_path):
     return modified_accuracies
 
 def run():
+
+    #REMOVE
+    # name_add = ''
+    # if args.random: name_add += 'random_'
+    # if args.fixed_conv: name_add += 'fixed_conv_'
+    # final_accuracies = save_final_accuracy_of_trained_models('output/' + args.experiment_name + '/training_{}over_time.pickle'.format(name_add), 'output/' + args.experiment_name + '/final_accuracies_{}over_training_time.pickle'.format(name_add))
+    # exit()
+
     torch.multiprocessing.freeze_support()
-    
+
     pickled_filters = {}
     
     experiment_name = args.experiment_name
@@ -92,17 +122,17 @@ def run():
             for i in range (len(filters_list)):
                 # if we only want to train the solution from the final generation
                 # put zeros in the metric dictionaries if this isn't the final generation
-                if training_interval != 0 and ((i+1)*1.0)/(len(filters_list)) % training_interval != 0:
+                if training_interval != 0 and i*1.0 not in [(len(filters_list)/(1/training_interval)*j)-1 for j in range(1, int(1/training_interval)+1)]:
                     overall_accuracy_record[name][run_num][i] = 0
                     for c in classlist:
                         classwise_accuracy_record[name][run_num][i][np.where(classlist==c)[0][0]] = 0
                     training_record[name][run_num][i] = {'running_acc': [], 'running_loss': []}
                     continue
-
+                
                 # else train the network and collect the metrics
                 save_path = "trained_models/trained/conv{}_e{}_n{}_r{}_g{}.pth".format(not fixed_conv, experiment_name, name, run_num, i)
                 print('Training and Evaluating: {} Gen: {} Run: {}'.format(name, i, run_num))
-                record_progress = helper.train_network(trainloader=trainloader, filters=filters_list[i], epochs=epochs, testloader=testloader, classes=classes, save_path=save_path, fixed_conv=fixed_conv)
+                record_progress = helper.train_network(trainloader=trainloader, filters=filters_list[i], epochs=epochs, testloader=testloader, classes=classes, save_path=save_path, fixed_conv=fixed_conv, novelty_interval=int(args.novelty_interval))
                 record_accuracy = helper.assess_accuracy(testloader=testloader, classes=classes, save_path=save_path)
                 training_record[name][run_num][i] = record_progress
                 overall_accuracy_record[name][run_num][i] = record_accuracy['overall']

@@ -211,7 +211,7 @@ def get_random_filters():
     return np.array(filters)
 
 
-def train_network(trainloader, testloader, classes, filters=None, epochs=2, save_path=None, fixed_conv=False):
+def train_network(trainloader, testloader, classes, filters=None, epochs=2, save_path=None, fixed_conv=False, novelty_interval=0):
     net = Net(num_classes=len(list(classes)))
     if filters is not None:
         for i in range(len(net.conv_layers)):
@@ -229,6 +229,7 @@ def train_network(trainloader, testloader, classes, filters=None, epochs=2, save
     record_progress = {}
     record_progress['running_loss'] = []
     record_progress['running_acc'] = []
+    record_progress['novelty_score'] = []
 
     # Load all images and labels into memory, then send to device instead of loading by batch from drive->mem->device.
     epochs = epochs
@@ -264,7 +265,11 @@ def train_network(trainloader, testloader, classes, filters=None, epochs=2, save
         accuracy = 100 * correct / total
         print('Accuracy of the network on training set at epoch %d: %d %%' % (epoch+1, accuracy))
         record_progress['running_acc'].append({'epoch': epoch+1, 'accuracy': accuracy})
-        
+        import evolution as evol
+        if not fixed_conv and novelty_interval != 0 and epoch % novelty_interval == 0:
+            activations = get_activations(trainloader, filters)
+            novelty_score = evol.compute_feature_novelty(activations)
+            record_progress['novelty_score'].append({'epoch': epoch+1, 'novelty': novelty_score})
         # run to compare the accuracy of network on test set.
         # if save_path is None:
         #     save_path = PATH
