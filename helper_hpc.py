@@ -267,7 +267,10 @@ def train_network(trainloader, testloader, classes, filters=None, epochs=2, save
         record_progress['running_acc'].append({'epoch': epoch+1, 'accuracy': accuracy})
         import evolution as evol
         if not fixed_conv and novelty_interval != 0 and epoch % novelty_interval == 0:
-            activations = get_activations(trainloader, filters)
+            trained_filters = []
+            for j in range(len(net.conv_layers)):
+                trained_filters.append(net.conv_layers[j].weight.data)
+            activations = get_activations(trainloader, trained_filters)
             novelty_score = evol.compute_feature_novelty(activations)
             record_progress['novelty_score'].append({'epoch': epoch+1, 'novelty': novelty_score})
         # run to compare the accuracy of network on test set.
