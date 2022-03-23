@@ -59,14 +59,43 @@ def save_final_accuracy_of_trained_models(pickle_path, save_path):
     print(modified_accuracies)
     return modified_accuracies
 
+def save_novelty_record_of_trained_models(pickle_path, save_path):
+
+    # read in the saved training record
+    with open(pickle_path, 'rb') as f:
+        pickled_metrics = pickle.load(f)
+
+    modified_novelties = {}
+    for key in pickled_metrics:
+        modified_novelties[key] = np.zeros((len(pickled_metrics[key])*int(1/args.training_interval), len(pickled_metrics[key][0][-1]['novelty_score'])))
+        for i in range(len(pickled_metrics[key])*int(1/args.training_interval)):
+            if args.training_interval == 1:
+                modified_novelties[key][i] = [p['novelty'] for p in pickled_metrics[key][i][int(len(pickled_metrics[key][i])/(int(1/args.training_interval))-1)]['novelty_score']]
+            elif args.random:
+                modified_novelties[key][i] = [p['novelty'] for p in pickled_metrics[key][0][int(len(pickled_metrics[key][0])/(int(1/args.training_interval))*i-1)]['novelty_score']]
+            elif args.random != True and args.training_interval != 1:
+                for j in range(int(1/args.training_interval)):
+                    modified_novelties[key][i*len(pickled_metrics[key])+j] = [p['novelty'] for p in pickled_metrics[key][i][int(len(pickled_metrics[key][i])/(int(1/args.training_interval))*j-1)]['novelty_score']]
+
+    with open(save_path, 'wb') as f:
+        import copy
+        modified_novelties_for_file = copy.deepcopy(modified_novelties)
+        modified_novelties_for_file['interval'] = args.novelty_interval
+        pickle.dump(modified_novelties_for_file, f)
+    
+    print(modified_novelties)
+    return modified_novelties
+
 def run():
 
     #REMOVE
-    # name_add = ''
-    # if args.random: name_add += 'random_'
-    # if args.fixed_conv: name_add += 'fixed_conv_'
+    name_add = ''
+    if args.random: name_add += 'random_'
+    if args.fixed_conv: name_add += 'fixed_conv_'
     # final_accuracies = save_final_accuracy_of_trained_models('output/' + args.experiment_name + '/training_{}over_time.pickle'.format(name_add), 'output/' + args.experiment_name + '/final_accuracies_{}over_training_time.pickle'.format(name_add))
-    # exit()
+    final_novelties = save_novelty_record_of_trained_models('output/' + args.experiment_name + '/training_{}over_time.pickle'.format(name_add), 'output/' + args.experiment_name + '/novelty_{}over_training_time.pickle'.format(name_add))
+    helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[0:] for k, x in final_novelties.items()], name=[k for k,x in final_novelties.items()], x_label="Epoch", y_label="Novelty", compute_CI=True, show=True, sample_interval=4)
+    exit()
 
     torch.multiprocessing.freeze_support()
 
@@ -126,7 +155,7 @@ def run():
                     overall_accuracy_record[name][run_num][i] = 0
                     for c in classlist:
                         classwise_accuracy_record[name][run_num][i][np.where(classlist==c)[0][0]] = 0
-                    training_record[name][run_num][i] = {'running_acc': [], 'running_loss': []}
+                    training_record[name][run_num][i] = {}
                     continue
                 
                 # else train the network and collect the metrics
@@ -152,8 +181,10 @@ def run():
 
     cut_off_beginning = 0
     final_accuracies = save_final_accuracy_of_trained_models('output/' + experiment_name + '/training_{}over_time.pickle'.format(name_add), 'output/' + experiment_name + '/final_accuracies_{}over_training_time.pickle'.format(name_add))
+    final_novelties = save_novelty_record_of_trained_models('output/' + experiment_name + '/training_{}over_time.pickle'.format(name_add), 'output/' + experiment_name + '/novelty_{}over_training_time.pickle'.format(name_add))
     helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[cut_off_beginning:] for k, x in overall_accuracy_record.items()], name=[k for k,x in overall_accuracy_record.items()], x_label="Generation", y_label="Fitness", compute_CI=True)
     helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[cut_off_beginning:] for k, x in final_accuracies.items()], name=[k for k,x in final_accuracies.items()], x_label="Epoch", y_label="Accuracy", compute_CI=True)
+    helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[cut_off_beginning:] for k, x in final_novelties.items()], name=[k for k,x in final_novelties.items()], x_label="Epoch", y_label="Novelty", compute_CI=True, sample_interval=args.novelty_interval)
 
 
 
