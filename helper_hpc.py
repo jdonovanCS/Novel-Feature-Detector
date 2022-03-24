@@ -211,7 +211,7 @@ def get_random_filters():
     return np.array(filters)
 
 
-def train_network(trainloader, testloader, classes, filters=None, epochs=2, save_path=None, fixed_conv=False, novelty_interval=0):
+def train_network(trainloader, testloader, classes, filters=None, epochs=2, save_path=None, fixed_conv=False, novelty_interval=0, test_accuracy_interval=0):
     net = Net(num_classes=len(list(classes)))
     if filters is not None:
         for i in range(len(net.conv_layers)):
@@ -230,6 +230,7 @@ def train_network(trainloader, testloader, classes, filters=None, epochs=2, save
     record_progress['running_loss'] = []
     record_progress['running_acc'] = []
     record_progress['novelty_score'] = []
+    record_progress['test_accuracies'] = []
 
     # Load all images and labels into memory, then send to device instead of loading by batch from drive->mem->device.
     epochs = epochs
@@ -273,11 +274,12 @@ def train_network(trainloader, testloader, classes, filters=None, epochs=2, save
             activations = get_activations(trainloader, trained_filters)
             novelty_score = evol.compute_feature_novelty(activations)
             record_progress['novelty_score'].append({'epoch': epoch+1, 'novelty': novelty_score})
-        # run to compare the accuracy of network on test set.
-        # if save_path is None:
-        #     save_path = PATH
-        # torch.save(net.state_dict(), save_path)
-        # assess_accuracy(testloader, classes, save_path)
+        if not fixed_conv and test_accuracy_interval != 0 and epoch % test_accuracy_interval == 0:
+            if save_path is None:
+                save_path = PATH
+            torch.save(net.state_dict(), save_path)
+            test_accuracy = assess_accuracy(testloader, classes, save_path)
+            record_progress['test_accuracies'].append({'epoch': epoch+1, 'test_accuracy': test_accuracy})
 
     print('Finished Training')
     if save_path is None:
