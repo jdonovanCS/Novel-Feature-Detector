@@ -18,6 +18,7 @@ parser.add_argument('--training_interval', help='How often should the network be
 parser.add_argument('--epochs', help="Number of epochos to train for", type=int, default=64)
 parser.add_argument('--random', action='store_true')
 parser.add_argument('--novelty_interval', help='How often should a novelty score be captured during training?', default=0)
+parser.add_argument('--test_accuracy_interval', help='How often should test accuracy be assessed during training?', default=0)
 args = parser.parse_args()
 
 def save_final_accuracy_of_trained_models(pickle_path, save_path):
@@ -86,6 +87,32 @@ def save_novelty_record_of_trained_models(pickle_path, save_path):
     print(modified_novelties)
     return modified_novelties
 
+def save_final_test_accuracies_of_trained_models(pickle_path, save_path):
+    # read in the saved training record
+    with open(pickle_path, 'rb') as f:
+        pickled_metrics = pickle.load(f)
+
+    modified_test_accuracies = {}
+    for key in pickled_metrics:
+        modified_test_accuracies[key] = np.zeros((len(pickled_metrics[key])*int(1/args.training_interval), len(pickled_metrics[key][0][-1]['test_accuracies'])))
+        for i in range(len(pickled_metrics[key])*int(1/args.training_interval)):
+            if args.training_interval == 1:
+                modified_test_accuracies[key][i] = [p['test_accuracy'] for p in pickled_metrics[key][i][int(len(pickled_metrics[key][i])/(int(1/args.training_interval))-1)]['test_accuracies']]
+            elif args.random:
+                modified_test_accuracies[key][i] = [p['test_accuracy'] for p in pickled_metrics[key][0][int(len(pickled_metrics[key][0])/(int(1/args.training_interval))*i-1)]['test_accuracies']]
+            elif args.random != True and args.training_interval != 1:
+                for j in range(int(1/args.training_interval)):
+                    modified_test_accuracies[key][i*len(pickled_metrics[key])+j] = [p['test_accuracy'] for p in pickled_metrics[key][i][int(len(pickled_metrics[key][i])/(int(1/args.training_interval))*j-1)]['test_accuracies']]
+
+    with open(save_path, 'wb') as f:
+        import copy
+        modified_test_accuracies_for_file = copy.deepcopy(modified_test_accuracies)
+        modified_test_accuracies_for_file['interval'] = args.test_accuracy_interval
+        pickle.dump(modified_test_accuracies_for_file, f)
+    
+    print(modified_test_accuracies)
+    return modified_test_accuracies
+
 def run():
 
     #REMOVE
@@ -93,9 +120,11 @@ def run():
     if args.random: name_add += 'random_'
     if args.fixed_conv: name_add += 'fixed_conv_'
     # final_accuracies = save_final_accuracy_of_trained_models('output/' + args.experiment_name + '/training_{}over_time.pickle'.format(name_add), 'output/' + args.experiment_name + '/final_accuracies_{}over_training_time.pickle'.format(name_add))
-    final_novelties = save_novelty_record_of_trained_models('output/' + args.experiment_name + '/training_{}over_time.pickle'.format(name_add), 'output/' + args.experiment_name + '/novelty_{}over_training_time.pickle'.format(name_add))
-    helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[0:] for k, x in final_novelties.items()], name=[k for k,x in final_novelties.items()], x_label="Epoch", y_label="Novelty", compute_CI=True, show=True, sample_interval=4)
-    exit()
+    # final_novelties = save_novelty_record_of_trained_models('output/' + args.experiment_name + '/training_{}over_time.pickle'.format(name_add), 'output/' + args.experiment_name + '/novelty_{}over_training_time.pickle'.format(name_add))
+    final_test_accuracies = save_final_test_accuracies_of_trained_models('output/' + args.experiment_name + '/training_{}over_time.pickle'.format(name_add), 'output/' + args.experiment_name + '/final_test_accuracies_{}over_training_time.pickle'.format(name_add))
+    # helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[0:] for k, x in final_novelties.items()], name=[k for k,x in final_novelties.items()], x_label="Epoch", y_label="Novelty", compute_CI=True, show=True, sample_interval=4)
+    helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[0:] for k, x in final_test_accuracies.items()], name=[k for k,x in final_test_accuracies.items()], x_label="Epoch", y_label="Accuracy", title="Final Test Accuracy on CIFAR-10, CIFAR-10 for novelty", compute_CI=True, show=True, sample_interval=4)
+    # exit()
 
     torch.multiprocessing.freeze_support()
 
@@ -161,7 +190,7 @@ def run():
                 # else train the network and collect the metrics
                 save_path = "trained_models/trained/conv{}_e{}_n{}_r{}_g{}.pth".format(not fixed_conv, experiment_name, name, run_num, i)
                 print('Training and Evaluating: {} Gen: {} Run: {}'.format(name, i, run_num))
-                record_progress = helper.train_network(trainloader=trainloader, filters=filters_list[i], epochs=epochs, testloader=testloader, classes=classes, save_path=save_path, fixed_conv=fixed_conv, novelty_interval=int(args.novelty_interval))
+                record_progress = helper.train_network(trainloader=trainloader, filters=filters_list[i], epochs=epochs, testloader=testloader, classes=classes, save_path=save_path, fixed_conv=fixed_conv, novelty_interval=int(args.novelty_interval), test_accuracy_interval=int(args.test_accuracy_interval))
                 record_accuracy = helper.assess_accuracy(testloader=testloader, classes=classes, save_path=save_path)
                 training_record[name][run_num][i] = record_progress
                 overall_accuracy_record[name][run_num][i] = record_accuracy['overall']
@@ -182,9 +211,11 @@ def run():
     cut_off_beginning = 0
     final_accuracies = save_final_accuracy_of_trained_models('output/' + experiment_name + '/training_{}over_time.pickle'.format(name_add), 'output/' + experiment_name + '/final_accuracies_{}over_training_time.pickle'.format(name_add))
     final_novelties = save_novelty_record_of_trained_models('output/' + experiment_name + '/training_{}over_time.pickle'.format(name_add), 'output/' + experiment_name + '/novelty_{}over_training_time.pickle'.format(name_add))
+    final_test_accuracies = save_final_test_accuracies_of_trained_models('output/' + experiment_name + 'training_{}over_time.pickle'.format(name_add), 'output/' + experiment_name + '/final_test_accuracies {}over_training_time.pickle'.format(name_add))
     helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[cut_off_beginning:] for k, x in overall_accuracy_record.items()], name=[k for k,x in overall_accuracy_record.items()], x_label="Generation", y_label="Fitness", compute_CI=True)
     helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[cut_off_beginning:] for k, x in final_accuracies.items()], name=[k for k,x in final_accuracies.items()], x_label="Epoch", y_label="Accuracy", compute_CI=True)
-    helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[cut_off_beginning:] for k, x in final_novelties.items()], name=[k for k,x in final_novelties.items()], x_label="Epoch", y_label="Novelty", compute_CI=True, sample_interval=args.novelty_interval)
+    helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[cut_off_beginning:] for k, x in final_novelties.items()], name=[k for k,x in final_novelties.items()], x_label="Epoch", y_label="Novelty", compute_CI=True, sample_interval=args.novelty_interval, save_path='output/' + experiment_name + 'novelty_{}over_training_time_plot'.format(name_add))
+    helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[cut_off_beginning:] for k, x in final_novelties.items()], name=[k for k,x in final_novelties.items()], x_label="Epoch", y_label="Accuracy", compute_CI=True, sample_interval=args.test_accuracy_interval, save_path='output/' + experiment_name + 'test_accuracy_{}over_training_time_plot'.format(name_add))
 
 
 
