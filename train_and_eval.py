@@ -19,6 +19,16 @@ parser.add_argument('--epochs', help="Number of epochos to train for", type=int,
 parser.add_argument('--random', action='store_true')
 parser.add_argument('--novelty_interval', help='How often should a novelty score be captured during training?', default=0)
 parser.add_argument('--test_accuracy_interval', help='How often should test accuracy be assessed during training?', default=0)
+parser.add_argument('--batch_size', help="batch size for training", default=64)
+parser.add_argument('--evo_gens', help="number of generations used in evolving solutions", default=None)
+parser.add_argument('--evo_pop', help='Number of individuals in population when evolving solutions', default=None)
+parser.add_argument('--evo_dataset_for_novelty', help='Dataset used for novelty computation during evolution and training', default=None)
+parser.add_argument('--evo', help='evolved solutions, should only be true if random is not set', action='store_true')
+parser.add_argument('--evo_num_runs', help='Number of runs used in evolution', default=None)
+parser.add_argument('--evo_tourney_size', help='Size of tournaments in evolutionary algorithm selection', default=None)
+parser.add_argument('--evo_num_winners', help='Number of winners in tournament in evolutionary algorithm', default=None)
+parser.add_argument('--evo_num_children', help='Number of children in evolutionary algorithm', default=None)
+    
 args = parser.parse_args()
 
 def save_final_accuracy_of_trained_models(pickle_path, save_path):
@@ -91,18 +101,20 @@ def save_final_test_accuracies_of_trained_models(pickle_path, save_path):
     # read in the saved training record
     with open(pickle_path, 'rb') as f:
         pickled_metrics = pickle.load(f)
+        
+    print(pickled_metrics[list(pickled_metrics.keys())[0]][0][-1]['test_accuracies'])    
 
     modified_test_accuracies = {}
     for key in pickled_metrics:
         modified_test_accuracies[key] = np.zeros((len(pickled_metrics[key])*int(1/args.training_interval), len(pickled_metrics[key][0][-1]['test_accuracies'])))
         for i in range(len(pickled_metrics[key])*int(1/args.training_interval)):
             if args.training_interval == 1:
-                modified_test_accuracies[key][i] = [p['test_accuracy'] for p in pickled_metrics[key][i][int(len(pickled_metrics[key][i])/(int(1/args.training_interval))-1)]['test_accuracies']]
+                modified_test_accuracies[key][i] = [p['test_accuracy']['overall'] for p in pickled_metrics[key][i][int(len(pickled_metrics[key][i])/(int(1/args.training_interval))-1)]['test_accuracies']]
             elif args.random:
-                modified_test_accuracies[key][i] = [p['test_accuracy'] for p in pickled_metrics[key][0][int(len(pickled_metrics[key][0])/(int(1/args.training_interval))*i-1)]['test_accuracies']]
+                modified_test_accuracies[key][i] = [p['test_accuracy']['overall'] for p in pickled_metrics[key][0][int(len(pickled_metrics[key][0])/(int(1/args.training_interval))*i-1)]['test_accuracies']]
             elif args.random != True and args.training_interval != 1:
                 for j in range(int(1/args.training_interval)):
-                    modified_test_accuracies[key][i*len(pickled_metrics[key])+j] = [p['test_accuracy'] for p in pickled_metrics[key][i][int(len(pickled_metrics[key][i])/(int(1/args.training_interval))*j-1)]['test_accuracies']]
+                    modified_test_accuracies[key][i*len(pickled_metrics[key])+j] = [p['test_accuracy']['overall'] for p in pickled_metrics[key][i][int(len(pickled_metrics[key][i])/(int(1/args.training_interval))*j-1)]['test_accuracies']]
 
     with open(save_path, 'wb') as f:
         import copy
@@ -116,14 +128,14 @@ def save_final_test_accuracies_of_trained_models(pickle_path, save_path):
 def run():
 
     #REMOVE
-    name_add = ''
-    if args.random: name_add += 'random_'
-    if args.fixed_conv: name_add += 'fixed_conv_'
+    # name_add = ''
+    # if args.random: name_add += 'random_'
+    # if args.fixed_conv: name_add += 'fixed_conv_'
     # final_accuracies = save_final_accuracy_of_trained_models('output/' + args.experiment_name + '/training_{}over_time.pickle'.format(name_add), 'output/' + args.experiment_name + '/final_accuracies_{}over_training_time.pickle'.format(name_add))
     # final_novelties = save_novelty_record_of_trained_models('output/' + args.experiment_name + '/training_{}over_time.pickle'.format(name_add), 'output/' + args.experiment_name + '/novelty_{}over_training_time.pickle'.format(name_add))
-    final_test_accuracies = save_final_test_accuracies_of_trained_models('output/' + args.experiment_name + '/training_{}over_time.pickle'.format(name_add), 'output/' + args.experiment_name + '/final_test_accuracies_{}over_training_time.pickle'.format(name_add))
+    # final_test_accuracies = save_final_test_accuracies_of_trained_models('output/' + args.experiment_name + '/training_{}over_time.pickle'.format(name_add), 'output/' + args.experiment_name + '/final_test_accuracies_{}over_training_time.pickle'.format(name_add))
     # helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[0:] for k, x in final_novelties.items()], name=[k for k,x in final_novelties.items()], x_label="Epoch", y_label="Novelty", compute_CI=True, show=True, sample_interval=4)
-    helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[0:] for k, x in final_test_accuracies.items()], name=[k for k,x in final_test_accuracies.items()], x_label="Epoch", y_label="Accuracy", title="Final Test Accuracy on CIFAR-10, CIFAR-10 for novelty", compute_CI=True, show=True, sample_interval=4)
+    # helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[0:] for k, x in final_test_accuracies.items()], name=[k for k,x in final_test_accuracies.items()], x_label="Epoch", y_label="Accuracy", title="Final Test Accuracy on CIFAR-10, CIFAR-10 for novelty", compute_CI=True, show=True, sample_interval=4)
     # exit()
 
     torch.multiprocessing.freeze_support()
@@ -148,7 +160,8 @@ def run():
         pickled_filters['random'] = np.array(pickled_filters['random'])
 
     
-    helper.run()
+    helper.run(int(args.batch_size))
+
 
     # get loader for train and test images and classes
     if args.dataset.lower() == 'cifar-100':
@@ -164,6 +177,17 @@ def run():
     classlist = np.array(classes)
     epochs = args.epochs
     
+    helper.wandb.config.dataset = args.dataset.lower()
+    helper.wandb.config.batch_size = helper.batch_size
+    helper.wandb.config.experiment_name = experiment_name
+    helper.wandb.config.evo_gens = args.evo_gens
+    helper.wandb.config.evo_pop = args.evo_pop
+    helper.wandb.config.evo_dataset_for_novelty = args.evo_dataset_for_novelty
+    helper.wandb.config.evo = args.evo or args.random == None or not args.random
+    helper.wandb.config.evo_num_runs = args.evo_num_runs
+    helper.wandb.config.evo_tourney_size = args.evo_tourney_size
+    helper.wandb.config.evo_num_winners = args.evo_num_winners
+    helper.wandb.config.evo_num_children = args.evo_num_children
     
     
     # run training and evaluation and record metrics in above variables

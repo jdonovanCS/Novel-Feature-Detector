@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import scikits.bootstrap as bootstrap
 import warnings
 warnings.filterwarnings('ignore')
-
+import wandb
 
 # Need to separate this file into functions and classes
 
@@ -221,6 +221,7 @@ def train_network(trainloader, testloader, classes, filters=None, epochs=2, save
                     param.requires_grad = False
 
     net = net.to(device)
+    wandb.config.fixed_conv = fixed_conv
 
     import torch.optim as optim
 
@@ -266,20 +267,27 @@ def train_network(trainloader, testloader, classes, filters=None, epochs=2, save
         accuracy = 100 * correct / total
         print('Accuracy of the network on training set at epoch %d: %d %%' % (epoch+1, accuracy))
         record_progress['running_acc'].append({'epoch': epoch+1, 'accuracy': accuracy})
+        wandb.log({'epoch': epoch+1, 'train_accuracy': accuracy})
         import evolution as evol
         if not fixed_conv and novelty_interval != 0 and epoch % novelty_interval == 0:
             trained_filters = []
             for j in range(len(net.conv_layers)):
                 trained_filters.append(net.conv_layers[j].weight.data)
+                print(trained_filters[j])
             activations = get_activations(trainloader, trained_filters)
             novelty_score = evol.compute_feature_novelty(activations)
             record_progress['novelty_score'].append({'epoch': epoch+1, 'novelty': novelty_score})
+            wandb.log({'epoch': epoch+1, 'novelty': novelty_score})
         if not fixed_conv and test_accuracy_interval != 0 and epoch % test_accuracy_interval == 0:
             if save_path is None:
                 save_path = PATH
             torch.save(net.state_dict(), save_path)
             test_accuracy = assess_accuracy(testloader, classes, save_path)
             record_progress['test_accuracies'].append({'epoch': epoch+1, 'test_accuracy': test_accuracy})
+            wandb.log({'epoch': epoch+1, 'test_accuracy': test_accuracy['overall']})
+            for c in classes:
+                wandb.log({'epoch': epoch+1, '{} test_class_accuracy'.format(c): test_accuracy[c]})
+
 
     print('Finished Training')
     if save_path is None:
@@ -405,6 +413,7 @@ def run(batch_size_input=64):
     PATH = './cifar_net.pth'
     global batch_size
     batch_size = batch_size_input
+    wandb.init(project="novel-feature-detectors")
 
 
     
