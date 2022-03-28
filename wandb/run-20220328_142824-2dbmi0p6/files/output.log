@@ -1,0 +1,41 @@
+usage: train_and_eval.py [-h] [--dataset DATASET] [--experiment_name EXPERIMENT_NAME] [--fixed_conv]
+                         [--training_interval TRAINING_INTERVAL] [--epochs EPOCHS] [--random]
+                         [--novelty_interval NOVELTY_INTERVAL] [--test_accuracy_interval TEST_ACCURACY_INTERVAL]
+                         [--batch_size BATCH_SIZE] [--evo_gens EVO_GENS] [--evo_pop EVO_POP]
+                         [--evo_dataset_for_novelty EVO_DATASET_FOR_NOVELTY] [--evo] [--evo_num_runs EVO_NUM_RUNS]
+                         [--evo_tourney_size EVO_TOURNEY_SIZE] [--evo_num_winners EVO_NUM_WINNERS]
+                         [--evo_num_children EVO_NUM_CHILDREN]
+Process some input files
+optional arguments:
+  -h, --help            show this help message and exit
+  --dataset DATASET     which dataset should be used for novelty metric, choices are: cifar-10, cifar-100
+  --experiment_name EXPERIMENT_NAME
+                        experiment name for saving data related to training
+  --fixed_conv          Should the convolutional layers stay fixed, or alternatively be trained
+  --training_interval TRAINING_INTERVAL
+                        How often should the network be trained. Values should be supplied as a fraction and will
+                        relate to the generations from evolutionFor example if 1 is given the filters generated from
+                        the final generation of evolution will be the only ones trained. If 0.5 is given then the
+                        halfway point of evolutionary generations and the final generation will be trained. If 0 is
+                        given, the filters from every generation will be trained
+  --epochs EPOCHS       Number of epochos to train for
+  --random
+  --novelty_interval NOVELTY_INTERVAL
+                        How often should a novelty score be captured during training?
+  --test_accuracy_interval TEST_ACCURACY_INTERVAL
+                        How often should test accuracy be assessed during training?
+  --batch_size BATCH_SIZE
+                        batch size for training
+  --evo_gens EVO_GENS   number of generations used in evolving solutions
+  --evo_pop EVO_POP     Number of individuals in population when evolving solutions
+  --evo_dataset_for_novelty EVO_DATASET_FOR_NOVELTY
+                        Dataset used for novelty computation during evolution and training
+  --evo                 evolved solutions, should only be true if random is not set
+  --evo_num_runs EVO_NUM_RUNS
+                        Number of runs used in evolution
+  --evo_tourney_size EVO_TOURNEY_SIZE
+                        Size of tournaments in evolutionary algorithm selection
+  --evo_num_winners EVO_NUM_WINNERS
+                        Number of winners in tournament in evolutionary algorithm
+  --evo_num_children EVO_NUM_CHILDREN
+                        Number of children in evolutionary algorithm

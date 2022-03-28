@@ -1,0 +1,14 @@
+
+Files already downloaded and verified
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\train_and_eval.py", line 247, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\train_and_eval.py", line 170, in run
+    trainset, testset, trainloader, testloader, classes = helper.load_CIFAR_10(helper.batch_size)
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\helper_hpc.py", line 34, in load_CIFAR_10
+    trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=2)
+  File "C:\Users\Jordan\anaconda3\envs\EC\lib\site-packages\torch\utils\data\dataloader.py", line 274, in __init__
+    batch_sampler = BatchSampler(sampler, batch_size, drop_last)
+  File "C:\Users\Jordan\anaconda3\envs\EC\lib\site-packages\torch\utils\data\sampler.py", line 218, in __init__
+    raise ValueError("batch_size should be a positive integer value, "
+ValueError: batch_size should be a positive integer value, but got batch_size=64

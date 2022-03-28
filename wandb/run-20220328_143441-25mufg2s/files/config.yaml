@@ -1,0 +1,61 @@
+wandb_version: 1
+
+_wandb:
+  desc: null
+  value:
+    cli_version: 0.12.11
+    framework: torch
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    python_version: 3.9.7
+    start_time: 1648492481
+    t:
+      1:
+      - 1
+      - 41
+      2:
+      - 1
+      - 41
+      3:
+      - 19
+      4: 3.9.7
+      5: 0.12.11
+      8:
+      - 3
+      - 5
+batch_size:
+  desc: null
+  value: 64
+dataset:
+  desc: null
+  value: random
+evo:
+  desc: null
+  value: true
+evo_dataset_for_novelty:
+  desc: null
+  value: cifar-10
+evo_gens:
+  desc: null
+  value: '50'
+evo_num_children:
+  desc: null
+  value: '20'
+evo_num_runs:
+  desc: null
+  value: '5'
+evo_num_winners:
+  desc: null
+  value: '2'
+evo_pop:
+  desc: null
+  value: '20'
+evo_tourney_size:
+  desc: null
+  value: '4'
+experiment_name:
+  desc: null
+  value: mutation_multiplier_cifar10novelty_pop20_gen50
+fixed_conv:
+  desc: null
+  value: false

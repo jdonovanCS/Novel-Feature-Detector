@@ -1,0 +1,26 @@
+{
+    "os": "Windows-10-10.0.19042-SP0",
+    "python": "3.9.7",
+    "heartbeatAt": "2022-03-28T18:27:34.269099",
+    "startedAt": "2022-03-28T18:27:33.320248",
+    "docker": null,
+    "gpu": "NVIDIA GeForce RTX 3080 Laptop GPU",
+    "gpu_count": 1,
+    "cpu_count": 16,
+    "cuda": null,
+    "args": [
+        "--help"
+    ],
+    "state": "running",
+    "program": "C:\\Users\\Jordan\\Learning\\UVM\\Research\\novel-feature-detector\\train_and_eval.py",
+    "codePath": "train_and_eval.py",
+    "git": {
+        "remote": "https://github.com/jdonovancs/novel-feature-detector",
+        "commit": "9a390b0907020e11930c484a4fdce425c85075ec"
+    },
+    "email": "jordan.t.donovancs@gmail.com",
+    "root": "C:/Users/Jordan/Learning/UVM/Research/novel-feature-detector",
+    "host": "LAPTOP-AUS3EALC",
+    "username": "Jordan",
+    "executable": "C:\\Users\\Jordan\\anaconda3\\envs\\EC\\python.exe"
+}
