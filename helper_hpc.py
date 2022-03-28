@@ -273,7 +273,7 @@ def train_network(trainloader, testloader, classes, filters=None, epochs=2, save
             trained_filters = []
             for j in range(len(net.conv_layers)):
                 trained_filters.append(net.conv_layers[j].weight.data)
-                print(trained_filters[j])
+                # print(trained_filters[j])
             activations = get_activations(trainloader, trained_filters)
             novelty_score = evol.compute_feature_novelty(activations)
             record_progress['novelty_score'].append({'epoch': epoch+1, 'novelty': novelty_score})
