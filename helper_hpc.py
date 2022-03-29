@@ -12,6 +12,9 @@ import scikits.bootstrap as bootstrap
 import warnings
 warnings.filterwarnings('ignore')
 import wandb
+import pytorch_lighning as pl
+import pl_bolts.datamodules
+import evolution as evol
 
 # Need to separate this file into functions and classes
 
@@ -115,7 +118,7 @@ def load_and_show_some_images(trainloader, classes, batch_size):
 
 # DEFINE a CONV NN
 
-class Net(nn.Module):
+class Net(pl.LightningModule):
     def __init__(self, num_classes=10):
         super().__init__()
         self.conv1 = nn.Conv2d(3, 32, 3, padding=1)
@@ -139,22 +142,28 @@ class Net(nn.Module):
 
     def forward(self, x):
         x = self.conv1(x)
+        self.conv1_act = x
         x = self.BatchNorm1(x)
         x = F.relu(x)
         x = self.conv2(x)
+        self.conv2_act = x
         x = F.relu(x)
         x = self.pool(x)
         x = self.conv3(x)
+        self.conv3_act = x
         x = self.BatchNorm2(x)
         x = F.relu(x)
         x = self.conv4(x)
+        self.conv4_act = x
         x = F.relu(x)
         x = self.pool(x)
         x = self.dropout1(x)
         x = self.conv5(x)
+        self.conv5_act = x
         x = self.BatchNorm3(x)
         x = F.relu(x)
         x = self.conv6(x)
+        self.conv6_act = x
         x = F.relu(x)
         x = self.pool(x)
         x = torch.flatten(x, 1)
@@ -169,6 +178,89 @@ class Net(nn.Module):
 
         output = F.log_softmax(x, dim=1)
         return output
+
+    def training_step(self, train_batch, batch_idx):
+        x, y = train_batch
+        logits = self.forward(x)
+        # get loss
+        loss = self.cross_entropy_loss(logits, y)
+        # get acc
+        labels_hat = torch.argmax(logits, 1)
+        acc = torch.sum(y==labels_hat).item()/(len(y)*1.0)
+        # log loss and acc
+        self.log('train_loss', loss)
+        self.log('train_acc', acc)
+        batch_dictionary={
+	            "train_loss": loss, "train_acc": acc
+	        }
+        return batch_dictionary
+
+    def training_epoch_end(self,outputs):
+        avg_loss = torch.stack([x['train_loss'] for x in outputs]).mean()
+        
+        avg_acc = torch.stack([x['train_acc'] for x in outputs]).mean()
+        
+        self.log('train_loss_epoch', avg_loss)
+        self.log('train_acc_epoch', avg_acc)
+    
+    def validation_step(self, val_batch, batch_idx):
+        x, y = val_batch
+        logits = self.forward(x)
+        # get loss
+        loss = self.cross_entropy_loss(logits, y)
+        # get acc
+        labels_hat = torch.argmax(logits, 1)
+        acc = torch.sum(y==labels_hat).item()/(len(y)*1.0)
+        # get class acc
+        class_acc = {}
+        classes = list(set(y))
+        corr_pred = {classname: 0 for classname in classes}
+        total_pred = {classname: 0 for classname in classes}
+        for label, prediction in zip(y, labels_hat):
+                if label == prediction:
+                    corr_pred[classes[label]] += 1
+                total_pred[classes[label]] += 1
+        for classname, correct_count in corr_pred.items():
+            accuracy = 100 * float(correct_count) / total_pred[classname]
+            class_acc[classname] = accuracy
+        # get novelty score
+        # if not fixed_conv and novelty_interval != 0 and epoch % novelty_interval == 0:
+        trained_filters = []
+        for j in range(len(self.conv_layers)):
+            trained_filters.append(self.conv_layers[j].weight.data)
+            # print(trained_filters[j])
+        activations = {}
+        for i in range(len(self.conv_layers)):
+            activations[i] = []
+        for i in range(len(x)):
+            x_act = self.get_activations(x[i])
+            for j in range(len(x_act)):
+                activations[j].append(x_act[j])
+        novelty_score = evol.compute_feature_novelty(activations)
+        # log loss, acc, and class acc
+        self.log('val_loss', loss)
+        self.log('val_acc', acc)
+        self.log('val_class_acc', class_acc)
+        self.log('val_novelty', novelty_score)
+        batch_dictionary = {'val_loss': loss, 'val_acc': acc, 'val_class_acc': class_acc, 'val_novelty': novelty_score}
+        return batch_dictionary
+    
+    def validation_epoch_end(self, outputs):
+        avg_loss = torch.stack([x['val_loss'] for x in outputs]).mean()
+        avg_acc = torch.stack([x['val_acc'] for x in outputs]).mean()
+        avg_class_acc = torch.stack([x['val_class_acc'] for x in outputs]).mean()
+        avg_novelty = torch.stack([x['val_novelty'] for x in outputs]).mean()
+        self.log('val_loss_epoch', avg_loss)
+        self.log('val_acc_epoch', avg_acc)
+        self.log('val_class_acc_epoch', avg_class_acc)
+        self.log('val_novelty_epoch', avg_novelty)
+
+    def configure_optimizers(self):
+        optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, self.parameters()), lr=1e-3, momentum=0.9)
+        return optimizer
+
+    def get_activations(self, x):
+        return[self.conv1_act, self.conv2_act, self.conv3_act, self.conv4_act, self.conv5_act, self.conv6_act]
 
 def get_activations(trainloader, filters, num_ims_used=64):
     net = Net()
@@ -211,8 +303,8 @@ def get_random_filters():
     return np.array(filters)
 
 
-def train_network(trainloader, testloader, classes, filters=None, epochs=2, save_path=None, fixed_conv=False, novelty_interval=0, test_accuracy_interval=0):
-    net = Net(num_classes=len(list(classes)))
+def train_network(data_module, filters=None, epochs=2, save_path=None, fixed_conv=False, val_interval=1, novelty_interval):
+    net = Net(num_classes=data_module.num_classes)
     if filters is not None:
         for i in range(len(net.conv_layers)):
             net.conv_layers[i].weight.data = torch.tensor(filters[i])
@@ -220,82 +312,26 @@ def train_network(trainloader, testloader, classes, filters=None, epochs=2, save
                 for param in net.conv_layers[i].parameters():
                     param.requires_grad = False
 
-    net = net.to(device)
-    wandb.config.fixed_conv = fixed_conv
-    wandb.watch(net, log_freq=100)
-
-    import torch.optim as optim
-
-    criterion = nn.CrossEntropyLoss()
-    optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
-    record_progress = {}
-    record_progress['running_loss'] = []
-    record_progress['running_acc'] = []
-    record_progress['novelty_score'] = []
-    record_progress['test_accuracies'] = []
-
-    # Load all images and labels into memory, then send to device instead of loading by batch from drive->mem->device.
-    epochs = epochs
-    for epoch in range(epochs):
-        running_loss = 0.0
-        correct = 0.0
-        total = 0
-        for i, data in enumerate(trainloader, 0):
-            # get the inputs; data is a list [inputs, labels]
-            inputs, labels = data
-            inputs = inputs.to(device)
-            labels = labels.to(device)
-
-            # zero the param gradients
-            optimizer.zero_grad()
-
-            # forward + backward + optimize
-            outputs = net(inputs)
-            loss = criterion(outputs, labels)
-            loss.backward()
-            optimizer.step()
-
-            # print statistics
-            running_loss += loss.item()
-            if i % 2000 == 1999:
-                print('[%d, %5d] loss: %.3f' % (epoch+1, i + 1, running_loss/2000))
-                record_progress['running_loss'].append({'epoch': epoch+1, 'iter': i+1, 'running_loss': running_loss/2000})
-                running_loss = 0.0
-
-            _, predicted = torch.max(outputs.data, 1)
-            correct += (predicted==labels).sum().item()
-            total += labels.size(0)
-        accuracy = 100 * correct / total
-        print('Accuracy of the network on training set at epoch %d: %d %%' % (epoch+1, accuracy))
-        record_progress['running_acc'].append({'epoch': epoch+1, 'accuracy': accuracy})
-        wandb.log({'epoch': epoch+1, 'train_accuracy': accuracy})
-        import evolution as evol
-        if not fixed_conv and novelty_interval != 0 and epoch % novelty_interval == 0:
-            trained_filters = []
-            for j in range(len(net.conv_layers)):
-                trained_filters.append(net.conv_layers[j].weight.data)
-                # print(trained_filters[j])
-            activations = get_activations(trainloader, trained_filters)
-            novelty_score = evol.compute_feature_novelty(activations)
-            record_progress['novelty_score'].append({'epoch': epoch+1, 'novelty': novelty_score})
-            wandb.log({'epoch': epoch+1, 'novelty': novelty_score})
-        if not fixed_conv and test_accuracy_interval != 0 and epoch % test_accuracy_interval == 0:
-            if save_path is None:
-                save_path = PATH
-            torch.save(net.state_dict(), save_path)
-            test_accuracy = assess_accuracy(testloader, classes, save_path)
-            record_progress['test_accuracies'].append({'epoch': epoch+1, 'test_accuracy': test_accuracy})
-            wandb.log({'epoch': epoch+1, 'test_accuracy': test_accuracy['overall']})
-            for c in classes:
-                wandb.log({'epoch': epoch+1, 'test_class_accuracy': {'{}'.format(c): test_accuracy[c]}})
-
-
-    print('Finished Training')
     if save_path is None:
         save_path = PATH
+    trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path)
+    # data_module = CIFAR10DataModule()
+    trainer.fit(net, data_module, check_val_every_n_epoch=val_interval)
 
-    torch.save(net.state_dict(), save_path)
-    return record_progress
+    # torch.save(net.state_dict(), save_path)
+    # return record_progress
+
+def get_data_module(dataset, batch_size):
+    match dataset.lower():
+        case 'cifar10' | 'cifar-10':
+            data_module = pl_bolts.datamodules.CIFAR10DataModule(batch_size=batch_size)
+        case 'cifar100' | 'cifar-100':
+            data_module = pl_bolts.datamodules.CIFAR100DataModule(batch_size=batch_size)
+        case _:
+            print('Please supply dataset of CIFAR-10 or CIFAR-100')
+            exit()
+    return data_module
+
 
 def assess_accuracy(testloader, classes, save_path=None):
     dataiter = iter(testloader)
@@ -306,7 +342,7 @@ def assess_accuracy(testloader, classes, save_path=None):
     net = Net(num_classes=len(list(classes)))
     if save_path is None:
         save_path = PATH
-    net.load_state_dict(torch.load(save_path))
+    net.load_from_checkpoint(save_path)
     net = net.to(device)
     outputs = net(images.to(device))
     _, predicted = torch.max(outputs, 1)
@@ -406,6 +442,7 @@ def plot_mean_and_bootstrapped_ci_multiple(input_data = None, title = 'overall',
 
 def run(batch_size_input=64):
     torch.multiprocessing.freeze_support()
+    pl.seed_everything(42, workers=True)
 
     global device
     device = "cuda" if torch.cuda.is_available() else "cpu"
