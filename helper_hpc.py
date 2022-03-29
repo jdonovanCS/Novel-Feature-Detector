@@ -222,6 +222,7 @@ def train_network(trainloader, testloader, classes, filters=None, epochs=2, save
 
     net = net.to(device)
     wandb.config.fixed_conv = fixed_conv
+    wandb.watch(net, log_freq=100)
 
     import torch.optim as optim
 
@@ -277,16 +278,16 @@ def train_network(trainloader, testloader, classes, filters=None, epochs=2, save
             activations = get_activations(trainloader, trained_filters)
             novelty_score = evol.compute_feature_novelty(activations)
             record_progress['novelty_score'].append({'epoch': epoch+1, 'novelty': novelty_score})
-            wandb.log({'epoch': epoch+1, 'novelty': novelty_score})
+            wandb.log({'novelty': novelty_score})
         if not fixed_conv and test_accuracy_interval != 0 and epoch % test_accuracy_interval == 0:
             if save_path is None:
                 save_path = PATH
             torch.save(net.state_dict(), save_path)
             test_accuracy = assess_accuracy(testloader, classes, save_path)
             record_progress['test_accuracies'].append({'epoch': epoch+1, 'test_accuracy': test_accuracy})
-            wandb.log({'epoch': epoch+1, 'test_accuracy': test_accuracy['overall']})
+            wandb.log({'test_accuracy': test_accuracy['overall']})
             for c in classes:
-                wandb.log({'epoch': epoch+1, '{} test_class_accuracy'.format(c): test_accuracy[c]})
+                wandb.log({'test_class_accuracy': {'{}'.format(c): test_accuracy[c]}})
 
 
     print('Finished Training')

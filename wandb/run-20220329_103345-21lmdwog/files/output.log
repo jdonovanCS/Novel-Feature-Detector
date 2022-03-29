@@ -1,0 +1,68 @@
+Files already downloaded and verified
+Files already downloaded and verified
+Training and Evaluating: fitness Gen: 49 Run: 0
+Accuracy of the network on training set at epoch 1: 41 %
+Ground Truth:    cat  ship  ship plane
+Predicted:    cat  ship  ship plane
+Accuracy of the network on the 10000 test images: 52 %
+Accuracy for class plane is: 55.4 %
+Accuracy for class car   is: 66.7 %
+Accuracy for class bird  is: 47.4 %
+Accuracy for class cat   is: 19.2 %
+Accuracy for class deer  is: 35.0 %
+Accuracy for class dog   is: 47.3 %
+Accuracy for class frog  is: 66.1 %
+Accuracy for class horse is: 59.8 %
+Accuracy for class ship  is: 65.8 %
+Accuracy for class truck is: 62.8 %
+Accuracy of the network on training set at epoch 2: 57 %
+Accuracy of the network on training set at epoch 3: 65 %
+Accuracy of the network on training set at epoch 4: 69 %
+Accuracy of the network on training set at epoch 5: 72 %
+Ground Truth:    cat  ship  ship plane
+Predicted:    cat  ship  ship plane
+Accuracy of the network on the 10000 test images: 70 %
+Accuracy for class plane is: 73.3 %
+Accuracy for class car   is: 79.3 %
+Accuracy for class bird  is: 51.4 %
+Accuracy for class cat   is: 60.7 %
+Accuracy for class deer  is: 61.5 %
+Accuracy for class dog   is: 54.0 %
+Accuracy for class frog  is: 78.3 %
+Accuracy for class horse is: 80.6 %
+Accuracy for class ship  is: 86.9 %
+Accuracy for class truck is: 75.9 %
+Accuracy of the network on training set at epoch 6: 75 %
+Accuracy of the network on training set at epoch 7: 78 %
+Accuracy of the network on training set at epoch 8: 80 %
+Accuracy of the network on training set at epoch 9: 81 %
+Ground Truth:    cat  ship  ship plane
+Predicted:    cat  ship  ship plane
+Accuracy of the network on the 10000 test images: 73 %
+Accuracy for class plane is: 80.7 %
+Accuracy for class car   is: 85.7 %
+Accuracy for class bird  is: 67.0 %
+Accuracy for class cat   is: 56.2 %
+Accuracy for class deer  is: 71.8 %
+Accuracy for class dog   is: 58.1 %
+Accuracy for class frog  is: 83.2 %
+Accuracy for class horse is: 72.6 %
+Accuracy for class ship  is: 81.7 %
+Accuracy for class truck is: 78.2 %
+Accuracy of the network on training set at epoch 10: 83 %
+Accuracy of the network on training set at epoch 11: 85 %
+Accuracy of the network on training set at epoch 12: 87 %
+Accuracy of the network on training set at epoch 13: 88 %
+Ground Truth:    cat  ship  ship plane
+Predicted:    cat  ship  ship plane
+Accuracy of the network on the 10000 test images: 74 %
+Accuracy for class plane is: 73.9 %
+Accuracy for class car   is: 77.7 %
+Accuracy for class bird  is: 67.6 %
+Accuracy for class cat   is: 52.3 %
+Accuracy for class deer  is: 73.6 %
+Accuracy for class dog   is: 65.2 %
+Accuracy for class frog  is: 79.8 %
+Accuracy for class horse is: 81.3 %
+Accuracy for class ship  is: 85.1 %
+Accuracy for class truck is: 86.8 %
