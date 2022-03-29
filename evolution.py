@@ -148,6 +148,7 @@ def run():
     data_module = helper.get_data_module(args.evo_dataset_for_novelty, batch_size=args.batch_size)
     data_module.prepare_data(data_dir="data")
     data_module.setup()
+
     # global trainloader
     # trainloader = helper.load_random_images(random_image_paths)
     # trainloader = helper.load_CIFAR_10()[2]
