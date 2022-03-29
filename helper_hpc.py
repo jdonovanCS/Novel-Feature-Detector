@@ -15,78 +15,79 @@ import wandb
 import pytorch_lighning as pl
 import pl_bolts.datamodules
 import evolution as evol
+from pytorch_lightning_loggers import WandbLogger
 
 # Need to separate this file into functions and classes
 
-def load_CIFAR_10(batch_size=64):
-    transform = transforms.Compose(
-        [transforms.ToTensor(),
-        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))]
-    )
+# def load_CIFAR_10(batch_size=64):
+#     transform = transforms.Compose(
+#         [transforms.ToTensor(),
+#         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))]
+#     )
 
-    batch_size = batch_size
+#     batch_size = batch_size
 
-    # Dowload training data
-    trainset = torchvision.datasets.CIFAR10(
-        root="data",
-        train=True,
-        download=True,
-        transform=transform
-    )
+#     # Dowload training data
+#     trainset = torchvision.datasets.CIFAR10(
+#         root="data",
+#         train=True,
+#         download=True,
+#         transform=transform
+#     )
 
-    trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=2)
+#     trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=2)
 
-    testset = torchvision.datasets.CIFAR10(
-        root="data",
-        train=False,
-        download=True,
-        transform=transform
-    )
+#     testset = torchvision.datasets.CIFAR10(
+#         root="data",
+#         train=False,
+#         download=True,
+#         transform=transform
+#     )
 
-    testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size, shuffle=False, num_workers=2)
+#     testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size, shuffle=False, num_workers=2)
 
-    classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
+#     classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 
-    return trainset, testset, trainloader, testloader, classes
+#     return trainset, testset, trainloader, testloader, classes
 
-def load_CIFAR_100(batch_size=64):
-    stats = ((0.5074,0.4867,0.4411),(0.2011,0.1987,0.2025))
-    train_transform = transforms.Compose([
-        transforms.RandomHorizontalFlip(),
-        transforms.RandomCrop(32,padding=4,padding_mode="reflect"),
-        transforms.ToTensor(),
-        transforms.Normalize(*stats)
-    ])
+# def load_CIFAR_100(batch_size=64):
+#     stats = ((0.5074,0.4867,0.4411),(0.2011,0.1987,0.2025))
+#     train_transform = transforms.Compose([
+#         transforms.RandomHorizontalFlip(),
+#         transforms.RandomCrop(32,padding=4,padding_mode="reflect"),
+#         transforms.ToTensor(),
+#         transforms.Normalize(*stats)
+#     ])
 
-    test_transform = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize(*stats)
-    ])
+#     test_transform = transforms.Compose([
+#         transforms.ToTensor(),
+#         transforms.Normalize(*stats)
+#     ])
 
-    batch_size = batch_size
+#     batch_size = batch_size
 
-    # Dowload training data
-    trainset = torchvision.datasets.CIFAR100(
-        root="data",
-        train=True,
-        download=True,
-        transform=train_transform
-    )
+#     # Dowload training data
+#     trainset = torchvision.datasets.CIFAR100(
+#         root="data",
+#         train=True,
+#         download=True,
+#         transform=train_transform
+#     )
 
-    trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=2)
+#     trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=2)
 
-    testset = torchvision.datasets.CIFAR100(
-        root="data",
-        train=False,
-        download=True,
-        transform=test_transform
-    )
+#     testset = torchvision.datasets.CIFAR100(
+#         root="data",
+#         train=False,
+#         download=True,
+#         transform=test_transform
+#     )
 
-    testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size, shuffle=False, num_workers=2)
+#     testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size, shuffle=False, num_workers=2)
 
-    classes = tuple(trainset.classes)
+#     classes = tuple(trainset.classes)
 
-    return trainset, testset, trainloader, testloader, classes
+#     return trainset, testset, trainloader, testloader, classes
 
 def create_random_images(num_images=200):
     paths = []
@@ -229,15 +230,15 @@ class Net(pl.LightningModule):
         for j in range(len(self.conv_layers)):
             trained_filters.append(self.conv_layers[j].weight.data)
             # print(trained_filters[j])
-        activations = {}
+        self.activations = {}
         for i in range(len(self.conv_layers)):
-            activations[i] = []
+            self.activations[i] = []
         for i in range(len(x)):
             x_act = self.get_activations(x[i])
             for j in range(len(x_act)):
-                activations[j].append(x_act[j])
+                self.activations[j].append(x_act[j])
         novelty_score = evol.compute_feature_novelty(activations)
-        # log loss, acc, and class acc
+        # log loss, acc, class acc, and novelty score
         self.log('val_loss', loss)
         self.log('val_acc', acc)
         self.log('val_class_acc', class_acc)
@@ -255,6 +256,58 @@ class Net(pl.LightningModule):
         self.log('val_class_acc_epoch', avg_class_acc)
         self.log('val_novelty_epoch', avg_novelty)
 
+    def test_step(self, test_batch, batch_idx):
+        x, y = test_batch
+        logits = self.forward(x)
+        # get loss
+        loss = self.cross_entropy_loss(logits, y)
+        # get acc
+        labels_hat = torch.argmax(logits, 1)
+        acc = torch.sum(y==labels_hat).item()/(len(y)*1.0)
+        # get class acc
+        class_acc = {}
+        classes = list(set(y))
+        corr_pred = {classname: 0 for classname in classes}
+        total_pred = {classname: 0 for classname in classes}
+        for label, prediction in zip(y, labels_hat):
+                if label == prediction:
+                    corr_pred[classes[label]] += 1
+                total_pred[classes[label]] += 1
+        for classname, correct_count in corr_pred.items():
+            accuracy = 100 * float(correct_count) / total_pred[classname]
+            class_acc[classname] = accuracy
+        # get novelty score
+        # if not fixed_conv and novelty_interval != 0 and epoch % novelty_interval == 0:
+        trained_filters = []
+        for j in range(len(self.conv_layers)):
+            trained_filters.append(self.conv_layers[j].weight.data)
+            # print(trained_filters[j])
+        self.activations = {}
+        for i in range(len(self.conv_layers)):
+            self.activations[i] = []
+        for i in range(len(x)):
+            x_act = self.get_activations(x[i])
+            for j in range(len(x_act)):
+                self.activations[j].append(x_act[j])
+        novelty_score = evol.compute_feature_novelty(activations)
+        # log loss, acc, class acc, and novelty score
+        self.log('test_loss', loss)
+        self.log('test_acc', acc)
+        self.log('test_class_acc', class_acc)
+        self.log('test_novelty', novelty_score)
+        batch_dictionary = {'test_loss': loss, 'test_acc': acc, 'test_class_acc': class_acc, 'test_novelty': novelty_score}
+        return batch_dictionary
+
+    def test_epoch_end(self, outputs):
+        avg_loss = torch.stack([x['test_loss'] for x in outputs]).mean()
+        avg_acc = torch.stack([x['test_acc'] for x in outputs]).mean()
+        avg_class_acc = torch.stack([x['test_class_acc'] for x in outputs]).mean()
+        avg_novelty = torch.stack([x['test_novelty'] for x in outputs]).mean()
+        self.log('test_loss_epoch', avg_loss)
+        self.log('test_acc_epoch', avg_acc)
+        self.log('test_class_acc_epoch', avg_class_acc)
+        self.log('test_novelty_epoch', avg_novelty)
+
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, self.parameters()), lr=1e-3, momentum=0.9)
         return optimizer
@@ -262,37 +315,41 @@ class Net(pl.LightningModule):
     def get_activations(self, x):
         return[self.conv1_act, self.conv2_act, self.conv3_act, self.conv4_act, self.conv5_act, self.conv6_act]
 
-def get_activations(trainloader, filters, num_ims_used=64):
-    net = Net()
-    for i in range (len(net.conv_layers)):
-        net.conv_layers[i].weight.data = filters[i]
-    net = net.to(device)
+    def set_filters(self, filters):
+        for i in range(len(filters)):
+            self.conv_layers[i].weight.data = filters[i]
 
-    activations = {}
-    def get_features(name):
-        def hook(model, input, output):
-            if name not in activations.keys():
-                activations[name] = []
-            activations[name].append(output.cpu().detach().numpy())
-        return hook
+# def get_activations(trainloader, filters, num_ims_used=64):
+#     net = Net()
+#     for i in range (len(net.conv_layers)):
+#         net.conv_layers[i].weight.data = filters[i]
+#     net = net.to(device)
 
-    for i in range (len(net.conv_layers)):
-        net.conv_layers[i].register_forward_hook(get_features(i))
+#     activations = {}
+#     def get_features(name):
+#         def hook(model, input, output):
+#             if name not in activations.keys():
+#                 activations[name] = []
+#             activations[name].append(output.cpu().detach().numpy())
+#         return hook
 
-    #TODO: The below code is far too slow
-    total = 0
-    while total < num_ims_used:
-        data = next(iter(trainloader))
-        inputs, labels = data
-        # inputs = np.transpose(inputs, (0, 3, 2, 1)).float()
-        inputs = inputs.float()
-        inputs = inputs.to(device)
-        # labels = labels.to(device)
-        outputs = net(inputs)
+#     for i in range (len(net.conv_layers)):
+#         net.conv_layers[i].register_forward_hook(get_features(i))
+
+#     #TODO: The below code is far too slow
+#     total = 0
+#     while total < num_ims_used:
+#         data = next(iter(trainloader))
+#         inputs, labels = data
+#         # inputs = np.transpose(inputs, (0, 3, 2, 1)).float()
+#         inputs = inputs.float()
+#         inputs = inputs.to(device)
+#         # labels = labels.to(device)
+#         outputs = net(inputs)
         
-        total += np.array(labels).size
-    # print(activations)
-    return activations
+#         total += np.array(labels).size
+#     # print(activations)
+#     return activations
 
 def get_random_filters():
     net = Net().to(device)
@@ -303,7 +360,7 @@ def get_random_filters():
     return np.array(filters)
 
 
-def train_network(data_module, filters=None, epochs=2, save_path=None, fixed_conv=False, val_interval=1, novelty_interval):
+def train_network(data_module, filters=None, epochs=2, save_path=None, fixed_conv=False, val_interval=1, novelty_interval=None):
     net = Net(num_classes=data_module.num_classes)
     if filters is not None:
         for i in range(len(net.conv_layers)):
@@ -314,7 +371,8 @@ def train_network(data_module, filters=None, epochs=2, save_path=None, fixed_con
 
     if save_path is None:
         save_path = PATH
-    trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path)
+    wandb_logger = WandbLogger()
+    trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger)
     # data_module = CIFAR10DataModule()
     trainer.fit(net, data_module, check_val_every_n_epoch=val_interval)
 
@@ -333,56 +391,56 @@ def get_data_module(dataset, batch_size):
     return data_module
 
 
-def assess_accuracy(testloader, classes, save_path=None):
-    dataiter = iter(testloader)
-    images, labels = dataiter.next()
-    # imshow(torchvision.utils.make_grid(images))
-    print("Ground Truth: ", " ".join('%5s' % classes[labels[j]] for j in range(4)))
+# def assess_accuracy(testloader, classes, save_path=None):
+    # dataiter = iter(testloader)
+    # images, labels = dataiter.next()
+    # # imshow(torchvision.utils.make_grid(images))
+    # print("Ground Truth: ", " ".join('%5s' % classes[labels[j]] for j in range(4)))
     
-    net = Net(num_classes=len(list(classes)))
-    if save_path is None:
-        save_path = PATH
-    net.load_from_checkpoint(save_path)
-    net = net.to(device)
-    outputs = net(images.to(device))
-    _, predicted = torch.max(outputs, 1)
-    record_accuracy = {}
+    # net = Net(num_classes=len(list(classes)))
+    # if save_path is None:
+    #     save_path = PATH
+    # net.load_from_checkpoint(save_path)
+    # net = net.to(device)
+    # outputs = net(images.to(device))
+    # _, predicted = torch.max(outputs, 1)
+    # record_accuracy = {}
 
-    print('Predicted: ', ' '.join('%5s' % classes[predicted[j]] for j in range(4)))
+    # print('Predicted: ', ' '.join('%5s' % classes[predicted[j]] for j in range(4)))
     
-    correct = 0
-    total = 0
+    # correct = 0
+    # total = 0
 
-    with torch.no_grad():
-        for data in testloader:
-            images, labels = data[0].to(device), data[1].to(device)
-            # images, labels = data[0].to(device), data[1].to(device)
-            outputs = net(images)
-            _, predicted = torch.max(outputs.data, 1)
-            total += labels.size(0)
-            correct += (predicted==labels).sum().item()
-    print('Accuracy of the network on the 10000 test images: %d %%' % (100 * correct/total))
-    record_accuracy['overall'] = (100 * correct/total)
+    # with torch.no_grad():
+    #     for data in testloader:
+    #         images, labels = data[0].to(device), data[1].to(device)
+    #         # images, labels = data[0].to(device), data[1].to(device)
+    #         outputs = net(images)
+    #         _, predicted = torch.max(outputs.data, 1)
+    #         total += labels.size(0)
+    #         correct += (predicted==labels).sum().item()
+    # print('Accuracy of the network on the 10000 test images: %d %%' % (100 * correct/total))
+    # record_accuracy['overall'] = (100 * correct/total)
 
-    correct_pred = {classname: 0 for classname in classes}
-    total_pred = {classname: 0 for classname in classes}
+    # correct_pred = {classname: 0 for classname in classes}
+    # total_pred = {classname: 0 for classname in classes}
 
-    with torch.no_grad():
-        for data in testloader:
-            images, labels = data[0].to(device), data[1].to(device)
-            outputs = net(images)
-            _, predictions = torch.max(outputs, 1)
-            for label, prediction in zip(labels, predictions):
-                if label == prediction:
-                    correct_pred[classes[label]] += 1
-                total_pred[classes[label]] += 1
+    # with torch.no_grad():
+    #     for data in testloader:
+    #         images, labels = data[0].to(device), data[1].to(device)
+    #         outputs = net(images)
+    #         _, predictions = torch.max(outputs, 1)
+    #         for label, prediction in zip(labels, predictions):
+    #             if label == prediction:
+    #                 correct_pred[classes[label]] += 1
+    #             total_pred[classes[label]] += 1
 
-    for classname, correct_count in correct_pred.items():
-        accuracy = 100 * float(correct_count) / total_pred[classname]
-        print("Accuracy for class {:5s} is: {:.1f} %".format(classname, accuracy))
-        record_accuracy[classname] = accuracy
+    # for classname, correct_count in correct_pred.items():
+    #     accuracy = 100 * float(correct_count) / total_pred[classname]
+    #     print("Accuracy for class {:5s} is: {:.1f} %".format(classname, accuracy))
+    #     record_accuracy[classname] = accuracy
 
-    return record_accuracy
+    # return record_accuracy
 
 def plot_mean_and_bootstrapped_ci_multiple(input_data = None, title = 'overall', name = "change this", x_label = "x", y_label = "y", save_name="", compute_CI=True, maximum_possible=None, show=None, sample_interval=None):
     """ 
@@ -440,17 +498,17 @@ def plot_mean_and_bootstrapped_ci_multiple(input_data = None, title = 'overall',
         plt.show()
     
 
-def run(batch_size_input=64):
+def run():
     torch.multiprocessing.freeze_support()
     pl.seed_everything(42, workers=True)
 
-    global device
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    print('Device:', device)
+    # global device
+    # device = "cuda" if torch.cuda.is_available() else "cpu"
+    # print('Device:', device)
     global PATH
     PATH = './cifar_net.pth'
-    global batch_size
-    batch_size = batch_size_input
+    # global batch_size
+    # batch_size = batch_size_input
     wandb.init(project="novel-feature-detectors")
 
 
