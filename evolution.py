@@ -21,14 +21,14 @@ import argparse
 
 parser=argparse.ArgumentParser(description="Process some inputs")
 parser.add_argument('--experiment_name', help='experiment name for saving data related to training')
-parser.add_argument('--batch_size', help="batch size for training", default=64)
-parser.add_argument('--evo_gens', help="number of generations used in evolving solutions", default=None)
-parser.add_argument('--evo_pop_size', help='Number of individuals in population when evolving solutions', default=None)
+parser.add_argument('--batch_size', help="batch size for training", type=int, default=64)
+parser.add_argument('--evo_gens', type=int, help="number of generations used in evolving solutions", default=None)
+parser.add_argument('--evo_pop_size', type=int, help='Number of individuals in population when evolving solutions', default=None)
 parser.add_argument('--evo_dataset_for_novelty', help='Dataset used for novelty computation during evolution and training', default=None)
-parser.add_argument('--evo_num_runs', help='Number of runs used in evolution', default=None)
-parser.add_argument('--evo_tourney_size', help='Size of tournaments in evolutionary algorithm selection', default=None)
-parser.add_argument('--evo_num_winners', help='Number of winners in tournament in evolutionary algorithm', default=None)
-parser.add_argument('--evo_num_children', help='Number of children in evolutionary algorithm', default=None)
+parser.add_argument('--evo_num_runs', type=int, help='Number of runs used in evolution', default=None)
+parser.add_argument('--evo_tourney_size', type=int, help='Size of tournaments in evolutionary algorithm selection', default=None)
+parser.add_argument('--evo_num_winners', type=int, help='Number of winners in tournament in evolutionary algorithm', default=None)
+parser.add_argument('--evo_num_children', type=int, help='Number of children in evolutionary algorithm', default=None)
     
 args = parser.parse_args()
 
@@ -105,7 +105,7 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
         model.filters = [m.weight.data for m in model.conv_layers]
         # model.filters = helper.get_random_filters()
         # model.activations = .get_activations(trainloader, model.filters)
-        model.fitness =  model.test_step(next(iter(data_module.train_dataloader)))['test_novelty']
+        model.fitness =  model.test_step(next(iter(data_module.train_dataloader())))['test_novelty']
         population.append(model)
         
     print("Generations")
@@ -146,6 +146,8 @@ def run():
     random_image_paths = helper.create_random_images(64)
     global data_module
     data_module = helper.get_data_module(args.evo_dataset_for_novelty, batch_size=args.batch_size)
+    data_module.prepare_data(data_dir="data")
+    data_module.setup()
     # global trainloader
     # trainloader = helper.load_random_images(random_image_paths)
     # trainloader = helper.load_CIFAR_10()[2]
@@ -174,7 +176,7 @@ def run():
 
     for run_name in ['fitness']:
         fitness_results[run_name] = np.zeros((num_runs, n_iters))
-        solution_results[run_name] = np.array([[Model() for i in range(n_iters)]for j in range(num_runs)], dtype=object)
+        solution_results[run_name] = np.array([[helper.Net() for i in range(n_iters)]for j in range(num_runs)], dtype=object)
         
         print("Running Evolution for {}".format(run_name))
         

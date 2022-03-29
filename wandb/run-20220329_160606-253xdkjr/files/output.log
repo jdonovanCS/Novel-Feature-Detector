@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 213, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 177, in run
+    solution_results[run_name] = np.array([[Model() for i in range(n_iters)]for j in range(num_runs)], dtype=object)
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 177, in <listcomp>
+    solution_results[run_name] = np.array([[Model() for i in range(n_iters)]for j in range(num_runs)], dtype=object)
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 177, in <listcomp>
+    solution_results[run_name] = np.array([[Model() for i in range(n_iters)]for j in range(num_runs)], dtype=object)
+NameError: name 'Model' is not defined

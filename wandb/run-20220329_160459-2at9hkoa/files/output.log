@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 213, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 176, in run
+    fitness_results[run_name] = np.zeros((num_runs, n_iters))
+TypeError: 'str' object cannot be interpreted as an integer
