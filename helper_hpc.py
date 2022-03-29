@@ -12,10 +12,10 @@ import scikits.bootstrap as bootstrap
 import warnings
 warnings.filterwarnings('ignore')
 import wandb
-import pytorch_lighning as pl
+import pytorch_lightning as pl
 import pl_bolts.datamodules
 import evolution as evol
-from pytorch_lightning_loggers import WandbLogger
+from pytorch_lightning.loggers import WandbLogger
 
 # Need to separate this file into functions and classes
 
