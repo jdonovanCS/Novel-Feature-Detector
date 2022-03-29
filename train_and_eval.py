@@ -9,7 +9,7 @@ import argparse
 import random
 
 parser=argparse.ArgumentParser(description="Process some input files")
-parser.add_argument('--dataset', help='which dataset should be used for novelty metric, choices are: cifar-10, cifar-100', default='random')
+parser.add_argument('--dataset', help='which dataset should be used for training metric, choices are: cifar-10, cifar-100', default='random')
 parser.add_argument('--experiment_name', help='experiment name for saving data related to training')
 parser.add_argument('--fixed_conv', help='Should the convolutional layers stay fixed, or alternatively be trained', action='store_true')
 parser.add_argument('--training_interval', help='How often should the network be trained. Values should be supplied as a fraction and will relate to the generations from evolution' +
@@ -21,7 +21,7 @@ parser.add_argument('--novelty_interval', help='How often should a novelty score
 parser.add_argument('--test_accuracy_interval', help='How often should test accuracy be assessed during training?', default=0)
 parser.add_argument('--batch_size', help="batch size for training", default=64)
 parser.add_argument('--evo_gens', help="number of generations used in evolving solutions", default=None)
-parser.add_argument('--evo_pop', help='Number of individuals in population when evolving solutions', default=None)
+parser.add_argument('--evo_pop_size', help='Number of individuals in population when evolving solutions', default=None)
 parser.add_argument('--evo_dataset_for_novelty', help='Dataset used for novelty computation during evolution and training', default=None)
 parser.add_argument('--evo', help='evolved solutions, should only be true if random is not set', action='store_true')
 parser.add_argument('--evo_num_runs', help='Number of runs used in evolution', default=None)
@@ -164,17 +164,18 @@ def run():
 
 
     # get loader for train and test images and classes
-    if args.dataset.lower() == 'cifar-100':
-        trainset, testset, trainloader, testloader, classes = helper.load_CIFAR_100(helper.batch_size)
-    else:
-        trainset, testset, trainloader, testloader, classes = helper.load_CIFAR_10(helper.batch_size)
+    data_module = helper.get_data_module(args.dataset, args.batch_size)
+    # if args.dataset.lower() == 'cifar-100':
+    #     trainset, testset, trainloader, testloader, classes = helper.load_CIFAR_100(helper.batch_size)
+    # else:
+    #     trainset, testset, trainloader, testloader, classes = helper.load_CIFAR_10(helper.batch_size)
     
     
     # create variables for holding metric
-    training_record = {}
-    overall_accuracy_record = {}
-    classwise_accuracy_record = {}
-    classlist = np.array(classes)
+    # training_record = {}
+    # overall_accuracy_record = {}
+    # classwise_accuracy_record = {}
+    # classlist = np.array(classes)
     epochs = args.epochs
     
     helper.wandb.config.dataset = args.dataset.lower()
@@ -194,9 +195,9 @@ def run():
     # for each type of evolution ran
     for name in pickled_filters.keys():
         # instatiate entry in dictionary for this type of evolution
-        overall_accuracy_record[name] = np.zeros((len(pickled_filters[name]), len(pickled_filters[name][0])))
-        classwise_accuracy_record[name] = np.zeros((len(pickled_filters[name]), len(pickled_filters[name][0]), len(classlist)))
-        training_record[name] = np.array([[dict for i in range(len(pickled_filters[name][0]))]for j in range(len(pickled_filters[name]))], dtype=dict)
+        # overall_accuracy_record[name] = np.zeros((len(pickled_filters[name]), len(pickled_filters[name][0])))
+        # classwise_accuracy_record[name] = np.zeros((len(pickled_filters[name]), len(pickled_filters[name][0]), len(classlist)))
+        # training_record[name] = np.array([[dict for i in range(len(pickled_filters[name][0]))]for j in range(len(pickled_filters[name]))], dtype=dict)
         # for each run of this evolution type
         for filters_list in pickled_filters[name]:
             run_num = np.where(pickled_filters[name] == filters_list)[0][0]
@@ -205,41 +206,37 @@ def run():
                 # if we only want to train the solution from the final generation
                 # put zeros in the metric dictionaries if this isn't the final generation
                 if training_interval != 0 and i*1.0 not in [(len(filters_list)/(1/training_interval)*j)-1 for j in range(1, int(1/training_interval)+1)]:
-                    overall_accuracy_record[name][run_num][i] = 0
-                    for c in classlist:
-                        classwise_accuracy_record[name][run_num][i][np.where(classlist==c)[0][0]] = 0
-                    training_record[name][run_num][i] = {}
                     continue
                 
                 # else train the network and collect the metrics
                 save_path = "trained_models/trained/conv{}_e{}_n{}_r{}_g{}.pth".format(not fixed_conv, experiment_name, name, run_num, i)
                 print('Training and Evaluating: {} Gen: {} Run: {}'.format(name, i, run_num))
-                record_progress = helper.train_network(trainloader=trainloader, filters=filters_list[i], epochs=epochs, testloader=testloader, classes=classes, save_path=save_path, fixed_conv=fixed_conv, novelty_interval=int(args.novelty_interval), test_accuracy_interval=int(args.test_accuracy_interval))
-                record_accuracy = helper.assess_accuracy(testloader=testloader, classes=classes, save_path=save_path)
-                training_record[name][run_num][i] = record_progress
-                overall_accuracy_record[name][run_num][i] = record_accuracy['overall']
-                for c in classlist:
-                    classwise_accuracy_record[name][run_num][i][np.where(classlist==c)[0][0]] = record_accuracy[c]
-    name_add = ''
-    if args.random: name_add += 'random_'
-    if fixed_conv: name_add += 'fixed_conv_'
-    if not os.path.isdir('output/' + experiment_name):
-        os.mkdir('output/' + experiment_name)
-    with open('output/' + experiment_name + '/training_{}over_time.pickle'.format(name_add), 'wb') as f:
-        pickle.dump(training_record, f)
-    with open('output/' + experiment_name + '/overall_accuracy_{}over_time.pickle'.format(name_add), 'wb') as f:
-        pickle.dump(overall_accuracy_record,f)
-    with open('output/' + experiment_name + '/classwise_accuracy_{}over_time.pickle'.format(name_add), 'wb') as f:
-        pickle.dump(classwise_accuracy_record,f)
+                record_progress = helper.train_network(data_module=data_module, filters=filters_list[i], epochs=epochs, save_path=save_path, fixed_conv=fixed_conv, novelty_interval=int(args.novelty_interval), val_interval=int(args.test_accuracy_interval))
+                # record_accuracy = helper.assess_accuracy(testloader=testloader, classes=classes, save_path=save_path)
+                # training_record[name][run_num][i] = record_progress
+                # overall_accuracy_record[name][run_num][i] = record_accuracy['overall']
+                # for c in classlist:
+                #     classwise_accuracy_record[name][run_num][i][np.where(classlist==c)[0][0]] = record_accuracy[c]
+    # name_add = ''
+    # if args.random: name_add += 'random_'
+    # if fixed_conv: name_add += 'fixed_conv_'
+    # if not os.path.isdir('output/' + experiment_name):
+    #     os.mkdir('output/' + experiment_name)
+    # with open('output/' + experiment_name + '/training_{}over_time.pickle'.format(name_add), 'wb') as f:
+    #     pickle.dump(training_record, f)
+    # with open('output/' + experiment_name + '/overall_accuracy_{}over_time.pickle'.format(name_add), 'wb') as f:
+    #     pickle.dump(overall_accuracy_record,f)
+    # with open('output/' + experiment_name + '/classwise_accuracy_{}over_time.pickle'.format(name_add), 'wb') as f:
+    #     pickle.dump(classwise_accuracy_record,f)
 
-    cut_off_beginning = 0
-    final_accuracies = save_final_accuracy_of_trained_models('output/' + experiment_name + '/training_{}over_time.pickle'.format(name_add), 'output/' + experiment_name + '/final_accuracies_{}over_training_time.pickle'.format(name_add))
-    final_novelties = save_novelty_record_of_trained_models('output/' + experiment_name + '/training_{}over_time.pickle'.format(name_add), 'output/' + experiment_name + '/novelty_{}over_training_time.pickle'.format(name_add))
-    final_test_accuracies = save_final_test_accuracies_of_trained_models('output/' + experiment_name + 'training_{}over_time.pickle'.format(name_add), 'output/' + experiment_name + '/final_test_accuracies {}over_training_time.pickle'.format(name_add))
-    helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[cut_off_beginning:] for k, x in overall_accuracy_record.items()], name=[k for k,x in overall_accuracy_record.items()], x_label="Generation", y_label="Fitness", compute_CI=True)
-    helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[cut_off_beginning:] for k, x in final_accuracies.items()], name=[k for k,x in final_accuracies.items()], x_label="Epoch", y_label="Accuracy", compute_CI=True)
-    helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[cut_off_beginning:] for k, x in final_novelties.items()], name=[k for k,x in final_novelties.items()], x_label="Epoch", y_label="Novelty", compute_CI=True, sample_interval=args.novelty_interval, save_path='output/' + experiment_name + 'novelty_{}over_training_time_plot'.format(name_add))
-    helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[cut_off_beginning:] for k, x in final_novelties.items()], name=[k for k,x in final_novelties.items()], x_label="Epoch", y_label="Accuracy", compute_CI=True, sample_interval=args.test_accuracy_interval, save_path='output/' + experiment_name + 'test_accuracy_{}over_training_time_plot'.format(name_add))
+    # cut_off_beginning = 0
+    # final_accuracies = save_final_accuracy_of_trained_models('output/' + experiment_name + '/training_{}over_time.pickle'.format(name_add), 'output/' + experiment_name + '/final_accuracies_{}over_training_time.pickle'.format(name_add))
+    # final_novelties = save_novelty_record_of_trained_models('output/' + experiment_name + '/training_{}over_time.pickle'.format(name_add), 'output/' + experiment_name + '/novelty_{}over_training_time.pickle'.format(name_add))
+    # final_test_accuracies = save_final_test_accuracies_of_trained_models('output/' + experiment_name + 'training_{}over_time.pickle'.format(name_add), 'output/' + experiment_name + '/final_test_accuracies {}over_training_time.pickle'.format(name_add))
+    # helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[cut_off_beginning:] for k, x in overall_accuracy_record.items()], name=[k for k,x in overall_accuracy_record.items()], x_label="Generation", y_label="Fitness", compute_CI=True)
+    # helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[cut_off_beginning:] for k, x in final_accuracies.items()], name=[k for k,x in final_accuracies.items()], x_label="Epoch", y_label="Accuracy", compute_CI=True)
+    # helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[cut_off_beginning:] for k, x in final_novelties.items()], name=[k for k,x in final_novelties.items()], x_label="Epoch", y_label="Novelty", compute_CI=True, sample_interval=args.novelty_interval, save_path='output/' + experiment_name + 'novelty_{}over_training_time_plot'.format(name_add))
+    # helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[cut_off_beginning:] for k, x in final_novelties.items()], name=[k for k,x in final_novelties.items()], x_label="Epoch", y_label="Accuracy", compute_CI=True, sample_interval=args.test_accuracy_interval, save_path='output/' + experiment_name + 'test_accuracy_{}over_training_time_plot'.format(name_add))
 
 
 
