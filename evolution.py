@@ -13,16 +13,31 @@ import helper_hpc as helper
 import torch
 import pickle
 from tqdm import tqdm
+import argparse
 
 
 # TODO: Why not use gradient descent since fitness function is differentiable. Should probably compare to that.
 
-class Model(object):
-    def __init__(self):
-        self.filters = None
-        self.activations = None
-        self.fitness = None
-        # self.novelty = None
+
+parser=argparse.ArgumentParser(description="Process some inputs")
+parser.add_argument('--experiment_name', help='experiment name for saving data related to training')
+parser.add_argument('--batch_size', help="batch size for training", default=64)
+parser.add_argument('--evo_gens', help="number of generations used in evolving solutions", default=None)
+parser.add_argument('--evo_pop_size', help='Number of individuals in population when evolving solutions', default=None)
+parser.add_argument('--evo_dataset_for_novelty', help='Dataset used for novelty computation during evolution and training', default=None)
+parser.add_argument('--evo_num_runs', help='Number of runs used in evolution', default=None)
+parser.add_argument('--evo_tourney_size', help='Size of tournaments in evolutionary algorithm selection', default=None)
+parser.add_argument('--evo_num_winners', help='Number of winners in tournament in evolutionary algorithm', default=None)
+parser.add_argument('--evo_num_children', help='Number of children in evolutionary algorithm', default=None)
+    
+args = parser.parse_args()
+
+# class Model(object):
+#     def __init__(self):
+#         self.filters = None
+#         self.activations = None
+#         self.fitness = None
+#         # self.novelty = None
 
 def compute_feature_novelty(activations):
     dist = {}
@@ -86,10 +101,11 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
     # Initialize the population with random models.
     print("Initializing")
     for i in tqdm(range(population_size)): #while len(population) < population_size:
-        model = Model()
-        model.filters = helper.get_random_filters()
-        model.activations = helper.get_activations(trainloader, model.filters)
-        model.fitness = compute_feature_novelty(model.activations)
+        model = helper.Net()
+        model.filters = [m.weight.data for m in model.conv_layers]
+        # model.filters = helper.get_random_filters()
+        # model.activations = .get_activations(trainloader, model.filters)
+        model.fitness =  model.test_step(next(iter(data_module.train_dataloader)))['test_novelty']
         population.append(model)
         
     print("Generations")
@@ -110,10 +126,9 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
 
         # Create the child model and store it.
         for parent in parents:
-            child = Model()
-            child.filters = mutate(parent.filters)
-            child.activations = helper.get_activations(trainloader, child.filters)
-            child.fitness = compute_feature_novelty(child.activations)
+            child = helper.Net()
+            child.set_filters = mutate(parent.filters)
+            child.fitness = model.test_step(next(iter(data_module.train_dataloader)))['test_novelty']
             population.append(child)
             
         if evolution_type == 'fitness':
@@ -129,28 +144,30 @@ def run():
     helper.run()
     
     random_image_paths = helper.create_random_images(64)
-    global trainloader
+    global data_module
+    data_module = helper.get_data_module(args.evo_dataset_for_novelty, batch_size=args.batch_size)
+    # global trainloader
     # trainloader = helper.load_random_images(random_image_paths)
-    trainloader = helper.load_CIFAR_10()[2]
+    # trainloader = helper.load_CIFAR_10()[2]
     global experiment_name
-    experiment_name = "mutation_multiplier_cifar10novelty_pop20_gen50"
+    experiment_name = args.experiment_name
     # filters = helper.get_random_filters()
     # activations = helper.get_activations(trainloader, filters)
 
     # num_runs = 20
-    num_runs = 5
+    num_runs = args.evo_num_runs
     run_id = 0
     # n_iters = 100
-    n_iters = 50
+    n_iters = args.evo_gens
     output_path = './'
     # pop_size = 50
-    pop_size = 20
+    pop_size = args.evo_pop_size
     # tournament_size = 10
-    tournament_size = 4
+    tournament_size = args.evo_tourney_size
     # num_children = 50
-    num_children = 20
+    num_children = args.evo_num_children
     # num_winners = 5
-    num_winners = 2
+    num_winners = args.evo_num_winners
 
     fitness_results = {}
     solution_results = {}
@@ -181,7 +198,15 @@ def run():
         with open('output/' + experiment_name + '/solutions_over_time_{}.npy'.format(k), 'wb') as f:
             np.save(f, v)
     cut_off_beginning = 0
-    helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[cut_off_beginning:] for k, x in fitness_results.items()], name=[k for k,x in fitness_results.items()], x_label="Generation", y_label="Fitness", compute_CI=True, show=True)
+    helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[cut_off_beginning:] for k, x in fitness_results.items()], name=[k for k,x in fitness_results.items()], x_label="Generation", y_label="Fitness", compute_CI=True, save_name=experiment_name + "/fitness_over_time.png")
+    os.system('conda activate EC')
+    os.system('python train_and_eval --dataset={} --experiment_name="{}" --fixed_conv --training_interval=1 --epochs=96 --novelty_interval=1 --test_accuracy_interval=4 --batch_size={} --evo_gens={} --evo_pop_size={} --evo_dataset_for_novelty={} --evo_num_runs={} --evo_tourney_size={} --evo_num_winners={} --evo_num_children={}'.format(args.evo_dataset_for_novelty, args.experiment_name, args.batch_size, args.evo_gens, args.evo_pop_size, args.evo_dataset_for_novelty, args.evo_num_runs, args.evo_tourney_size, args.evo_num_winners, args.evo_num_children))
+    os.system('python generate_random_filters.py --dataset={} --experiment_name="{}" --population_size={}'.format(args.evo_dataset_for_novelty, experiment_name, 50))
+    os.system('python train_and_eval --dataset={} --experiment_name="{}" --fixed_conv --training_interval=.2 --epochs=96 --novelty_interval=1 --test_accuracy_interval=4 --batch_size={} --evo_gens={} --evo_pop_size={} --evo_dataset_for_novelty={} --evo_num_runs={} --evo_tourney_size={} --evo_num_winners={} --evo_num_children={} --random'.format(args.evo_dataset_for_novelty, args.experiment_name, args.batch_size, args.evo_gens, args.evo_pop_size, args.evo_dataset_for_novelty, args.evo_num_runs, args.evo_tourney_size, args.evo_num_winners, args.evo_num_children))
+    os.system('python train_and_eval --dataset={} --experiment_name="{}" --training_interval=1 --epochs=32 --novelty_interval=1 --test_accuracy_interval=4 --batch_size={} --evo_gens={} --evo_pop_size={} --evo_dataset_for_novelty={} --evo_num_runs={} --evo_tourney_size={} --evo_num_winners={} --evo_num_children={}'.format(args.evo_dataset_for_novelty, args.experiment_name, args.batch_size, args.evo_gens, args.evo_pop_size, args.evo_dataset_for_novelty, args.evo_num_runs, args.evo_tourney_size, args.evo_num_winners, args.evo_num_children))
+    os.system('python train_and_eval --dataset={} --experiment_name="{}" --training_interval=.2 --epochs=32 --novelty_interval=1 --test_accuracy_interval=4 --batch_size={} --evo_gens={} --evo_pop_size={} --evo_dataset_for_novelty={} --evo_num_runs={} --evo_tourney_size={} --evo_num_winners={} --evo_num_children={} --random'.format(args.evo_dataset_for_novelty, args.experiment_name, args.batch_size, args.evo_gens, args.evo_pop_size, args.evo_dataset_for_novelty, args.evo_num_runs, args.evo_tourney_size, args.evo_num_winners, args.evo_num_children))
+    os.system('python train_and_eval --dataset=cifar100 --experiment_name="{}" --fixed_conv --training_interval=1 --epochs=1024 --novelty_interval=1 --test_accuracy_interval=4 --batch_size={} --evo_gens={} --evo_pop_size={} --evo_dataset_for_novelty={} --evo_num_runs={} --evo_tourney_size={} --evo_num_winners={} --evo_num_children={}'.format(args.evo_dataset_for_novelty, args.experiment_name, args.batch_size, args.evo_gens, args.evo_pop_size, args.evo_dataset_for_novelty, args.evo_num_runs, args.evo_tourney_size, args.evo_num_winners, args.evo_num_children))
+    os.system('python train_and_eval --dataset=cifar100 --experiment_name="{}" --fixed_conv --training_interval=.2 --epochs=1024 --novelty_interval=1 --test_accuracy_interval=4 --batch_size={} --evo_gens={} --evo_pop_size={} --evo_dataset_for_novelty={} --evo_num_runs={} --evo_tourney_size={} --evo_num_winners={} --evo_num_children={} --random'.format(args.evo_dataset_for_novelty, args.experiment_name, args.batch_size, args.evo_gens, args.evo_pop_size, args.evo_dataset_for_novelty, args.evo_num_runs, args.evo_tourney_size, args.evo_num_winners, args.evo_num_children))
 
 
 if __name__ == '__main__':
