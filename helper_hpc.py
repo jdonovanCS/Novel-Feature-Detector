@@ -273,6 +273,14 @@ class Net(pl.LightningModule):
         self.log('val_class_acc_epoch', avg_class_acc)
         self.log('val_novelty_epoch', avg_novelty)
 
+    def get_fitness(self, batch):
+        x, y = batch
+        logits = self.forward(x)
+        novelty_score = evol.compute_feature_novelty(self.activations)
+        # clear out activations
+        for i in range(len(self.conv_layers)):
+            self.activations[i] = []
+
     def test_step(self, test_batch, batch_idx):
         x, y = test_batch
         logits = self.forward(x)
