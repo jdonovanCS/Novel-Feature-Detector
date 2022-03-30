@@ -147,7 +147,6 @@ def run():
     global data_module
     data_module = helper.get_data_module(args.evo_dataset_for_novelty, batch_size=args.batch_size)
     data_module.prepare_data(data_dir="data")
-    data_module.prepare_data()
     data_module.setup()
 
     # global trainloader
