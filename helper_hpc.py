@@ -283,15 +283,14 @@ class Net(pl.LightningModule):
         acc = torch.sum(y==labels_hat).item()/(len(y)*1.0)
         # get class acc
         class_acc = {}
-        classes = list(set(y))
+        classes = list(set(y.detach().numpy()))
         corr_pred = {classname: 0 for classname in classes}
         total_pred = {classname: 0 for classname in classes}
-        for label, prediction in zip(y, labels_hat):
-                if label == prediction:
-                    corr_pred[classes[label]] += 1
-                total_pred[classes[label]] += 1
+        for label, prediction in zip(y.detach().numpy(), labels_hat.detach().numpy()):
+            if label == prediction:
+                corr_pred[classes[label]] += 1
+            total_pred[classes[label]] += 1
         for classname, correct_count in corr_pred.items():
-            print(classname, correct_count)
             accuracy = None
             if total_pred[classname] != 0:
                 accuracy = 100 * float(correct_count) / total_pred[classname]
