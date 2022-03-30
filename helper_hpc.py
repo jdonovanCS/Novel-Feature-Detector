@@ -346,7 +346,7 @@ class Net(pl.LightningModule):
         return [m.weight.data for m in self.conv_layers]
 
     def compute_feature_novelty(self):
-        dist = {}
+        dist = []
         avg_dist = {}
         # for each conv layer
         for layer in self.activations:
@@ -357,9 +357,12 @@ class Net(pl.LightningModule):
                 for ind_activation in batch:
                     
                     for ind_activation2 in batch:
-                        dist.append(torch.abs(ind_activation2 - ind_activation))
-            avg_dist[str(layer)] = torch.mean(torch.stack(dist))
+                        dist.append(np.abs(ind_activation.detach().numpy(), ind_activation2.detach().numpy()))
+        #                 dist.append(torch.abs(ind_activation2 - ind_activation))
+            avg_dist[str(layer)] = np.mean((dist))
+        #     avg_dist[str(layer)] = torch.mean(torch.stack(dist))
         return(sum(avg_dist.values()))
+        # return(sum(avg_dist.values()))
 
 # def get_activations(trainloader, filters, num_ims_used=64):
 #     net = Net()
