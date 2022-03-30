@@ -237,7 +237,7 @@ class Net(pl.LightningModule):
             x_act = self.get_activations(x[i])
             for j in range(len(x_act)):
                 self.activations[j].append(x_act[j])
-        novelty_score = evol.compute_feature_novelty(activations)
+        novelty_score = evol.compute_feature_novelty(self.activations)
         # log loss, acc, class acc, and novelty score
         self.log('val_loss', loss)
         self.log('val_acc', acc)
@@ -274,7 +274,9 @@ class Net(pl.LightningModule):
                     corr_pred[classes[label]] += 1
                 total_pred[classes[label]] += 1
         for classname, correct_count in corr_pred.items():
-            accuracy = 100 * float(correct_count) / total_pred[classname]
+            accuracy = None
+            if total_pred[classname] != 0:
+                accuracy = 100 * float(correct_count) / total_pred[classname]
             class_acc[classname] = accuracy
         # get novelty score
         # if not fixed_conv and novelty_interval != 0 and epoch % novelty_interval == 0:
@@ -289,7 +291,7 @@ class Net(pl.LightningModule):
             x_act = self.get_activations(x[i])
             for j in range(len(x_act)):
                 self.activations[j].append(x_act[j])
-        novelty_score = evol.compute_feature_novelty(activations)
+        novelty_score = evol.compute_feature_novelty(self.activations)
         # log loss, acc, class acc, and novelty score
         self.log('test_loss', loss)
         self.log('test_acc', acc)
@@ -311,6 +313,9 @@ class Net(pl.LightningModule):
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, self.parameters()), lr=1e-3, momentum=0.9)
         return optimizer
+
+    def cross_entropy_loss(self, logits, labels):
+        F.nll_loss(logits, labels)
 
     def get_activations(self, x):
         return[self.conv1_act, self.conv2_act, self.conv3_act, self.conv4_act, self.conv5_act, self.conv6_act]
