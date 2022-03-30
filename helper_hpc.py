@@ -122,15 +122,15 @@ def load_and_show_some_images(trainloader, classes, batch_size):
 class Net(pl.LightningModule):
     def __init__(self, num_classes=10):
         super().__init__()
-        self.conv1 = nn.Conv2d(3, 32, 3, padding=1)
+        # self.conv1 = nn.Conv2d(3, 32, 3, padding=1)
         self.BatchNorm1 = nn.BatchNorm2d(32)
-        self.conv2 = nn.Conv2d(32, 64, 3, padding=1)
-        self.conv3 = nn.Conv2d(64, 128, 3, padding=1)
+        # self.conv2 = nn.Conv2d(32, 64, 3, padding=1)
+        # self.conv3 = nn.Conv2d(64, 128, 3, padding=1)
         self.BatchNorm2 = nn.BatchNorm2d(128)
-        self.conv4 = nn.Conv2d(128, 128, 3, padding=1)
-        self.conv5 = nn.Conv2d(128, 256, 3, padding=1)
+        # self.conv4 = nn.Conv2d(128, 128, 3, padding=1)
+        # self.conv5 = nn.Conv2d(128, 256, 3, padding=1)
         self.BatchNorm3 = nn.BatchNorm2d(256)
-        self.conv6 = nn.Conv2d(256, 256, 3, padding=1)
+        # self.conv6 = nn.Conv2d(256, 256, 3, padding=1)
         self.pool = nn.MaxPool2d(2,2)
         self.fc1 = nn.Linear(4096, 1024)
         self.fc2 = nn.Linear(1024, 512)
@@ -138,33 +138,59 @@ class Net(pl.LightningModule):
         # self.fc3 = nn.Linear(84, 10)
         self.dropout1 = nn.Dropout2d(0.05)
         self.dropout2 = nn.Dropout2d(0.1)
-        self.conv_layers = [self.conv1, self.conv2, self.conv3, self.conv4, self.conv5, self.conv6]
+        self.conv_layers = [nn.Conv2d(3, 32, 3, padding=1), 
+                            nn.Conv2d(32, 64, 3, padding=1), 
+                            nn.Conv2d(64, 128, 3, padding=1), 
+                            nn.Conv2d(128, 128, 3, padding=1), 
+                            nn.Conv2d(128, 256, 3, padding=1), 
+                            nn.Conv2d(256, 256, 3, padding=1)]
+        self.activations = {}
+        for i in range(len(self.conv_layers)):
+            self.activations[i] = []
         # print(self.conv1.weight.shape)
 
     def forward(self, x):
-        x = self.conv1(x)
-        self.conv1_act = x
+        conv_count = 0
+        # x = self.conv1(x)
+        x = self.conv_layers[conv_count](x)
+        # self.conv1_act = x
+        self.activations[conv_count].append(x)
+        conv_count += 1
         x = self.BatchNorm1(x)
         x = F.relu(x)
-        x = self.conv2(x)
-        self.conv2_act = x
+        # x = self.conv2(x)
+        x = self.conv_layers[conv_count](x)
+        # self.conv2_act = x
+        self.activations[conv_count].append(x)
+        conv_count += 1
         x = F.relu(x)
         x = self.pool(x)
-        x = self.conv3(x)
-        self.conv3_act = x
+        # x = self.conv3(x)
+        x = self.conv_layers[conv_count](x)
+        # self.conv3_act = x
+        self.activations[conv_count].append(x)
+        conv_count += 1
         x = self.BatchNorm2(x)
         x = F.relu(x)
-        x = self.conv4(x)
-        self.conv4_act = x
+        # x = self.conv4(x)
+        x = self.conv_layers[conv_count](x)
+        # self.conv4_act = x
+        self.activations[conv_count].append(x)
+        conv_count += 1
         x = F.relu(x)
         x = self.pool(x)
         x = self.dropout1(x)
-        x = self.conv5(x)
-        self.conv5_act = x
+        # x = self.conv5(x)
+        x = self.conv_layers[conv_count](x)
+        # self.conv5_act = x
+        self.activations[conv_count].append(x)
+        conv_count += 1
         x = self.BatchNorm3(x)
         x = F.relu(x)
-        x = self.conv6(x)
-        self.conv6_act = x
+        # x = self.conv6(x)
+        x = self.conv_layers[conv_count](x)
+        # self.conv6_act = x
+        self.activations[conv_count].append(x)
         x = F.relu(x)
         x = self.pool(x)
         x = torch.flatten(x, 1)
@@ -225,19 +251,10 @@ class Net(pl.LightningModule):
             accuracy = 100 * float(correct_count) / total_pred[classname]
             class_acc[classname] = accuracy
         # get novelty score
-        # if not fixed_conv and novelty_interval != 0 and epoch % novelty_interval == 0:
-        trained_filters = []
-        for j in range(len(self.conv_layers)):
-            trained_filters.append(self.conv_layers[j].weight.data)
-            # print(trained_filters[j])
-        self.activations = {}
+        novelty_score = evol.compute_feature_novelty(self.activations)
+        # clear out activations
         for i in range(len(self.conv_layers)):
             self.activations[i] = []
-        for i in range(len(x)):
-            x_act = self.get_activations(x[i])
-            for j in range(len(x_act)):
-                self.activations[j].append(x_act[j])
-        novelty_score = evol.compute_feature_novelty(self.activations)
         # log loss, acc, class acc, and novelty score
         self.log('val_loss', loss)
         self.log('val_acc', acc)
@@ -279,19 +296,10 @@ class Net(pl.LightningModule):
                 accuracy = 100 * float(correct_count) / total_pred[classname]
             class_acc[classname] = accuracy
         # get novelty score
-        # if not fixed_conv and novelty_interval != 0 and epoch % novelty_interval == 0:
-        trained_filters = []
-        for j in range(len(self.conv_layers)):
-            trained_filters.append(self.conv_layers[j].weight.data)
-            # print(trained_filters[j])
-        self.activations = {}
+        novelty_score = evol.compute_feature_novelty(self.activations)
+        # clear out activations
         for i in range(len(self.conv_layers)):
             self.activations[i] = []
-        for i in range(len(x)):
-            x_act = self.get_activations(x[i])
-            for j in range(len(x_act)):
-                self.activations[j].append(x_act[j])
-        novelty_score = evol.compute_feature_novelty(self.activations)
         # log loss, acc, class acc, and novelty score
         self.log('test_loss', loss)
         self.log('test_acc', acc)
@@ -316,14 +324,13 @@ class Net(pl.LightningModule):
 
     def cross_entropy_loss(self, logits, labels):
         return F.nll_loss(logits, labels)
-
-
-    def get_activations(self, x):
-        return[self.conv1_act, self.conv2_act, self.conv3_act, self.conv4_act, self.conv5_act, self.conv6_act]
-
+        
     def set_filters(self, filters):
         for i in range(len(filters)):
             self.conv_layers[i].weight.data = filters[i]
+    
+    def get_filters(self):
+        return [m.weight.data for m in self.conv_layers]
 
 # def get_activations(trainloader, filters, num_ims_used=64):
 #     net = Net()
