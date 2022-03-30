@@ -39,22 +39,22 @@ args = parser.parse_args()
 #         self.fitness = None
 #         # self.novelty = None
 
-def compute_feature_novelty(activations):
-    dist = {}
-    avg_dist = {}
-    # for each conv layer
-    for layer in activations:
-        # for each activation 3d(batch, h, w)
-        for batch in activations[layer]:
-            # for each activation
-            for ind_activation in batch:
+# def compute_feature_novelty(activations):
+#     dist = {}
+#     avg_dist = {}
+#     # for each conv layer
+#     for layer in activations:
+#         # for each activation 3d(batch, h, w)
+#         for batch in activations[layer]:
+#             # for each activation
+#             for ind_activation in batch:
                 
-                for ind_activation2 in batch:
-                    if str(layer) not in dist:
-                        dist[str(layer)] = []
-                    dist[str(layer)].append(torch.abs(ind_activation2 - ind_activation))
-        avg_dist[str(layer)] = torch.mean(torch.stack(dist[str(layer)]))
-    return(sum(avg_dist.values()))
+#                 for ind_activation2 in batch:
+#                     if str(layer) not in dist:
+#                         dist[str(layer)] = []
+#                     dist[str(layer)].append(torch.abs(ind_activation2 - ind_activation))
+#         avg_dist[str(layer)] = torch.mean(torch.stack(dist[str(layer)]))
+#     return(sum(avg_dist.values()))
 
 def mutate(filters):
     # select a single 3x3 filter in one of the convolutional layers and replace it with a random new filter.
