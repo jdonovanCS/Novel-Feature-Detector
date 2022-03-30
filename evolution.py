@@ -102,7 +102,7 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
     print("Initializing")
     for i in tqdm(range(population_size)): #while len(population) < population_size:
         model = helper.Net()
-        model.filters = [m.weight.data for m in model.conv_layers]
+        # model.filters = [m.weight.data for m in model.conv_layers]
         # model.filters = helper.get_random_filters()
         # model.activations = .get_activations(trainloader, model.filters)
         model.fitness =  model.test_step(next(iter(data_module.train_dataloader())), 0)['test_novelty']
@@ -127,7 +127,7 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
         # Create the child model and store it.
         for parent in parents:
             child = helper.Net()
-            child.set_filters = mutate(parent.filters)
+            child.set_filters(mutate(parent.get_filters()))
             child.fitness = model.test_step(next(iter(data_module.train_dataloader)))['test_novelty']
             population.append(child)
             
