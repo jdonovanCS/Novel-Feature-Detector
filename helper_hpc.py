@@ -16,6 +16,7 @@ import pytorch_lightning as pl
 import pl_bolts.datamodules
 import evolution as evol
 from pytorch_lightning.loggers import WandbLogger
+import gc
 
 # Need to separate this file into functions and classes
 
@@ -229,6 +230,7 @@ class Net(pl.LightningModule):
         
         self.log('train_loss_epoch', avg_loss)
         self.log('train_acc_epoch', avg_acc)
+        gc.collect()
     
     def validation_step(self, val_batch, batch_idx):
         x, y = val_batch
@@ -272,6 +274,7 @@ class Net(pl.LightningModule):
         self.log('val_acc_epoch', avg_acc)
         self.log('val_class_acc_epoch', avg_class_acc)
         self.log('val_novelty_epoch', avg_novelty)
+        gc.collect()
 
     def get_fitness(self, batch):
         x, y = batch
@@ -326,6 +329,7 @@ class Net(pl.LightningModule):
         self.log('test_acc_epoch', avg_acc)
         self.log('test_class_acc_epoch', avg_class_acc)
         self.log('test_novelty_epoch', avg_novelty)
+        gc.collect()
 
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, self.parameters()), lr=1e-3, momentum=0.9)

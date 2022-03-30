@@ -14,6 +14,7 @@ import torch
 import pickle
 from tqdm import tqdm
 import argparse
+import gc
 
 
 # TODO: Why not use gradient descent since fitness function is differentiable. Should probably compare to that.
@@ -109,6 +110,7 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
         # model.activations = .get_activations(trainloader, model.filters)
         model.fitness =  net.get_fitness(net_input)
         population.append(model)
+        gc.collect()
         
     print("Generations")
     for i in tqdm(range(generations)):
@@ -129,11 +131,11 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
         # Create the child model and store it.
         for parent in parents:
             child = Model()
-            net = helper.Net()
             child.filters = (mutate(parent.filters))
             net.set_filters = child.filters
             child.fitness = net.get_fitness(net_input)
             population.append(child)
+            gc.collect()
             
         if evolution_type == 'fitness':
             population = sorted(population, key=lambda i: i.fitness, reverse=True)[:population_size]
