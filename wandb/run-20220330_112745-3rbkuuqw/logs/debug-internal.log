@@ -41,3 +41,58 @@ FileNotFoundError: [WinError 2] The system cannot find the file specified
 2022-03-30 11:27:47,493 INFO    Thread-11 :9744 [dir_watcher.py:_on_file_created():217] file/dir created: C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220330_112745-3rbkuuqw\files\conda-environment.yaml
 2022-03-30 11:27:47,493 INFO    Thread-11 :9744 [dir_watcher.py:_on_file_created():217] file/dir created: C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220330_112745-3rbkuuqw\files\wandb-metadata.json
 2022-03-30 11:27:47,493 INFO    Thread-11 :9744 [dir_watcher.py:_on_file_created():217] file/dir created: C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220330_112745-3rbkuuqw\files\wandb-summary.json
+2022-03-30 11:27:49,499 INFO    Thread-11 :9744 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220330_112745-3rbkuuqw\files\output.log
+2022-03-30 11:27:51,507 INFO    Thread-11 :9744 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220330_112745-3rbkuuqw\files\output.log
+2022-03-30 11:27:54,532 INFO    Thread-11 :9744 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220330_112745-3rbkuuqw\files\output.log
+2022-03-30 11:28:01,962 DEBUG   HandlerThread:9744 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-30 11:28:01,962 DEBUG   SenderThread:9744 [sender.py:send_request():249] send_request: stop_status
+2022-03-30 11:28:17,093 DEBUG   HandlerThread:9744 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-30 11:28:17,094 DEBUG   SenderThread:9744 [sender.py:send_request():249] send_request: stop_status
+2022-03-30 11:28:17,781 DEBUG   SenderThread:9744 [sender.py:send():235] send: stats
+2022-03-30 11:28:18,728 INFO    Thread-11 :9744 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220330_112745-3rbkuuqw\files\config.yaml
+2022-03-30 11:28:32,253 DEBUG   HandlerThread:9744 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-30 11:28:32,254 DEBUG   SenderThread:9744 [sender.py:send_request():249] send_request: stop_status
+2022-03-30 11:28:47,480 DEBUG   HandlerThread:9744 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-30 11:28:47,480 DEBUG   SenderThread:9744 [sender.py:send_request():249] send_request: stop_status
+2022-03-30 11:28:51,227 DEBUG   SenderThread:9744 [sender.py:send():235] send: stats
+2022-03-30 11:29:02,601 DEBUG   HandlerThread:9744 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-30 11:29:02,604 DEBUG   SenderThread:9744 [sender.py:send_request():249] send_request: stop_status
+2022-03-30 11:29:17,954 DEBUG   HandlerThread:9744 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-30 11:29:17,957 DEBUG   SenderThread:9744 [sender.py:send_request():249] send_request: stop_status
+2022-03-30 11:29:29,576 DEBUG   SenderThread:9744 [sender.py:send():235] send: stats
+2022-03-30 11:29:33,361 DEBUG   HandlerThread:9744 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-30 11:29:33,362 DEBUG   SenderThread:9744 [sender.py:send_request():249] send_request: stop_status
+2022-03-30 11:29:48,517 DEBUG   HandlerThread:9744 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-30 11:29:48,517 DEBUG   SenderThread:9744 [sender.py:send_request():249] send_request: stop_status
+2022-03-30 11:30:03,048 DEBUG   SenderThread:9744 [sender.py:send():235] send: stats
+2022-03-30 11:30:03,637 DEBUG   HandlerThread:9744 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-30 11:30:03,638 DEBUG   SenderThread:9744 [sender.py:send_request():249] send_request: stop_status
+2022-03-30 11:30:18,778 DEBUG   HandlerThread:9744 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-30 11:30:18,779 DEBUG   SenderThread:9744 [sender.py:send_request():249] send_request: stop_status
+2022-03-30 11:30:34,204 DEBUG   HandlerThread:9744 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-30 11:30:34,205 DEBUG   SenderThread:9744 [sender.py:send_request():249] send_request: stop_status
+2022-03-30 11:30:36,556 DEBUG   SenderThread:9744 [sender.py:send():235] send: stats
+2022-03-30 11:30:49,319 DEBUG   HandlerThread:9744 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-30 11:30:49,320 DEBUG   SenderThread:9744 [sender.py:send_request():249] send_request: stop_status
+2022-03-30 11:31:04,461 DEBUG   HandlerThread:9744 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-30 11:31:04,461 DEBUG   SenderThread:9744 [sender.py:send_request():249] send_request: stop_status
+2022-03-30 11:31:06,618 WARNING MainThread:9744 [internal.py:wandb_internal():155] Internal process interrupt: 1
+2022-03-30 11:31:06,804 WARNING MainThread:9744 [internal.py:wandb_internal():155] Internal process interrupt: 2
+2022-03-30 11:31:06,804 ERROR   MainThread:9744 [internal.py:wandb_internal():158] Internal process interrupted.
+2022-03-30 11:31:07,484 INFO    HandlerThread:9744 [handler.py:finish():778] shutting down handler
+2022-03-30 11:31:07,593 INFO    SenderThread:9744 [sender.py:finish():1078] shutting down sender
+2022-03-30 11:31:07,594 INFO    SenderThread:9744 [dir_watcher.py:finish():283] shutting down directory watcher
+2022-03-30 11:31:07,767 INFO    WriterThread:9744 [datastore.py:close():281] close: C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220330_112745-3rbkuuqw\run-3rbkuuqw.wandb
+2022-03-30 11:31:07,847 INFO    SenderThread:9744 [dir_watcher.py:finish():313] scan: C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220330_112745-3rbkuuqw\files
+2022-03-30 11:31:07,848 INFO    SenderThread:9744 [dir_watcher.py:finish():327] scan save: C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220330_112745-3rbkuuqw\files\conda-environment.yaml conda-environment.yaml
+2022-03-30 11:31:07,849 INFO    SenderThread:9744 [dir_watcher.py:finish():327] scan save: C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220330_112745-3rbkuuqw\files\config.yaml config.yaml
+2022-03-30 11:31:07,850 INFO    SenderThread:9744 [dir_watcher.py:finish():327] scan save: C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220330_112745-3rbkuuqw\files\output.log output.log
+2022-03-30 11:31:07,854 INFO    SenderThread:9744 [dir_watcher.py:finish():327] scan save: C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220330_112745-3rbkuuqw\files\requirements.txt requirements.txt
+2022-03-30 11:31:07,870 INFO    SenderThread:9744 [dir_watcher.py:finish():327] scan save: C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220330_112745-3rbkuuqw\files\wandb-metadata.json wandb-metadata.json
+2022-03-30 11:31:07,870 INFO    SenderThread:9744 [dir_watcher.py:finish():327] scan save: C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220330_112745-3rbkuuqw\files\wandb-summary.json wandb-summary.json
+2022-03-30 11:31:07,873 INFO    SenderThread:9744 [file_pusher.py:finish():145] shutting down file pusher
+2022-03-30 11:31:07,874 INFO    SenderThread:9744 [file_pusher.py:join():150] waiting for file pusher
+2022-03-30 11:31:08,322 INFO    Thread-20 :9744 [upload_job.py:push():137] Uploaded file C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220330_112745-3rbkuuqw\files\requirements.txt
+2022-03-30 11:31:08,328 INFO    Thread-21 :9744 [upload_job.py:push():137] Uploaded file C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220330_112745-3rbkuuqw\files\wandb-summary.json
+2022-03-30 11:31:08,394 INFO    Thread-19 :9744 [upload_job.py:push():137] Uploaded file C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220330_112745-3rbkuuqw\files\output.log
+2022-03-30 11:31:08,403 INFO    Thread-18 :9744 [upload_job.py:push():137] Uploaded file C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220330_112745-3rbkuuqw\files\config.yaml
