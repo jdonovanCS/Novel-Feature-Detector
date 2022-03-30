@@ -1,0 +1,24 @@
+2022-03-29 20:22:43,459 INFO    MainThread:112168 [wandb_setup.py:_flush():75] Loading settings from C:\Users\Jordan\.config\wandb\settings
+2022-03-29 20:22:43,459 INFO    MainThread:112168 [wandb_setup.py:_flush():75] Loading settings from C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\settings
+2022-03-29 20:22:43,460 INFO    MainThread:112168 [wandb_setup.py:_flush():75] Loading settings from environment variables: {}
+2022-03-29 20:22:43,460 INFO    MainThread:112168 [wandb_setup.py:_flush():75] Inferring run settings from compute environment: {'program_relpath': 'evolution.py', 'program': 'C:\\Users\\Jordan\\Learning\\UVM\\Research Projects\\Novel-Feature-Detector\\evolution.py'}
+2022-03-29 20:22:43,460 INFO    MainThread:112168 [wandb_init.py:_log_setup():405] Logging user logs to C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220329_202243-16wz2ndg\logs\debug.log
+2022-03-29 20:22:43,460 INFO    MainThread:112168 [wandb_init.py:_log_setup():406] Logging internal logs to C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220329_202243-16wz2ndg\logs\debug-internal.log
+2022-03-29 20:22:43,460 INFO    MainThread:112168 [wandb_init.py:init():439] calling init triggers
+2022-03-29 20:22:43,460 INFO    MainThread:112168 [wandb_init.py:init():442] wandb.init called with sweep_config: {}
+config: {}
+2022-03-29 20:22:43,461 INFO    MainThread:112168 [wandb_init.py:init():492] starting backend
+2022-03-29 20:22:43,461 INFO    MainThread:112168 [backend.py:_multiprocessing_setup():99] multiprocessing start_methods=spawn, using: spawn
+2022-03-29 20:22:43,463 INFO    MainThread:112168 [backend.py:ensure_launched():219] starting backend process...
+2022-03-29 20:22:43,516 INFO    MainThread:112168 [backend.py:ensure_launched():224] started backend process with pid: 143968
+2022-03-29 20:22:43,517 INFO    MainThread:112168 [wandb_init.py:init():501] backend started and connected
+2022-03-29 20:22:43,519 INFO    MainThread:112168 [wandb_init.py:init():565] updated telemetry
+2022-03-29 20:22:43,554 INFO    MainThread:112168 [wandb_init.py:init():596] communicating run to backend with 30 second timeout
+2022-03-29 20:22:45,261 INFO    MainThread:112168 [wandb_run.py:_on_init():1759] communicating current version
+2022-03-29 20:22:45,368 INFO    MainThread:112168 [wandb_run.py:_on_init():1763] got version response 
+2022-03-29 20:22:45,368 INFO    MainThread:112168 [wandb_init.py:init():625] starting run threads in backend
+2022-03-29 20:22:45,566 INFO    MainThread:112168 [wandb_run.py:_console_start():1733] atexit reg
+2022-03-29 20:22:45,567 INFO    MainThread:112168 [wandb_run.py:_redirect():1606] redirect: SettingsConsole.WRAP
+2022-03-29 20:22:45,567 INFO    MainThread:112168 [wandb_run.py:_redirect():1643] Wrapping output streams.
+2022-03-29 20:22:45,568 INFO    MainThread:112168 [wandb_run.py:_redirect():1667] Redirects installed.
+2022-03-29 20:22:45,568 INFO    MainThread:112168 [wandb_init.py:init():664] run started, returning control to user process

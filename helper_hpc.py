@@ -317,6 +317,7 @@ class Net(pl.LightningModule):
     def cross_entropy_loss(self, logits, labels):
         return F.nll_loss(logits, labels)
 
+
     def get_activations(self, x):
         return[self.conv1_act, self.conv2_act, self.conv3_act, self.conv4_act, self.conv5_act, self.conv6_act]
 

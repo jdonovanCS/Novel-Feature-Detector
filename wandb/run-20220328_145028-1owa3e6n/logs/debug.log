@@ -1,0 +1,258 @@
+2022-03-28 14:50:28,153 INFO    MainThread:106764 [wandb_setup.py:_flush():75] Loading settings from C:\Users\Jordan\.config\wandb\settings
+2022-03-28 14:50:28,153 INFO    MainThread:106764 [wandb_setup.py:_flush():75] Loading settings from C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\settings
+2022-03-28 14:50:28,153 INFO    MainThread:106764 [wandb_setup.py:_flush():75] Loading settings from environment variables: {}
+2022-03-28 14:50:28,153 INFO    MainThread:106764 [wandb_setup.py:_flush():75] Inferring run settings from compute environment: {'program_relpath': 'train_and_eval.py', 'program': 'train_and_eval.py'}
+2022-03-28 14:50:28,154 INFO    MainThread:106764 [wandb_init.py:_log_setup():405] Logging user logs to C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220328_145028-1owa3e6n\logs\debug.log
+2022-03-28 14:50:28,154 INFO    MainThread:106764 [wandb_init.py:_log_setup():406] Logging internal logs to C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220328_145028-1owa3e6n\logs\debug-internal.log
+2022-03-28 14:50:28,154 INFO    MainThread:106764 [wandb_init.py:init():439] calling init triggers
+2022-03-28 14:50:28,154 INFO    MainThread:106764 [wandb_init.py:init():443] wandb.init called with sweep_config: {}
+config: {}
+2022-03-28 14:50:28,154 INFO    MainThread:106764 [wandb_init.py:init():492] starting backend
+2022-03-28 14:50:28,154 INFO    MainThread:106764 [backend.py:_multiprocessing_setup():101] multiprocessing start_methods=spawn, using: spawn
+2022-03-28 14:50:28,156 INFO    MainThread:106764 [backend.py:ensure_launched():219] starting backend process...
+2022-03-28 14:50:29,124 INFO    MainThread:106764 [backend.py:ensure_launched():225] started backend process with pid: 124304
+2022-03-28 14:50:29,125 INFO    MainThread:106764 [wandb_init.py:init():501] backend started and connected
+2022-03-28 14:50:29,126 INFO    MainThread:106764 [wandb_init.py:init():565] updated telemetry
+2022-03-28 14:50:29,248 INFO    MainThread:106764 [wandb_init.py:init():596] communicating run to backend with 30 second timeout
+2022-03-28 14:50:29,420 INFO    MainThread:106764 [wandb_run.py:_on_init():1759] communicating current version
+2022-03-28 14:50:29,535 INFO    MainThread:106764 [wandb_run.py:_on_init():1763] got version response 
+2022-03-28 14:50:29,535 INFO    MainThread:106764 [wandb_init.py:init():625] starting run threads in backend
+2022-03-28 14:50:31,111 INFO    MainThread:106764 [wandb_run.py:_console_start():1733] atexit reg
+2022-03-28 14:50:31,111 INFO    MainThread:106764 [wandb_run.py:_redirect():1606] redirect: SettingsConsole.WRAP
+2022-03-28 14:50:31,112 INFO    MainThread:106764 [wandb_run.py:_redirect():1643] Wrapping output streams.
+2022-03-28 14:50:31,113 INFO    MainThread:106764 [wandb_run.py:_redirect():1667] Redirects installed.
+2022-03-28 14:50:31,113 INFO    MainThread:106764 [wandb_init.py:init():664] run started, returning control to user process
+2022-03-28 14:50:32,319 INFO    MainThread:106764 [wandb_config.py:__setitem__():153] config set dataset = random - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x0000025A0BCFDE48>>
+2022-03-28 14:50:32,319 INFO    MainThread:106764 [wandb_run.py:_config_callback():992] config_cb dataset random None
+2022-03-28 14:50:32,319 INFO    MainThread:106764 [wandb_config.py:__setitem__():153] config set batch_size = 64 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x0000025A0BCFDE48>>
+2022-03-28 14:50:32,319 INFO    MainThread:106764 [wandb_run.py:_config_callback():992] config_cb batch_size 64 None
+2022-03-28 14:50:32,320 INFO    MainThread:106764 [wandb_config.py:__setitem__():153] config set experiment_name = mutation_multiplier_cifar10novelty_pop20_gen50 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x0000025A0BCFDE48>>
+2022-03-28 14:50:32,320 INFO    MainThread:106764 [wandb_run.py:_config_callback():992] config_cb experiment_name mutation_multiplier_cifar10novelty_pop20_gen50 None
+2022-03-28 14:50:32,320 INFO    MainThread:106764 [wandb_config.py:__setitem__():153] config set evo_gens = 50 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x0000025A0BCFDE48>>
+2022-03-28 14:50:32,320 INFO    MainThread:106764 [wandb_run.py:_config_callback():992] config_cb evo_gens 50 None
+2022-03-28 14:50:32,320 INFO    MainThread:106764 [wandb_config.py:__setitem__():153] config set evo_pop = 20 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x0000025A0BCFDE48>>
+2022-03-28 14:50:32,321 INFO    MainThread:106764 [wandb_run.py:_config_callback():992] config_cb evo_pop 20 None
+2022-03-28 14:50:32,321 INFO    MainThread:106764 [wandb_config.py:__setitem__():153] config set evo_dataset_for_novelty = cifar-10 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x0000025A0BCFDE48>>
+2022-03-28 14:50:32,321 INFO    MainThread:106764 [wandb_run.py:_config_callback():992] config_cb evo_dataset_for_novelty cifar-10 None
+2022-03-28 14:50:32,321 INFO    MainThread:106764 [wandb_config.py:__setitem__():153] config set evo = True - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x0000025A0BCFDE48>>
+2022-03-28 14:50:32,321 INFO    MainThread:106764 [wandb_run.py:_config_callback():992] config_cb evo True None
+2022-03-28 14:50:32,321 INFO    MainThread:106764 [wandb_config.py:__setitem__():153] config set evo_num_runs = 5 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x0000025A0BCFDE48>>
+2022-03-28 14:50:32,322 INFO    MainThread:106764 [wandb_run.py:_config_callback():992] config_cb evo_num_runs 5 None
+2022-03-28 14:50:32,322 INFO    MainThread:106764 [wandb_config.py:__setitem__():153] config set evo_tourney_size = 4 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x0000025A0BCFDE48>>
+2022-03-28 14:50:32,322 INFO    MainThread:106764 [wandb_run.py:_config_callback():992] config_cb evo_tourney_size 4 None
+2022-03-28 14:50:32,322 INFO    MainThread:106764 [wandb_config.py:__setitem__():153] config set evo_num_winners = 2 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x0000025A0BCFDE48>>
+2022-03-28 14:50:32,322 INFO    MainThread:106764 [wandb_run.py:_config_callback():992] config_cb evo_num_winners 2 None
+2022-03-28 14:50:32,322 INFO    MainThread:106764 [wandb_config.py:__setitem__():153] config set evo_num_children = 20 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x0000025A0BCFDE48>>
+2022-03-28 14:50:32,322 INFO    MainThread:106764 [wandb_run.py:_config_callback():992] config_cb evo_num_children 20 None
+2022-03-28 14:50:32,763 INFO    MainThread:106764 [wandb_config.py:__setitem__():153] config set fixed_conv = False - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x0000025A0BCFDE48>>
+2022-03-28 14:50:32,763 INFO    MainThread:106764 [wandb_run.py:_config_callback():992] config_cb fixed_conv False None
+2022-03-28 14:59:53,863 INFO    MainThread:106764 [wandb_config.py:__setitem__():153] config set fixed_conv = False - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x0000025A0BCFDE48>>
+2022-03-28 14:59:53,863 INFO    MainThread:106764 [wandb_run.py:_config_callback():992] config_cb fixed_conv False None
+2022-03-28 15:09:21,654 INFO    MainThread:106764 [wandb_config.py:__setitem__():153] config set fixed_conv = False - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x0000025A0BCFDE48>>
+2022-03-28 15:09:21,654 INFO    MainThread:106764 [wandb_run.py:_config_callback():992] config_cb fixed_conv False None
+2022-03-28 15:18:59,107 INFO    MainThread:106764 [wandb_config.py:__setitem__():153] config set fixed_conv = False - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x0000025A0BCFDE48>>
+2022-03-28 15:18:59,108 INFO    MainThread:106764 [wandb_run.py:_config_callback():992] config_cb fixed_conv False None
+2022-03-28 15:28:47,188 INFO    MainThread:106764 [wandb_config.py:__setitem__():153] config set fixed_conv = False - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x0000025A0BCFDE48>>
+2022-03-28 15:28:47,189 INFO    MainThread:106764 [wandb_run.py:_config_callback():992] config_cb fixed_conv False None
+2022-03-28 15:38:48,378 INFO    MainThread:106764 [wandb_run.py:_atexit_cleanup():1702] got exitcode: 1
+2022-03-28 15:38:48,379 INFO    MainThread:106764 [wandb_run.py:_restore():1674] restore
+2022-03-28 15:38:48,997 INFO    MainThread:106764 [wandb_run.py:_on_finish():1831] got exit ret: file_counts {
+  wandb_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 1473
+  total_bytes: 1473
+}
+
+2022-03-28 15:38:49,151 INFO    MainThread:106764 [wandb_run.py:_on_finish():1831] got exit ret: file_counts {
+  wandb_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 1473
+  total_bytes: 1473
+}
+
+2022-03-28 15:38:49,370 INFO    MainThread:106764 [wandb_run.py:_on_finish():1831] got exit ret: file_counts {
+  wandb_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 1473
+  total_bytes: 1473
+}
+
+2022-03-28 15:38:50,120 INFO    MainThread:106764 [wandb_run.py:_on_finish():1831] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 1473
+  total_bytes: 40408
+}
+
+2022-03-28 15:38:50,235 INFO    MainThread:106764 [wandb_run.py:_on_finish():1831] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 1473
+  total_bytes: 40408
+}
+
+2022-03-28 15:38:50,343 INFO    MainThread:106764 [wandb_run.py:_on_finish():1831] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 1473
+  total_bytes: 40408
+}
+
+2022-03-28 15:38:50,452 INFO    MainThread:106764 [wandb_run.py:_on_finish():1831] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 38945
+  total_bytes: 40408
+}
+
+2022-03-28 15:38:50,560 INFO    MainThread:106764 [wandb_run.py:_on_finish():1831] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 38945
+  total_bytes: 40408
+}
+
+2022-03-28 15:38:50,669 INFO    MainThread:106764 [wandb_run.py:_on_finish():1831] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 38945
+  total_bytes: 40408
+}
+
+2022-03-28 15:38:50,778 INFO    MainThread:106764 [wandb_run.py:_on_finish():1831] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 38945
+  total_bytes: 40408
+}
+
+2022-03-28 15:38:50,886 INFO    MainThread:106764 [wandb_run.py:_on_finish():1831] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 38945
+  total_bytes: 40408
+}
+
+2022-03-28 15:38:50,995 INFO    MainThread:106764 [wandb_run.py:_on_finish():1831] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 38945
+  total_bytes: 40408
+}
+
+2022-03-28 15:38:51,103 INFO    MainThread:106764 [wandb_run.py:_on_finish():1831] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 38945
+  total_bytes: 40408
+}
+
+2022-03-28 15:38:51,212 INFO    MainThread:106764 [wandb_run.py:_on_finish():1831] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 38945
+  total_bytes: 40408
+}
+
+2022-03-28 15:38:51,321 INFO    MainThread:106764 [wandb_run.py:_on_finish():1831] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 38945
+  total_bytes: 40408
+}
+
+2022-03-28 15:38:51,429 INFO    MainThread:106764 [wandb_run.py:_on_finish():1831] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 38945
+  total_bytes: 40408
+}
+
+2022-03-28 15:38:51,538 INFO    MainThread:106764 [wandb_run.py:_on_finish():1831] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 39889
+  total_bytes: 40408
+}
+
+2022-03-28 15:38:51,646 INFO    MainThread:106764 [wandb_run.py:_on_finish():1831] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 40408
+  total_bytes: 40408
+}
+
+2022-03-28 15:38:51,755 INFO    MainThread:106764 [wandb_run.py:_on_finish():1831] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 40408
+  total_bytes: 40408
+}
+
+2022-03-28 15:38:51,864 INFO    MainThread:106764 [wandb_run.py:_on_finish():1831] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 40408
+  total_bytes: 40408
+}
+
+2022-03-28 15:38:51,972 INFO    MainThread:106764 [wandb_run.py:_on_finish():1831] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 40408
+  total_bytes: 40408
+}
+
+2022-03-28 15:38:52,081 INFO    MainThread:106764 [wandb_run.py:_on_finish():1831] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 40408
+  total_bytes: 40408
+}
+
+2022-03-28 15:38:52,402 INFO    MainThread:106764 [wandb_run.py:_on_finish():1831] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 40408
+  total_bytes: 40408
+}
+
+2022-03-28 15:38:53,059 INFO    MainThread:106764 [wandb_run.py:_on_finish():1831] got exit ret: done: true
+exit_result {
+}
+file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 40408
+  total_bytes: 40408
+}
+local_info {
+}
+
+2022-03-28 15:38:54,459 INFO    MainThread:106764 [wandb_run.py:_footer_history_summary_info():2865] rendering history
+2022-03-28 15:38:54,460 INFO    MainThread:106764 [wandb_run.py:_footer_history_summary_info():2894] rendering summary
+2022-03-28 15:38:54,475 INFO    MainThread:106764 [wandb_run.py:_footer_sync_info():2822] logging synced files

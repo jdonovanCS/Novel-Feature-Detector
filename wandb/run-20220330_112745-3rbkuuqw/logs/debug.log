@@ -14,3 +14,11 @@ config: {}
 2022-03-30 11:27:45,662 INFO    MainThread:30432 [wandb_init.py:init():501] backend started and connected
 2022-03-30 11:27:45,664 INFO    MainThread:30432 [wandb_init.py:init():565] updated telemetry
 2022-03-30 11:27:45,698 INFO    MainThread:30432 [wandb_init.py:init():596] communicating run to backend with 30 second timeout
+2022-03-30 11:27:46,475 INFO    MainThread:30432 [wandb_run.py:_on_init():1759] communicating current version
+2022-03-30 11:27:46,541 INFO    MainThread:30432 [wandb_run.py:_on_init():1763] got version response 
+2022-03-30 11:27:46,541 INFO    MainThread:30432 [wandb_init.py:init():625] starting run threads in backend
+2022-03-30 11:27:46,756 INFO    MainThread:30432 [wandb_run.py:_console_start():1733] atexit reg
+2022-03-30 11:27:46,759 INFO    MainThread:30432 [wandb_run.py:_redirect():1606] redirect: SettingsConsole.WRAP
+2022-03-30 11:27:46,759 INFO    MainThread:30432 [wandb_run.py:_redirect():1643] Wrapping output streams.
+2022-03-30 11:27:46,760 INFO    MainThread:30432 [wandb_run.py:_redirect():1667] Redirects installed.
+2022-03-30 11:27:46,760 INFO    MainThread:30432 [wandb_init.py:init():664] run started, returning control to user process
