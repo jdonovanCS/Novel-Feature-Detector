@@ -100,7 +100,8 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
 
     # Initialize the population with random models.
     print("Initializing")
-    net_input = next(iter(data_module.train_dataloader()))
+    data_iterator = iter(data_module.train_dataloader())
+    net_input = next(data_iterator)
     for i in tqdm(range(population_size)): #while len(population) < population_size:
         model = helper.Net()
         # model.filters = [m.weight.data for m in model.conv_layers]
@@ -111,7 +112,7 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
         
     print("Generations")
     for i in tqdm(range(generations)):
-        net_input = next(iter(data_module.train_dataloader()))
+        net_input = next(data_iterator)
         parents = []  
         while len(parents) < num_children and evolution_type != "random":
         # Sample randomly chosen models from the current population.
