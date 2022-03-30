@@ -106,7 +106,7 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
         # model.filters = [m.weight.data for m in model.conv_layers]
         # model.filters = helper.get_random_filters()
         # model.activations = .get_activations(trainloader, model.filters)
-        model.fitness =  model.test_step(net_input, 0)['test_novelty']
+        model.fitness =  model.get_fitness(net_input)['test_novelty']
         population.append(model)
         
     print("Generations")
@@ -129,7 +129,7 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
         for parent in parents:
             child = helper.Net()
             child.set_filters(mutate(parent.get_filters()))
-            child.fitness = model.test_step(net_input, 0)['test_novelty']
+            child.fitness = model.get_fitness(net_input)['test_novelty']
             population.append(child)
             
         if evolution_type == 'fitness':
