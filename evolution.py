@@ -130,7 +130,7 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
         for parent in parents:
             child = helper.Net()
             child.set_filters(mutate(parent.get_filters()))
-            child.fitness = model.get_fitness(net_input)
+            child.fitness = child.get_fitness(net_input)
             population.append(child)
             
         if evolution_type == 'fitness':
