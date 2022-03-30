@@ -22,3 +22,8 @@ config: {}
 2022-03-30 11:27:46,759 INFO    MainThread:30432 [wandb_run.py:_redirect():1643] Wrapping output streams.
 2022-03-30 11:27:46,760 INFO    MainThread:30432 [wandb_run.py:_redirect():1667] Redirects installed.
 2022-03-30 11:27:46,760 INFO    MainThread:30432 [wandb_init.py:init():664] run started, returning control to user process
+2022-03-30 11:34:10,076 INFO    MainThread:30432 [wandb_run.py:_atexit_cleanup():1702] got exitcode: 255
+2022-03-30 11:34:10,421 INFO    MainThread:30432 [wandb_run.py:_restore():1674] restore
+2022-03-30 11:34:15,971 INFO    MainThread:30432 [wandb_run.py:_on_finish():1831] got exit ret: None
+2022-03-30 11:34:21,086 INFO    MainThread:30432 [wandb_run.py:_on_finish():1831] got exit ret: None
+2022-03-30 11:34:26,206 INFO    MainThread:30432 [wandb_run.py:_on_finish():1831] got exit ret: None
