@@ -78,3 +78,35 @@ Initializing
 7 0
 8 0
 
+Traceback (most recent call last):                                                      | 1/10 [00:47<07:03, 47.04s/it]
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\threading.py", line 1009, in _bootstrap_inner
+    self.run()
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\threading.py", line 946, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\wandb\sdk\wandb_run.py", line 149, in check_network_status
+    status_response = self._interface.communicate_network_status()
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\wandb\sdk\interface\interface.py", line 125, in communicate_network_status
+    resp = self._communicate_network_status(status)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\wandb\sdk\interface\interface_shared.py", line 397, in _communicate_network_status
+    resp = self._communicate(req, local=True)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\wandb\sdk\interface\interface_shared.py", line 222, in _communicate
+    return self._communicate_async(rec, local=local).get(timeout=timeout)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\wandb\sdk\interface\interface_shared.py", line 227, in _communicate_async
+    raise Exception("The wandb backend process has shutdown")
+Exception: The wandb backend process has shutdown
+Exception in thread ChkStopThr:
+Traceback (most recent call last):
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\threading.py", line 1009, in _bootstrap_inner
+    self.run()
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\threading.py", line 946, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\wandb\sdk\wandb_run.py", line 167, in check_status
+    status_response = self._interface.communicate_stop_status()
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\wandb\sdk\interface\interface.py", line 114, in communicate_stop_status
+    resp = self._communicate_stop_status(status)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\wandb\sdk\interface\interface_shared.py", line 387, in _communicate_stop_status
+    resp = self._communicate(req, local=True)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\wandb\sdk\interface\interface_shared.py", line 222, in _communicate
+    return self._communicate_async(rec, local=local).get(timeout=timeout)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\wandb\sdk\interface\interface_shared.py", line 227, in _communicate_async
+    raise Exception("The wandb backend process has shutdown")
