@@ -110,6 +110,7 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
         # model.activations = .get_activations(trainloader, model.filters)
         model.fitness =  net.get_fitness(net_input)
         population.append(model)
+        helper.wandb.log({'gen': 0, 'individual': i, 'fitness': model.fitness})
         gc.collect()
         
     print("Generations")
@@ -139,9 +140,14 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
             
         if evolution_type == 'fitness':
             population = sorted(population, key=lambda i: i.fitness, reverse=True)[:population_size]
+            for i in range(len(population)):
+                helper.wandb.log({'gen': 0, 'individual': i, 'fitness': population[i].fitness})
         
-        fitness_over_time.append((sorted(population, key=lambda i: i.fitness, reverse=True)[0].fitness))
-        solutions_over_time.append((sorted(population, key=lambda i: i.fitness, reverse=True)[0].filters))
+        best_fitness = sorted(population, key=lambda i: i.fitness, reverse=True)[0].fitness
+        best_solution = sorted(population, key=lambda i: i.fitness, reverse=True)[0].filters
+        fitness_over_time.append((best_fitness))
+        solutions_over_time.append((best_solution))
+        helper.wandb.log({'gen': 0, 'best_individual_fitness': best_fitness, 'best_individual_filters': best_solution})
         
     return solutions_over_time, np.array(fitness_over_time)
 
@@ -160,6 +166,7 @@ def run():
     # trainloader = helper.load_CIFAR_10()[2]
     global experiment_name
     experiment_name = args.experiment_name
+    
     # filters = helper.get_random_filters()
     # activations = helper.get_activations(trainloader, filters)
 
@@ -197,6 +204,8 @@ def run():
             with open('output.txt', 'a+') as f:
                 f.write('run_name, run_num, time, fittest individual\n{}, {}, {}, {}'.format(run_name, run_num, time.time()-start_time, fitness_over_time[-1]))
 
+    if not os.path.isdir('plots/' + experiment_name):
+        os.mkdir('plots/' + experiment_name)
     if not os.path.isdir('output/' + experiment_name):
         os.mkdir('output/' + experiment_name)
     with open('output/' + experiment_name + '/solutions_over_time.pickle', 'wb') as f:
