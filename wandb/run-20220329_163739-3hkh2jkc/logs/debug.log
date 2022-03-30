@@ -1,0 +1,56 @@
+2022-03-29 16:37:39,164 INFO    MainThread:221232 [wandb_setup.py:_flush():75] Loading settings from C:\Users\Jordan\.config\wandb\settings
+2022-03-29 16:37:39,164 INFO    MainThread:221232 [wandb_setup.py:_flush():75] Loading settings from C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\settings
+2022-03-29 16:37:39,164 INFO    MainThread:221232 [wandb_setup.py:_flush():75] Loading settings from environment variables: {}
+2022-03-29 16:37:39,164 INFO    MainThread:221232 [wandb_setup.py:_flush():75] Inferring run settings from compute environment: {'program_relpath': 'evolution.py', 'program': 'evolution.py'}
+2022-03-29 16:37:39,165 INFO    MainThread:221232 [wandb_init.py:_log_setup():405] Logging user logs to C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220329_163739-3hkh2jkc\logs\debug.log
+2022-03-29 16:37:39,165 INFO    MainThread:221232 [wandb_init.py:_log_setup():406] Logging internal logs to C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220329_163739-3hkh2jkc\logs\debug-internal.log
+2022-03-29 16:37:39,165 INFO    MainThread:221232 [wandb_init.py:init():439] calling init triggers
+2022-03-29 16:37:39,165 INFO    MainThread:221232 [wandb_init.py:init():443] wandb.init called with sweep_config: {}
+config: {}
+2022-03-29 16:37:39,165 INFO    MainThread:221232 [wandb_init.py:init():492] starting backend
+2022-03-29 16:37:39,165 INFO    MainThread:221232 [backend.py:_multiprocessing_setup():101] multiprocessing start_methods=spawn, using: spawn
+2022-03-29 16:37:39,167 INFO    MainThread:221232 [backend.py:ensure_launched():219] starting backend process...
+2022-03-29 16:37:39,872 WARNING MainThread:221232 [wandb_init.py:init():975] interrupted
+Traceback (most recent call last):
+  File "C:\Users\Jordan\anaconda3\envs\EC\lib\site-packages\wandb\sdk\wandb_init.py", line 954, in init
+    run = wi.init()
+  File "C:\Users\Jordan\anaconda3\envs\EC\lib\site-packages\wandb\sdk\wandb_init.py", line 499, in init
+    backend.ensure_launched()
+  File "C:\Users\Jordan\anaconda3\envs\EC\lib\site-packages\wandb\sdk\backend\backend.py", line 222, in ensure_launched
+    self.wandb_process.start()
+  File "C:\Users\Jordan\anaconda3\envs\EC\lib\multiprocessing\process.py", line 112, in start
+    self._popen = self._Popen(self)
+  File "C:\Users\Jordan\anaconda3\envs\EC\lib\multiprocessing\context.py", line 322, in _Popen
+    return Popen(process_obj)
+  File "C:\Users\Jordan\anaconda3\envs\EC\lib\multiprocessing\popen_spawn_win32.py", line 67, in __init__
+    set_spawning_popen(None)
+BrokenPipeError: [Errno 32] Broken pipe
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Jordan\anaconda3\envs\EC\lib\site-packages\wandb\sdk\wandb_init.py", line 958, in init
+    sentry_exc(e)
+  File "C:\Users\Jordan\anaconda3\envs\EC\lib\site-packages\wandb\util.py", line 152, in sentry_exc
+    capture_exception(exc)
+  File "C:\Users\Jordan\anaconda3\envs\EC\lib\site-packages\sentry_sdk\api.py", line 97, in capture_exception
+    return Hub.current.capture_exception(error, scope=scope, **scope_args)
+  File "C:\Users\Jordan\anaconda3\envs\EC\lib\site-packages\sentry_sdk\hub.py", line 370, in capture_exception
+    event, hint = event_from_exception(exc_info, client_options=client.options)
+  File "C:\Users\Jordan\anaconda3\envs\EC\lib\site-packages\sentry_sdk\utils.py", line 744, in event_from_exception
+    exc_info, client_options, mechanism
+  File "C:\Users\Jordan\anaconda3\envs\EC\lib\site-packages\sentry_sdk\utils.py", line 629, in exceptions_from_error_tuple
+    exc_type, exc_value, tb, client_options, mechanism
+  File "C:\Users\Jordan\anaconda3\envs\EC\lib\site-packages\sentry_sdk\utils.py", line 560, in single_exception_from_error_tuple
+    for tb in iter_stacks(tb)
+  File "C:\Users\Jordan\anaconda3\envs\EC\lib\site-packages\sentry_sdk\utils.py", line 560, in <listcomp>
+    for tb in iter_stacks(tb)
+  File "C:\Users\Jordan\anaconda3\envs\EC\lib\site-packages\sentry_sdk\utils.py", line 495, in serialize_frame
+    pre_context, context_line, post_context = get_source_context(frame, tb_lineno)
+  File "C:\Users\Jordan\anaconda3\envs\EC\lib\site-packages\sentry_sdk\utils.py", line 407, in get_source_context
+    return get_lines_from_file(abs_path, lineno, loader, module)
+  File "C:\Users\Jordan\anaconda3\envs\EC\lib\site-packages\sentry_sdk\utils.py", line 355, in get_lines_from_file
+    source_str = loader.get_source(module)  # type: Optional[str]
+  File "<frozen importlib._bootstrap_external>", line 779, in get_source
+  File "<frozen importlib._bootstrap_external>", line 916, in get_data
+KeyboardInterrupt

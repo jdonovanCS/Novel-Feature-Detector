@@ -1,0 +1,16 @@
+Files already downloaded and verified
+Files already downloaded and verified
+  0%|                                                                                            | 0/1 [00:00<?, ?it/s]
+  0%|                                                                                           | 0/10 [00:00<?, ?it/s]
+Running Evolution for fitness
+  0%|                                                                                            | 0/1 [00:42<?, ?it/s]
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 216, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 186, in run
+    solution_over_time, fitness_over_time = evolution(generations=n_iters, population_size=pop_size, num_children=num_children, tournament_size=tournament_size, num_winners=num_winners, evolution_type=run_name)
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 108, in evolution
+    model.fitness =  model.test_step(next(iter(data_module.train_dataloader())), 0)['test_novelty']
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\helper_hpc.py", line 263, in test_step
+    loss = self.cross_entropy_loss(logits, y)
+TypeError: Net.cross_entropy_loss() takes 2 positional arguments but 3 were given
