@@ -251,7 +251,7 @@ class Net(pl.LightningModule):
             accuracy = 100 * float(correct_count) / total_pred[classname]
             class_acc[classname] = accuracy
         # get novelty score
-        novelty_score = self.compute_feature_novelty(self.activations)
+        novelty_score = self.compute_feature_novelty()
         # clear out activations
         for i in range(len(self.conv_layers)):
             self.activations[i] = []
@@ -276,7 +276,7 @@ class Net(pl.LightningModule):
     def get_fitness(self, batch):
         x, y = batch
         logits = self.forward(x)
-        novelty_score = self.compute_feature_novelty(self.activations)
+        novelty_score = self.compute_feature_novelty()
         # clear out activations
         for i in range(len(self.conv_layers)):
             self.activations[i] = []
@@ -305,7 +305,7 @@ class Net(pl.LightningModule):
                 accuracy = 100 * float(correct_count) / total_pred[classname]
             class_acc[classname] = accuracy
         # get novelty score
-        novelty_score = self.compute_feature_novelty(self.activations)
+        novelty_score = self.compute_feature_novelty()
         # clear out activations
         for i in range(len(self.conv_layers)):
             self.activations[i] = []
