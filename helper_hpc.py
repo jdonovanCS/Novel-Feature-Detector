@@ -291,6 +291,7 @@ class Net(pl.LightningModule):
                     corr_pred[classes[label]] += 1
                 total_pred[classes[label]] += 1
         for classname, correct_count in corr_pred.items():
+            print(classname, correct_count)
             accuracy = None
             if total_pred[classname] != 0:
                 accuracy = 100 * float(correct_count) / total_pred[classname]
