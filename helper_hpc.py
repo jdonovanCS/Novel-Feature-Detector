@@ -251,7 +251,7 @@ class Net(pl.LightningModule):
             accuracy = 100 * float(correct_count) / total_pred[classname]
             class_acc[classname] = accuracy
         # get novelty score
-        novelty_score = evol.compute_feature_novelty(self.activations)
+        novelty_score = self.compute_feature_novelty(self.activations)
         # clear out activations
         for i in range(len(self.conv_layers)):
             self.activations[i] = []
@@ -276,7 +276,7 @@ class Net(pl.LightningModule):
     def get_fitness(self, batch):
         x, y = batch
         logits = self.forward(x)
-        novelty_score = evol.compute_feature_novelty(self.activations)
+        novelty_score = self.compute_feature_novelty(self.activations)
         # clear out activations
         for i in range(len(self.conv_layers)):
             self.activations[i] = []
@@ -305,7 +305,7 @@ class Net(pl.LightningModule):
                 accuracy = 100 * float(correct_count) / total_pred[classname]
             class_acc[classname] = accuracy
         # get novelty score
-        novelty_score = evol.compute_feature_novelty(self.activations)
+        novelty_score = self.compute_feature_novelty(self.activations)
         # clear out activations
         for i in range(len(self.conv_layers)):
             self.activations[i] = []
@@ -340,6 +340,23 @@ class Net(pl.LightningModule):
     
     def get_filters(self):
         return [m.weight.data for m in self.conv_layers]
+
+    def compute_feature_novelty(self):
+        dist = {}
+        avg_dist = {}
+        # for each conv layer
+        for layer in self.activations:
+            # for each activation 3d(batch, h, w)
+            for batch in self.activations[layer]:
+                # for each activation
+                for ind_activation in batch:
+                    
+                    for ind_activation2 in batch:
+                        if str(layer) not in dist:
+                            dist[str(layer)] = []
+                        dist[str(layer)].append(torch.abs(ind_activation2 - ind_activation))
+            avg_dist[str(layer)] = torch.mean(torch.stack(dist[str(layer)]))
+        return(sum(avg_dist.values()))
 
 # def get_activations(trainloader, filters, num_ims_used=64):
 #     net = Net()
