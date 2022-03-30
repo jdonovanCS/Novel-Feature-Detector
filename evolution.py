@@ -147,7 +147,8 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
         best_solution = sorted(population, key=lambda i: i.fitness, reverse=True)[0].filters
         fitness_over_time.append((best_fitness))
         solutions_over_time.append((best_solution))
-        # helper.wandb.log({'gen': i, 'best_individual_fitness': best_fitness, 'best_individual_filters': best_solution})
+        helper.wandb.log({'gen': i, 'best_individual_fitness': best_fitness})
+        helper.wandb.log({'gen': i, 'best_individual_filters': best_solution})
         
     return solutions_over_time, np.array(fitness_over_time)
 
