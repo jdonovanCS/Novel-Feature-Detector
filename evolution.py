@@ -32,12 +32,11 @@ parser.add_argument('--evo_num_children', type=int, help='Number of children in 
     
 args = parser.parse_args()
 
-# class Model(object):
-#     def __init__(self):
-#         self.filters = None
-#         self.activations = None
-#         self.fitness = None
-#         # self.novelty = None
+class Model(object):
+    def __init__(self):
+        self.filters = None
+        self.fitness = None
+        # self.novelty = None
 
 # def compute_feature_novelty(activations):
 #     dist = {}
@@ -103,11 +102,12 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
     data_iterator = iter(data_module.train_dataloader())
     net_input = next(data_iterator)
     for i in tqdm(range(population_size)): #while len(population) < population_size:
-        model = helper.Net()
+        model = Model()
+        net = helper.Net()
         # model.filters = [m.weight.data for m in model.conv_layers]
-        # model.filters = helper.get_random_filters()
+        model.filters = net.get_filters()
         # model.activations = .get_activations(trainloader, model.filters)
-        model.fitness =  model.get_fitness(net_input)
+        model.fitness =  net.get_fitness(net_input)
         population.append(model)
         
     print("Generations")
@@ -128,9 +128,11 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
 
         # Create the child model and store it.
         for parent in parents:
-            child = helper.Net()
-            child.set_filters(mutate(parent.get_filters()))
-            child.fitness = child.get_fitness(net_input)
+            child = Model()
+            net = helper.Net()
+            child.filters = (mutate(parent.filters))
+            net.set_filters = child.filters
+            child.fitness = net.get_fitness(net_input)
             population.append(child)
             
         if evolution_type == 'fitness':
@@ -179,7 +181,7 @@ def run():
 
     for run_name in ['fitness']:
         fitness_results[run_name] = np.zeros((num_runs, n_iters))
-        solution_results[run_name] = np.array([[helper.Net() for i in range(n_iters)]for j in range(num_runs)], dtype=object)
+        solution_results[run_name] = np.array([[Model() for i in range(n_iters)]for j in range(num_runs)], dtype=object)
         
         print("Running Evolution for {}".format(run_name))
         
