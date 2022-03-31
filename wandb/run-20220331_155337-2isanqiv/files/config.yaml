@@ -1,0 +1,133 @@
+wandb_version: 1
+
+_wandb:
+  desc: null
+  value:
+    cli_version: 0.12.11
+    framework: lightning
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    python_version: 3.10.0
+    start_time: 1648756417
+    t:
+      1:
+      - 1
+      - 9
+      - 41
+      2:
+      - 1
+      - 9
+      - 41
+      3:
+      - 1
+      4: 3.10.0
+      5: 0.12.11
+      8:
+      - 3
+      - 5
+classnames:
+  desc: null
+  value:
+  - apple
+  - aquarium_fish
+  - baby
+  - bear
+  - beaver
+  - bed
+  - bee
+  - beetle
+  - bicycle
+  - bottle
+  - bowl
+  - boy
+  - bridge
+  - bus
+  - butterfly
+  - camel
+  - can
+  - castle
+  - caterpillar
+  - cattle
+  - chair
+  - chimpanzee
+  - clock
+  - cloud
+  - cockroach
+  - couch
+  - crab
+  - crocodile
+  - cup
+  - dinosaur
+  - dolphin
+  - elephant
+  - flatfish
+  - forest
+  - fox
+  - girl
+  - hamster
+  - house
+  - kangaroo
+  - keyboard
+  - lamp
+  - lawn_mower
+  - leopard
+  - lion
+  - lizard
+  - lobster
+  - man
+  - maple_tree
+  - motorcycle
+  - mountain
+  - mouse
+  - mushroom
+  - oak_tree
+  - orange
+  - orchid
+  - otter
+  - palm_tree
+  - pear
+  - pickup_truck
+  - pine_tree
+  - plain
+  - plate
+  - poppy
+  - porcupine
+  - possum
+  - rabbit
+  - raccoon
+  - ray
+  - road
+  - rocket
+  - rose
+  - sea
+  - seal
+  - shark
+  - shrew
+  - skunk
+  - skyscraper
+  - snail
+  - snake
+  - spider
+  - squirrel
+  - streetcar
+  - sunflower
+  - sweet_pepper
+  - table
+  - tank
+  - telephone
+  - television
+  - tiger
+  - tractor
+  - train
+  - trout
+  - tulip
+  - turtle
+  - wardrobe
+  - whale
+  - willow_tree
+  - wolf
+  - woman
+  - worm
+num_classes:
+  desc: null
+  value: 100

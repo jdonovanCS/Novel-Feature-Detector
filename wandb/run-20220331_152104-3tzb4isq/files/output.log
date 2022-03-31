@@ -1,0 +1,49 @@
+Files already downloaded and verified
+Files already downloaded and verified
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:88: LightningDeprecationWarning: DataModule property `train_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:107: LightningDeprecationWarning: DataModule property `val_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:126: LightningDeprecationWarning: DataModule property `test_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+  0%|                                                                                            | 0/1 [00:00<?, ?it/s]
+Running Evolution for fitness
+  0%|                                                                                           | 0/10 [00:00<?, ?it/s]
+
+
+
+
+
+
+ 80%|██████████████████████████████████████████████████████████████████▍                | 8/10 [00:11<00:02,  1.41s/it]
+100%|██████████████████████████████████████████████████████████████████████████████████| 10/10 [00:14<00:00,  1.41s/it]
+
+
+
+
+
+
+
+
+
+
+
+
+  0%|                                                                                            | 0/1 [03:52<?, ?it/s]
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 216, in <module>
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 184, in run
+    start_time = time.time()
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 111, in evolution
+    net.set_filters = child.filters
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\net.py", line 156, in get_fitness
+    logits = self.forward(x)
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\net.py", line 39, in forward
+    x = self.conv_layers[conv_count](x)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\torch\nn\modules\module.py", line 1110, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\torch\nn\modules\conv.py", line 447, in forward
+    return self._conv_forward(input, self.weight, self.bias)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\torch\nn\modules\conv.py", line 443, in _conv_forward
+    return F.conv2d(input, weight, bias, self.stride,
+KeyboardInterrupt
