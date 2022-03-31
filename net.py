@@ -21,12 +21,13 @@ class Net(pl.LightningModule):
         self.fc3 = nn.Linear(512, num_classes)
         self.dropout1 = nn.Dropout2d(0.05)
         self.dropout2 = nn.Dropout2d(0.1)
-        self.conv_layers = [nn.Conv2d(3, 32, 3, padding=1), 
+        self.conv1 = nn.Conv2d(3, 32, 3, padding=1)
+        self.conv_layers = nn.ModuleList([nn.Conv2d(3, 32, 3, padding=1), 
                             nn.Conv2d(32, 64, 3, padding=1), 
                             nn.Conv2d(64, 128, 3, padding=1), 
                             nn.Conv2d(128, 128, 3, padding=1), 
                             nn.Conv2d(128, 256, 3, padding=1), 
-                            nn.Conv2d(256, 256, 3, padding=1)]
+                            nn.Conv2d(256, 256, 3, padding=1)])
         self.activations = {}
         for i in range(len(self.conv_layers)):
             self.activations[i] = []
@@ -110,19 +111,21 @@ class Net(pl.LightningModule):
         loss = self.cross_entropy_loss(logits, y)
         # get acc
         labels_hat = torch.argmax(logits, 1)
-        acc = torch.sum(y==labels_hat).item()/(len(y)*1.0)
+        acc = torch.sum(y.data==labels_hat).item()/(y.shape[0]*1.0)
         # get class acc
         class_acc = {}
         if self.classnames == None:
-            classnames = list(set(y))
-        corr_pred = {classname: 0 for classname in classnames}
-        total_pred = {classname: 0 for classname in classnames}
+            self.classnames = list(set(y))
+        corr_pred = {classname: 0 for classname in self.classnames}
+        total_pred = {classname: 0 for classname in self.classnames}
         for label, prediction in zip(y, labels_hat):
                 if label == prediction:
-                    corr_pred[classnames[label]] += 1
-                total_pred[classnames[label]] += 1
+                    corr_pred[self.classnames[label]] += 1
+                total_pred[self.classnames[label]] += 1
         for classname, correct_count in corr_pred.items():
-            accuracy = 100 * float(correct_count) / total_pred[classname]
+            accuracy = 0
+            if correct_count != 0 and total_pred[classname] != 0:
+                accuracy = 100 * float(correct_count) / total_pred[classname]
             class_acc[classname] = accuracy
         # get novelty score
         novelty_score = self.compute_feature_novelty()
@@ -139,9 +142,11 @@ class Net(pl.LightningModule):
     
     def validation_epoch_end(self, outputs):
         avg_loss = torch.stack([x['val_loss'] for x in outputs]).mean()
-        avg_acc = torch.stack([x['val_acc'] for x in outputs]).mean()
-        avg_class_acc = torch.stack([x['val_class_acc'] for x in outputs]).mean()
-        avg_novelty = torch.stack([x['val_novelty'] for x in outputs]).mean()
+        avg_acc = np.mean([x['val_acc'] for x in outputs])
+        avg_class_acc = {}
+        for k, v in outputs[0]['val_class_acc']:
+            avg_class_acc[k] = np.mean(v)
+        avg_novelty = np.mean([x['val_novelty'] for x in outputs])
         self.log('val_loss_epoch', avg_loss)
         self.log('val_acc_epoch', avg_acc)
         self.log('val_class_acc_epoch', avg_class_acc)
@@ -167,16 +172,17 @@ class Net(pl.LightningModule):
         acc = torch.sum(y==labels_hat).item()/(len(y)*1.0)
         # get class acc
         class_acc = {}
-        classes = list(set(y.detach().numpy()))
-        corr_pred = {classname: 0 for classname in classes}
-        total_pred = {classname: 0 for classname in classes}
-        for label, prediction in zip(y.detach().numpy(), labels_hat.detach().numpy()):
-            if label == prediction:
-                corr_pred[classes[label]] += 1
-            total_pred[classes[label]] += 1
+        if self.classnames == None:
+            self.classnames = list(set(y))
+        corr_pred = {classname: 0 for classname in self.classnames}
+        total_pred = {classname: 0 for classname in self.classnames}
+        for label, prediction in zip(y, labels_hat):
+                if label == prediction:
+                    corr_pred[self.classnames[label]] += 1
+                total_pred[self.classnames[label]] += 1
         for classname, correct_count in corr_pred.items():
-            accuracy = None
-            if total_pred[classname] != 0:
+            accuracy = 0
+            if correct_count != 0 and total_pred[classname] != 0:
                 accuracy = 100 * float(correct_count) / total_pred[classname]
             class_acc[classname] = accuracy
         # get novelty score
@@ -229,6 +235,6 @@ class Net(pl.LightningModule):
                 for ind_activation in batch:
                     
                     for ind_activation2 in batch:
-                        dist.append(np.abs(ind_activation.detach().numpy(), ind_activation2.detach().numpy()))
+                        dist.append(np.abs(ind_activation.detach().cpu().numpy(), ind_activation2.detach().cpu().numpy()))
             avg_dist[str(layer)] = np.mean((dist))
         return(sum(avg_dist.values()))
