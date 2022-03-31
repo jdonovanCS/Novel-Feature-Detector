@@ -1,9 +1,0 @@
-name: EC
-channels:
-  - defaults
-dependencies:
-  - torchaudio
-  - pytorch
-  - cudatoolkit=11.3
-  - torchvision
-prefix: C:\Users\Jordan\anaconda3\envs\EC

@@ -1,0 +1,10 @@
+
+Training and Evaluating: fitness Gen: 29 Run: 0
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\train_and_eval.py", line 102, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\train_and_eval.py", line 94, in run
+    record_progress = helper.train_network(data_module=data_module, filters=filters_list[i], epochs=epochs, save_path=save_path, fixed_conv=fixed_conv, novelty_interval=int(args.novelty_interval), val_interval=int(args.test_accuracy_interval))
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\helper_hpc.py", line 31, in train_network
+    net = Net(num_classes=data_module.num_classes, classnames=list(data_module.dataset_test.classes))
+AttributeError: 'CIFAR10DataModule' object has no attribute 'dataset_test'

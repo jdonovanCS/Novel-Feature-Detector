@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\train_and_eval.py", line 102, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\train_and_eval.py", line 70, in run
+    helper.config.evo_pop = args.evo_pop
+AttributeError: 'Namespace' object has no attribute 'evo_pop'
