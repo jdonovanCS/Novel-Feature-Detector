@@ -14,13 +14,7 @@ import pickle
 from tqdm import tqdm
 import argparse
 import gc
-<<<<<<< HEAD
-<<<<<<< HEAD
 from model import Model
-=======
->>>>>>> 50255dc6dd8af54d026bacb4af2f177209ee7b67
-=======
->>>>>>> 50255dc6dd8af54d026bacb4af2f177209ee7b67
 
 # TODO: Why not use gradient descent since fitness function is differentiable. Should probably compare to that.
 
