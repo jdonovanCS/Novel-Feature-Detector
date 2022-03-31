@@ -1,4 +1,3 @@
-import evolution as evol
 from tqdm import tqdm
 import helper_hpc as helper
 import os
@@ -6,6 +5,8 @@ import pickle
 import numpy as np
 import torch
 import argparse
+from model import Model
+
 
 parser=argparse.ArgumentParser(description="Process some input files")
 parser.add_argument('--dataset', help='which dataset should be used for novelty metric, choices are: random, cifar-10', default='random')
@@ -13,6 +14,7 @@ parser.add_argument('--experiment_name', help='experiment name for saving and da
 parser.add_argument('--population_size', help='number of filters to generate', type=int, default=50)
 parser.add_argument('--batch_size', help='Number of images to use for novelty metric, only 1 batch used', default=64, type=int)
 args = parser.parse_args()
+
 
 def run():
     torch.multiprocessing.freeze_support()
@@ -37,7 +39,7 @@ def run():
     net_input = next(data_iterator)
 
     for i in tqdm(range(population_size)): #while len(population) < population_size:
-        model = evol.Model()
+        model = Model()
         net = helper.Net(num_classes=len(classnames), classnames=classnames)
         model.filters = net.get_filters()
         model.fitness =  net.get_fitness(net_input)
@@ -45,7 +47,7 @@ def run():
         helper.wandb.log({'gen': 0, 'individual': i, 'fitness': model.fitness})
         
     sols = [p.filters for p in population]
-    solutions = np.array([[evol.Model() for i in range(population_size)]for j in range(1)], dtype=object)
+    solutions = np.array([[Model() for i in range(population_size)]for j in range(1)], dtype=object)
     for i in range(1):
         solutions[i] = sols
     solutions = solutions[0]

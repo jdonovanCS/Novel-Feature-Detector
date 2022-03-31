@@ -13,6 +13,7 @@ import pl_bolts.datamodules
 from pytorch_lightning.loggers import WandbLogger
 import pytorch_lightning as pl
 from net import Net
+from cifar100datamodule import CIFAR100DataModule
 
 def create_random_images(num_images=200):
     paths = []
@@ -50,9 +51,9 @@ def train_network(data_module, filters=None, epochs=2, save_path=None, fixed_con
 def get_data_module(dataset, batch_size):
     match dataset.lower():
         case 'cifar10' | 'cifar-10':
-            data_module = pl_bolts.datamodules.CIFAR10DataModule(batch_size=batch_size)
+            data_module = pl_bolts.datamodules.CIFAR10DataModule(batch_size=batch_size, data_dir="data/")
         case 'cifar100' | 'cifar-100':
-            data_module = pl_bolts.datamodules.CIFAR100DataModule(batch_size=batch_size)
+            data_module = CIFAR100DataModule(batch_size=batch_size, data_dir="data/")
         case _:
             print('Please supply dataset of CIFAR-10 or CIFAR-100')
             exit()
