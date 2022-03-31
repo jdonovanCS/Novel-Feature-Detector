@@ -30,6 +30,8 @@ def load_random_images(random_image_paths, batch_size=64):
 
 def train_network(data_module, filters=None, epochs=2, save_path=None, fixed_conv=False, val_interval=1, novelty_interval=None):
     net = Net(num_classes=data_module.num_classes, classnames=list(data_module.dataset_test.classes))
+    net = net.to(device)
+    print(net.device)
     if filters is not None:
         for i in range(len(net.conv_layers)):
             net.conv_layers[i].weight.data = torch.tensor(filters[i])
@@ -40,7 +42,7 @@ def train_network(data_module, filters=None, epochs=2, save_path=None, fixed_con
     if save_path is None:
         save_path = PATH
     wandb_logger = WandbLogger(log_model=True)
-    trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval)
+    trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu")
     wandb_logger.watch(net, log="all")
     trainer.fit(net, data_module)
     wandb_logger.unwatch(net)
@@ -124,6 +126,9 @@ def run(seed=True):
     torch.multiprocessing.freeze_support()
     if seed:
         pl.seed_everything(42, workers=True)
+    
+    global device
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     global PATH
     PATH = './cifar_net.pth'
