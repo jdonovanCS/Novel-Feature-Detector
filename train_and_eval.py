@@ -19,7 +19,7 @@ parser.add_argument('--epochs', help="Number of epochos to train for", type=int,
 parser.add_argument('--random', action='store_true')
 parser.add_argument('--novelty_interval', help='How often should a novelty score be captured during training?', default=0)
 parser.add_argument('--test_accuracy_interval', help='How often should test accuracy be assessed during training?', default=0)
-parser.add_argument('--batch_size', help="batch size for training", default=64)
+parser.add_argument('--batch_size', help="batch size for training", type=int, default=64)
 parser.add_argument('--evo_gens', help="number of generations used in evolving solutions", default=None)
 parser.add_argument('--evo_pop_size', help='Number of individuals in population when evolving solutions', default=None)
 parser.add_argument('--evo_dataset_for_novelty', help='Dataset used for novelty computation during evolution and training', default=None)
@@ -60,7 +60,7 @@ def run():
 
     # get loader for train and test images and classes
     data_module = helper.get_data_module(args.dataset, args.batch_size)
-    data_module.prepare_data(data_dir="data/")
+    data_module.prepare_data()
     data_module.setup()
 
     epochs = args.epochs

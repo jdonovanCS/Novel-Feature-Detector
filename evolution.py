@@ -14,6 +14,7 @@ import pickle
 from tqdm import tqdm
 import argparse
 import gc
+from model import Model
 
 # TODO: Why not use gradient descent since fitness function is differentiable. Should probably compare to that.
 
@@ -30,12 +31,6 @@ parser.add_argument('--evo_num_winners', type=int, help='Number of winners in to
 parser.add_argument('--evo_num_children', type=int, help='Number of children in evolutionary algorithm', default=None)
     
 args = parser.parse_args()
-
-class Model(object):
-    def __init__(self):
-        self.filters = None
-        self.fitness = None
-        # self.novelty = None
 
 def mutate(filters):
     # select a single 3x3 filter in one of the convolutional layers and replace it with a random new filter.
@@ -149,7 +144,7 @@ def run():
     random_image_paths = helper.create_random_images(64)
     global data_module
     data_module = helper.get_data_module(args.evo_dataset_for_novelty, batch_size=args.batch_size)
-    data_module.prepare_data(data_dir="data/")
+    data_module.prepare_data()
     data_module.setup()
     global classnames
     classnames = list(data_module.dataset_test.classes)

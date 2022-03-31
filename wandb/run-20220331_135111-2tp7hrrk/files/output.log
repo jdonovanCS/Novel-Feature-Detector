@@ -1,0 +1,26 @@
+
+Files already downloaded and verified
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:88: LightningDeprecationWarning: DataModule property `train_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:107: LightningDeprecationWarning: DataModule property `val_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+Files already downloaded and verified
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:126: LightningDeprecationWarning: DataModule property `test_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+Training and Evaluating: fitness Gen: 29 Run: 0
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\train_and_eval.py", line 104, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\train_and_eval.py", line 96, in run
+    record_progress = helper.train_network(data_module=data_module, filters=filters_list[i], epochs=epochs, save_path=save_path, fixed_conv=fixed_conv, novelty_interval=int(args.novelty_interval), val_interval=int(args.test_accuracy_interval))
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\helper_hpc.py", line 43, in train_network
+    trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu", devices=1)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\utilities\argparse.py", line 339, in insert_env_defaults
+    return fn(self, **kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\trainer\trainer.py", line 486, in __init__
+    self._accelerator_connector = AcceleratorConnector(
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\trainer\connectors\accelerator_connector.py", line 194, in __init__
+    self._set_parallel_devices_and_init_accelerator()
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\trainer\connectors\accelerator_connector.py", line 498, in _set_parallel_devices_and_init_accelerator
+    raise MisconfigurationException(
+pytorch_lightning.utilities.exceptions.MisconfigurationException: GPUAccelerator can not run on your system since the accelerator is not available. The following accelerator(s) is available and can be passed into `accelerator` argument of `Trainer`: ['cpu'].

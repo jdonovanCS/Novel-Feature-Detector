@@ -31,6 +31,8 @@ class Net(pl.LightningModule):
         for i in range(len(self.conv_layers)):
             self.activations[i] = []
 
+        self.classnames = classnames
+
     def forward(self, x):
         conv_count = 0
         x = self.conv_layers[conv_count](x)

@@ -1,0 +1,29 @@
+{
+    "os": "Windows-10-10.0.19044-SP0",
+    "python": "3.10.0",
+    "heartbeatAt": "2022-03-31T17:09:49.212257",
+    "startedAt": "2022-03-31T17:09:48.273789",
+    "docker": null,
+    "gpu": "NVIDIA GeForce RTX 3080 Laptop GPU",
+    "gpu_count": 1,
+    "cpu_count": 16,
+    "cuda": null,
+    "args": [
+        "--dataset=cifar10",
+        "--experiment_name=further testing of logging with wandb and lightning",
+        "--population_size=50",
+        "--batch_size=64"
+    ],
+    "state": "running",
+    "program": "C:\\Users\\Jordan\\Learning\\UVM\\Research\\novel-feature-detector\\generate_random_filters.py",
+    "codePath": "generate_random_filters.py",
+    "git": {
+        "remote": "https://github.com/jdonovancs/novel-feature-detector",
+        "commit": "50255dc6dd8af54d026bacb4af2f177209ee7b67"
+    },
+    "email": "jordan.t.donovancs@gmail.com",
+    "root": "C:/Users/Jordan/Learning/UVM/Research/novel-feature-detector",
+    "host": "LAPTOP-AUS3EALC",
+    "username": "Jordan",
+    "executable": "C:\\Users\\Jordan\\anaconda3\\envs\\EC2\\python.exe"
+}
