@@ -1,0 +1,81 @@
+updating config
+config: {'batch_size': 64, 'experiment_name': 'attempting to rewrite compute diversity fuction', 'evo_gens': 10, 'evo_pop': 10, 'evo_dataset_for_novelty': 'cifar10', 'evo_num_runs': 1, 'evo_tourney_size': 4, 'evo_num_winners': 2, 'evo_num_children': 10}
+Files already downloaded and verified
+Files already downloaded and verified
+Running Evolution for fitness
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:88: LightningDeprecationWarning: DataModule property `train_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:107: LightningDeprecationWarning: DataModule property `val_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:126: LightningDeprecationWarning: DataModule property `test_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+  0%|                                                                                            | 0/1 [00:00<?, ?it/s]
+Initializing
+forward pass: 0.08721709251403809
+  0%|                                                                                           | 0/10 [00:00<?, ?it/s]
+loop function 2.9318737983703613
+loop function 0.02564263343811035
+loop function 0.04101276397705078
+loop function 0.027768373489379883
+loop function 0.041008949279785156
+loop function 0.050989389419555664
+compute diversity 3.124727725982666
+0.03209424018859863 0.0 3.219615936279297
+
+ 10%|████████▎                                                                          | 1/10 [00:03<00:29,  3.25s/it]
+loop function 2.082679271697998
+loop function 0.04384255409240723
+loop function 0.02464771270751953
+loop function 0.026600360870361328
+loop function 0.04071378707885742
+loop function 0.03374791145324707
+compute diversity 2.256290912628174
+0.04440879821777344 0.0 2.3494412899017334
+
+ 20%|████████████████▌                                                                  | 2/10 [00:05<00:21,  2.75s/it]
+loop function 2.482145309448242
+loop function 0.032645225524902344
+loop function 0.027637243270874023
+loop function 0.03541302680969238
+loop function 0.03774261474609375
+loop function 0.05202770233154297
+compute diversity 2.6721107959747314
+0.04588603973388672 0.0 2.7639353275299072
+
+
+ 40%|█████████████████████████████████▏                                                 | 4/10 [00:10<00:15,  2.64s/it]
+loop function 2.1075778007507324
+loop function 0.026249170303344727
+loop function 0.030107975006103516
+loop function 0.04208707809448242
+loop function 0.05238533020019531
+loop function 0.03596210479736328
+compute diversity 2.296926975250244
+0.045485734939575195 0.0 2.388279438018799
+forward pass: 0.08304929733276367
+loop function 2.4157626628875732
+loop function 0.025053024291992188
+loop function 0.025359153747558594
+loop function 0.025907516479492188
+loop function 0.03406548500061035
+loop function 0.03455185890197754
+compute diversity 2.5632967948913574
+0.04572105407714844 0.0 2.6550989151000977
+
+ 50%|█████████████████████████████████████████▌                                         | 5/10 [00:13<00:13,  2.66s/it]
+loop function 2.3404152393341064
+loop function 0.02471470832824707
+loop function 0.029241085052490234
+  0%|                                                                                            | 0/1 [00:27<?, ?it/s]
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 223, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 189, in run
+    solution_over_time, fitness_over_time = evolution(generations=n_iters, population_size=pop_size, num_children=num_children, tournament_size=tournament_size, num_winners=num_winners, evolution_type=run_name)
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 89, in evolution
+    model.fitness =  net.get_fitness(net_input)
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\net.py", line 163, in get_fitness
+    novelty_score = self.compute_feature_novelty()
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\net.py", line 288, in compute_feature_novelty
+    l.append(loops(self.activations[i][0]))
+KeyboardInterrupt

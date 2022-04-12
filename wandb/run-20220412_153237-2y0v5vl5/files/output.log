@@ -1,0 +1,147 @@
+updating config
+config: {'batch_size': 64, 'experiment_name': 'attempting to rewrite compute diversity fuction', 'evo_gens': 10, 'evo_pop': 10, 'evo_dataset_for_novelty': 'cifar10', 'evo_num_runs': 1, 'evo_tourney_size': 4, 'evo_num_winners': 2, 'evo_num_children': 10}
+Files already downloaded and verified
+Files already downloaded and verified
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:88: LightningDeprecationWarning: DataModule property `train_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:107: LightningDeprecationWarning: DataModule property `val_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:126: LightningDeprecationWarning: DataModule property `test_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+Running Evolution for fitness
+  0%|                                                                                            | 0/1 [00:00<?, ?it/s]
+Initializing
+  0%|                                                                                           | 0/10 [00:00<?, ?it/s]
+forward pass: 0.08798909187316895
+loop function 2.862431287765503
+loop function 0.024851322174072266
+loop function 0.025466442108154297
+loop function 0.042130231857299805
+loop function 0.03427624702453613
+loop function 0.05412101745605469
+compute diversity 3.0462470054626465
+0.0330049991607666 0.0 3.144385814666748
+forward pass: 0.07999944686889648
+loop function 0.013084650039672852
+loop function 0.04177498817443848
+loop function 0.0464019775390625
+loop function 0.040796756744384766
+loop function 0.03435778617858887
+loop function 0.05715608596801758
+compute diversity 0.23566770553588867
+
+ 20%|████████████████▌                                                                  | 2/10 [00:03<00:12,  1.53s/it]
+forward pass: 0.08556962013244629
+loop function 0.01175546646118164
+loop function 0.04017305374145508
+loop function 0.042273521423339844
+loop function 0.039823293685913086
+loop function 0.052091121673583984
+loop function 0.05085039138793945
+compute diversity 0.2399141788482666
+0.04467034339904785 0.0 0.33368682861328125
+forward pass: 0.08370041847229004
+loop function 0.011214256286621094
+loop function 0.04181170463562012
+loop function 0.04009652137756348
+loop function 0.04103255271911621
+loop function 0.05130577087402344
+loop function 0.0521092414855957
+compute diversity 0.24110817909240723
+0.04516482353210449 0.0 0.33290982246398926
+forward pass: 0.08428597450256348
+loop function 0.010426998138427734
+loop function 0.0413053035736084
+loop function 0.0407412052154541
+loop function 0.041229963302612305
+loop function 0.05179405212402344
+loop function 0.05061006546020508
+compute diversity 0.2379589080810547
+0.04506182670593262 0.0 0.3317720890045166
+forward pass: 0.08615899085998535
+loop function 0.01100611686706543
+loop function 0.04137992858886719
+loop function 0.041689395904541016
+loop function 0.041153907775878906
+loop function 0.05389285087585449
+loop function 0.03738689422607422
+compute diversity 0.22722792625427246
+0.0452876091003418 0.0 0.32293272018432617
+forward pass: 0.08538484573364258
+loop function 0.011525392532348633
+loop function 0.04029369354248047
+loop function 0.026159048080444336
+loop function 0.03855133056640625
+loop function 0.05038046836853027
+loop function 0.05082416534423828
+compute diversity 0.22037410736083984
+0.04473090171813965 0.0 0.3138594627380371
+forward pass: 0.082183837890625
+loop function 0.010772943496704102
+loop function 0.04036855697631836
+
+100%|██████████████████████████████████████████████████████████████████████████████████| 10/10 [00:06<00:00,  2.46it/s]
+  0%|                                                                                           | 0/10 [00:00<?, ?it/s]
+loop function 0.04264664649963379
+loop function 0.051241159439086914
+loop function 0.0356442928314209
+compute diversity 0.22457337379455566
+0.04496645927429199 0.0 0.3167407512664795
+forward pass: 0.08197879791259766
+loop function 0.011338472366333008
+loop function 0.03841066360473633
+loop function 0.04038381576538086
+loop function 0.0410308837890625
+loop function 0.05695343017578125
+loop function 0.04477500915527344
+compute diversity 0.23622727394104004
+0.04368090629577637 0.0 0.3273634910583496
+forward pass: 0.08868646621704102
+loop function 0.010384082794189453
+loop function 0.04152202606201172
+loop function 0.04089975357055664
+loop function 0.040526390075683594
+loop function 0.05165505409240723
+loop function 0.04024076461791992
+compute diversity 0.2262284755706787
+0.05198383331298828 0.0 0.3238954544067383
+Generations
+forward pass: 0.08298945426940918
+loop function 0.010902166366577148
+loop function 0.03975415229797363
+loop function 0.04237937927246094
+loop function 0.040480852127075195
+loop function 0.0515437126159668
+loop function 0.039777278900146484
+compute diversity 0.22752666473388672
+forward pass: 0.07996010780334473
+loop function 0.01423788070678711
+loop function 0.04098987579345703
+loop function 0.04039430618286133
+loop function 0.04073143005371094
+loop function 0.057295799255371094
+loop function 0.035253047943115234
+compute diversity 0.2315082550048828
+forward pass: 0.07640361785888672
+loop function 0.011846065521240234
+loop function 0.04367399215698242
+loop function 0.0456850528717041
+loop function 0.03993058204650879
+loop function 0.03318071365356445
+loop function 0.04784059524536133
+compute diversity 0.22670412063598633
+forward pass: 0.07363033294677734
+loop function 0.016250133514404297
+  0%|                                                                                            | 0/1 [00:18<?, ?it/s]
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 223, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 189, in run
+    solution_over_time, fitness_over_time = evolution(generations=n_iters, population_size=pop_size, num_children=num_children, tournament_size=tournament_size, num_winners=num_winners, evolution_type=run_name)
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 116, in evolution
+    child.fitness = net.get_fitness(net_input)
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\net.py", line 162, in get_fitness
+    novelty_score = self.compute_feature_novelty()
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\net.py", line 270, in compute_feature_novelty
+    l.append(helper.loops(self.activations[i][0]))
+KeyboardInterrupt

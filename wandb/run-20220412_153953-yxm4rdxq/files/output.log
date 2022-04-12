@@ -1,0 +1,219 @@
+updating config
+config: {'batch_size': 64, 'experiment_name': 'attempting to rewrite compute diversity fuction', 'evo_gens': 10, 'evo_pop': 10, 'evo_dataset_for_novelty': 'cifar10', 'evo_num_runs': 1, 'evo_tourney_size': 4, 'evo_num_winners': 2, 'evo_num_children': 10}
+Files already downloaded and verified
+Files already downloaded and verified
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:88: LightningDeprecationWarning: DataModule property `train_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:107: LightningDeprecationWarning: DataModule property `val_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:126: LightningDeprecationWarning: DataModule property `test_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+Running Evolution for fitness
+  0%|                                                                                            | 0/1 [00:00<?, ?it/s]
+Initializing
+forward pass: 0.09163737297058105
+
+ 50%|█████████████████████████████████████████▌                                         | 5/10 [00:04<00:03,  1.59it/s]
+loop function 2.999008893966675
+loop function 0.03779315948486328
+loop function 0.04085659980773926
+loop function 0.028544902801513672
+loop function 0.04853415489196777
+loop function 0.05455827713012695
+compute diversity 3.2123539447784424
+0.03920388221740723 0.0 3.3081037998199463
+forward pass: 0.08778882026672363
+loop function 0.012613773345947266
+loop function 0.04127812385559082
+loop function 0.04105687141418457
+loop function 0.040112972259521484
+loop function 0.05272388458251953
+loop function 0.053006887435913086
+compute diversity 0.2430419921875
+0.04412698745727539 0.0 0.3349442481994629
+forward pass: 0.08807635307312012
+loop function 0.012336492538452148
+loop function 0.041571617126464844
+loop function 0.0414736270904541
+loop function 0.04203534126281738
+loop function 0.05114316940307617
+loop function 0.03705024719238281
+compute diversity 0.22825336456298828
+0.0449068546295166 0.0 0.3209364414215088
+forward pass: 0.08769822120666504
+loop function 0.010654687881469727
+loop function 0.04496264457702637
+loop function 0.04132366180419922
+loop function 0.04014158248901367
+loop function 0.05128073692321777
+loop function 0.03539872169494629
+compute diversity 0.22526264190673828
+0.04459977149963379 0.0 0.3159797191619873
+forward pass: 0.09074187278747559
+loop function 0.01184535026550293
+loop function 0.0404820442199707
+loop function 0.040862083435058594
+loop function 0.041530609130859375
+loop function 0.051857948303222656
+loop function 0.04309248924255371
+compute diversity 0.23171114921569824
+0.04715275764465332 0.0 0.32495570182800293
+100%|██████████████████████████████████████████████████████████████████████████████████| 10/10 [00:06<00:00,  2.50it/s]
+  0%|                                                                                           | 0/10 [00:00<?, ?it/s]
+loop function 0.012565851211547852
+loop function 0.045992374420166016
+loop function 0.04082155227661133
+loop function 0.04157686233520508
+loop function 0.055407047271728516
+loop function 0.05129075050354004
+compute diversity 0.2500333786010742
+0.047266244888305664 0.0 0.33734798431396484
+forward pass: 0.08705377578735352
+loop function 0.010764598846435547
+loop function 0.030825376510620117
+loop function 0.039696455001831055
+loop function 0.04107308387756348
+loop function 0.0525515079498291
+loop function 0.05401754379272461
+compute diversity 0.23197531700134277
+0.04509258270263672 0.0 0.32227110862731934
+forward pass: 0.08810281753540039
+loop function 0.01200556755065918
+loop function 0.04117774963378906
+loop function 0.040445804595947266
+loop function 0.04127788543701172
+loop function 0.050803422927856445
+loop function 0.03823256492614746
+compute diversity 0.22675013542175293
+0.04487419128417969 0.0 0.319413423538208
+forward pass: 0.08692765235900879
+loop function 0.009679317474365234
+loop function 0.048247337341308594
+loop function 0.04205775260925293
+loop function 0.04108572006225586
+loop function 0.05241537094116211
+loop function 0.035521507263183594
+compute diversity 0.23051667213439941
+0.04460000991821289 0.0 0.32155680656433105
+forward pass: 0.08536458015441895
+loop function 0.012164115905761719
+loop function 0.04740142822265625
+loop function 0.025989055633544922
+loop function 0.04087662696838379
+loop function 0.03596210479736328
+loop function 0.0507047176361084
+compute diversity 0.21309804916381836
+0.04557394981384277 0.0 0.30246591567993164
+Generations
+forward pass: 0.0887603759765625
+loop function 0.010591506958007812
+loop function 0.04031229019165039
+loop function 0.04098367691040039
+loop function 0.046946048736572266
+loop function 0.054604291915893555
+loop function 0.03476858139038086
+compute diversity 0.23021292686462402
+forward pass: 0.08828902244567871
+loop function 0.01561427116394043
+loop function 0.042328596115112305
+loop function 0.043413400650024414
+loop function 0.025148391723632812
+loop function 0.05001330375671387
+loop function 0.04488372802734375
+compute diversity 0.22359371185302734
+forward pass: 0.08434557914733887
+loop function 0.013181447982788086
+loop function 0.041280269622802734
+loop function 0.040738821029663086
+loop function 0.0392603874206543
+loop function 0.0504305362701416
+loop function 0.04865837097167969
+compute diversity 0.23588156700134277
+forward pass: 0.08465361595153809
+loop function 0.011941909790039062
+loop function 0.045713186264038086
+loop function 0.041357994079589844
+loop function 0.04793691635131836
+loop function 0.05109906196594238
+loop function 0.03502488136291504
+compute diversity 0.2336578369140625
+forward pass: 0.08428621292114258
+loop function 0.011048555374145508
+loop function 0.041701316833496094
+loop function 0.04078054428100586
+loop function 0.04083251953125
+loop function 0.03790903091430664
+loop function 0.036229610443115234
+compute diversity 0.21015119552612305
+forward pass: 0.08572125434875488
+loop function 0.010783195495605469
+loop function 0.03985238075256348
+loop function 0.041648149490356445
+loop function 0.040596723556518555
+loop function 0.05033469200134277
+loop function 0.05048561096191406
+compute diversity 0.23644685745239258
+forward pass: 0.09394121170043945
+loop function 0.010690450668334961
+loop function 0.03991508483886719
+loop function 0.04136037826538086
+loop function 0.0463109016418457
+loop function 0.05772137641906738
+loop function 0.05265378952026367
+compute diversity 0.25315189361572266
+forward pass: 0.08401155471801758
+loop function 0.011326789855957031
+loop function 0.04071402549743652
+loop function 0.04082083702087402
+loop function 0.02605891227722168
+loop function 0.05139780044555664
+loop function 0.05314350128173828
+compute diversity 0.22452759742736816
+forward pass: 0.08407807350158691
+loop function 0.010766029357910156
+loop function 0.04567289352416992
+loop function 0.04153084754943848
+loop function 0.045584917068481445
+loop function 0.05166316032409668
+loop function 0.03592228889465332
+compute diversity 0.23424386978149414
+forward pass: 0.08431744575500488
+loop function 0.012366294860839844
+loop function 0.04153776168823242
+loop function 0.04087352752685547
+loop function 0.041513681411743164
+loop function 0.03544330596923828
+loop function 0.05218052864074707
+compute diversity 0.2256636619567871
+forward pass: 0.09018969535827637
+loop function 0.011005878448486328
+loop function 0.044107913970947266
+loop function 0.040766000747680664
+loop function 0.04125714302062988
+loop function 0.05059504508972168
+loop function 0.051816463470458984
+compute diversity 0.241929292678833
+forward pass: 0.09236025810241699
+loop function 0.009952783584594727
+loop function 0.03997635841369629
+loop function 0.0402987003326416
+loop function 0.041166067123413086
+loop function 0.0526731014251709
+loop function 0.038735389709472656
+compute diversity 0.22738313674926758
+forward pass: 0.08639740943908691
+loop function 0.010569095611572266
+loop function 0.046982526779174805
+loop function 0.04065656661987305
+loop function 0.04064130783081055
+loop function 0.051143646240234375
+loop function 0.03507184982299805
+  0%|                                                                                            | 0/1 [00:23<?, ?it/s]
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 224, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 189, in run
+    solution_over_time, fitness_over_time = evolution(generations=n_iters, population_size=pop_size, num_children=num_children, tournament_size=tournament_size, num_winners=num_winners, evolution_type=run_name)
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 118, in evolution
+    gc.collect()
+KeyboardInterrupt
