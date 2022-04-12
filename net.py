@@ -258,7 +258,7 @@ class Net(pl.LightningModule):
         print(end-start)
         # return(sum(layer_totals.values()))
 
-        @numba.njit
+        @numba.njit(parallel=True)
         def loops(acts):
             
             # with torch.no_grad():
@@ -267,9 +267,9 @@ class Net(pl.LightningModule):
             B = len(acts)
             C = len(acts[0])
             pairwise = np.zeros((B,C,C))
-            for batch in range(B):
-                for channel in range(C):
-                    for channel2 in range(channel, C):
+            for batch in numba.prange(B):
+                for channel in numba.prange(C):
+                    for channel2 in numba.prange(channel, C):
                         div = np.abs(acts[batch][channel] - acts[batch][channel2]).sum()
                         pairwise[batch, channel, channel2] = div
                         pairwise[batch, channel2, channel] = div
