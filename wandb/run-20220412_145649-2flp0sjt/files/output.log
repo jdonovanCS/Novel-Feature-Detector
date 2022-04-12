@@ -1,0 +1,17 @@
+updating config
+config: {'batch_size': 64, 'experiment_name': 'attempting to rewrite compute diversity fuction', 'evo_gens': 10, 'evo_pop': 10, 'evo_dataset_for_novelty': 'cifar10', 'evo_num_runs': 1, 'evo_tourney_size': 4, 'evo_num_winners': 2, 'evo_num_children': 10}
+Files already downloaded and verified
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 221, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 150, in run
+    data_module.prepare_data()
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pl_bolts\datamodules\vision_datamodule.py", line 63, in prepare_data
+    self.dataset_cls(self.data_dir, train=True, download=True)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\torchvision\datasets\cifar.py", line 89, in __init__
+    self.data = np.vstack(self.data).reshape(-1, 3, 32, 32)
+  File "<__array_function__ internals>", line 5, in vstack
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numpy\core\shape_base.py", line 282, in vstack
+    return _nx.concatenate(arrs, 0)
+  File "<__array_function__ internals>", line 5, in concatenate
+KeyboardInterrupt

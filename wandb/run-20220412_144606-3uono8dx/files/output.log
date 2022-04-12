@@ -1,0 +1,69 @@
+updating config
+config: {'batch_size': 64, 'experiment_name': 'attempting to rewrite compute diversity fuction', 'evo_gens': 10, 'evo_pop': 10, 'evo_dataset_for_novelty': 'cifar10', 'evo_num_runs': 1, 'evo_tourney_size': 4, 'evo_num_winners': 2, 'evo_num_children': 10}
+Files already downloaded and verified
+Files already downloaded and verified
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:88: LightningDeprecationWarning: DataModule property `train_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:107: LightningDeprecationWarning: DataModule property `val_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+Running Evolution for fitness
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:126: LightningDeprecationWarning: DataModule property `test_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+  0%|                                                                                            | 0/1 [00:00<?, ?it/s]
+Initializing
+  0%|                                                                                           | 0/10 [00:00<?, ?it/s]
+3.058042049407959
+0.026445627212524414
+0.02543473243713379
+0.025765657424926758
+0.03348803520202637
+
+ 10%|████████▎                                                                          | 1/10 [00:03<00:30,  3.34s/it]
+2.139714479446411
+0.041641950607299805
+0.041463375091552734
+0.04179692268371582
+0.03480863571166992
+
+ 20%|████████████████▌                                                                  | 2/10 [00:05<00:22,  2.83s/it]
+2.061546564102173
+0.029357194900512695
+0.042258501052856445
+0.04227161407470703
+0.036397457122802734
+
+ 30%|████████████████████████▉                                                          | 3/10 [00:08<00:18,  2.63s/it]
+2.255749464035034
+0.02500176429748535
+0.024930477142333984
+0.02586817741394043
+0.035508155822753906
+
+
+ 50%|█████████████████████████████████████████▌                                         | 5/10 [00:13<00:13,  2.63s/it]
+2.3571512699127197
+0.041239023208618164
+0.025002717971801758
+0.042357683181762695
+0.039942026138305664
+0.050951242446899414
+2.551929235458374
+0.043477535247802734
+0.04153609275817871
+
+ 60%|█████████████████████████████████████████████████▊                                 | 6/10 [00:16<00:10,  2.74s/it]
+0.052258968353271484
+
+ 70%|██████████████████████████████████████████████████████████                         | 7/10 [00:19<00:08,  2.72s/it]
+2.3781094551086426
+0.027079105377197266
+0.02553081512451172
+0.025263547897338867
+0.03566694259643555
+0.050609588623046875
+2.4463441371917725
+0.04241347312927246
+0.04156208038330078
+0.04176521301269531
+0.03579425811767578
+

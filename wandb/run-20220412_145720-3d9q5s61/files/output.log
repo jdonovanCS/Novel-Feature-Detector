@@ -1,0 +1,218 @@
+updating config
+config: {'batch_size': 64, 'experiment_name': 'attempting to rewrite compute diversity fuction', 'evo_gens': 10, 'evo_pop': 10, 'evo_dataset_for_novelty': 'cifar10', 'evo_num_runs': 1, 'evo_tourney_size': 4, 'evo_num_winners': 2, 'evo_num_children': 10}
+Files already downloaded and verified
+Files already downloaded and verified
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:88: LightningDeprecationWarning: DataModule property `train_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:107: LightningDeprecationWarning: DataModule property `val_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:126: LightningDeprecationWarning: DataModule property `test_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+Running Evolution for fitness
+  0%|                                                                                            | 0/1 [00:00<?, ?it/s]
+Initializing
+         3806 function calls (3664 primitive calls) in 0.032 seconds
+   Ordered by: standard name
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        3    0.000    0.000    0.000    0.000 <string>:1(<lambda>)
+        1    0.000    0.000    0.032    0.032 <string>:1(<module>)
+        1    0.000    0.000    0.000    0.000 __init__.py:1298(disable)
+        1    0.000    0.000    0.000    0.000 __init__.py:1446(debug)
+        1    0.000    0.000    0.000    0.000 __init__.py:1701(getEffectiveLevel)
+        1    0.000    0.000    0.000    0.000 __init__.py:1715(isEnabledFor)
+        1    0.000    0.000    0.000    0.000 __init__.py:219(_acquireLock)
+        1    0.000    0.000    0.000    0.000 __init__.py:228(_releaseLock)
+        1    0.000    0.000    0.000    0.000 _collections_abc.py:262(__subclasshook__)
+        2    0.000    0.000    0.000    0.000 _collections_abc.py:283(__subclasshook__)
+       13    0.000    0.000    0.000    0.000 _collections_abc.py:315(__subclasshook__)
+        1    0.000    0.000    0.000    0.000 _collections_abc.py:362(__subclasshook__)
+       45    0.000    0.000    0.000    0.000 _collections_abc.py:409(__subclasshook__)
+        5    0.000    0.000    0.000    0.000 _collections_abc.py:78(_check_methods)
+       24    0.000    0.000    0.000    0.000 _jit_internal.py:957(is_scripting)
+       31    0.000    0.000    0.000    0.000 abc.py:117(__instancecheck__)
+     63/1    0.000    0.000    0.000    0.000 abc.py:121(__subclasscheck__)
+        3    0.000    0.000    0.001    0.000 batchnorm.py:119(__init__)
+        3    0.000    0.000    0.001    0.000 batchnorm.py:27(__init__)
+        3    0.000    0.000    0.000    0.000 batchnorm.py:57(<dictcomp>)
+        3    0.000    0.000    0.000    0.000 batchnorm.py:65(reset_running_stats)
+        3    0.000    0.000    0.000    0.000 batchnorm.py:73(reset_parameters)
+        1    0.000    0.000    0.000    0.000 container.py:180(__init__)
+        2    0.000    0.000    0.000    0.000 container.py:215(__len__)
+        1    0.000    0.000    0.000    0.000 container.py:223(__iadd__)
+        1    0.000    0.000    0.000    0.000 container.py:258(extend)
+        6    0.000    0.000    0.006    0.001 conv.py:140(reset_parameters)
+        6    0.000    0.000    0.007    0.001 conv.py:415(__init__)
+        6    0.000    0.000    0.007    0.001 conv.py:67(__init__)
+     16/1    0.000    0.000    0.000    0.000 copy.py:128(deepcopy)
+       14    0.000    0.000    0.000    0.000 copy.py:182(_deepcopy_atomic)
+        1    0.000    0.000    0.000    0.000 copy.py:201(_deepcopy_list)
+        2    0.000    0.000    0.000    0.000 copy.py:243(_keep_alive)
+        1    0.000    0.000    0.000    0.000 copy.py:259(_reconstruct)
+        2    0.000    0.000    0.000    0.000 copy.py:264(<genexpr>)
+        1    0.000    0.000    0.000    0.000 copyreg.py:100(__newobj__)
+        1    0.000    0.000    0.000    0.000 copyreg.py:109(_slotnames)
+        1    0.000    0.000    0.000    0.000 dataclasses.py:1204(is_dataclass)
+        1    0.000    0.000    0.000    0.000 device_dtype_mixin.py:36(__init__)
+        2    0.000    0.000    0.000    0.000 dropout.py:12(__init__)
+        6    0.000    0.000    0.000    0.000 enum.py:358(__call__)
+        6    0.000    0.000    0.000    0.000 enum.py:670(__new__)
+       24    0.000    0.000    0.000    0.000 grad_mode.py:121(__init__)
+       24    0.000    0.000    0.000    0.000 grad_mode.py:126(__enter__)
+       24    0.000    0.000    0.000    0.000 grad_mode.py:130(__exit__)
+       48    0.000    0.000    0.000    0.000 grad_mode.py:215(__init__)
+        1    0.000    0.000    0.000    0.000 hooks.py:330(__init__)
+        1    0.000    0.000    0.000    0.000 hparams_mixin.py:109(_set_hparams)
+        1    0.000    0.000    0.000    0.000 hparams_mixin.py:117(_to_hparams_dict)
+        2    0.000    0.000    0.000    0.000 hparams_mixin.py:129(hparams)
+        1    0.000    0.000    0.000    0.000 hparams_mixin.py:29(__init__)
+        1    0.000    0.000    0.001    0.001 hparams_mixin.py:33(save_hyperparameters)
+        9    0.000    0.000    0.000    0.000 init.py:12(_no_grad_uniform_)
+        9    0.000    0.000    0.000    0.000 init.py:122(uniform_)
+        3    0.000    0.000    0.000    0.000 init.py:195(ones_)
+        3    0.000    0.000    0.000    0.000 init.py:208(zeros_)
+       18    0.000    0.000    0.000    0.000 init.py:284(_calculate_fan_in_and_fan_out)
+        9    0.000    0.000    0.000    0.000 init.py:356(_calculate_correct_fan)
+        9    0.000    0.000    0.028    0.003 init.py:366(kaiming_uniform_)
+        3    0.000    0.000    0.000    0.000 init.py:57(_no_grad_fill_)
+        3    0.000    0.000    0.000    0.000 init.py:62(_no_grad_zero_)
+        9    0.000    0.000    0.000    0.000 init.py:67(calculate_gain)
+        3    0.000    0.000    0.000    0.000 inspect.py:1190(getargs)
+        3    0.000    0.000    0.000    0.000 inspect.py:1347(getargvalues)
+        1    0.000    0.000    0.000    0.000 inspect.py:1670(currentframe)
+        2    0.000    0.000    0.000    0.000 inspect.py:2274(_signature_from_function)
+        2    0.000    0.000    0.000    0.000 inspect.py:2369(_signature_from_callable)
+        6    0.000    0.000    0.000    0.000 inspect.py:2628(__init__)
+        7    0.000    0.000    0.000    0.000 inspect.py:2678(name)
+        6    0.000    0.000    0.000    0.000 inspect.py:2690(kind)
+        4    0.000    0.000    0.000    0.000 inspect.py:277(isfunction)
+        2    0.000    0.000    0.000    0.000 inspect.py:2911(__init__)
+        8    0.000    0.000    0.000    0.000 inspect.py:2960(<genexpr>)
+        2    0.000    0.000    0.000    0.000 inspect.py:2989(from_callable)
+        2    0.000    0.000    0.000    0.000 inspect.py:2997(parameters)
+        2    0.000    0.000    0.000    0.000 inspect.py:3243(signature)
+        3    0.000    0.000    0.000    0.000 inspect.py:379(iscode)
+        2    0.000    0.000    0.000    0.000 inspect.py:612(unwrap)
+        2    0.000    0.000    0.000    0.000 inspect.py:632(_is_wrapper)
+        2    0.000    0.000    0.000    0.000 inspect.py:66(get_annotations)
+        1    0.000    0.000    0.000    0.000 lightning.py:2037(_register_sharded_tensor_state_dict_hooks_if_available)
+        1    0.000    0.000    0.000    0.000 lightning.py:90(__init__)
+        3    0.000    0.000    0.023    0.008 linear.py:79(__init__)
+        3    0.000    0.000    0.023    0.008 linear.py:92(reset_parameters)
+       92    0.000    0.000    0.000    0.000 module.py:1172(__getattr__)
+      340    0.001    0.000    0.001    0.000 module.py:1188(__setattr__)
+       34    0.000    0.000    0.000    0.000 module.py:1189(remove_from)
+       17    0.000    0.000    0.001    0.000 module.py:254(__init__)
+        9    0.000    0.000    0.000    0.000 module.py:274(register_buffer)
+       24    0.000    0.000    0.000    0.000 module.py:328(register_parameter)
+        6    0.000    0.000    0.000    0.000 module.py:370(add_module)
+        1    0.000    0.000    0.032    0.032 net.py:14(__init__)
+       24    0.000    0.000    0.000    0.000 parameter.py:23(__new__)
+        1    0.000    0.000    0.000    0.000 parsing.py:111(parse_class_init_keys)
+        2    0.000    0.000    0.000    0.000 parsing.py:129(_get_first_if_any)
+        1    0.000    0.000    0.001    0.001 parsing.py:144(get_init_args)
+        1    0.000    0.000    0.000    0.000 parsing.py:151(<listcomp>)
+        1    0.000    0.000    0.000    0.000 parsing.py:154(<dictcomp>)
+        1    0.000    0.000    0.000    0.000 parsing.py:158(<dictcomp>)
+      2/1    0.000    0.000    0.001    0.001 parsing.py:162(collect_init_args)
+        1    0.000    0.000    0.001    0.001 parsing.py:205(save_hyperparameters)
+        2    0.000    0.000    0.000    0.000 parsing.py:286(__getattr__)
+        1    0.000    0.000    0.000    0.000 platform.py:1111(python_version)
+        1    0.000    0.000    0.000    0.000 platform.py:994(_sys_version)
+        1    0.000    0.000    0.000    0.000 pooling.py:18(__init__)
+        1    0.000    0.000    0.000    0.000 rank_zero.py:29(wrapped_fn)
+        1    0.000    0.000    0.000    0.000 rank_zero.py:60(_debug)
+        1    0.000    0.000    0.000    0.000 rank_zero.py:66(rank_zero_debug)
+        5    0.000    0.000    0.000    0.000 typing.py:1001(<genexpr>)
+        1    0.000    0.000    0.000    0.000 typing.py:1114(__getitem__)
+        2    0.000    0.000    0.000    0.000 typing.py:1119(<genexpr>)
+        1    0.000    0.000    0.000    0.000 typing.py:1123(copy_with)
+        1    0.000    0.000    0.000    0.000 typing.py:1248(_value_and_type_iter)
+        3    0.000    0.000    0.000    0.000 typing.py:1249(<genexpr>)
+        1    0.000    0.000    0.000    0.000 typing.py:137(_type_convert)
+        1    0.000    0.000    0.000    0.000 typing.py:146(_type_check)
+        1    0.000    0.000    0.000    0.000 typing.py:250(_deduplicate)
+        1    0.000    0.000    0.000    0.000 typing.py:281(_flatten_literal_params)
+        3    0.000    0.000    0.000    0.000 typing.py:303(inner)
+        1    0.000    0.000    0.000    0.000 typing.py:404(__getitem__)
+        1    0.000    0.000    0.000    0.000 typing.py:528(Literal)
+        3    0.000    0.000    0.000    0.000 typing.py:558(<genexpr>)
+       17    0.000    0.000    0.000    0.000 typing.py:917(_is_dunder)
+        2    0.000    0.000    0.000    0.000 typing.py:929(__init__)
+       17    0.000    0.000    0.000    0.000 typing.py:968(__setattr__)
+        2    0.000    0.000    0.000    0.000 typing.py:995(__init__)
+        3    0.000    0.000    0.000    0.000 typing_extensions.py:118(_should_collect_from_parameters)
+        2    0.000    0.000    0.000    0.000 typing_extensions.py:130(_collect_type_vars)
+        1    0.000    0.000    0.000    0.000 typing_extensions.py:96(_check_generic)
+        6    0.000    0.000    0.000    0.000 utils.py:22(_reverse_repeat_tuple)
+       30    0.000    0.000    0.000    0.000 utils.py:28(<genexpr>)
+       30    0.000    0.000    0.000    0.000 utils.py:7(parse)
+        7    0.000    0.000    0.000    0.000 {built-in method __new__ of type object at 0x00007FFCA9367CD0}
+       31    0.000    0.000    0.000    0.000 {built-in method _abc._abc_instancecheck}
+     63/1    0.000    0.000    0.000    0.000 {built-in method _abc._abc_subclasscheck}
+       24    0.000    0.000    0.000    0.000 {built-in method _make_subclass}
+        4    0.000    0.000    0.000    0.000 {built-in method builtins.callable}
+        1    0.000    0.000    0.032    0.032 {built-in method builtins.exec}
+        8    0.000    0.000    0.000    0.000 {built-in method builtins.getattr}
+       46    0.000    0.000    0.000    0.000 {built-in method builtins.hasattr}
+       23    0.000    0.000    0.000    0.000 {built-in method builtins.id}
+      861    0.000    0.000    0.000    0.000 {built-in method builtins.isinstance}
+        1    0.000    0.000    0.000    0.000 {built-in method builtins.issubclass}
+     11/9    0.000    0.000    0.000    0.000 {built-in method builtins.len}
+       24    0.000    0.000    0.000    0.000 {built-in method empty}
+       45    0.000    0.000    0.000    0.000 {built-in method math.sqrt}
+        3    0.000    0.000    0.000    0.000 {built-in method ones}
+        1    0.000    0.000    0.000    0.000 {built-in method sys._getframe}
+        2    0.000    0.000    0.000    0.000 {built-in method sys.getrecursionlimit}
+        3    0.000    0.000    0.000    0.000 {built-in method tensor}
+       18    0.000    0.000    0.000    0.000 {built-in method torch._C._has_torch_function_variadic}
+       18    0.000    0.000    0.000    0.000 {built-in method torch._C._log_api_usage_once}
+       48    0.000    0.000    0.000    0.000 {built-in method torch._C._set_grad_enabled}
+        1    0.000    0.000    0.000    0.000 {built-in method torch._C.get_default_dtype}
+       72    0.000    0.000    0.000    0.000 {built-in method torch._C.is_grad_enabled}
+        3    0.000    0.000    0.000    0.000 {built-in method zeros}
+        1    0.000    0.000    0.000    0.000 {method '__reduce_ex__' of 'object' objects}
+        1    0.000    0.000    0.000    0.000 {method 'acquire' of '_thread.RLock' objects}
+       20    0.000    0.000    0.000    0.000 {method 'append' of 'list' objects}
+       36    0.000    0.000    0.000    0.000 {method 'dim' of 'torch._C._TensorBase' objects}
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+        9    0.000    0.000    0.000    0.000 {method 'discard' of 'set' objects}
+        9    0.000    0.000    0.000    0.000 {method 'endswith' of 'str' objects}
+        6    0.000    0.000    0.000    0.000 {method 'fill_' of 'torch._C._TensorBase' objects}
+       40    0.000    0.000    0.000    0.000 {method 'format' of 'str' objects}
+     1004    0.000    0.000    0.000    0.000 {method 'get' of 'dict' objects}
+        1    0.000    0.000    0.000    0.000 {method 'get' of 'mappingproxy' objects}
+        6    0.000    0.000    0.000    0.000 {method 'isidentifier' of 'str' objects}
+        4    0.000    0.000    0.000    0.000 {method 'items' of 'dict' objects}
+        1    0.000    0.000    0.000    0.000 {method 'keys' of 'mappingproxy' objects}
+        9    0.000    0.000    0.000    0.000 {method 'lower' of 'str' objects}
+        1    0.000    0.000    0.000    0.000 {method 'release' of '_thread.RLock' objects}
+       36    0.000    0.000    0.000    0.000 {method 'size' of 'torch._C._TensorBase' objects}
+       17    0.000    0.000    0.000    0.000 {method 'startswith' of 'str' objects}
+       18    0.028    0.002    0.028    0.002 {method 'uniform_' of 'torch._C._TensorBase' objects}
+        2    0.000    0.000    0.000    0.000 {method 'update' of 'dict' objects}
+        1    0.000    0.000    0.000    0.000 {method 'values' of 'mappingproxy' objects}
+        9    0.000    0.000    0.000    0.000 {method 'zero_' of 'torch._C._TensorBase' objects}
+         3 function calls in 0.000 seconds
+   Ordered by: standard name
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.000    0.000    0.000    0.000 <string>:1(<module>)
+        1    0.000    0.000    0.000    0.000 {built-in method builtins.exec}
+  0%|                                                                                           | 0/10 [00:00<?, ?it/s]
+  0%|                                                                                            | 0/1 [00:12<?, ?it/s]
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 222, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 188, in run
+    solution_over_time, fitness_over_time = evolution(generations=n_iters, population_size=pop_size, num_children=num_children, tournament_size=tournament_size, num_winners=num_winners, evolution_type=run_name)
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 87, in evolution
+    cProfile.run('net.get_filters()')
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\cProfile.py", line 16, in run
+    return _pyprofile._Utils(Profile).run(statement, filename, sort)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\profile.py", line 53, in run
+    prof.run(statement)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\cProfile.py", line 95, in run
+    return self.runctx(cmd, dict, dict)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\cProfile.py", line 100, in runctx
+    exec(cmd, globals, locals)
+  File "<string>", line 1, in <module>
+NameError: name 'net' is not defined
