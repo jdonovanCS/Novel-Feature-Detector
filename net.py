@@ -268,8 +268,8 @@ class Net(pl.LightningModule):
             C = len(acts[0])
             pairwise = np.zeros((B,C,C))
             for batch in numba.prange(B):
-                for channel in numba.prange(C):
-                    for channel2 in numba.prange(channel, C):
+                for channel in range(C):
+                    for channel2 in range(channel, C):
                         div = np.abs(acts[batch][channel] - acts[batch][channel2]).sum()
                         pairwise[batch, channel, channel2] = div
                         pairwise[batch, channel2, channel] = div
