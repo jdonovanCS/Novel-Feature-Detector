@@ -6,7 +6,6 @@ import torch.nn.functional as F
 import numpy as np
 import helper_hpc as helper
 import time
-import numba
 
 # DEFINE a CONV NN
 
@@ -224,24 +223,6 @@ class Net(pl.LightningModule):
     def get_filters(self):
         return [m.weight.data for m in self.conv_layers]
 
-    # def compute_feature_novelty(self):
-    #     dist = []
-    #     avg_dist = {}
-    #     # for each conv layer
-    #     for layer in self.activations: #6 conv layers
-    #         dist = []
-    #         # for each activation 3d(batch, h, w)
-    #         for batch in self.activations[layer]: #1 entry
-    #             print(batch.shape)
-    #             # for each batch
-    #             for ind_activation in batch: #64 batches
-                    
-    #                 for ind_activation2 in batch:
-    #                     dist.append(np.abs(ind_activation.detach().cpu().numpy() - ind_activation2.detach().cpu().numpy()))
-    #         avg_dist[str(layer)] = np.mean(dist)
-    #     return(sum(avg_dist.values()))
-
-    # @numba.njit
     def compute_feature_novelty(self):
         
         # start = time.time()
@@ -258,30 +239,12 @@ class Net(pl.LightningModule):
         # print('gpu time: {}'.format(end-start))
         # return(sum(layer_totals.values()))
 
-        @numba.njit(parallel=True)
-        def loops(acts):
-            
-            # with torch.no_grad():
-            # for each conv layer 4d (batch, channel, h, w)
-        
-            B = len(acts)
-            C = len(acts[0])
-            pairwise = np.zeros((B,C,C))
-            for batch in numba.prange(B):
-                for channel in range(C):
-                    for channel2 in range(channel, C):
-                        div = np.abs(acts[batch][channel] - acts[batch][channel2]).sum()
-                        pairwise[batch, channel, channel2] = div
-                        pairwise[batch, channel2, channel] = div
-            return(pairwise.sum())
-
             # layer_totals[layer] = np.abs(np.expand_dims(a, axis=2) - np.expand_dims(a, axis=1)).sum().item()
 
-        # start = time.time()
         l = []
         for i in self.activations:
             self.activations[i][0] = self.activations[i][0].detach().cpu().numpy()
-            l.append(loops(self.activations[i][0]))
+            l.append(helper.diversity(self.activations[i][0]))
         # print('cpu answer: {}'.format(sum(l)))
         # end = time.time()
         # print('cpu time: {}'.format(end-start))

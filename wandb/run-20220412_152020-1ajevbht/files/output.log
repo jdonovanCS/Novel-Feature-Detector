@@ -1,0 +1,142 @@
+updating config
+config: {'batch_size': 64, 'experiment_name': 'attempting to rewrite compute diversity fuction', 'evo_gens': 10, 'evo_pop': 10, 'evo_dataset_for_novelty': 'cifar10', 'evo_num_runs': 1, 'evo_tourney_size': 4, 'evo_num_winners': 2, 'evo_num_children': 10}
+Files already downloaded and verified
+Files already downloaded and verified
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:88: LightningDeprecationWarning: DataModule property `train_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:107: LightningDeprecationWarning: DataModule property `val_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:126: LightningDeprecationWarning: DataModule property `test_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+  0%|                                                                                            | 0/1 [00:00<?, ?it/s]
+Running Evolution for fitness
+Initializing
+  0%|                                                                                           | 0/10 [00:00<?, ?it/s]
+2.8434081077575684
+0.025326251983642578
+0.026934146881103516
+0.03441667556762695
+0.03882145881652832
+0.0358586311340332
+
+ 10%|████████▎                                                                          | 1/10 [00:03<00:28,  3.15s/it]
+2.218388319015503
+
+ 20%|████████████████▌                                                                  | 2/10 [00:05<00:22,  2.81s/it]
+0.041152238845825195
+0.04122138023376465
+0.05179405212402344
+0.05244112014770508
+0.04376077651977539 0.0 2.533132791519165
+2.282646894454956
+0.025729656219482422
+0.029929637908935547
+0.029067039489746094
+0.04749870300292969
+0.05305147171020508
+
+ 30%|████████████████████████▉                                                          | 3/10 [00:08<00:19,  2.72s/it]
+2.350809335708618
+0.03797793388366699
+0.041239023208618164
+0.026243209838867188
+0.04559755325317383
+0.038639068603515625
+
+  0%|                                                                                            | 0/1 [00:23<?, ?it/s]
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 223, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 189, in run
+    solution_over_time, fitness_over_time = evolution(generations=n_iters, population_size=pop_size, num_children=num_children, tournament_size=tournament_size, num_winners=num_winners, evolution_type=run_name)
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 89, in evolution
+    model.fitness =  net.get_fitness(net_input)
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\net.py", line 160, in get_fitness
+    novelty_score = self.compute_feature_novelty()
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\net.py", line 284, in compute_feature_novelty
+    l.append(loops(self.activations[i][0]))
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\dispatcher.py", line 420, in _compile_for_args
+    return_val = self.compile(tuple(argtypes))
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\dispatcher.py", line 965, in compile
+    cres = self._compiler.compile(args, return_type)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\dispatcher.py", line 125, in compile
+    status, retval = self._compile_cached(args, return_type)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\dispatcher.py", line 139, in _compile_cached
+    retval = self._compile_core(args, return_type)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\dispatcher.py", line 152, in _compile_core
+    cres = compiler.compile_extra(self.targetdescr.typing_context,
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\compiler.py", line 693, in compile_extra
+    return pipeline.compile_extra(func)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\compiler.py", line 429, in compile_extra
+    return self._compile_bytecode()
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\compiler.py", line 497, in _compile_bytecode
+    return self._compile_core()
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\compiler.py", line 463, in _compile_core
+    pm.run(self.state)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\compiler_machinery.py", line 341, in run
+    self._runPass(idx, pass_inst, state)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\compiler_machinery.py", line 296, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\compiler_machinery.py", line 269, in check
+    mangled = func(compiler_state)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\typed_passes.py", line 394, in run_pass
+    lower.lower()
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\lowering.py", line 196, in lower
+    self.lower_normal_function(self.fndesc)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\lowering.py", line 250, in lower_normal_function
+    entry_block_tail = self.lower_function_body()
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\lowering.py", line 279, in lower_function_body
+    self.lower_block(block)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\lowering.py", line 293, in lower_block
+    self.lower_inst(inst)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\lowering.py", line 565, in lower_inst
+    func(self, inst)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\parfors\parfor_lowering.py", line 283, in _lower_parfor_parallel
+    exp_name_to_tuple_var) = _create_gufunc_for_parfor_body(
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\parfors\parfor_lowering.py", line 1381, in _create_gufunc_for_parfor_body
+    kernel_func = compiler.compile_ir(
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\compiler.py", line 756, in compile_ir
+    return pipeline.compile_ir(func_ir=func_ir, lifted=lifted,
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\compiler.py", line 439, in compile_ir
+    return self._compile_ir()
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\compiler.py", line 504, in _compile_ir
+    return self._compile_core()
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\compiler.py", line 463, in _compile_core
+    pm.run(self.state)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\compiler_machinery.py", line 341, in run
+    self._runPass(idx, pass_inst, state)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\compiler_lock.py", line 35, in _acquire_compile_lock
+    return func(*args, **kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\compiler_machinery.py", line 296, in _runPass
+    mutated |= check(pss.run_pass, internal_state)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\compiler_machinery.py", line 269, in check
+    mangled = func(compiler_state)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\typed_passes.py", line 552, in run_pass
+    if guard(workfn, state, work_list, block, i, expr,
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\ir_utils.py", line 1532, in guard
+    return func(*args, **kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\typed_passes.py", line 693, in _do_work_expr
+    inlinee_info = self._get_callable_info(state, expr)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\typed_passes.py", line 640, in _get_callable_info
+    func_ty = get_func_type(state, expr)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\typed_passes.py", line 620, in get_func_type
+    func_ty = state.typingctx.resolve_value_type(expr.fn)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\typing\context.py", line 381, in resolve_value_type
+    ty = typeof(val, Purpose.constant)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\typing\typeof.py", line 33, in typeof
+    msg = _termcolor.errmsg(
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\errors.py", line 317, in errmsg
+    return self._markup(msg, self._errmsg)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\errors.py", line 307, in _markup
+    with ColorShell():
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\errors.py", line 225, in __init__
+    init()
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\colorama\initialise.py", line 38, in init
+    wrap_stream(orig_stdout, convert, strip, autoreset, wrap)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\colorama\initialise.py", line 76, in wrap_stream
+    wrapper = AnsiToWin32(stream,
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\colorama\ansitowin32.py", line 101, in __init__
+    self.win32_calls = self.get_win32_calls()
+KeyboardInterrupt
