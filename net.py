@@ -34,6 +34,7 @@ class Net(pl.LightningModule):
 
         self.classnames = classnames
 
+    # TODO: flag for saving activations
     def forward(self, x):
         conv_count = 0
         x = self.conv_layers[conv_count](x)
