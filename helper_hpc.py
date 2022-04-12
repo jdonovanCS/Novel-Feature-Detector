@@ -14,6 +14,7 @@ from pytorch_lightning.loggers import WandbLogger
 import pytorch_lightning as pl
 from net import Net
 from cifar100datamodule import CIFAR100DataModule
+import numba
 
 def create_random_images(num_images=200):
     paths = []
@@ -60,6 +61,23 @@ def get_data_module(dataset, batch_size):
             print('Please supply dataset of CIFAR-10 or CIFAR-100')
             exit()
     return data_module
+
+@numba.njit(parallel=True)
+def diversity(acts):
+    
+    # with torch.no_grad():
+    # for each conv layer 4d (batch, channel, h, w)
+
+    B = len(acts)
+    C = len(acts[0])
+    pairwise = np.zeros((B,C,C))
+    for batch in numba.prange(B):
+        for channel in range(C):
+            for channel2 in range(channel, C):
+                div = np.abs(acts[batch, channel] - acts[batch, channel2]).sum()
+                pairwise[batch, channel, channel2] = div
+                pairwise[batch, channel2, channel] = div
+    return(pairwise.sum())
 
 def plot_mean_and_bootstrapped_ci_multiple(input_data = None, title = 'overall', name = "change this", x_label = "x", y_label = "y", save_name="", compute_CI=True, maximum_possible=None, show=None, sample_interval=None):
     """ 
