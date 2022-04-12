@@ -3,4 +3,15 @@ fitness, 0, 532.4108066558838, 2.156295567750931run_name, run_num, time, fittest
 fitness, 0, 513.2956311702728, 2.156295567750931run_name, run_num, time, fittest individual
 fitness, 0, 590.3965899944305, 2.6617321372032166run_name, run_num, time, fittest individual
 fitness, 0, 527.0220913887024, 2.1398881524801254run_name, run_num, time, fittest individual
-fitness, 0, 575.1628777980804, 2.791654258966446
+fitness, 0, 575.1628777980804, 2.791654258966446run_name, run_num, time, fittest individual
+fitness, 0, 9181.03996515274, 4.237565100193024run_name, run_num, time, fittest individual
+fitness, 1, 9201.384516716003, 2.4087975919246674run_name, run_num, time, fittest individual
+fitness, 2, 9177.549954414368, 2.5315241515636444run_name, run_num, time, fittest individual
+fitness, 3, 9169.726705312729, 2.453108251094818run_name, run_num, time, fittest individual
+fitness, 4, 9192.960748672485, 9.405630707740784run_name, run_num, time, fittest individual
+fitness, 5, 9338.65143609047, 2.3198562264442444run_name, run_num, time, fittest individual
+fitness, 0, 2590.368706226349, 1.7679457515478134run_name, run_num, time, fittest individual
+fitness, 1, 2400.1931431293488, 4.08824223279953run_name, run_num, time, fittest individual
+fitness, 2, 2448.6149156093597, 1.8804600238800049run_name, run_num, time, fittest individual
+fitness, 3, 2363.8437836170197, 1.6251084208488464run_name, run_num, time, fittest individual
+fitness, 4, 2372.5027537345886, 1.6290954053401947
