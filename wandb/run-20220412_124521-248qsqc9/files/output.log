@@ -1,0 +1,67 @@
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:88: LightningDeprecationWarning: DataModule property `train_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:107: LightningDeprecationWarning: DataModule property `val_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+updating config
+config: {'batch_size': 64, 'experiment_name': 'attempting to rewrite compute diversity fuction', 'evo_gens': 10, 'evo_pop': 10, 'evo_dataset_for_novelty': 'cifar10', 'evo_num_runs': 1, 'evo_tourney_size': 4, 'evo_num_winners': 2, 'evo_num_children': 10}
+Files already downloaded and verified
+Files already downloaded and verified
+Running Evolution for fitness
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:126: LightningDeprecationWarning: DataModule property `test_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+  0%|                                                                                            | 0/1 [00:00<?, ?it/s]
+Initializing
+1649781931.0966077
+  0%|                                                                                           | 0/10 [00:00<?, ?it/s]
+470327052.0
+  0%|                                                                                            | 0/1 [00:08<?, ?it/s]
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 220, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 186, in run
+    solution_over_time, fitness_over_time = evolution(generations=n_iters, population_size=pop_size, num_children=num_children, tournament_size=tournament_size, num_winners=num_winners, evolution_type=run_name)
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 87, in evolution
+    model.fitness =  net.get_fitness(net_input)
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\net.py", line 160, in get_fitness
+    novelty_score = self.compute_feature_novelty()
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\net.py", line 285, in compute_feature_novelty
+    l = loops(list(self.activations.values()))
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\dispatcher.py", line 468, in _compile_for_args
+    error_rewrite(e, 'typing')
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\dispatcher.py", line 409, in error_rewrite
+    raise e.with_traceback(None)
+numba.core.errors.TypingError: Failed in nopython mode pipeline (step: nopython frontend)
+[1mNo implementation of function Function(<built-in function sum>) found for signature:
+[1m 
+[1m >>> sum(array(float64, 3d, C))
+[1m 
+[1mThere are 2 candidate implementations:
+[1m    - Of which 2 did not match due to:
+[1m    Overload in function 'ol_sum': File: numba\cpython\builtins.py: Line 619.
+[1m      With argument(s): '(array(float64, 3d, C))':
+[1m     Rejected as the implementation raised a specific error:
+[1m       TypingError: Failed in nopython mode pipeline (step: nopython frontend)
+[1m     Cannot unify Literal[int](0) and array(float64, 2d, C) for 'acc.2', defined at C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\cpython\builtins.py (648)
+[1m     
+[1m     File "..\..\..\..\anaconda3\envs\EC2\lib\site-packages\numba\cpython\builtins.py", line 648:
+     [1m    def impl(iterable, start=0):
+[1m             <source elided>
+[1m             acc = start
+[1m             for x in iterator(iterable):
+[1m     [22m        [1m^
+     [1mDuring: typing of assignment at C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\cpython\builtins.py (648)
+[1m     File "..\..\..\..\anaconda3\envs\EC2\lib\site-packages\numba\cpython\builtins.py", line 648:
+     [1m    def impl(iterable, start=0):
+[1m             <source elided>
+[1m             acc = start
+[1m             for x in iterator(iterable):
+[1m     [22m        [1m^
+  raised from C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numba\core\typeinfer.py:1086
+[1mDuring: resolving callee type: Function(<built-in function sum>)
+[1mDuring: typing of call at C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\net.py (276)
+[1mFile "net.py", line 276:
+[1m        def loops(acts):
+[1m            <source elided>
+[1m                            pairwise[batch, channel2, channel] = div
+[1m                acts[layer] = sum(pairwise)
+                [1m^

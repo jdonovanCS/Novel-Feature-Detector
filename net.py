@@ -5,6 +5,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 import helper_hpc as helper
+import time
+import numba
 
 # DEFINE a CONV NN
 
@@ -235,34 +237,53 @@ class Net(pl.LightningModule):
     #             for ind_activation in batch: #64 batches
                     
     #                 for ind_activation2 in batch:
-    #                     dist.append(np.abs(ind_activation.detach().cpu().numpy(), ind_activation2.detach().cpu().numpy()))
+    #                     dist.append(np.abs(ind_activation.detach().cpu().numpy() - ind_activation2.detach().cpu().numpy()))
     #         avg_dist[str(layer)] = np.mean(dist)
     #     return(sum(avg_dist.values()))
 
-
+    # @numba.njit
     def compute_feature_novelty(self):
         
-        avg_dist = {}
-        # for each conv layer 4d (batch, channel, h, w)
-        for layer in range(len(self.activations)):
-            B = len(self.activations[layer][0])
-            C = len(self.activations[layer][0][0])
-            pairwise = np.zeros((B, C, C))
-            # for each activation 3d(channel, h, w)
-            for batch in range(B): 
-                # for each channel 2d (h, w)
-                for channel in range(C): 
-                    # for each other channel                    
+        start = time.time()
+        layer_totals = {}
+        with torch.no_grad():
+            # for each conv layer 4d (batch, channel, h, w)
+            for layer in range(len(self.activations)):
+                B = len(self.activations[layer][0])
+                C = len(self.activations[layer][0][0])
+                a = self.activations[layer][0]
+                layer_totals[layer] = torch.abs(a.unsqueeze(2) - a.unsqueeze(1)).sum().item()
+        end = time.time()
+        print(sum(layer_totals.values()))
+        print(end-start)
+        # return(sum(layer_totals.values()))
+
+        @numba.njit
+        def loops(acts):
+            
+            # with torch.no_grad():
+            # for each conv layer 4d (batch, channel, h, w)
+        
+            B = len(acts)
+            C = len(acts[0])
+            pairwise = np.zeros((B,C,C))
+            for batch in range(B):
+                for channel in range(C):
                     for channel2 in range(channel, C):
-                        div = np.abs(self.activations[layer][0][batch][channel].detach().cpu().numpy() - self.activations[layer][0][batch][channel2].detach().cpu().numpy()).sum()
+                        div = np.abs(acts[batch][channel] - acts[batch][channel2]).sum()
                         pairwise[batch, channel, channel2] = div
                         pairwise[batch, channel2, channel] = div
+            return(pairwise.sum())
 
-            avg_dist[str(layer)] = np.mean(pairwise)
-            y = self.activations[layer][0]
-            b, ch, h, w = y.shape
-            print(y.shape)
-            new_avg = torch.einsum('bchw,bdhw->bcd', [y, y]) / (h * w)
-            print(new_avg)
-            print(avg_dist)
-        return(sum(avg_dist.values()))
+            # layer_totals[layer] = np.abs(np.expand_dims(a, axis=2) - np.expand_dims(a, axis=1)).sum().item()
+
+        start = time.time()
+        l = []
+        for i in self.activations:
+            self.activations[i][0] = self.activations[i][0].detach().cpu().numpy()
+            l.append(loops(self.activations[i][0]))
+        print(sum(l))
+        end = time.time()
+        print(end-start)
+        return l
+

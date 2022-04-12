@@ -1,0 +1,63 @@
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:88: LightningDeprecationWarning: DataModule property `train_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:107: LightningDeprecationWarning: DataModule property `val_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+updating config
+config: {'batch_size': 64, 'experiment_name': 'attempting to rewrite compute diversity fuction', 'evo_gens': 10, 'evo_pop': 10, 'evo_dataset_for_novelty': 'cifar10', 'evo_num_runs': 1, 'evo_tourney_size': 4, 'evo_num_winners': 2, 'evo_num_children': 10}
+Files already downloaded and verified
+Files already downloaded and verified
+Running Evolution for fitness
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:126: LightningDeprecationWarning: DataModule property `test_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+  0%|                                                                                            | 0/1 [00:00<?, ?it/s]
+Initializing
+1649774860.1074653
+  0%|                                                                                           | 0/10 [00:00<?, ?it/s]
+{'0': 328.13058812590316}
+{1: 1649774860.778465, 2: 0.4280550479888916, 3: 55749192085350.98, 4: 0.45406436920166016, 5: 55749192085351.06, 6: 0.4800529479980469, 7: 1649774860.778465}
+{'0': 328.13058812590316, '1': 409.9596277656383}
+{1: 1649774863.1003623, 2: 2.091026544570923, 3: 275367221706632.72, 4: 2.2210452556610107, 5: 275367221706633.25, 6: 2.334996223449707, 7: 3299549723.878827}
+{'0': 328.13058812590316, '1': 409.9596277656383, '2': 46.32620681789376}
+{1: 1649774871.9162123, 2: 8.782661437988281, 3: 1147081865285697.0, 4: 9.223665237426758, 5: 1147081865285698.5, 6: 9.659605503082275, 7: 4949324595.79604}
+{'0': 328.13058812590316, '1': 409.9596277656383, '2': 46.32620681789376, '3': 105.1678437751143}
+{1: 1649774880.85147, 2: 15.49147629737854, 3: 2018796513576041.5, 4: 16.2539541721344, 5: 2018796513576044.5, 6: 17.06003713607788, 7: 6599099476.64851}
+{'0': 328.13058812590316, '1': 409.9596277656383, '2': 46.32620681789376, '3': 105.1678437751143, '4': 14.854544705076705}
+{1: 1649774915.4072757, 2: 41.68960380554199, 3: 5492140196511519.0, 4: 43.570932388305664, 5: 5492140196511525.0, 6: 45.77713441848755, 7: 8248874392.059786}
+{'0': 328.13058812590316, '1': 409.9596277656383, '2': 46.32620681789376, '3': 105.1678437751143, '4': 14.854544705076705, '5': 26.642412495561075}
+{1: 1649774949.7099977, 2: 67.7166690826416, 3: 8965483952185796.0, 4: 70.68903803825378, 5: 8965483952185806.0, 6: 74.2820611000061, 7: 9898649341.774784}
+1649774949.7209973
+1649774949.7439978
+{'0': 343.1335091707879}
+
+ 10%|████████▎                                                                          | 1/10 [01:29<13:26, 89.64s/it]
+{'0': 343.1335091707879, '1': 407.0820963428123}
+{1: 1649774953.6386902, 2: 2.9878602027893066, 3: 275367236744427.62, 4: 3.129814624786377, 5: 275367236744427.94, 6: 3.261899709701538, 7: 3299549904.2356873}
+{'0': 343.1335091707879, '1': 407.0820963428123, '2': 53.72707210637782}
+{1: 1649774962.490286, 2: 9.691543579101562, 3: 1147081928204613.8, 4: 10.13547945022583, 5: 1147081928204615.2, 6: 10.579666376113892, 7: 4949324866.72697}
+{'0': 343.1335091707879, '1': 407.0820963428123, '2': 53.72707210637782, '3': 105.08555139813325}
+{1: 1649774971.274256, 2: 16.29529070854187, 3: 2018796624305448.5, 4: 17.045186519622803, 5: 2018796624305450.0, 6: 17.822413206100464, 7: 6599099838.002226}
+{'0': 343.1335091707879, '1': 407.0820963428123, '2': 53.72707210637782, '3': 105.08555139813325, '4': 15.213594775844285}
+
+ 20%|████████████████▌                                                                  | 2/10 [02:59<11:59, 89.98s/it]
+{'0': 343.1335091707879, '1': 407.0820963428123, '2': 53.72707210637782, '3': 105.08555139813325, '4': 15.213594775844285, '5': 25.417439121771395}
+{1: 1649775039.9245408, 2: 68.43902945518494, 3: 8965484443123867.0, 4: 71.30587124824524, 5: 8965484443123877.0, 6: 74.8192720413208, 7: 9898649883.584599}
+1649775039.9355907
+1649775039.9575942
+{'0': 250.12411585857626}
+{1: 1649775040.6274066, 2: 0.4529719352722168, 3: 55749198162798.414, 4: 0.4809732437133789, 5: 55749198162798.49, 6: 0.500974178314209, 7: 1649775040.6274066}
+{'0': 250.12411585857626, '1': 417.1061229004408}
+  0%|                                                                                            | 0/1 [03:10<?, ?it/s]
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 220, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 186, in run
+    solution_over_time, fitness_over_time = evolution(generations=n_iters, population_size=pop_size, num_children=num_children, tournament_size=tournament_size, num_winners=num_winners, evolution_type=run_name)
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 87, in evolution
+    model.fitness =  net.get_fitness(net_input)
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\net.py", line 159, in get_fitness
+    novelty_score = self.compute_feature_novelty()
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\net.py", line 270, in compute_feature_novelty
+    div = div.sum()
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numpy\core\_methods.py", line 48, in _sum
+    return umr_sum(a, axis, dtype, out, keepdims, initial, where)
+KeyboardInterrupt
