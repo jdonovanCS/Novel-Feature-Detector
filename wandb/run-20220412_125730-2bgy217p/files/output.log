@@ -1,0 +1,69 @@
+updating config
+config: {'batch_size': 64, 'experiment_name': 'channel diversity metric', 'evo_gens': 50, 'evo_pop': 20, 'evo_dataset_for_novelty': 'cifar10', 'evo_num_runs': 5, 'evo_tourney_size': 4, 'evo_num_winners': 2, 'evo_num_children': 20}
+Files already downloaded and verified
+Files already downloaded and verified
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:88: LightningDeprecationWarning: DataModule property `train_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:107: LightningDeprecationWarning: DataModule property `val_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:126: LightningDeprecationWarning: DataModule property `test_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+  0%|                                                                                            | 0/5 [00:00<?, ?it/s]
+Running Evolution for fitness
+  0%|                                                                                           | 0/20 [00:00<?, ?it/s]
+Initializing
+1649782660.2875237
+gpu answer: 475092744.0
+
+  5%|████▏                                                                              | 1/20 [00:03<01:04,  3.40s/it]
+cpu answer:
+cpu time: 1.7720284461975098
+1649782663.6639366
+1649782663.6849546
+gpu answer: 467677416.0
+gpu time: 1.5823652744293213
+cpu answer:
+cpu time: 1.6519250869750977
+1649782666.977295
+
+
+ 15%|████████████▍                                                                      | 3/20 [00:09<00:54,  3.19s/it]
+gpu answer: 462193898.0
+gpu time: 1.6659371852874756
+cpu answer:
+cpu time: 1.2605869770050049
+1649782669.9843888
+1649782670.005907
+gpu answer: 479906376.0
+gpu time: 1.6724426746368408
+cpu answer:
+cpu time: 1.2250571250915527
+1649782672.9639587
+1649782672.9854774
+gpu answer: 469147376.0
+
+ 20%|████████████████▌                                                                  | 4/20 [00:12<00:49,  3.11s/it]
+cpu answer:
+cpu time: 1.2395696640014648
+1649782675.9545388
+
+ 25%|████████████████████▊                                                              | 5/20 [00:15<00:45,  3.07s/it]
+gpu answer: 475452028.0
+gpu time: 1.6684389114379883
+cpu answer:
+cpu time: 1.367680549621582
+1649782679.0722282
+1649782679.0932462
+gpu answer: 482655006.0
+
+ 30%|████████████████████████▉                                                          | 6/20 [00:18<00:43,  3.08s/it]
+cpu answer:
+cpu time: 1.2415716648101807
+1649782682.0257757
+
+ 35%|█████████████████████████████                                                      | 7/20 [00:21<00:39,  3.04s/it]
+gpu answer: 461496734.0
+gpu time: 1.6494226455688477
+cpu answer:
+cpu time: 1.2415714263916016
+1649782684.9978395
