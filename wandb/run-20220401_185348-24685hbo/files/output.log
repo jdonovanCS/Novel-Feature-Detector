@@ -1,0 +1,118 @@
+Files already downloaded and verified
+Files already downloaded and verified
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:88: LightningDeprecationWarning: DataModule property `train_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:107: LightningDeprecationWarning: DataModule property `val_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:126: LightningDeprecationWarning: DataModule property `test_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+GPU available: True, used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+wandb: logging graph, to disable use `wandb.watch(log_graph=False)`
+Training and Evaluating: random Gen: 9 Run: 0
+cuda:0
+Files already downloaded and verified
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+  | Name        | Type        | Params
+--------------------------------------------
+0 | BatchNorm1  | BatchNorm2d | 64
+1 | BatchNorm2  | BatchNorm2d | 256
+2 | BatchNorm3  | BatchNorm2d | 512
+3 | pool        | MaxPool2d   | 0
+4 | fc1         | Linear      | 4.2 M
+5 | fc2         | Linear      | 524 K
+6 | fc3         | Linear      | 5.1 K
+7 | dropout1    | Dropout2d   | 0
+8 | dropout2    | Dropout2d   | 0
+9 | conv_layers | ModuleList  | 1.1 M
+--------------------------------------------
+5.9 M     Trainable params
+0         Non-trainable params
+5.9 M     Total params
+23.409    Total estimated model params size (MB)
+Files already downloaded and verified
+
+
+
+
+
+
+
+
+Epoch 0:  72%|███████████████████████████████            | 452/625 [01:08<00:26,  6.57it/s, loss=-2.34e+12, v_num=5hbo]
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\train_and_eval.py", line 104, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\train_and_eval.py", line 96, in run
+    record_progress = helper.train_network(data_module=data_module, filters=filters_list[i], epochs=epochs, save_path=save_path, fixed_conv=fixed_conv, novelty_interval=int(args.novelty_interval), val_interval=int(args.test_accuracy_interval))
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\helper_hpc.py", line 47, in train_network
+    trainer.fit(net, data_module)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\trainer\trainer.py", line 771, in fit
+    self._call_and_handle_interrupt(
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\trainer\trainer.py", line 724, in _call_and_handle_interrupt
+    return trainer_fn(*args, **kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\trainer\trainer.py", line 812, in _fit_impl
+    results = self._run(model, ckpt_path=self.ckpt_path)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\trainer\trainer.py", line 1237, in _run
+    results = self._run_stage()
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\trainer\trainer.py", line 1324, in _run_stage
+    return self._run_train()
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\trainer\trainer.py", line 1354, in _run_train
+    self.fit_loop.run()
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\loops\base.py", line 204, in run
+    self.advance(*args, **kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\loops\fit_loop.py", line 269, in advance
+    self._outputs = self.epoch_loop.run(self._data_fetcher)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\loops\base.py", line 204, in run
+    self.advance(*args, **kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\loops\epoch\training_epoch_loop.py", line 208, in advance
+    batch_output = self.batch_loop.run(batch, batch_idx)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\loops\base.py", line 204, in run
+    self.advance(*args, **kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\loops\batch\training_batch_loop.py", line 88, in advance
+    outputs = self.optimizer_loop.run(split_batch, optimizers, batch_idx)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\loops\base.py", line 204, in run
+    self.advance(*args, **kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\loops\optimization\optimizer_loop.py", line 203, in advance
+    result = self._run_optimization(
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\loops\optimization\optimizer_loop.py", line 256, in _run_optimization
+    self._optimizer_step(optimizer, opt_idx, batch_idx, closure)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\loops\optimization\optimizer_loop.py", line 369, in _optimizer_step
+    self.trainer._call_lightning_module_hook(
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\trainer\trainer.py", line 1596, in _call_lightning_module_hook
+    output = fn(*args, **kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\lightning.py", line 1625, in optimizer_step
+    optimizer.step(closure=optimizer_closure)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\optimizer.py", line 168, in step
+    step_output = self._strategy.optimizer_step(self._optimizer, self._optimizer_idx, closure, **kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\strategies\strategy.py", line 193, in optimizer_step
+    return self.precision_plugin.optimizer_step(model, optimizer, opt_idx, closure, **kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\plugins\precision\precision_plugin.py", line 155, in optimizer_step
+    return optimizer.step(closure=closure, **kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\torch\optim\optimizer.py", line 88, in wrapper
+    return func(*args, **kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\torch\autograd\grad_mode.py", line 27, in decorate_context
+    return func(*args, **kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\torch\optim\adam.py", line 100, in step
+    loss = closure()
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\plugins\precision\precision_plugin.py", line 140, in _wrap_closure
+    closure_result = closure()
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\loops\optimization\optimizer_loop.py", line 148, in __call__
+    self._result = self.closure(*args, **kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\loops\optimization\optimizer_loop.py", line 134, in closure
+    step_output = self._step_fn()
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\loops\optimization\optimizer_loop.py", line 427, in _training_step
+    training_step_output = self.trainer._call_strategy_hook("training_step", *step_kwargs.values())
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\trainer\trainer.py", line 1766, in _call_strategy_hook
+    output = fn(*args, **kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\strategies\strategy.py", line 333, in training_step
+    return self.model.training_step(*args, **kwargs)
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\net.py", line 83, in training_step
+    logits = self.forward(x)
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\net.py", line 56, in forward
+    x = F.relu(x)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\torch\nn\functional.py", line 1442, in relu
+    result = torch.relu(input)
+RuntimeError: CUDA out of memory. Tried to allocate 20.00 MiB (GPU 0; 24.00 GiB total capacity; 21.36 GiB already allocated; 0 bytes free; 21.38 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF

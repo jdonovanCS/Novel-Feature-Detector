@@ -1,0 +1,148 @@
+2022-04-01 16:07:20,354 INFO    MainThread:200972 [wandb_setup.py:_flush():75] Loading settings from C:\Users\Jordan\.config\wandb\settings
+2022-04-01 16:07:20,354 INFO    MainThread:200972 [wandb_setup.py:_flush():75] Loading settings from C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\settings
+2022-04-01 16:07:20,354 INFO    MainThread:200972 [wandb_setup.py:_flush():75] Loading settings from environment variables: {}
+2022-04-01 16:07:20,354 INFO    MainThread:200972 [wandb_setup.py:_flush():75] Inferring run settings from compute environment: {'program_relpath': 'evolution.py', 'program': 'C:\\Users\\Jordan\\Learning\\UVM\\Research Projects\\Novel-Feature-Detector\\evolution.py'}
+2022-04-01 16:07:20,355 INFO    MainThread:200972 [wandb_init.py:_log_setup():405] Logging user logs to C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220401_160720-23t5w89p\logs\debug.log
+2022-04-01 16:07:20,355 INFO    MainThread:200972 [wandb_init.py:_log_setup():406] Logging internal logs to C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220401_160720-23t5w89p\logs\debug-internal.log
+2022-04-01 16:07:20,356 INFO    MainThread:200972 [wandb_init.py:init():439] calling init triggers
+2022-04-01 16:07:20,356 INFO    MainThread:200972 [wandb_init.py:init():442] wandb.init called with sweep_config: {}
+config: {}
+2022-04-01 16:07:20,356 INFO    MainThread:200972 [wandb_init.py:init():487] wandb.init() called when a run is still active
+2022-04-01 16:47:20,559 INFO    MainThread:200972 [wandb_setup.py:_flush():75] Loading settings from C:\Users\Jordan\.config\wandb\settings
+2022-04-01 16:47:20,560 INFO    MainThread:200972 [wandb_setup.py:_flush():75] Loading settings from C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\settings
+2022-04-01 16:47:20,560 INFO    MainThread:200972 [wandb_setup.py:_flush():75] Loading settings from environment variables: {}
+2022-04-01 16:47:20,560 INFO    MainThread:200972 [wandb_setup.py:_flush():75] Inferring run settings from compute environment: {'program_relpath': 'evolution.py', 'program': 'C:\\Users\\Jordan\\Learning\\UVM\\Research Projects\\Novel-Feature-Detector\\evolution.py'}
+2022-04-01 16:47:20,560 INFO    MainThread:200972 [wandb_init.py:_log_setup():405] Logging user logs to C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220401_164720-1y1kg7de\logs\debug.log
+2022-04-01 16:47:20,561 INFO    MainThread:200972 [wandb_init.py:_log_setup():406] Logging internal logs to C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220401_164720-1y1kg7de\logs\debug-internal.log
+2022-04-01 16:47:20,561 INFO    MainThread:200972 [wandb_init.py:init():439] calling init triggers
+2022-04-01 16:47:20,562 INFO    MainThread:200972 [wandb_init.py:init():442] wandb.init called with sweep_config: {}
+config: {}
+2022-04-01 16:47:20,563 INFO    MainThread:200972 [wandb_init.py:init():487] wandb.init() called when a run is still active
+2022-04-01 17:28:09,189 INFO    MainThread:200972 [wandb_setup.py:_flush():75] Loading settings from C:\Users\Jordan\.config\wandb\settings
+2022-04-01 17:28:09,190 INFO    MainThread:200972 [wandb_setup.py:_flush():75] Loading settings from C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\settings
+2022-04-01 17:28:09,190 INFO    MainThread:200972 [wandb_setup.py:_flush():75] Loading settings from environment variables: {}
+2022-04-01 17:28:09,190 INFO    MainThread:200972 [wandb_setup.py:_flush():75] Inferring run settings from compute environment: {'program_relpath': 'evolution.py', 'program': 'C:\\Users\\Jordan\\Learning\\UVM\\Research Projects\\Novel-Feature-Detector\\evolution.py'}
+2022-04-01 17:28:09,190 INFO    MainThread:200972 [wandb_init.py:_log_setup():405] Logging user logs to C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220401_172809-37fn83pn\logs\debug.log
+2022-04-01 17:28:09,191 INFO    MainThread:200972 [wandb_init.py:_log_setup():406] Logging internal logs to C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220401_172809-37fn83pn\logs\debug-internal.log
+2022-04-01 17:28:09,191 INFO    MainThread:200972 [wandb_init.py:init():439] calling init triggers
+2022-04-01 17:28:09,192 INFO    MainThread:200972 [wandb_init.py:init():442] wandb.init called with sweep_config: {}
+config: {}
+2022-04-01 17:28:09,192 INFO    MainThread:200972 [wandb_init.py:init():487] wandb.init() called when a run is still active
+2022-04-01 18:07:33,043 INFO    MainThread:200972 [wandb_setup.py:_flush():75] Loading settings from C:\Users\Jordan\.config\wandb\settings
+2022-04-01 18:07:33,043 INFO    MainThread:200972 [wandb_setup.py:_flush():75] Loading settings from C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\settings
+2022-04-01 18:07:33,044 INFO    MainThread:200972 [wandb_setup.py:_flush():75] Loading settings from environment variables: {}
+2022-04-01 18:07:33,044 INFO    MainThread:200972 [wandb_setup.py:_flush():75] Inferring run settings from compute environment: {'program_relpath': 'evolution.py', 'program': 'C:\\Users\\Jordan\\Learning\\UVM\\Research Projects\\Novel-Feature-Detector\\evolution.py'}
+2022-04-01 18:07:33,044 INFO    MainThread:200972 [wandb_init.py:_log_setup():405] Logging user logs to C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220401_180733-4n699ecd\logs\debug.log
+2022-04-01 18:07:33,044 INFO    MainThread:200972 [wandb_init.py:_log_setup():406] Logging internal logs to C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220401_180733-4n699ecd\logs\debug-internal.log
+2022-04-01 18:07:33,045 INFO    MainThread:200972 [wandb_init.py:init():439] calling init triggers
+2022-04-01 18:07:33,045 INFO    MainThread:200972 [wandb_init.py:init():442] wandb.init called with sweep_config: {}
+config: {}
+2022-04-01 18:07:33,045 INFO    MainThread:200972 [wandb_init.py:init():487] wandb.init() called when a run is still active
+2022-04-01 18:47:05,556 INFO    MainThread:200972 [wandb_setup.py:_flush():75] Loading settings from C:\Users\Jordan\.config\wandb\settings
+2022-04-01 18:47:05,557 INFO    MainThread:200972 [wandb_setup.py:_flush():75] Loading settings from C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\settings
+2022-04-01 18:47:05,557 INFO    MainThread:200972 [wandb_setup.py:_flush():75] Loading settings from environment variables: {}
+2022-04-01 18:47:05,557 INFO    MainThread:200972 [wandb_setup.py:_flush():75] Inferring run settings from compute environment: {'program_relpath': 'evolution.py', 'program': 'C:\\Users\\Jordan\\Learning\\UVM\\Research Projects\\Novel-Feature-Detector\\evolution.py'}
+2022-04-01 18:47:05,558 INFO    MainThread:200972 [wandb_init.py:_log_setup():405] Logging user logs to C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220401_184705-21ip50cd\logs\debug.log
+2022-04-01 18:47:05,558 INFO    MainThread:200972 [wandb_init.py:_log_setup():406] Logging internal logs to C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220401_184705-21ip50cd\logs\debug-internal.log
+2022-04-01 18:47:05,559 INFO    MainThread:200972 [wandb_init.py:init():439] calling init triggers
+2022-04-01 18:47:05,559 INFO    MainThread:200972 [wandb_init.py:init():442] wandb.init called with sweep_config: {}
+config: {}
+2022-04-01 18:47:05,559 INFO    MainThread:200972 [wandb_init.py:init():487] wandb.init() called when a run is still active
+2022-04-01 18:56:42,504 INFO    MainThread:200972 [wandb_run.py:_atexit_cleanup():1702] got exitcode: 0
+2022-04-01 18:56:42,505 INFO    MainThread:200972 [wandb_run.py:_restore():1674] restore
+2022-04-01 18:56:42,669 INFO    MainThread:200972 [wandb_run.py:_on_finish():1831] got exit ret: file_counts {
+  wandb_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 1218
+  total_bytes: 1218
+}
+
+2022-04-01 18:56:42,838 INFO    MainThread:200972 [wandb_run.py:_on_finish():1831] got exit ret: file_counts {
+  wandb_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 1218
+  total_bytes: 1218
+}
+
+2022-04-01 18:56:43,157 INFO    MainThread:200972 [wandb_run.py:_on_finish():1831] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 1218
+  total_bytes: 9462
+}
+
+2022-04-01 18:56:43,270 INFO    MainThread:200972 [wandb_run.py:_on_finish():1831] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 1218
+  total_bytes: 9462
+}
+
+2022-04-01 18:56:43,381 INFO    MainThread:200972 [wandb_run.py:_on_finish():1831] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 2733
+  total_bytes: 9462
+}
+
+2022-04-01 18:56:43,489 INFO    MainThread:200972 [wandb_run.py:_on_finish():1831] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 9462
+  total_bytes: 9462
+}
+
+2022-04-01 18:56:43,596 INFO    MainThread:200972 [wandb_run.py:_on_finish():1831] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 9462
+  total_bytes: 9462
+}
+
+2022-04-01 18:56:43,704 INFO    MainThread:200972 [wandb_run.py:_on_finish():1831] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 9462
+  total_bytes: 9462
+}
+
+2022-04-01 18:56:43,813 INFO    MainThread:200972 [wandb_run.py:_on_finish():1831] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 9462
+  total_bytes: 9462
+}
+
+2022-04-01 18:56:44,148 INFO    MainThread:200972 [wandb_run.py:_on_finish():1831] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 9462
+  total_bytes: 9462
+}
+
+2022-04-01 18:56:44,514 INFO    MainThread:200972 [wandb_run.py:_on_finish():1831] got exit ret: done: true
+exit_result {
+}
+file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 9462
+  total_bytes: 9462
+}
+local_info {
+}
+
+2022-04-01 18:56:45,676 INFO    MainThread:200972 [wandb_run.py:_footer_history_summary_info():2865] rendering history
+2022-04-01 18:56:45,677 INFO    MainThread:200972 [wandb_run.py:_footer_history_summary_info():2894] rendering summary
+2022-04-01 18:56:45,690 INFO    MainThread:200972 [wandb_run.py:_footer_sync_info():2822] logging synced files

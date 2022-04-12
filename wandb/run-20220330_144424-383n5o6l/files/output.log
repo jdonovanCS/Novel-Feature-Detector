@@ -1,0 +1,29 @@
+Files already downloaded and verified
+Files already downloaded and verified
+  0%|                                                                                            | 0/1 [00:00<?, ?it/s]
+Running Evolution for fitness
+Initializing
+
+
+
+
+
+
+
+
+
+ 90%|██████████████████████████████████████████████████████████████████████████▋        | 9/10 [01:05<00:10, 10.56s/it]
+100%|██████████████████████████████████████████████████████████████████████████████████| 10/10 [01:14<00:00, 10.05s/it]
+  0%|                                                                                            | 0/1 [02:24<?, ?it/s]
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 220, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 190, in run
+    solution_over_time, fitness_over_time = evolution(generations=n_iters, population_size=pop_size, num_children=num_children, tournament_size=tournament_size, num_winners=num_winners, evolution_type=run_name)
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 135, in evolution
+    child.fitness = net.get_fitness(net_input)
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\helper_hpc.py", line 279, in get_fitness
+    novelty_score = self.compute_feature_novelty()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\helper_hpc.py", line 357, in compute_feature_novelty
+    dist[str(layer)].append(torch.abs(ind_activation2 - ind_activation))
+RuntimeError: [enforce fail at ..\c10\core\impl\alloc_cpu.cpp:81] data. DefaultCPUAllocator: not enough memory: you tried to allocate 131072 bytes.
