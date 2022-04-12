@@ -83,9 +83,7 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
         model = Model()
         net = helper.Net(num_classes=len(classnames), classnames=classnames)
         model.filters = net.get_filters()
-        print(time.time())
         model.fitness =  net.get_fitness(net_input)
-        print(time.time())
         population.append(model)
         helper.wandb.log({'gen': 0, 'individual': i, 'fitness': model.fitness})
         
