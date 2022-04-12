@@ -1,0 +1,24 @@
+{
+    "os": "Windows-10-10.0.19043-SP0",
+    "python": "3.10.0",
+    "heartbeatAt": "2022-04-11T17:08:00.562599",
+    "startedAt": "2022-04-11T17:07:59.262979",
+    "docker": null,
+    "gpu": "NVIDIA GeForce RTX 3090",
+    "gpu_count": 1,
+    "cpu_count": 32,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "C:\\Users\\Jordan\\Learning\\UVM\\Research Projects\\Novel-Feature-Detector\\evolution.py",
+    "codePath": "evolution.py",
+    "git": {
+        "remote": "https://github.com/jdonovancs/Novel-Feature-Detector.git",
+        "commit": "1b89179f86fd1b7de1037c4c2d8916b4b3faf510"
+    },
+    "email": "jordan.t.donovancs@gmail.com",
+    "root": "C:/Users/Jordan/Learning/UVM/Research Projects/Novel-Feature-Detector",
+    "host": "DESKTOP-ESA8F4M",
+    "username": "Jordan",
+    "executable": "C:\\Users\\Jordan\\anaconda3\\envs\\EC2\\python.exe"
+}

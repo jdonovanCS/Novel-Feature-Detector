@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 218, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 133, in run
+    helper.config.batch_size = args.batch_size
+AttributeError: module 'helper_hpc' has no attribute 'config'

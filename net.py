@@ -21,7 +21,6 @@ class Net(pl.LightningModule):
         self.fc3 = nn.Linear(512, num_classes)
         self.dropout1 = nn.Dropout2d(0.05)
         self.dropout2 = nn.Dropout2d(0.1)
-        self.conv1 = nn.Conv2d(3, 32, 3, padding=1)
         self.conv_layers = nn.ModuleList([nn.Conv2d(3, 32, 3, padding=1), 
                             nn.Conv2d(32, 64, 3, padding=1), 
                             nn.Conv2d(64, 128, 3, padding=1), 
@@ -91,7 +90,7 @@ class Net(pl.LightningModule):
         self.log('train_loss', loss)
         self.log('train_acc', acc)
         batch_dictionary={
-	            "train_loss": loss, "train_acc": acc
+	            "train_loss": loss, "train_acc": acc, 'loss': loss
 	        }
         return batch_dictionary
 
@@ -144,7 +143,7 @@ class Net(pl.LightningModule):
         avg_loss = torch.stack([x['val_loss'] for x in outputs]).mean()
         avg_acc = np.mean([x['val_acc'] for x in outputs])
         avg_class_acc = {}
-        for k, v in outputs[0]['val_class_acc']:
+        for k, v in outputs[0]['val_class_acc'].items():
             avg_class_acc[k] = np.mean(v)
         avg_novelty = np.mean([x['val_novelty'] for x in outputs])
         self.log('val_loss_epoch', avg_loss)
@@ -223,18 +222,47 @@ class Net(pl.LightningModule):
     def get_filters(self):
         return [m.weight.data for m in self.conv_layers]
 
-    def compute_feature_novelty(self):
-        dist = []
-        avg_dist = {}
-        # for each conv layer
-        for layer in self.activations:
-            dist = []
-            # for each activation 3d(batch, h, w)
-            for batch in self.activations[layer]:
-                # for each activation
-                for ind_activation in batch:
+    # def compute_feature_novelty(self):
+    #     dist = []
+    #     avg_dist = {}
+    #     # for each conv layer
+    #     for layer in self.activations: #6 conv layers
+    #         dist = []
+    #         # for each activation 3d(batch, h, w)
+    #         for batch in self.activations[layer]: #1 entry
+    #             print(batch.shape)
+    #             # for each batch
+    #             for ind_activation in batch: #64 batches
                     
-                    for ind_activation2 in batch:
-                        dist.append(np.abs(ind_activation.detach().cpu().numpy(), ind_activation2.detach().cpu().numpy()))
-            avg_dist[str(layer)] = np.mean((dist))
+    #                 for ind_activation2 in batch:
+    #                     dist.append(np.abs(ind_activation.detach().cpu().numpy(), ind_activation2.detach().cpu().numpy()))
+    #         avg_dist[str(layer)] = np.mean(dist)
+    #     return(sum(avg_dist.values()))
+
+
+    def compute_feature_novelty(self):
+        
+        avg_dist = {}
+        # for each conv layer 4d (batch, channel, h, w)
+        for layer in range(len(self.activations)):
+            B = len(self.activations[layer][0])
+            C = len(self.activations[layer][0][0])
+            pairwise = np.zeros((B, C, C))
+            # for each activation 3d(channel, h, w)
+            for batch in range(B): 
+                # for each channel 2d (h, w)
+                for channel in range(C): 
+                    # for each other channel                    
+                    for channel2 in range(channel, C):
+                        div = np.abs(self.activations[layer][0][batch][channel].detach().cpu().numpy() - self.activations[layer][0][batch][channel2].detach().cpu().numpy()).sum()
+                        pairwise[batch, channel, channel2] = div
+                        pairwise[batch, channel2, channel] = div
+
+            avg_dist[str(layer)] = np.mean(pairwise)
+            y = self.activations[layer][0]
+            b, ch, h, w = y.shape
+            print(y.shape)
+            new_avg = torch.einsum('bchw,bdhw->bcd', [y, y]) / (h * w)
+            print(new_avg)
+            print(avg_dist)
         return(sum(avg_dist.values()))

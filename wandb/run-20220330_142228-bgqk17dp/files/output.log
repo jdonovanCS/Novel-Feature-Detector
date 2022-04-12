@@ -1,0 +1,16 @@
+Files already downloaded and verified
+Files already downloaded and verified
+  0%|                                                                                            | 0/1 [00:00<?, ?it/s]
+Running Evolution for fitness
+  0%|                                                                                           | 0/10 [00:00<?, ?it/s]
+  0%|                                                                                            | 0/1 [00:41<?, ?it/s]
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 218, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 188, in run
+    solution_over_time, fitness_over_time = evolution(generations=n_iters, population_size=pop_size, num_children=num_children, tournament_size=tournament_size, num_winners=num_winners, evolution_type=run_name)
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 110, in evolution
+    model.fitness =  model.get_fitness(net_input)
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\helper_hpc.py", line 279, in get_fitness
+    novelty_score = self.compute_feature_novelty(self.activations)
+TypeError: Net.compute_feature_novelty() takes 1 positional argument but 2 were given

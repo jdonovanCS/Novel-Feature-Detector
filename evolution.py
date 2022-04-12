@@ -83,13 +83,15 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
         model = Model()
         net = helper.Net(num_classes=len(classnames), classnames=classnames)
         model.filters = net.get_filters()
+        print(time.time())
         model.fitness =  net.get_fitness(net_input)
+        print(time.time())
         population.append(model)
         helper.wandb.log({'gen': 0, 'individual': i, 'fitness': model.fitness})
         
     print("\nGenerations")
     for i in tqdm(range(generations)):
-        net_input = next(data_iterator)
+        # net_input = next(data_iterator)
         parents = []  
         while len(parents) < num_children and evolution_type != "random":
         # Sample randomly chosen models from the current population.
@@ -130,15 +132,15 @@ def run():
     torch.multiprocessing.freeze_support()
     helper.run(seed=False)
     
-    helper.config.batch_size = args.batch_size
-    helper.config.experiment_name = args.experiment_name
-    helper.config.evo_gens = args.evo_gens
-    helper.config.evo_pop = args.evo_pop_size
-    helper.config.evo_dataset_for_novelty = args.evo_dataset_for_novelty
-    helper.config.evo_num_runs = args.evo_num_runs
-    helper.config.evo_tourney_size = args.evo_tourney_size
-    helper.config.evo_num_winners = args.evo_num_winners
-    helper.config.evo_num_children = args.evo_num_children
+    helper.config['batch_size'] = args.batch_size
+    helper.config['experiment_name'] = args.experiment_name
+    helper.config['evo_gens'] = args.evo_gens
+    helper.config['evo_pop'] = args.evo_pop_size
+    helper.config['evo_dataset_for_novelty'] = args.evo_dataset_for_novelty
+    helper.config['evo_num_runs'] = args.evo_num_runs
+    helper.config['evo_tourney_size'] = args.evo_tourney_size
+    helper.config['evo_num_winners'] = args.evo_num_winners
+    helper.config['evo_num_children'] = args.evo_num_children
     helper.update_config()
 
     random_image_paths = helper.create_random_images(64)
@@ -188,7 +190,8 @@ def run():
             print(run_name, run_num, time.time()-start_time, fitness_over_time[-1])
             with open('output.txt', 'a+') as f:
                 f.write('run_name, run_num, time, fittest individual\n{}, {}, {}, {}'.format(run_name, run_num, time.time()-start_time, fitness_over_time[-1]))
-
+            helper.run(seed=False)
+            
     if not os.path.isdir('plots/' + experiment_name):
         os.mkdir('plots/' + experiment_name)
     if not os.path.isdir('output/' + experiment_name):

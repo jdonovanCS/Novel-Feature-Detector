@@ -1,0 +1,156 @@
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:88: LightningDeprecationWarning: DataModule property `train_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:107: LightningDeprecationWarning: DataModule property `val_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+Files already downloaded and verified
+Files already downloaded and verified
+Running Evolution for fitness
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:126: LightningDeprecationWarning: DataModule property `test_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+  0%|                                                                                            | 0/5 [00:00<?, ?it/s]
+Initializing
+  0%|                                                                                           | 0/20 [00:00<?, ?it/s]
+()
+()
+()
+()
+()
+()
+()
+()
+
+
+ 10%|████████▎                                                                          | 2/20 [00:05<00:48,  2.68s/it]
+()
+()
+()
+()
+()
+()
+()
+()
+()
+
+
+ 20%|████████████████▌                                                                  | 4/20 [00:10<00:42,  2.64s/it]
+()
+()
+()
+()
+()
+()
+()
+()
+()
+()
+
+ 25%|████████████████████▊                                                              | 5/20 [00:13<00:42,  2.83s/it]
+()
+()
+()
+()
+()
+
+ 30%|████████████████████████▉                                                          | 6/20 [00:16<00:38,  2.78s/it]
+()
+()
+()
+()
+()
+()
+
+ 35%|█████████████████████████████                                                      | 7/20 [00:19<00:36,  2.77s/it]
+()
+()
+()
+()
+
+ 40%|█████████████████████████████████▏                                                 | 8/20 [00:22<00:34,  2.86s/it]
+()
+()
+()
+()
+()
+
+ 45%|█████████████████████████████████████▎                                             | 9/20 [00:24<00:30,  2.82s/it]
+()
+()
+()
+()
+()
+()
+()
+
+ 50%|█████████████████████████████████████████                                         | 10/20 [00:27<00:27,  2.73s/it]
+()
+()
+()
+
+ 55%|█████████████████████████████████████████████                                     | 11/20 [00:30<00:24,  2.71s/it]
+()
+()
+()
+()
+
+ 60%|█████████████████████████████████████████████████▏                                | 12/20 [00:32<00:21,  2.72s/it]
+()
+()
+()
+()
+()
+()
+()
+()
+
+ 65%|█████████████████████████████████████████████████████▎                            | 13/20 [00:35<00:18,  2.66s/it]
+()
+()
+()
+()
+
+ 70%|█████████████████████████████████████████████████████████▍                        | 14/20 [00:37<00:15,  2.62s/it]
+()
+()
+()
+
+ 75%|█████████████████████████████████████████████████████████████▌                    | 15/20 [00:40<00:13,  2.69s/it]
+()
+()
+()
+()
+()
+()
+()
+
+ 80%|█████████████████████████████████████████████████████████████████▌                | 16/20 [00:43<00:11,  2.76s/it]
+()
+()
+()
+()
+
+ 85%|█████████████████████████████████████████████████████████████████████▋            | 17/20 [00:46<00:08,  2.68s/it]
+()
+()
+()
+()
+()
+
+ 90%|█████████████████████████████████████████████████████████████████████████▊        | 18/20 [00:48<00:05,  2.67s/it]
+  0%|                                                                                            | 0/5 [01:46<?, ?it/s]
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 218, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 184, in run
+    solution_over_time, fitness_over_time = evolution(generations=n_iters, population_size=pop_size, num_children=num_children, tournament_size=tournament_size, num_winners=num_winners, evolution_type=run_name)
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 86, in evolution
+    model.fitness =  net.get_fitness(net_input)
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\net.py", line 158, in get_fitness
+    novelty_score = self.compute_feature_novelty()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\net.py", line 238, in compute_feature_novelty
+    avg_dist[str(layer)] = np.mean(dist)
+  File "<__array_function__ internals>", line 5, in mean
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numpy\core\fromnumeric.py", line 3440, in mean
+    return _methods._mean(a, axis=axis, dtype=dtype,
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numpy\core\_methods.py", line 163, in _mean
+    arr = asanyarray(a)
+KeyboardInterrupt

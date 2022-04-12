@@ -1,0 +1,108 @@
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:88: LightningDeprecationWarning: DataModule property `train_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:107: LightningDeprecationWarning: DataModule property `val_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+updating config
+config: {'batch_size': 64, 'experiment_name': 'channel diversity metric', 'evo_gens': 50, 'evo_pop': 20, 'evo_dataset_for_novelty': 'cifar10', 'evo_num_runs': 5, 'evo_tourney_size': 4, 'evo_num_winners': 2, 'evo_num_children': 20}
+Files already downloaded and verified
+Files already downloaded and verified
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:126: LightningDeprecationWarning: DataModule property `test_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+  0%|                                                                                            | 0/5 [00:00<?, ?it/s]
+Running Evolution for fitness
+Initializing
+1649732355.3673098
+  0%|                                                                                           | 0/20 [00:00<?, ?it/s]
+torch.Size([64, 32, 32, 32])
+tensor([[[ 7.3981e-03, -6.3523e-04,  1.5710e-03,  ..., -1.4434e-02,
+          -3.5401e-05, -8.3751e-04],
+         [-6.3523e-04,  5.9929e-03,  9.0437e-05,  ..., -7.9630e-03,
+          -5.0185e-03, -1.5575e-03],
+         [ 1.5710e-03,  9.0437e-05,  1.8186e-02,  ..., -3.3044e-02,
+           3.6306e-03,  9.3871e-03],
+         ...,
+         [-1.4434e-02, -7.9630e-03, -3.3044e-02,  ...,  2.0425e-01,
+           8.6266e-03, -3.6547e-02],
+         [-3.5401e-05, -5.0185e-03,  3.6306e-03,  ...,  8.6266e-03,
+           1.2251e-02,  2.8467e-03],
+         [-8.3751e-04, -1.5575e-03,  9.3871e-03,  ..., -3.6547e-02,
+           2.8467e-03,  1.4999e-02]],
+        [[ 5.6070e-03, -2.3036e-03,  2.6386e-03,  ..., -2.2668e-02,
+           2.4178e-03,  4.0292e-03],
+         [-2.3036e-03,  2.6833e-03, -2.7018e-03,  ...,  1.1573e-02,
+          -1.9129e-03, -3.3092e-03],
+         [ 2.6386e-03, -2.7018e-03,  6.3169e-03,  ..., -3.5418e-02,
+           4.6175e-03,  8.1452e-03],
+         ...,
+         [-2.2668e-02,  1.1573e-02, -3.5418e-02,  ...,  3.6528e-01,
+          -2.6733e-02, -8.0117e-02],
+         [ 2.4178e-03, -1.9129e-03,  4.6175e-03,  ..., -2.6733e-02,
+           4.8858e-03,  6.4996e-03],
+         [ 4.0292e-03, -3.3092e-03,  8.1452e-03,  ..., -8.0117e-02,
+           6.4996e-03,  2.1060e-02]],
+        [[ 5.9922e-03, -1.3218e-03, -2.1595e-03,  ...,  4.0001e-03,
+          -7.1787e-04, -2.5547e-03],
+         [-1.3218e-03,  5.4614e-03, -6.2471e-03,  ...,  1.0401e-02,
+          -5.2736e-03, -4.6725e-03],
+         [-2.1595e-03, -6.2471e-03,  2.3898e-02,  ..., -7.3448e-02,
+           1.5533e-02,  2.7462e-02],
+         ...,
+         [ 4.0001e-03,  1.0401e-02, -7.3448e-02,  ...,  4.3332e-01,
+          -5.0941e-02, -1.3863e-01],
+         [-7.1787e-04, -5.2736e-03,  1.5533e-02,  ..., -5.0941e-02,
+           1.5263e-02,  2.0326e-02],
+         [-2.5547e-03, -4.6725e-03,  2.7462e-02,  ..., -1.3863e-01,
+           2.0326e-02,  5.2519e-02]],
+        ...,
+        [[ 5.5673e-03, -4.1580e-04,  3.6793e-03,  ..., -9.2290e-03,
+          -7.1604e-05,  1.4448e-03],
+         [-4.1580e-04,  4.3944e-03,  4.6448e-03,  ..., -1.5490e-02,
+          -2.3765e-03,  2.8669e-03],
+         [ 3.6793e-03,  4.6448e-03,  2.9928e-02,  ..., -5.5416e-02,
+          -2.5060e-03,  1.6082e-02],
+         ...,
+         [-9.2290e-03, -1.5490e-02, -5.5416e-02,  ...,  2.1832e-01,
+           8.7870e-03, -4.7863e-02],
+         [-7.1604e-05, -2.3765e-03, -2.5060e-03,  ...,  8.7870e-03,
+           5.2218e-03, -8.0282e-04],
+         [ 1.4448e-03,  2.8669e-03,  1.6082e-02,  ..., -4.7863e-02,
+          -8.0282e-04,  1.4587e-02]],
+        [[ 1.7521e-02, -7.4241e-03, -1.3373e-03,  ...,  1.1127e-02,
+           2.4612e-03, -6.5084e-03],
+         [-7.4241e-03,  8.0454e-03, -5.9249e-03,  ...,  9.5124e-03,
+          -4.7014e-03, -4.3505e-03],
+         [-1.3373e-03, -5.9249e-03,  2.3490e-02,  ..., -6.7018e-02,
+           1.8757e-02,  2.5419e-02],
+         ...,
+         [ 1.1127e-02,  9.5124e-03, -6.7018e-02,  ...,  4.3971e-01,
+          -5.8868e-02, -1.3742e-01],
+         [ 2.4612e-03, -4.7014e-03,  1.8757e-02,  ..., -5.8868e-02,
+           2.0284e-02,  2.1124e-02],
+         [-6.5084e-03, -4.3505e-03,  2.5419e-02,  ..., -1.3742e-01,
+           2.1124e-02,  5.1544e-02]],
+        [[ 9.5995e-03, -1.4690e-03, -1.7707e-03,  ...,  3.1152e-02,
+          -3.7503e-03, -1.0006e-02],
+         [-1.4690e-03,  6.5286e-03, -3.3525e-03,  ...,  2.7939e-02,
+          -6.0860e-03, -1.0036e-02],
+         [-1.7707e-03, -3.3525e-03,  4.4580e-03,  ..., -1.4131e-02,
+           4.7951e-03,  5.3776e-03],
+         ...,
+         [ 3.1152e-02,  2.7939e-02, -1.4131e-02,  ...,  5.3065e-01,
+          -8.5855e-02, -1.6818e-01],
+         [-3.7503e-03, -6.0860e-03,  4.7951e-03,  ..., -8.5855e-02,
+           1.7543e-02,  2.7827e-02],
+         [-1.0006e-02, -1.0036e-02,  5.3776e-03,  ..., -1.6818e-01,
+           2.7827e-02,  5.7491e-02]]], grad_fn=<DivBackward0>)
+  0%|                                                                                            | 0/5 [00:06<?, ?it/s]
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 220, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 186, in run
+    solution_over_time, fitness_over_time = evolution(generations=n_iters, population_size=pop_size, num_children=num_children, tournament_size=tournament_size, num_winners=num_winners, evolution_type=run_name)
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 87, in evolution
+    model.fitness =  net.get_fitness(net_input)
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\net.py", line 158, in get_fitness
+    novelty_score = self.compute_feature_novelty()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\net.py", line 257, in compute_feature_novelty
+    div = np.abs(self.activations[layer][0][batch][channel].detach().cpu().numpy() - self.activations[layer][0][batch][channel2].detach().cpu().numpy()).sum()
+KeyboardInterrupt
