@@ -41,3 +41,69 @@ FileNotFoundError: [WinError 2] The system cannot find the file specified
 2022-04-11 15:34:51,835 INFO    Thread-11 :20320 [dir_watcher.py:_on_file_created():217] file/dir created: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220411_153449-1tcs3dsw\files\conda-environment.yaml
 2022-04-11 15:34:51,836 INFO    Thread-11 :20320 [dir_watcher.py:_on_file_created():217] file/dir created: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220411_153449-1tcs3dsw\files\requirements.txt
 2022-04-11 15:34:51,836 INFO    Thread-11 :20320 [dir_watcher.py:_on_file_created():217] file/dir created: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220411_153449-1tcs3dsw\files\wandb-summary.json
+2022-04-11 15:34:53,851 INFO    Thread-11 :20320 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220411_153449-1tcs3dsw\files\output.log
+2022-04-11 15:34:55,867 INFO    Thread-11 :20320 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220411_153449-1tcs3dsw\files\output.log
+2022-04-11 15:34:59,901 INFO    Thread-11 :20320 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220411_153449-1tcs3dsw\files\output.log
+2022-04-11 15:35:06,363 DEBUG   HandlerThread:20320 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-11 15:35:06,363 DEBUG   SenderThread:20320 [sender.py:send_request():249] send_request: stop_status
+2022-04-11 15:35:21,077 INFO    Thread-11 :20320 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220411_153449-1tcs3dsw\files\config.yaml
+2022-04-11 15:35:21,732 DEBUG   HandlerThread:20320 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-11 15:35:21,732 DEBUG   SenderThread:20320 [sender.py:send_request():249] send_request: stop_status
+2022-04-11 15:35:22,409 DEBUG   SenderThread:20320 [sender.py:send():235] send: stats
+2022-04-11 15:35:37,428 DEBUG   HandlerThread:20320 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-11 15:35:37,428 DEBUG   SenderThread:20320 [sender.py:send_request():249] send_request: stop_status
+2022-04-11 15:35:52,617 DEBUG   HandlerThread:20320 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-11 15:35:52,617 DEBUG   SenderThread:20320 [sender.py:send_request():249] send_request: stop_status
+2022-04-11 15:35:55,002 DEBUG   SenderThread:20320 [sender.py:send():235] send: stats
+2022-04-11 15:36:07,819 DEBUG   HandlerThread:20320 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-11 15:36:07,819 DEBUG   SenderThread:20320 [sender.py:send_request():249] send_request: stop_status
+2022-04-11 15:36:12,712 DEBUG   HandlerThread:20320 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-11 15:36:12,712 DEBUG   SenderThread:20320 [sender.py:send():235] send: history
+2022-04-11 15:36:12,713 DEBUG   SenderThread:20320 [sender.py:send():235] send: summary
+2022-04-11 15:36:12,714 INFO    SenderThread:20320 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-11 15:36:13,512 INFO    Thread-11 :20320 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220411_153449-1tcs3dsw\files\output.log
+2022-04-11 15:36:13,512 INFO    Thread-11 :20320 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220411_153449-1tcs3dsw\files\wandb-summary.json
+2022-04-11 15:36:23,040 DEBUG   HandlerThread:20320 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-11 15:36:23,041 DEBUG   SenderThread:20320 [sender.py:send_request():249] send_request: stop_status
+2022-04-11 15:36:28,077 DEBUG   SenderThread:20320 [sender.py:send():235] send: stats
+2022-04-11 15:36:28,952 WARNING MainThread:20320 [internal.py:wandb_internal():155] Internal process interrupt: 1
+2022-04-11 15:36:28,955 DEBUG   SenderThread:20320 [sender.py:send():235] send: telemetry
+2022-04-11 15:36:28,955 DEBUG   HandlerThread:20320 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-11 15:36:29,109 DEBUG   SenderThread:20320 [sender.py:send():235] send: exit
+2022-04-11 15:36:29,109 INFO    SenderThread:20320 [sender.py:send_exit():371] handling exit code: 255
+2022-04-11 15:36:29,109 INFO    SenderThread:20320 [sender.py:send_exit():373] handling runtime: 98
+2022-04-11 15:36:29,109 DEBUG   HandlerThread:20320 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-11 15:36:29,109 INFO    SenderThread:20320 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-11 15:36:29,110 INFO    SenderThread:20320 [sender.py:send_exit():379] send defer
+2022-04-11 15:36:29,110 DEBUG   SenderThread:20320 [sender.py:send_request():249] send_request: poll_exit
+2022-04-11 15:36:29,110 DEBUG   HandlerThread:20320 [handler.py:handle_request():141] handle_request: defer
+2022-04-11 15:36:29,110 INFO    HandlerThread:20320 [handler.py:handle_request_defer():164] handle defer: 0
+2022-04-11 15:36:29,110 DEBUG   SenderThread:20320 [sender.py:send_request():249] send_request: defer
+2022-04-11 15:36:29,110 INFO    SenderThread:20320 [sender.py:send_request_defer():388] handle sender defer: 0
+2022-04-11 15:36:29,110 INFO    SenderThread:20320 [sender.py:transition_state():392] send defer: 1
+2022-04-11 15:36:29,110 DEBUG   HandlerThread:20320 [handler.py:handle_request():141] handle_request: defer
+2022-04-11 15:36:29,110 INFO    HandlerThread:20320 [handler.py:handle_request_defer():164] handle defer: 1
+2022-04-11 15:36:29,114 WARNING MainThread:20320 [internal.py:wandb_internal():155] Internal process interrupt: 2
+2022-04-11 15:36:29,114 ERROR   MainThread:20320 [internal.py:wandb_internal():158] Internal process interrupted.
+2022-04-11 15:36:29,189 INFO    HandlerThread:20320 [handler.py:finish():778] shutting down handler
+2022-04-11 15:36:29,189 DEBUG   SenderThread:20320 [sender.py:send_request():249] send_request: defer
+2022-04-11 15:36:29,189 INFO    SenderThread:20320 [sender.py:send_request_defer():388] handle sender defer: 1
+2022-04-11 15:36:29,189 INFO    SenderThread:20320 [sender.py:transition_state():392] send defer: 2
+2022-04-11 15:36:29,189 INFO    SenderThread:20320 [sender.py:finish():1078] shutting down sender
+2022-04-11 15:36:29,189 INFO    SenderThread:20320 [dir_watcher.py:finish():283] shutting down directory watcher
+2022-04-11 15:36:29,646 INFO    SenderThread:20320 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220411_153449-1tcs3dsw\files\output.log
+2022-04-11 15:36:29,646 INFO    SenderThread:20320 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220411_153449-1tcs3dsw\files\wandb-summary.json
+2022-04-11 15:36:29,647 INFO    SenderThread:20320 [dir_watcher.py:finish():313] scan: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220411_153449-1tcs3dsw\files
+2022-04-11 15:36:29,647 INFO    SenderThread:20320 [dir_watcher.py:finish():327] scan save: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220411_153449-1tcs3dsw\files\conda-environment.yaml conda-environment.yaml
+2022-04-11 15:36:29,647 INFO    SenderThread:20320 [dir_watcher.py:finish():327] scan save: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220411_153449-1tcs3dsw\files\config.yaml config.yaml
+2022-04-11 15:36:29,647 INFO    SenderThread:20320 [dir_watcher.py:finish():327] scan save: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220411_153449-1tcs3dsw\files\output.log output.log
+2022-04-11 15:36:29,648 INFO    SenderThread:20320 [dir_watcher.py:finish():327] scan save: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220411_153449-1tcs3dsw\files\requirements.txt requirements.txt
+2022-04-11 15:36:29,652 INFO    SenderThread:20320 [dir_watcher.py:finish():327] scan save: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220411_153449-1tcs3dsw\files\wandb-metadata.json wandb-metadata.json
+2022-04-11 15:36:29,652 INFO    SenderThread:20320 [dir_watcher.py:finish():327] scan save: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220411_153449-1tcs3dsw\files\wandb-summary.json wandb-summary.json
+2022-04-11 15:36:29,654 INFO    SenderThread:20320 [file_pusher.py:finish():145] shutting down file pusher
+2022-04-11 15:36:29,654 INFO    SenderThread:20320 [file_pusher.py:join():150] waiting for file pusher
+2022-04-11 15:36:30,111 INFO    WriterThread:20320 [datastore.py:close():281] close: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220411_153449-1tcs3dsw\run-1tcs3dsw.wandb
+2022-04-11 15:36:30,206 INFO    Thread-20 :20320 [upload_job.py:push():137] Uploaded file C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220411_153449-1tcs3dsw\files\requirements.txt
+2022-04-11 15:36:30,222 INFO    Thread-21 :20320 [upload_job.py:push():137] Uploaded file C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220411_153449-1tcs3dsw\files\wandb-summary.json
+2022-04-11 15:36:30,238 INFO    Thread-19 :20320 [upload_job.py:push():137] Uploaded file C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220411_153449-1tcs3dsw\files\output.log
+2022-04-11 15:36:30,276 INFO    Thread-18 :20320 [upload_job.py:push():137] Uploaded file C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220411_153449-1tcs3dsw\files\config.yaml

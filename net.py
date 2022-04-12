@@ -244,18 +244,18 @@ class Net(pl.LightningModule):
     # @numba.njit
     def compute_feature_novelty(self):
         
-        start = time.time()
-        layer_totals = {}
-        with torch.no_grad():
-            # for each conv layer 4d (batch, channel, h, w)
-            for layer in range(len(self.activations)):
-                B = len(self.activations[layer][0])
-                C = len(self.activations[layer][0][0])
-                a = self.activations[layer][0]
-                layer_totals[layer] = torch.abs(a.unsqueeze(2) - a.unsqueeze(1)).sum().item()
-        end = time.time()
-        print(sum(layer_totals.values()))
-        print(end-start)
+        # start = time.time()
+        # layer_totals = {}
+        # with torch.no_grad():
+        #     # for each conv layer 4d (batch, channel, h, w)
+        #     for layer in range(len(self.activations)):
+        #         B = len(self.activations[layer][0])
+        #         C = len(self.activations[layer][0][0])
+        #         a = self.activations[layer][0]
+        #         layer_totals[layer] = torch.abs(a.unsqueeze(2) - a.unsqueeze(1)).sum().item()
+        # end = time.time()
+        # print('gpu answer: {}'.format(sum(layer_totals.values())))
+        # print('gpu time: {}'.format(end-start))
         # return(sum(layer_totals.values()))
 
         @numba.njit(parallel=True)
@@ -277,13 +277,13 @@ class Net(pl.LightningModule):
 
             # layer_totals[layer] = np.abs(np.expand_dims(a, axis=2) - np.expand_dims(a, axis=1)).sum().item()
 
-        start = time.time()
+        # start = time.time()
         l = []
         for i in self.activations:
             self.activations[i][0] = self.activations[i][0].detach().cpu().numpy()
             l.append(loops(self.activations[i][0]))
-        print(sum(l))
-        end = time.time()
-        print(end-start)
-        return l
+        # print('cpu answer: {}'.format(sum(l)))
+        # end = time.time()
+        # print('cpu time: {}'.format(end-start))
+        return(sum(l))
 
