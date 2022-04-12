@@ -1,0 +1,29 @@
+updating config
+config: {'batch_size': 64, 'experiment_name': 'attempting to rewrite compute diversity fuction', 'evo_gens': 10, 'evo_pop': 10, 'evo_dataset_for_novelty': 'cifar10', 'evo_num_runs': 1, 'evo_tourney_size': 4, 'evo_num_winners': 2, 'evo_num_children': 10}
+Files already downloaded and verified
+Files already downloaded and verified
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:88: LightningDeprecationWarning: DataModule property `train_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:107: LightningDeprecationWarning: DataModule property `val_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:126: LightningDeprecationWarning: DataModule property `test_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+  0%|                                                                                            | 0/1 [00:00<?, ?it/s]
+Running Evolution for fitness
+Initializing
+1649781594.5912786
+463155808.0
+  0%|                                                                                           | 0/10 [00:01<?, ?it/s]
+  0%|                                                                                            | 0/1 [00:07<?, ?it/s]
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 220, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 186, in run
+    solution_over_time, fitness_over_time = evolution(generations=n_iters, population_size=pop_size, num_children=num_children, tournament_size=tournament_size, num_winners=num_winners, evolution_type=run_name)
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 87, in evolution
+    model.fitness =  net.get_fitness(net_input)
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\net.py", line 160, in get_fitness
+    novelty_score = self.compute_feature_novelty()
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\net.py", line 283, in compute_feature_novelty
+    l = loops(list(self.activations.values().detach().cpu().numpy()))
+AttributeError: 'dict_values' object has no attribute 'detach'

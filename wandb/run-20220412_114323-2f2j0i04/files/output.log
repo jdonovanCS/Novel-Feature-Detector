@@ -1,0 +1,94 @@
+updating config
+config: {'batch_size': 64, 'experiment_name': 'attempting to rewrite compute diversity fuction', 'evo_gens': 10, 'evo_pop': 10, 'evo_dataset_for_novelty': 'cifar10', 'evo_num_runs': 1, 'evo_tourney_size': 4, 'evo_num_winners': 2, 'evo_num_children': 10}
+Files already downloaded and verified
+Files already downloaded and verified
+Running Evolution for fitness
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:88: LightningDeprecationWarning: DataModule property `train_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:107: LightningDeprecationWarning: DataModule property `val_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:126: LightningDeprecationWarning: DataModule property `test_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+  0%|                                                                                            | 0/1 [00:00<?, ?it/s]
+Initializing
+1649778220.987966
+0.08689451217651367
+0.3407864570617676
+
+ 10%|████████▎                                                                          | 1/10 [00:02<00:18,  2.01s/it]
+0.3738241195678711
+0.3445620536804199
+0.3644294738769531
+0.365109920501709
+1649778222.9584827
+1649778223.0017169
+0.10263800621032715
+
+ 20%|████████████████▌                                                                  | 2/10 [00:04<00:16,  2.01s/it]
+0.33779096603393555
+0.3995954990386963
+0.32085394859313965
+0.3796694278717041
+1649778224.9728773
+1649778225.0115573
+0.0820012092590332
+
+ 30%|████████████████████████▉                                                          | 3/10 [00:05<00:13,  1.98s/it]
+0.3674643039703369
+0.35747671127319336
+0.3763091564178467
+0.32880425453186035
+1649778226.9195154
+1649778226.9596748
+0.10530781745910645
+0.32468557357788086
+
+ 40%|█████████████████████████████████▏                                                 | 4/10 [00:07<00:12,  2.00s/it]
+0.3856079578399658
+0.39194178581237793
+0.3510885238647461
+1649778228.9522443
+1649778228.9927855
+0.07928895950317383
+0.33999133110046387
+
+ 50%|█████████████████████████████████████████▌                                         | 5/10 [00:10<00:10,  2.01s/it]
+0.3881804943084717
+0.3404664993286133
+0.38752055168151855
+1649778230.9838994
+1649778231.0213919
+0.0819849967956543
+0.3429226875305176
+0.34601855278015137
+0.375321626663208
+0.31844282150268555
+0.3907787799835205
+1649778232.9671552
+1649778233.001992
+0.08599996566772461
+0.3324275016784668
+
+
+ 70%|██████████████████████████████████████████████████████████                         | 7/10 [00:13<00:05,  1.99s/it]
+0.3730480670928955
+0.3652229309082031
+0.34490251541137695
+1649778234.9376395
+1649778234.9756393
+0.09684967994689941
+0.3107874393463135
+0.3471958637237549
+  0%|                                                                                            | 0/1 [00:27<?, ?it/s]
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 220, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 186, in run
+    solution_over_time, fitness_over_time = evolution(generations=n_iters, population_size=pop_size, num_children=num_children, tournament_size=tournament_size, num_winners=num_winners, evolution_type=run_name)
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 87, in evolution
+    model.fitness =  net.get_fitness(net_input)
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\net.py", line 159, in get_fitness
+    novelty_score = self.compute_feature_novelty()
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\net.py", line 264, in compute_feature_novelty
+    avg_dist[str(layer)] = torch.abs(a.unsqueeze(2) - a.unsqueeze(1)).sum().item()
+KeyboardInterrupt

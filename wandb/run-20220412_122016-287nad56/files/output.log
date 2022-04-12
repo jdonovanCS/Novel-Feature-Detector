@@ -1,0 +1,64 @@
+updating config
+config: {'batch_size': 64, 'experiment_name': 'attempting to rewrite compute diversity fuction', 'evo_gens': 10, 'evo_pop': 10, 'evo_dataset_for_novelty': 'cifar10', 'evo_num_runs': 1, 'evo_tourney_size': 4, 'evo_num_winners': 2, 'evo_num_children': 10}
+Files already downloaded and verified
+Files already downloaded and verified
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:88: LightningDeprecationWarning: DataModule property `train_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:107: LightningDeprecationWarning: DataModule property `val_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+Running Evolution for fitness
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:126: LightningDeprecationWarning: DataModule property `test_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+  0%|                                                                                            | 0/1 [00:00<?, ?it/s]
+Initializing
+1649780425.4145622
+466353710.0
+1.708993673324585
+
+ 10%|████████▎                                                                          | 1/10 [00:05<00:46,  5.16s/it]
+466353486.0
+3.352003574371338
+1649780430.548152
+1649780430.5711584
+478405504.0
+1.7529935836791992
+478405642.0
+3.313002586364746
+1649780435.6936595
+
+ 20%|████████████████▌                                                                  | 2/10 [00:10<00:41,  5.15s/it]
+469125444.0
+
+ 30%|████████████████████████▉                                                          | 3/10 [00:15<00:36,  5.16s/it]
+469124584.0
+3.328003406524658
+1649780440.8557508
+1649780440.8777509
+470036560.0
+1.6959993839263916
+470036340.0
+3.348003387451172
+1649780445.9818788
+
+ 40%|█████████████████████████████████▏                                                 | 4/10 [00:20<00:30,  5.14s/it]
+476785420.0
+
+ 50%|█████████████████████████████████████████▌                                         | 5/10 [00:25<00:25,  5.16s/it]
+476784510.0
+3.3179991245269775
+1649780451.1602533
+1649780451.1833148
+461306792.0
+  0%|                                                                                            | 0/1 [00:34<?, ?it/s]
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 220, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 186, in run
+    solution_over_time, fitness_over_time = evolution(generations=n_iters, population_size=pop_size, num_children=num_children, tournament_size=tournament_size, num_winners=num_winners, evolution_type=run_name)
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 87, in evolution
+    model.fitness =  net.get_fitness(net_input)
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\net.py", line 160, in get_fitness
+    novelty_score = self.compute_feature_novelty()
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\net.py", line 269, in compute_feature_novelty
+    layer_totals[layer] = np.abs(np.expand_dims(a, axis=2) - np.expand_dims(a, axis=1)).sum().item()
+KeyboardInterrupt

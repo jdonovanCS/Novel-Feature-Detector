@@ -1,0 +1,241 @@
+2022-04-12 10:08:56,775 INFO    MainThread:4068 [internal.py:wandb_internal():92] W&B internal server running at pid: 4068, started at: 2022-04-12 10:08:56.774021
+2022-04-12 10:08:56,777 INFO    WriterThread:4068 [datastore.py:open_for_write():77] open: C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220412_100856-1uwww3ne\run-1uwww3ne.wandb
+2022-04-12 10:08:56,779 DEBUG   SenderThread:4068 [sender.py:send():235] send: header
+2022-04-12 10:08:56,779 DEBUG   SenderThread:4068 [sender.py:send():235] send: run
+2022-04-12 10:08:56,894 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: check_version
+2022-04-12 10:08:56,896 INFO    SenderThread:4068 [dir_watcher.py:__init__():169] watching files in: C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220412_100856-1uwww3ne\files
+2022-04-12 10:08:56,896 INFO    SenderThread:4068 [sender.py:_start_run_threads():812] run started: 1uwww3ne with start time 1649772536
+2022-04-12 10:08:56,896 DEBUG   SenderThread:4068 [sender.py:send():235] send: summary
+2022-04-12 10:08:56,896 INFO    SenderThread:4068 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-12 10:08:56,897 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: check_version
+2022-04-12 10:08:56,966 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: run_start
+2022-04-12 10:08:56,977 DEBUG   HandlerThread:4068 [meta.py:__init__():37] meta init
+2022-04-12 10:08:56,978 DEBUG   HandlerThread:4068 [meta.py:__init__():51] meta init done
+2022-04-12 10:08:56,978 DEBUG   HandlerThread:4068 [meta.py:probe():211] probe
+2022-04-12 10:08:57,018 DEBUG   HandlerThread:4068 [meta.py:_setup_git():201] setup git
+2022-04-12 10:08:57,088 DEBUG   HandlerThread:4068 [meta.py:_setup_git():208] setup git done
+2022-04-12 10:08:57,088 DEBUG   HandlerThread:4068 [meta.py:_save_pip():55] save pip
+2022-04-12 10:08:57,088 DEBUG   HandlerThread:4068 [meta.py:_save_pip():69] save pip done
+2022-04-12 10:08:57,088 DEBUG   HandlerThread:4068 [meta.py:_save_conda():76] save conda
+2022-04-12 10:08:57,091 ERROR   HandlerThread:4068 [meta.py:_save_conda():85] Error saving conda packages
+Traceback (most recent call last):
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\wandb\sdk\internal\meta.py", line 81, in _save_conda
+    subprocess.call(
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\subprocess.py", line 345, in call
+    with Popen(*popenargs, **kwargs) as p:
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\subprocess.py", line 966, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\subprocess.py", line 1435, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+FileNotFoundError: [WinError 2] The system cannot find the file specified
+2022-04-12 10:08:57,092 DEBUG   HandlerThread:4068 [meta.py:_save_conda():86] save conda done
+2022-04-12 10:08:57,092 DEBUG   HandlerThread:4068 [meta.py:probe():249] probe done
+2022-04-12 10:08:57,190 DEBUG   SenderThread:4068 [sender.py:send():235] send: files
+2022-04-12 10:08:57,190 INFO    SenderThread:4068 [sender.py:_save_file():947] saving file wandb-metadata.json with policy now
+2022-04-12 10:08:57,190 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-12 10:08:57,191 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: stop_status
+2022-04-12 10:08:57,293 DEBUG   SenderThread:4068 [sender.py:send():235] send: telemetry
+2022-04-12 10:08:57,664 INFO    Thread-17 :4068 [upload_job.py:push():137] Uploaded file C:\Users\Jordan\AppData\Local\Temp\tmp_r68kk3zwandb\384lits0-wandb-metadata.json
+2022-04-12 10:08:57,899 INFO    Thread-11 :4068 [dir_watcher.py:_on_file_created():217] file/dir created: C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220412_100856-1uwww3ne\files\output.log
+2022-04-12 10:08:57,899 INFO    Thread-11 :4068 [dir_watcher.py:_on_file_created():217] file/dir created: C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220412_100856-1uwww3ne\files\wandb-summary.json
+2022-04-12 10:08:57,899 INFO    Thread-11 :4068 [dir_watcher.py:_on_file_created():217] file/dir created: C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220412_100856-1uwww3ne\files\conda-environment.yaml
+2022-04-12 10:08:57,899 INFO    Thread-11 :4068 [dir_watcher.py:_on_file_created():217] file/dir created: C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220412_100856-1uwww3ne\files\wandb-metadata.json
+2022-04-12 10:08:57,900 INFO    Thread-11 :4068 [dir_watcher.py:_on_file_created():217] file/dir created: C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220412_100856-1uwww3ne\files\requirements.txt
+2022-04-12 10:08:59,920 INFO    Thread-11 :4068 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220412_100856-1uwww3ne\files\output.log
+2022-04-12 10:09:01,935 INFO    Thread-11 :4068 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220412_100856-1uwww3ne\files\output.log
+2022-04-12 10:09:12,306 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-12 10:09:12,307 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: stop_status
+2022-04-12 10:09:27,416 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-12 10:09:27,416 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: stop_status
+2022-04-12 10:09:27,749 DEBUG   SenderThread:4068 [sender.py:send():235] send: stats
+2022-04-12 10:09:28,123 INFO    Thread-11 :4068 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220412_100856-1uwww3ne\files\config.yaml
+2022-04-12 10:09:42,519 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-12 10:09:42,519 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: stop_status
+2022-04-12 10:09:57,628 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-12 10:09:57,629 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: stop_status
+2022-04-12 10:10:00,453 DEBUG   SenderThread:4068 [sender.py:send():235] send: stats
+2022-04-12 10:10:12,745 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-12 10:10:12,745 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: stop_status
+2022-04-12 10:10:27,855 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-12 10:10:27,856 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: stop_status
+2022-04-12 10:10:33,099 DEBUG   SenderThread:4068 [sender.py:send():235] send: stats
+2022-04-12 10:10:42,977 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-12 10:10:42,977 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: stop_status
+2022-04-12 10:10:58,086 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-12 10:10:58,086 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: stop_status
+2022-04-12 10:11:05,711 DEBUG   SenderThread:4068 [sender.py:send():235] send: stats
+2022-04-12 10:11:13,215 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-12 10:11:13,216 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: stop_status
+2022-04-12 10:11:28,388 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-12 10:11:28,388 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: stop_status
+2022-04-12 10:11:38,374 DEBUG   SenderThread:4068 [sender.py:send():235] send: stats
+2022-04-12 10:11:43,565 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-12 10:11:43,565 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: stop_status
+2022-04-12 10:11:58,911 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-12 10:11:58,911 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: stop_status
+2022-04-12 10:12:11,132 DEBUG   SenderThread:4068 [sender.py:send():235] send: stats
+2022-04-12 10:12:14,060 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-12 10:12:14,060 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: stop_status
+2022-04-12 10:12:29,290 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-12 10:12:29,290 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: stop_status
+2022-04-12 10:12:43,850 DEBUG   SenderThread:4068 [sender.py:send():235] send: stats
+2022-04-12 10:12:44,454 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-12 10:12:44,454 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: stop_status
+2022-04-12 10:12:59,619 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-12 10:12:59,619 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: stop_status
+2022-04-12 10:13:14,763 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-12 10:13:14,763 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: stop_status
+2022-04-12 10:13:16,626 DEBUG   SenderThread:4068 [sender.py:send():235] send: stats
+2022-04-12 10:13:29,941 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-12 10:13:29,941 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: stop_status
+2022-04-12 10:13:36,647 INFO    Thread-11 :4068 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220412_100856-1uwww3ne\files\output.log
+2022-04-12 10:13:38,673 INFO    Thread-11 :4068 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220412_100856-1uwww3ne\files\output.log
+2022-04-12 10:13:39,464 WARNING MainThread:4068 [internal.py:wandb_internal():155] Internal process interrupt: 1
+2022-04-12 10:13:39,469 DEBUG   SenderThread:4068 [sender.py:send():235] send: telemetry
+2022-04-12 10:13:39,470 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-12 10:13:40,352 DEBUG   SenderThread:4068 [sender.py:send():235] send: exit
+2022-04-12 10:13:40,353 INFO    SenderThread:4068 [sender.py:send_exit():371] handling exit code: 255
+2022-04-12 10:13:40,353 INFO    SenderThread:4068 [sender.py:send_exit():373] handling runtime: 283
+2022-04-12 10:13:40,353 INFO    SenderThread:4068 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-12 10:13:40,354 INFO    SenderThread:4068 [sender.py:send_exit():379] send defer
+2022-04-12 10:13:40,354 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-12 10:13:40,354 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: poll_exit
+2022-04-12 10:13:40,354 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: defer
+2022-04-12 10:13:40,354 INFO    HandlerThread:4068 [handler.py:handle_request_defer():164] handle defer: 0
+2022-04-12 10:13:40,354 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: defer
+2022-04-12 10:13:40,354 INFO    SenderThread:4068 [sender.py:send_request_defer():388] handle sender defer: 0
+2022-04-12 10:13:40,354 INFO    SenderThread:4068 [sender.py:transition_state():392] send defer: 1
+2022-04-12 10:13:40,355 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: defer
+2022-04-12 10:13:40,355 INFO    HandlerThread:4068 [handler.py:handle_request_defer():164] handle defer: 1
+2022-04-12 10:13:40,404 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: defer
+2022-04-12 10:13:40,404 INFO    SenderThread:4068 [sender.py:send_request_defer():388] handle sender defer: 1
+2022-04-12 10:13:40,404 INFO    SenderThread:4068 [sender.py:transition_state():392] send defer: 2
+2022-04-12 10:13:40,404 DEBUG   SenderThread:4068 [sender.py:send():235] send: stats
+2022-04-12 10:13:40,406 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: defer
+2022-04-12 10:13:40,406 INFO    HandlerThread:4068 [handler.py:handle_request_defer():164] handle defer: 2
+2022-04-12 10:13:40,406 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: defer
+2022-04-12 10:13:40,406 INFO    SenderThread:4068 [sender.py:send_request_defer():388] handle sender defer: 2
+2022-04-12 10:13:40,406 INFO    SenderThread:4068 [sender.py:transition_state():392] send defer: 3
+2022-04-12 10:13:40,406 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: defer
+2022-04-12 10:13:40,406 INFO    HandlerThread:4068 [handler.py:handle_request_defer():164] handle defer: 3
+2022-04-12 10:13:40,406 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: defer
+2022-04-12 10:13:40,406 INFO    SenderThread:4068 [sender.py:send_request_defer():388] handle sender defer: 3
+2022-04-12 10:13:40,407 INFO    SenderThread:4068 [sender.py:transition_state():392] send defer: 4
+2022-04-12 10:13:40,407 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: defer
+2022-04-12 10:13:40,407 INFO    HandlerThread:4068 [handler.py:handle_request_defer():164] handle defer: 4
+2022-04-12 10:13:40,407 DEBUG   SenderThread:4068 [sender.py:send():235] send: summary
+2022-04-12 10:13:40,408 INFO    SenderThread:4068 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-12 10:13:40,408 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: defer
+2022-04-12 10:13:40,408 INFO    SenderThread:4068 [sender.py:send_request_defer():388] handle sender defer: 4
+2022-04-12 10:13:40,408 INFO    SenderThread:4068 [sender.py:transition_state():392] send defer: 5
+2022-04-12 10:13:40,408 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: defer
+2022-04-12 10:13:40,408 INFO    HandlerThread:4068 [handler.py:handle_request_defer():164] handle defer: 5
+2022-04-12 10:13:40,408 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: defer
+2022-04-12 10:13:40,408 INFO    SenderThread:4068 [sender.py:send_request_defer():388] handle sender defer: 5
+2022-04-12 10:13:40,457 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-12 10:13:40,662 INFO    SenderThread:4068 [sender.py:transition_state():392] send defer: 6
+2022-04-12 10:13:40,662 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: poll_exit
+2022-04-12 10:13:40,662 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: defer
+2022-04-12 10:13:40,663 INFO    HandlerThread:4068 [handler.py:handle_request_defer():164] handle defer: 6
+2022-04-12 10:13:40,663 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: defer
+2022-04-12 10:13:40,663 INFO    SenderThread:4068 [sender.py:send_request_defer():388] handle sender defer: 6
+2022-04-12 10:13:40,663 INFO    SenderThread:4068 [dir_watcher.py:finish():283] shutting down directory watcher
+2022-04-12 10:13:40,690 INFO    SenderThread:4068 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220412_100856-1uwww3ne\files\config.yaml
+2022-04-12 10:13:40,690 INFO    SenderThread:4068 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220412_100856-1uwww3ne\files\output.log
+2022-04-12 10:13:40,690 INFO    SenderThread:4068 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220412_100856-1uwww3ne\files\wandb-summary.json
+2022-04-12 10:13:40,690 INFO    SenderThread:4068 [dir_watcher.py:finish():313] scan: C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220412_100856-1uwww3ne\files
+2022-04-12 10:13:40,690 INFO    SenderThread:4068 [dir_watcher.py:finish():327] scan save: C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220412_100856-1uwww3ne\files\conda-environment.yaml conda-environment.yaml
+2022-04-12 10:13:40,691 INFO    SenderThread:4068 [dir_watcher.py:finish():327] scan save: C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220412_100856-1uwww3ne\files\config.yaml config.yaml
+2022-04-12 10:13:40,691 INFO    SenderThread:4068 [dir_watcher.py:finish():327] scan save: C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220412_100856-1uwww3ne\files\output.log output.log
+2022-04-12 10:13:40,691 INFO    SenderThread:4068 [dir_watcher.py:finish():327] scan save: C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220412_100856-1uwww3ne\files\requirements.txt requirements.txt
+2022-04-12 10:13:40,693 INFO    SenderThread:4068 [dir_watcher.py:finish():327] scan save: C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220412_100856-1uwww3ne\files\wandb-metadata.json wandb-metadata.json
+2022-04-12 10:13:40,695 INFO    SenderThread:4068 [dir_watcher.py:finish():327] scan save: C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220412_100856-1uwww3ne\files\wandb-summary.json wandb-summary.json
+2022-04-12 10:13:40,698 INFO    SenderThread:4068 [sender.py:transition_state():392] send defer: 7
+2022-04-12 10:13:40,699 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: defer
+2022-04-12 10:13:40,699 INFO    HandlerThread:4068 [handler.py:handle_request_defer():164] handle defer: 7
+2022-04-12 10:13:40,700 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: defer
+2022-04-12 10:13:40,700 INFO    SenderThread:4068 [sender.py:send_request_defer():388] handle sender defer: 7
+2022-04-12 10:13:40,700 INFO    SenderThread:4068 [file_pusher.py:finish():145] shutting down file pusher
+2022-04-12 10:13:40,766 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-12 10:13:40,766 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: poll_exit
+2022-04-12 10:13:40,875 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-12 10:13:40,876 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: poll_exit
+2022-04-12 10:13:40,984 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-12 10:13:40,984 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: poll_exit
+2022-04-12 10:13:41,091 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-12 10:13:41,091 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: poll_exit
+2022-04-12 10:13:41,169 INFO    Thread-20 :4068 [upload_job.py:push():137] Uploaded file C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220412_100856-1uwww3ne\files\requirements.txt
+2022-04-12 10:13:41,199 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-12 10:13:41,199 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: poll_exit
+2022-04-12 10:13:41,286 INFO    Thread-21 :4068 [upload_job.py:push():137] Uploaded file C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220412_100856-1uwww3ne\files\wandb-summary.json
+2022-04-12 10:13:41,307 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-12 10:13:41,307 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: poll_exit
+2022-04-12 10:13:41,342 INFO    Thread-18 :4068 [upload_job.py:push():137] Uploaded file C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220412_100856-1uwww3ne\files\config.yaml
+2022-04-12 10:13:41,416 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-12 10:13:41,416 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: poll_exit
+2022-04-12 10:13:41,523 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-12 10:13:41,523 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: poll_exit
+2022-04-12 10:13:41,630 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-12 10:13:41,630 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: poll_exit
+2022-04-12 10:13:41,738 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-12 10:13:41,739 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: poll_exit
+2022-04-12 10:13:41,845 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-12 10:13:41,845 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: poll_exit
+2022-04-12 10:13:41,953 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-12 10:13:41,953 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: poll_exit
+2022-04-12 10:13:42,062 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-12 10:13:42,062 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: poll_exit
+2022-04-12 10:13:42,170 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-12 10:13:42,171 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: poll_exit
+2022-04-12 10:13:42,277 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-12 10:13:42,277 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: poll_exit
+2022-04-12 10:13:42,384 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-12 10:13:42,384 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: poll_exit
+2022-04-12 10:13:42,492 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-12 10:13:42,492 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: poll_exit
+2022-04-12 10:13:42,599 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-12 10:13:42,599 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: poll_exit
+2022-04-12 10:13:42,706 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-12 10:13:42,706 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: poll_exit
+2022-04-12 10:13:42,813 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-12 10:13:42,814 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: poll_exit
+2022-04-12 10:13:42,920 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-12 10:13:42,921 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: poll_exit
+2022-04-12 10:13:43,028 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-12 10:13:43,029 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: poll_exit
+2022-04-12 10:13:43,051 INFO    Thread-19 :4068 [upload_job.py:push():137] Uploaded file C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220412_100856-1uwww3ne\files\output.log
+2022-04-12 10:13:43,136 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-12 10:13:43,136 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: poll_exit
+2022-04-12 10:13:43,243 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-12 10:13:43,243 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: poll_exit
+2022-04-12 10:13:43,259 INFO    Thread-10 (_thread_body):4068 [sender.py:transition_state():392] send defer: 8
+2022-04-12 10:13:43,259 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: defer
+2022-04-12 10:13:43,259 INFO    HandlerThread:4068 [handler.py:handle_request_defer():164] handle defer: 8
+2022-04-12 10:13:43,259 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: defer
+2022-04-12 10:13:43,259 INFO    SenderThread:4068 [sender.py:send_request_defer():388] handle sender defer: 8
+2022-04-12 10:13:43,350 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-12 10:13:43,802 INFO    SenderThread:4068 [sender.py:transition_state():392] send defer: 9
+2022-04-12 10:13:43,802 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: poll_exit
+2022-04-12 10:13:43,803 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: defer
+2022-04-12 10:13:43,803 INFO    HandlerThread:4068 [handler.py:handle_request_defer():164] handle defer: 9
+2022-04-12 10:13:43,803 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: defer
+2022-04-12 10:13:43,803 INFO    SenderThread:4068 [sender.py:send_request_defer():388] handle sender defer: 9
+2022-04-12 10:13:43,803 INFO    SenderThread:4068 [sender.py:transition_state():392] send defer: 10
+2022-04-12 10:13:43,803 DEBUG   SenderThread:4068 [sender.py:send():235] send: final
+2022-04-12 10:13:43,804 DEBUG   SenderThread:4068 [sender.py:send():235] send: footer
+2022-04-12 10:13:43,804 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: defer
+2022-04-12 10:13:43,804 INFO    HandlerThread:4068 [handler.py:handle_request_defer():164] handle defer: 10
+2022-04-12 10:13:43,804 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: defer
+2022-04-12 10:13:43,804 INFO    SenderThread:4068 [sender.py:send_request_defer():388] handle sender defer: 10
+2022-04-12 10:13:43,919 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-12 10:13:43,919 DEBUG   SenderThread:4068 [sender.py:send_request():249] send_request: poll_exit
+2022-04-12 10:13:43,919 INFO    SenderThread:4068 [file_pusher.py:join():150] waiting for file pusher
+2022-04-12 10:13:44,398 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: sampled_history
+2022-04-12 10:13:44,399 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: get_summary
+2022-04-12 10:13:44,400 DEBUG   HandlerThread:4068 [handler.py:handle_request():141] handle_request: shutdown
+2022-04-12 10:13:44,400 INFO    HandlerThread:4068 [handler.py:finish():778] shutting down handler
+2022-04-12 10:13:44,818 INFO    WriterThread:4068 [datastore.py:close():281] close: C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\wandb\run-20220412_100856-1uwww3ne\run-1uwww3ne.wandb
+2022-04-12 10:13:45,295 INFO    SenderThread:4068 [sender.py:finish():1078] shutting down sender
+2022-04-12 10:13:45,295 INFO    SenderThread:4068 [file_pusher.py:finish():145] shutting down file pusher
+2022-04-12 10:13:45,295 INFO    SenderThread:4068 [file_pusher.py:join():150] waiting for file pusher
+2022-04-12 10:13:45,297 INFO    MainThread:4068 [internal.py:handle_exit():82] Internal process exited
