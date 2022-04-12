@@ -15,6 +15,7 @@ from tqdm import tqdm
 import argparse
 import gc
 from model import Model
+import numba
 
 # TODO: Why not use gradient descent since fitness function is differentiable. Should probably compare to that.
 
@@ -32,6 +33,7 @@ parser.add_argument('--evo_num_children', type=int, help='Number of children in 
     
 args = parser.parse_args()
 
+# @numba.njit(parallel=True)
 def mutate(filters):
     # select a single 3x3 filter in one of the convolutional layers and replace it with a random new filter.
     selected_layer = random.randint(0,len(filters)-1)
@@ -56,7 +58,6 @@ def mutate(filters):
     filters[selected_layer][selected_dims[0]][selected_dims[1]] = selected_filter
     return filters
 
-
 def evolution(generations, population_size, num_children, tournament_size, num_winners=1, evolution_type="fitness"):
     """Evolutionary Algorithm
 
@@ -75,8 +76,8 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
     fitness_over_time = []
 
     # Initialize the population with random models.
-    data_iterator = iter(data_module.train_dataloader())
-    net_input = next(data_iterator)
+    # data_iterator = iter(data_module.train_dataloader())
+    # net_input = next(data_iterator)
 
     print("\nInitializing")
     for i in tqdm(range(population_size)): #while len(population) < population_size:
@@ -146,6 +147,9 @@ def run():
     data_module = helper.get_data_module(args.evo_dataset_for_novelty, batch_size=args.batch_size)
     data_module.prepare_data()
     data_module.setup()
+    data_iterator = iter(data_module.train_dataloader())
+    global net_input
+    net_input = next(data_iterator)
     global classnames
     classnames = list(data_module.dataset_test.classes)
 
@@ -215,4 +219,5 @@ def run():
 
 
 if __name__ == '__main__':
-    run()
+    with torch.no_grad():
+        run()
