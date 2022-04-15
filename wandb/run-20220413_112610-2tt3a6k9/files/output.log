@@ -1,0 +1,10 @@
+updating config
+config: {'batch_size': 64, 'experiment_name': 'longer evolution', 'evo_gens': 100, 'evo_pop': 50, 'evo_dataset_for_novelty': 'cifar10', 'evo_num_runs': 10, 'evo_tourney_size': 4, 'evo_num_winners': 2, 'evo_num_children': 50}
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 224, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 143, in run
+    helper.update_config()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\helper_hpc.py", line 143, in update_config
+    print(wandb.config.experiment_name)
+AttributeError: 'dict' object has no attribute 'experiment_name'

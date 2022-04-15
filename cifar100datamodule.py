@@ -4,7 +4,7 @@ from pl_bolts.datamodules import CIFAR10DataModule
 from torchvision import transforms
 class CIFAR100DataModule(CIFAR10DataModule):
 
-    name = "cifar10"
+    name = "cifar100"
     dataset_cls = CIFAR100
     dims = (3, 32, 32)
 
@@ -65,7 +65,7 @@ class CIFAR100DataModule(CIFAR10DataModule):
         transforms.RandomCrop(32,padding=4,padding_mode="reflect"),
         transforms.ToTensor(),
         transforms.Normalize(*stats)
-    ])
+        ])
         return transform
 
     

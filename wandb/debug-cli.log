@@ -1,0 +1,23 @@
+2022-04-13 16:47:19 INFO Running runs: []
+2022-04-13 16:47:31 INFO Agent received command: run
+2022-04-13 16:47:31 INFO Agent starting run with config:
+	evo_gens: 50
+	evo_pop_size: 100
+2022-04-13 16:47:31 INFO About to run command: python "evolution.py --experiment_name="sweeps" --batch_size=64 --evo_dataset_for_novelty=cifar10 --evo_num_runs=3 --evo_tourney_size=4 --evo_num_winners=2 --evo_num_children=50" --evo_gens=50 --evo_pop_size=100
+2022-04-13 16:47:36 INFO Running runs: ['7vam243k']
+2022-04-13 16:47:36 INFO Cleaning up finished run: 7vam243k
+2022-04-13 16:47:37 INFO Agent received command: run
+2022-04-13 16:47:37 INFO Agent starting run with config:
+	evo_gens: 50
+	evo_pop_size: 100
+2022-04-13 16:47:37 INFO About to run command: python "evolution.py --experiment_name="sweeps" --batch_size=64 --evo_dataset_for_novelty=cifar10 --evo_num_runs=3 --evo_tourney_size=4 --evo_num_winners=2 --evo_num_children=50" --evo_gens=50 --evo_pop_size=100
+2022-04-13 16:47:42 INFO Running runs: ['sistl02e']
+2022-04-13 16:47:42 INFO Cleaning up finished run: sistl02e
+2022-04-13 16:47:42 INFO Agent received command: run
+2022-04-13 16:47:42 INFO Agent starting run with config:
+	evo_gens: 250
+	evo_pop_size: 20
+2022-04-13 16:47:42 INFO About to run command: python "evolution.py --experiment_name="sweeps" --batch_size=64 --evo_dataset_for_novelty=cifar10 --evo_num_runs=3 --evo_tourney_size=4 --evo_num_winners=2 --evo_num_children=50" --evo_gens=250 --evo_pop_size=20
+2022-04-13 16:47:47 INFO Running runs: ['8q3db0vy']
+2022-04-13 16:47:47 ERROR Detected 3 failed runs in the first 60 seconds, shutting down.
+2022-04-13 16:47:47 INFO To disable this check set WANDB_AGENT_DISABLE_FLAPPING=true

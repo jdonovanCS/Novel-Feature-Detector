@@ -107,11 +107,10 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
         # Create the child model and store it.
         for parent in parents:
             child = Model()
-            child.filters = (mutate(parent.filters))
-            net.set_filters = child.filters
+            child.filters = mutate(parent.filters)
+            net.set_filters(child.filters)
             child.fitness = net.get_fitness(net_input)
             population.append(child)
-            gc.collect()
             
         if evolution_type == 'fitness':
             population = sorted(population, key=lambda i: i.fitness, reverse=True)[:population_size]
@@ -193,6 +192,16 @@ def run():
             with open('output.txt', 'a+') as f:
                 f.write('run_name, run_num, time, fittest individual\n{}, {}, {}, {}'.format(run_name, run_num, time.time()-start_time, fitness_over_time[-1]))
             helper.run(seed=False)
+            helper.config['batch_size'] = args.batch_size
+            helper.config['experiment_name'] = args.experiment_name
+            helper.config['evo_gens'] = args.evo_gens
+            helper.config['evo_pop'] = args.evo_pop_size
+            helper.config['evo_dataset_for_novelty'] = args.evo_dataset_for_novelty
+            helper.config['evo_num_runs'] = args.evo_num_runs
+            helper.config['evo_tourney_size'] = args.evo_tourney_size
+            helper.config['evo_num_winners'] = args.evo_num_winners
+            helper.config['evo_num_children'] = args.evo_num_children
+            helper.update_config()
             
     if not os.path.isdir('plots/' + experiment_name):
         os.mkdir('plots/' + experiment_name)

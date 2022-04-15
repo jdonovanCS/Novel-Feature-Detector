@@ -1,0 +1,20 @@
+
+Files already downloaded and verified
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 251, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 166, in run
+    data_module.prepare_data()
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pl_bolts\datamodules\vision_datamodule.py", line 63, in prepare_data
+    self.dataset_cls(self.data_dir, train=True, download=True)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\torchvision\datasets\cifar.py", line 67, in __init__
+    if not self._check_integrity():
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\torchvision\datasets\cifar.py", line 133, in _check_integrity
+    if not check_integrity(fpath, md5):
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\torchvision\datasets\utils.py", line 71, in check_integrity
+    return check_md5(fpath, md5)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\torchvision\datasets\utils.py", line 63, in check_md5
+    return md5 == calculate_md5(fpath, **kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\torchvision\datasets\utils.py", line 58, in calculate_md5
+    md5.update(chunk)
+KeyboardInterrupt
