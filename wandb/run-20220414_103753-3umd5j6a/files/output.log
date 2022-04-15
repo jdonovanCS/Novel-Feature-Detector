@@ -1,0 +1,164 @@
+Files already downloaded and verified
+Files already downloaded and verified
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:88: LightningDeprecationWarning: DataModule property `train_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:107: LightningDeprecationWarning: DataModule property `val_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:126: LightningDeprecationWarning: DataModule property `test_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+GPU available: True, used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+Training and Evaluating: fitness Gen: 99 Run: 0
+cuda:0
+Files already downloaded and verified
+Files already downloaded and verified
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+  | Name        | Type        | Params
+--------------------------------------------
+0 | BatchNorm1  | BatchNorm2d | 64
+1 | BatchNorm2  | BatchNorm2d | 256
+2 | BatchNorm3  | BatchNorm2d | 512
+3 | pool        | MaxPool2d   | 0
+4 | fc1         | Linear      | 4.2 M
+5 | fc2         | Linear      | 524 K
+6 | fc3         | Linear      | 5.1 K
+7 | dropout1    | Dropout2d   | 0
+8 | dropout2    | Dropout2d   | 0
+9 | conv_layers | ModuleList  | 1.1 M
+--------------------------------------------
+5.9 M     Trainable params
+0         Non-trainable params
+5.9 M     Total params
+23.409    Total estimated model params size (MB)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Epoch 3:  80%|█████████████████████████████████████▌         | 625/782 [01:14<00:18,  8.37it/s, loss=0.887, v_num=5j6a]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Epoch 7:  80%|█████████████████████████████████████▌         | 625/782 [03:05<00:46,  3.38it/s, loss=0.622, v_num=5j6a]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Epoch 11:  80%|████████████████████████████████████▊         | 625/782 [04:56<01:14,  2.11it/s, loss=0.524, v_num=5j6a]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Epoch 15:  80%|████████████████████████████████████▊         | 625/782 [06:46<01:42,  1.54it/s, loss=0.528, v_num=5j6a]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Epoch 16:  88%|█████████████████████████████████████████▎     | 549/625 [07:39<01:03,  1.20it/s, loss=0.55, v_num=5j6a]
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\train_and_eval.py", line 109, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\train_and_eval.py", line 101, in run
+    record_progress = helper.train_network(data_module=data_module, filters=pickled_filters[name][run_num][i], epochs=epochs, save_path=save_path, fixed_conv=fixed_conv, novelty_interval=int(args.novelty_interval), val_interval=int(args.test_accuracy_interval))
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\helper_hpc.py", line 49, in train_network
+    wandb_logger.unwatch(net)
+AttributeError: 'WandbLogger' object has no attribute 'unwatch'

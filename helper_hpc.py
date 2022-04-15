@@ -45,8 +45,7 @@ def train_network(data_module, filters=None, epochs=2, save_path=None, fixed_con
     wandb_logger = WandbLogger(log_model=True)
     trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu")
     wandb_logger.watch(net, log="all")
-    trainer.fit(net, data_module)
-    wandb_logger.unwatch(net)
+    trainer.fit(net, datamodule=data_module)
 
     # torch.save(net.state_dict(), save_path)
     # return record_progress
@@ -54,9 +53,9 @@ def train_network(data_module, filters=None, epochs=2, save_path=None, fixed_con
 def get_data_module(dataset, batch_size):
     match dataset.lower():
         case 'cifar10' | 'cifar-10':
-            data_module = pl_bolts.datamodules.CIFAR10DataModule(batch_size=batch_size, data_dir="data/", num_workers=2)
+            data_module = pl_bolts.datamodules.CIFAR10DataModule(batch_size=batch_size, data_dir="data/", num_workers=4, pin_memory=True)
         case 'cifar100' | 'cifar-100':
-            data_module = CIFAR100DataModule(batch_size=batch_size, data_dir="data/", num_workers=2)
+            data_module = CIFAR100DataModule(batch_size=batch_size, data_dir="data/", num_workers=4, pin_memory=True)
         case _:
             print('Please supply dataset of CIFAR-10 or CIFAR-100')
             exit()
@@ -78,6 +77,24 @@ def diversity(acts):
                 pairwise[batch, channel, channel2] = div
                 pairwise[batch, channel2, channel] = div
     return(pairwise.sum())
+
+@numba.njit(parallel=True)
+def diversity_orig(acts):
+    B = len(acts)
+    C = len(acts[0])
+    actual_C = (len(acts[0][0]))
+    h = w = (len(acts[0][0][0]))
+    dist = np.zeros((B*C*C, actual_C, h, w))
+
+    for batch in range(B):
+            # for each activation
+            for channel in numba.prange(C):
+                
+                for channel2 in range(C):
+                    
+                    dist[(batch*B) + (channel*C) + channel2] = (np.abs(acts[batch][channel2] - acts[batch][channel]))
+                   
+    return dist.mean()
 
 def plot_mean_and_bootstrapped_ci_multiple(input_data = None, title = 'overall', name = "change this", x_label = "x", y_label = "y", save_name="", compute_CI=True, maximum_possible=None, show=None, sample_interval=None):
     """ 
@@ -138,8 +155,7 @@ def log(input):
     wandb.log(input)
 
 def update_config():
-    print('updating config\nconfig: {}'.format(config))
-    wandb.config = config
+    wandb.config.update(config)
 
 def run(seed=True):
     torch.multiprocessing.freeze_support()
@@ -153,6 +169,7 @@ def run(seed=True):
     PATH = './cifar_net.pth'
     global config
     config = {}
+    wandb.finish()
     wandb.init(project="novel-feature-detectors")
 
 
