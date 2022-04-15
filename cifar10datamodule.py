@@ -1,11 +1,11 @@
 from typing import Any, Callable, Optional, Sequence, Union
-from torchvision.datasets import CIFAR100
+from torchvision.datasets import CIFAR10
 from pl_bolts.datamodules import CIFAR10DataModule
 from torchvision import transforms
-class CIFAR100DataModule(CIFAR10DataModule):
+class CIFAR10DataModule(CIFAR10DataModule):
 
-    name = "cifar100"
-    dataset_cls = CIFAR100
+    name = "cifar10"
+    dataset_cls = CIFAR10
     dims = (3, 32, 32)
 
     def __init__(self,
@@ -49,23 +49,5 @@ class CIFAR100DataModule(CIFAR10DataModule):
             *args,
             **kwargs,
         )
-
-    @property
-    def num_classes(self) -> int:
-        """
-        Return:
-            100
-        """
-        return 100
-
-    def default_transforms(self) -> Callable:
-        stats = ((0.5074,0.4867,0.4411),(0.2011,0.1987,0.2025))
-        transform = transforms.Compose([
-        transforms.RandomHorizontalFlip(),
-        transforms.RandomCrop(32,padding=4,padding_mode="reflect"),
-        transforms.ToTensor(),
-        transforms.Normalize(*stats)
-        ])
-        return transform
 
     

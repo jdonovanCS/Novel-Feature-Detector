@@ -34,36 +34,42 @@ class Net(pl.LightningModule):
 
         self.classnames = classnames
 
-    def forward(self, x):
+    def forward(self, x, get_activations=False):
         conv_count = 0
         x = self.conv_layers[conv_count](x)
-        self.activations[conv_count].append(x)
+        if get_activations:
+            self.activations[conv_count].append(x)
         conv_count += 1
         x = self.BatchNorm1(x)
         x = F.relu(x)
         x = self.conv_layers[conv_count](x)
-        self.activations[conv_count].append(x)
+        if get_activations:
+            self.activations[conv_count].append(x)
         conv_count += 1
         x = F.relu(x)
         x = self.pool(x)
         x = self.conv_layers[conv_count](x)
-        self.activations[conv_count].append(x)
+        if get_activations:
+            self.activations[conv_count].append(x)
         conv_count += 1
         x = self.BatchNorm2(x)
         x = F.relu(x)
         x = self.conv_layers[conv_count](x)
-        self.activations[conv_count].append(x)
+        if get_activations:
+            self.activations[conv_count].append(x)
         conv_count += 1
         x = F.relu(x)
         x = self.pool(x)
         x = self.dropout1(x)
         x = self.conv_layers[conv_count](x)
-        self.activations[conv_count].append(x)
+        if get_activations:
+            self.activations[conv_count].append(x)
         conv_count += 1
         x = self.BatchNorm3(x)
         x = F.relu(x)
         x = self.conv_layers[conv_count](x)
-        self.activations[conv_count].append(x)
+        if get_activations:
+            self.activations[conv_count].append(x)
         x = F.relu(x)
         x = self.pool(x)
         x = torch.flatten(x, 1)
@@ -86,7 +92,7 @@ class Net(pl.LightningModule):
         loss = self.cross_entropy_loss(logits, y)
         # get acc
         labels_hat = torch.argmax(logits, 1)
-        acc = torch.sum(y==labels_hat).item()/(len(y)*1.0)
+        acc = torch.sum(y==labels_hat)/(len(y)*1.0)
         # log loss and acc
         self.log('train_loss', loss)
         self.log('train_acc', acc)
@@ -97,7 +103,6 @@ class Net(pl.LightningModule):
 
     def training_epoch_end(self,outputs):
         avg_loss = torch.stack([x['train_loss'] for x in outputs]).mean()
-        
         avg_acc = torch.stack([x['train_acc'] for x in outputs]).mean()
         
         self.log('train_loss_epoch', avg_loss)
@@ -105,48 +110,50 @@ class Net(pl.LightningModule):
         gc.collect()
     
     def validation_step(self, val_batch, batch_idx):
-        x, y = val_batch
-        logits = self.forward(x)
-        # get loss
-        loss = self.cross_entropy_loss(logits, y)
-        # get acc
-        labels_hat = torch.argmax(logits, 1)
-        acc = torch.sum(y.data==labels_hat).item()/(y.shape[0]*1.0)
-        # get class acc
-        class_acc = {}
-        if self.classnames == None:
-            self.classnames = list(set(y))
-        corr_pred = {classname: 0 for classname in self.classnames}
-        total_pred = {classname: 0 for classname in self.classnames}
-        for label, prediction in zip(y, labels_hat):
-                if label == prediction:
-                    corr_pred[self.classnames[label]] += 1
-                total_pred[self.classnames[label]] += 1
-        for classname, correct_count in corr_pred.items():
-            accuracy = 0
-            if correct_count != 0 and total_pred[classname] != 0:
-                accuracy = 100 * float(correct_count) / total_pred[classname]
-            class_acc[classname] = accuracy
-        # get novelty score
-        novelty_score = self.compute_feature_novelty()
-        # clear out activations
-        for i in range(len(self.conv_layers)):
-            self.activations[i] = []
-        # log loss, acc, class acc, and novelty score
-        self.log('val_loss', loss)
-        self.log('val_acc', acc)
-        self.log('val_class_acc', class_acc)
-        self.log('val_novelty', novelty_score)
-        batch_dictionary = {'val_loss': loss, 'val_acc': acc, 'val_class_acc': class_acc, 'val_novelty': novelty_score}
+        with torch.no_grad():
+            x, y = val_batch
+            logits = self.forward(x, get_activations=True)
+            # get loss
+            loss = self.cross_entropy_loss(logits, y)
+            # get acc
+            labels_hat = torch.argmax(logits, 1)
+            acc = torch.sum(y==labels_hat)/(len(y)*1.0)
+            # get class acc
+            class_acc = {}
+            if self.classnames == None:
+                self.classnames = list(set(y))
+            corr_pred = {classname: 0 for classname in self.classnames}
+            total_pred = {classname: 0 for classname in self.classnames}
+            for label, prediction in zip(y, labels_hat):
+                    if label == prediction:
+                        corr_pred[self.classnames[label]] += 1
+                    total_pred[self.classnames[label]] += 1
+            for classname, correct_count in corr_pred.items():
+                accuracy = 0
+                if correct_count != 0 and total_pred[classname] != 0:
+                    accuracy = 100 * float(correct_count) / total_pred[classname]
+                class_acc[classname] = accuracy
+            # get novelty score
+            novelty_score = self.compute_feature_novelty()
+            # clear out activations
+            for i in range(len(self.conv_layers)):
+                self.activations[i] = []
+            # log loss, acc, class acc, and novelty score
+            self.log('val_loss', loss)
+            self.log('val_acc', acc)
+            self.log('val_class_acc', class_acc)
+            self.log('val_novelty', novelty_score)
+            batch_dictionary = {'val_loss': loss, 'val_acc': acc, 'val_class_acc': class_acc, 'val_novelty': novelty_score}
         return batch_dictionary
     
     def validation_epoch_end(self, outputs):
         avg_loss = torch.stack([x['val_loss'] for x in outputs]).mean()
-        avg_acc = np.mean([x['val_acc'] for x in outputs])
+        avg_acc = torch.stack([x['val_acc'] for x in outputs]).mean()
         avg_class_acc = {}
-        for k, v in outputs[0]['val_class_acc'].items():
-            avg_class_acc[k] = np.mean(v)
-        avg_novelty = np.mean([x['val_novelty'] for x in outputs])
+        for x in outputs:
+            for k, v in x['val_class_acc'].items():
+                avg_class_acc[k] = v
+        avg_novelty = np.stack([x['val_novelty'] for x in outputs]).mean()
         self.log('val_loss_epoch', avg_loss)
         self.log('val_acc_epoch', avg_acc)
         self.log('val_class_acc_epoch', avg_class_acc)
@@ -154,55 +161,60 @@ class Net(pl.LightningModule):
         gc.collect()
 
     def get_fitness(self, batch):
-        x, y = batch
-        logits = self.forward(x)
-        novelty_score = self.compute_feature_novelty()
-        # clear out activations
-        for i in range(len(self.conv_layers)):
-            self.activations[i] = []
+        with torch.no_grad():
+            x, y = batch
+            logits = self.forward(x, get_activations=True)
+            novelty_score = self.compute_feature_novelty()
+            # clear out activations
+            for i in range(len(self.conv_layers)):
+                self.activations[i] = []
         return novelty_score
 
     def test_step(self, test_batch, batch_idx):
-        x, y = test_batch
-        logits = self.forward(x)
-        # get loss
-        loss = self.cross_entropy_loss(logits, y)
-        # get acc
-        labels_hat = torch.argmax(logits, 1)
-        acc = torch.sum(y==labels_hat).item()/(len(y)*1.0)
-        # get class acc
-        class_acc = {}
-        if self.classnames == None:
-            self.classnames = list(set(y))
-        corr_pred = {classname: 0 for classname in self.classnames}
-        total_pred = {classname: 0 for classname in self.classnames}
-        for label, prediction in zip(y, labels_hat):
-                if label == prediction:
-                    corr_pred[self.classnames[label]] += 1
-                total_pred[self.classnames[label]] += 1
-        for classname, correct_count in corr_pred.items():
-            accuracy = 0
-            if correct_count != 0 and total_pred[classname] != 0:
-                accuracy = 100 * float(correct_count) / total_pred[classname]
-            class_acc[classname] = accuracy
-        # get novelty score
-        novelty_score = self.compute_feature_novelty()
-        # clear out activations
-        for i in range(len(self.conv_layers)):
-            self.activations[i] = []
-        # log loss, acc, class acc, and novelty score
-        self.log('test_loss', loss)
-        self.log('test_acc', acc)
-        self.log('test_class_acc', class_acc)
-        self.log('test_novelty', novelty_score)
-        batch_dictionary = {'test_loss': loss, 'test_acc': acc, 'test_class_acc': class_acc, 'test_novelty': novelty_score}
+        with torch.no_grad():
+            x, y = test_batch
+            logits = self.forward(x, get_activations=True)
+            # get loss
+            loss = self.cross_entropy_loss(logits, y)
+            # get acc
+            labels_hat = torch.argmax(logits, 1)
+            acc = torch.sum(y==labels_hat)/(len(y)*1.0)
+            # get class acc
+            class_acc = {}
+            if self.classnames == None:
+                self.classnames = list(set(y))
+            corr_pred = {classname: 0 for classname in self.classnames}
+            total_pred = {classname: 0 for classname in self.classnames}
+            for label, prediction in zip(y, labels_hat):
+                    if label == prediction:
+                        corr_pred[self.classnames[label]] += 1
+                    total_pred[self.classnames[label]] += 1
+            for classname, correct_count in corr_pred.items():
+                accuracy = 0
+                if correct_count != 0 and total_pred[classname] != 0:
+                    accuracy = 100 * float(correct_count) / total_pred[classname]
+                class_acc[classname] = accuracy
+            # get novelty score
+            novelty_score = self.compute_feature_novelty()
+            # clear out activations
+            for i in range(len(self.conv_layers)):
+                self.activations[i] = []
+            # log loss, acc, class acc, and novelty score
+            self.log('test_loss', loss)
+            self.log('test_acc', acc)
+            self.log('test_class_acc', class_acc)
+            self.log('test_novelty', novelty_score)
+            batch_dictionary = {'test_loss': loss, 'test_acc': acc, 'test_class_acc': class_acc, 'test_novelty': novelty_score}
         return batch_dictionary
 
     def test_epoch_end(self, outputs):
         avg_loss = torch.stack([x['test_loss'] for x in outputs]).mean()
         avg_acc = torch.stack([x['test_acc'] for x in outputs]).mean()
-        avg_class_acc = torch.stack([x['test_class_acc'] for x in outputs]).mean()
-        avg_novelty = torch.stack([x['test_novelty'] for x in outputs]).mean()
+        avg_class_acc = {}
+        for x in outputs:
+            for k, v in x['val_class_acc'].items():
+                avg_class_acc[k] = v
+        avg_novelty = np.stack([x['test_novelty'] for x in outputs]).mean()
         self.log('test_loss_epoch', avg_loss)
         self.log('test_acc_epoch', avg_acc)
         self.log('test_class_acc_epoch', avg_class_acc)
@@ -214,7 +226,8 @@ class Net(pl.LightningModule):
         return optimizer
 
     def cross_entropy_loss(self, logits, labels):
-        return F.nll_loss(logits, labels)
+        # return F.nll_loss(logits, labels)
+        return F.cross_entropy(logits, labels)
         
     def set_filters(self, filters):
         for i in range(len(filters)):
@@ -242,11 +255,14 @@ class Net(pl.LightningModule):
             # layer_totals[layer] = np.abs(np.expand_dims(a, axis=2) - np.expand_dims(a, axis=1)).sum().item()
 
         l = []
+        l2 = []
         for i in self.activations:
             self.activations[i][0] = self.activations[i][0].detach().cpu().numpy()
-            l.append(helper.diversity(self.activations[i][0]))
-        # print('cpu answer: {}'.format(sum(l)))
-        # end = time.time()
-        # print('cpu time: {}'.format(end-start))
-        return(sum(l))
+            # l.append(helper.diversity(self.activations[i][0]))
+            l2.append(helper.diversity_orig(self.activations[i]))
+        
+        # return(sum(l))
+        # print(sum(l2))
+        # print(helper.diversity_orig2(np.array(self.activations.values())))
+        return(sum(l2))
 
