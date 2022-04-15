@@ -1,0 +1,14 @@
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:88: LightningDeprecationWarning: DataModule property `train_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:107: LightningDeprecationWarning: DataModule property `val_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+Files already downloaded and verified
+Files already downloaded and verified
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:126: LightningDeprecationWarning: DataModule property `test_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\train_and_eval.py", line 109, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\train_and_eval.py", line 90, in run
+    for run_num in range(pickled_filters[name]):
+TypeError: only integer scalar arrays can be converted to a scalar index

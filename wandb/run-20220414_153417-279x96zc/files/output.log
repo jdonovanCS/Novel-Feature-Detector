@@ -1,0 +1,36 @@
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 232, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 221, in run
+    os.system('python train_and_eval.py --dataset={} --experiment_name="{}" --fixed_conv --training_interval=1 --epochs=96 --novelty_interval=1 --test_accuracy_interval=4 --batch_size={} --evo_gens={} --evo_pop_size={} --evo_dataset_for_novelty={} --evo_num_runs={} --evo_tourney_size={} --evo_num_winners={} --evo_num_children={}'.format(args.evo_dataset_for_novelty, args.experiment_name, args.batch_size, args.evo_gens, args.evo_pop_size, args.evo_dataset_for_novelty, args.evo_num_runs, args.evo_tourney_size, args.evo_num_winners, args.evo_num_children))
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 232, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 221, in run
+    os.system('python train_and_eval.py --dataset={} --experiment_name="{}" --fixed_conv --training_interval=1 --epochs=96 --novelty_interval=1 --test_accuracy_interval=4 --batch_size={} --evo_gens={} --evo_pop_size={} --evo_dataset_for_novelty={} --evo_num_runs={} --evo_tourney_size={} --evo_num_winners={} --evo_num_children={}'.format(args.evo_dataset_for_novelty, args.experiment_name, args.batch_size, args.evo_gens, args.evo_pop_size, args.evo_dataset_for_novelty, args.evo_num_runs, args.evo_tourney_size, args.evo_num_winners, args.evo_num_children))
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 232, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 221, in run
+    os.system('python train_and_eval.py --dataset={} --experiment_name="{}" --fixed_conv --training_interval=1 --epochs=96 --novelty_interval=1 --test_accuracy_interval=4 --batch_size={} --evo_gens={} --evo_pop_size={} --evo_dataset_for_novelty={} --evo_num_runs={} --evo_tourney_size={} --evo_num_winners={} --evo_num_children={}'.format(args.evo_dataset_for_novelty, args.experiment_name, args.batch_size, args.evo_gens, args.evo_pop_size, args.evo_dataset_for_novelty, args.evo_num_runs, args.evo_tourney_size, args.evo_num_winners, args.evo_num_children))
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 232, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 221, in run
+    os.system('python train_and_eval.py --dataset={} --experiment_name="{}" --fixed_conv --training_interval=1 --epochs=96 --novelty_interval=1 --test_accuracy_interval=4 --batch_size={} --evo_gens={} --evo_pop_size={} --evo_dataset_for_novelty={} --evo_num_runs={} --evo_tourney_size={} --evo_num_winners={} --evo_num_children={}'.format(args.evo_dataset_for_novelty, args.experiment_name, args.batch_size, args.evo_gens, args.evo_pop_size, args.evo_dataset_for_novelty, args.evo_num_runs, args.evo_tourney_size, args.evo_num_winners, args.evo_num_children))
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 232, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 221, in run
+    os.system('python train_and_eval.py --dataset={} --experiment_name="{}" --fixed_conv --training_interval=1 --epochs=96 --novelty_interval=1 --test_accuracy_interval=4 --batch_size={} --evo_gens={} --evo_pop_size={} --evo_dataset_for_novelty={} --evo_num_runs={} --evo_tourney_size={} --evo_num_winners={} --evo_num_children={}'.format(args.evo_dataset_for_novelty, args.experiment_name, args.batch_size, args.evo_gens, args.evo_pop_size, args.evo_dataset_for_novelty, args.evo_num_runs, args.evo_tourney_size, args.evo_num_winners, args.evo_num_children))
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 232, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 221, in run
+    os.system('python train_and_eval.py --dataset={} --experiment_name="{}" --fixed_conv --training_interval=1 --epochs=96 --novelty_interval=1 --test_accuracy_interval=4 --batch_size={} --evo_gens={} --evo_pop_size={} --evo_dataset_for_novelty={} --evo_num_runs={} --evo_tourney_size={} --evo_num_winners={} --evo_num_children={}'.format(args.evo_dataset_for_novelty, args.experiment_name, args.batch_size, args.evo_gens, args.evo_pop_size, args.evo_dataset_for_novelty, args.evo_num_runs, args.evo_tourney_size, args.evo_num_winners, args.evo_num_children))
+KeyboardInterrupt

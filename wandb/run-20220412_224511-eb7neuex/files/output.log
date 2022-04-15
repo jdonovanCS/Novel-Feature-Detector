@@ -1,0 +1,122 @@
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:88: LightningDeprecationWarning: DataModule property `train_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:107: LightningDeprecationWarning: DataModule property `val_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+updating config
+config: {'batch_size': 64, 'experiment_name': 'longer evolution', 'evo_gens': 100, 'evo_pop': 50, 'evo_dataset_for_novelty': 'cifar10', 'evo_num_runs': 10, 'evo_tourney_size': 4, 'evo_num_winners': 2, 'evo_num_children': 50}
+Files already downloaded and verified
+Files already downloaded and verified
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:126: LightningDeprecationWarning: DataModule property `test_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+  0%|                                                                                           | 0/10 [00:00<?, ?it/s]
+  2%|█▋                                                                                 | 1/50 [00:01<01:23,  1.71s/it]
+Running Evolution for fitness
+
+
+
+
+
+ 96%|██████████████████████████████████████████████████████████████████████████████▋   | 48/50 [00:11<00:00,  4.40it/s]
+100%|██████████████████████████████████████████████████████████████████████████████████| 50/50 [00:12<00:00,  4.49it/s]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+100%|████████████████████████████████████████████████████████████████████████████████| 100/100 [21:13<00:00, 12.63s/it]
+fitness 0 1286.2106580734253 6120989349.280329
