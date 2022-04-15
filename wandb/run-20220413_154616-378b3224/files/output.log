@@ -1,0 +1,96 @@
+
+Initializing
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 95%|█████████████████████████████████████████████████████████████████████████████▉    | 19/20 [00:32<00:01,  1.71s/it]
+100%|██████████████████████████████████████████████████████████████████████████████████| 20/20 [00:34<00:00,  1.71s/it]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Traceback (most recent call last):███████                                              | 22/50 [12:12<15:19, 32.86s/it]
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 232, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 187, in run
+    solution_over_time, fitness_over_time = evolution(generations=n_iters, population_size=pop_size, num_children=num_children, tournament_size=tournament_size, num_winners=num_winners, evolution_type=run_name)
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 112, in evolution
+    child.fitness = net.get_fitness(net_input)
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\net.py", line 159, in get_fitness
+    self.log('val_novelty_epoch', avg_novelty)
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\net.py", line 249, in compute_feature_novelty
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 232, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 187, in run
+    solution_over_time, fitness_over_time = evolution(generations=n_iters, population_size=pop_size, num_children=num_children, tournament_size=tournament_size, num_winners=num_winners, evolution_type=run_name)
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 112, in evolution
+    child.fitness = net.get_fitness(net_input)
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\net.py", line 159, in get_fitness
+    self.log('val_novelty_epoch', avg_novelty)
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\net.py", line 249, in compute_feature_novelty
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 232, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 187, in run
+    solution_over_time, fitness_over_time = evolution(generations=n_iters, population_size=pop_size, num_children=num_children, tournament_size=tournament_size, num_winners=num_winners, evolution_type=run_name)
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 112, in evolution
+    child.fitness = net.get_fitness(net_input)
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\net.py", line 159, in get_fitness
+    self.log('val_novelty_epoch', avg_novelty)
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\net.py", line 249, in compute_feature_novelty
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 232, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 187, in run
+    solution_over_time, fitness_over_time = evolution(generations=n_iters, population_size=pop_size, num_children=num_children, tournament_size=tournament_size, num_winners=num_winners, evolution_type=run_name)
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 112, in evolution
+    child.fitness = net.get_fitness(net_input)
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\net.py", line 159, in get_fitness
+    self.log('val_novelty_epoch', avg_novelty)
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\net.py", line 249, in compute_feature_novelty
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 232, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 187, in run
+    solution_over_time, fitness_over_time = evolution(generations=n_iters, population_size=pop_size, num_children=num_children, tournament_size=tournament_size, num_winners=num_winners, evolution_type=run_name)
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 112, in evolution
+    child.fitness = net.get_fitness(net_input)
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\net.py", line 159, in get_fitness
+    self.log('val_novelty_epoch', avg_novelty)
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\net.py", line 249, in compute_feature_novelty
+KeyboardInterrupt

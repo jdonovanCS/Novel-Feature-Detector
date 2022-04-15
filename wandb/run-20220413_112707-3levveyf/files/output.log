@@ -1,0 +1,3 @@
+updating config
+config: {'batch_size': 64, 'experiment_name': 'longer evolution', 'evo_gens': 100, 'evo_pop': 50, 'evo_dataset_for_novelty': 'cifar10', 'evo_num_runs': 10, 'evo_tourney_size': 4, 'evo_num_winners': 2, 'evo_num_children': 50}
+longer evolution
