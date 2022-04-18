@@ -1,0 +1,59 @@
+Files already downloaded and verified
+Files already downloaded and verified
+Running Evolution for fitness
+Initializing
+Files already downloaded and verified
+Files already downloaded and verified
+  0%|                                                                                            | 0/5 [00:00<?, ?it/s]
+  0%|                                                                                           | 0/20 [00:00<?, ?it/s]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  0%|                                                                                            | 0/5 [00:49<?, ?it/s]
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 242, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 197, in run
+    solution_over_time, fitness_over_time = evolution(generations=n_iters, population_size=pop_size, num_children=num_children, tournament_size=tournament_size, num_winners=num_winners, evolution_type=run_name)
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 92, in evolution
+    trainer.validate(net, datamodule=data_module)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\trainer\trainer.py", line 851, in validate
+    return self._call_and_handle_interrupt(self._validate_impl, model, dataloaders, ckpt_path, verbose, datamodule)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\trainer\trainer.py", line 724, in _call_and_handle_interrupt
+    return trainer_fn(*args, **kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\trainer\trainer.py", line 898, in _validate_impl
+    results = self._run(model, ckpt_path=self.ckpt_path)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\trainer\trainer.py", line 1237, in _run
+    results = self._run_stage()
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\trainer\trainer.py", line 1321, in _run_stage
+    return self._run_evaluate()
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\trainer\trainer.py", line 1366, in _run_evaluate
+    eval_loop_results = self._evaluation_loop.run()
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\loops\base.py", line 211, in run
+    output = self.on_run_end()
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\loops\dataloader\evaluation_loop.py", line 212, in on_run_end
+    self._print_results(logged_outputs, self.trainer.state.stage)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\loops\dataloader\evaluation_loop.py", line 341, in _print_results
+    metrics = sorted({k for keys in apply_to_collection(results, dict, EvaluationLoop._get_keys) for k in keys})
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\loops\dataloader\evaluation_loop.py", line 341, in <setcomp>
+    metrics = sorted({k for keys in apply_to_collection(results, dict, EvaluationLoop._get_keys) for k in keys})
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\loops\dataloader\evaluation_loop.py", line 325, in _get_keys
+    yield from apply_to_collection(v, dict, dict.keys)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\torch\_tensor.py", line 698, in __iter__
+    raise TypeError('iteration over a 0-d tensor')
+
+Validation DataLoader 0: 100%|███████████████████████████████████████████████████████| 157/157 [00:47<00:00,  3.31it/s]

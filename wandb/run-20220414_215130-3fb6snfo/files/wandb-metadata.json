@@ -1,0 +1,29 @@
+{
+    "os": "Windows-10-10.0.19044-SP0",
+    "python": "3.10.0",
+    "heartbeatAt": "2022-04-15T01:51:31.529532",
+    "startedAt": "2022-04-15T01:51:30.411534",
+    "docker": null,
+    "gpu": "NVIDIA GeForce RTX 3080 Laptop GPU",
+    "gpu_count": 1,
+    "cpu_count": 16,
+    "cuda": null,
+    "args": [
+        "--dataset=cifar10",
+        "--experiment_name=channel-wise diversity",
+        "--population_size=50",
+        "--batch_size=64"
+    ],
+    "state": "running",
+    "program": "C:\\Users\\Jordan\\Learning\\UVM\\Research\\novel-feature-detector\\generate_random_filters.py",
+    "codePath": "generate_random_filters.py",
+    "git": {
+        "remote": "https://github.com/jdonovancs/novel-feature-detector",
+        "commit": "1ba30f00cb207af18656e8d5f4b2660e57321afd"
+    },
+    "email": "jordan.t.donovancs@gmail.com",
+    "root": "C:/Users/Jordan/Learning/UVM/Research/novel-feature-detector",
+    "host": "LAPTOP-AUS3EALC",
+    "username": "Jordan",
+    "executable": "C:\\Users\\Jordan\\anaconda3\\envs\\EC2\\python.exe"
+}
