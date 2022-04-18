@@ -1,0 +1,14 @@
+Files already downloaded and verified
+Files already downloaded and verified
+Running Evolution for fitness
+Initializing
+  0%|                                                                                           | 0/20 [00:00<?, ?it/s]
+  0%|                                                                                            | 0/5 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 242, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 197, in run
+    solution_over_time, fitness_over_time = evolution(generations=n_iters, population_size=pop_size, num_children=num_children, tournament_size=tournament_size, num_winners=num_winners, evolution_type=run_name)
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 92, in evolution
+    trainer.test(net, test_dataloaders=data_module.val_dataloader())
+TypeError: Trainer.test() got an unexpected keyword argument 'test_dataloaders'
