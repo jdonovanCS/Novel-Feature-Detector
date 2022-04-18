@@ -258,10 +258,10 @@ class Net(pl.LightningModule):
         l2 = []
         for i in self.activations:
             self.activations[i][0] = self.activations[i][0].detach().cpu().numpy()
-            # l.append(helper.diversity(self.activations[i][0]))
-            l2.append(helper.diversity_orig(self.activations[i]))
+            l.append(helper.diversity(self.activations[i][0]))
+            # l2.append(helper.diversity_orig(self.activations[i]))
         
-        # return(sum(l))
+        return(sum(l))
         # print(sum(l2))
         # print(helper.diversity_orig2(np.array(self.activations.values())))
         return(sum(l2))
