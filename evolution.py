@@ -7,6 +7,8 @@ import os
 import numpy as np
 import collections
 import warnings
+
+from pytorch_lightning import Trainer
 warnings.filterwarnings('ignore') # Danger, Will Robinson! (not a scalable hack, and may surpress other helpful warning other than for ill-conditioned bootstrapped CI distributions)
 import helper_hpc as helper
 import torch
@@ -16,6 +18,9 @@ import argparse
 import gc
 from model import Model
 import numba
+from pytorch_lightning.loggers import WandbLogger
+import pytorch_lightning as pl
+
 
 # TODO: Why not use gradient descent since fitness function is differentiable. Should probably compare to that.
 
@@ -84,7 +89,8 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
         model = Model()
         net = helper.Net(num_classes=len(classnames), classnames=classnames)
         model.filters = net.get_filters()
-        model.fitness =  net.get_fitness(net_input)
+        trainer.validate(net, dataloaders=data_module.val_dataloader(), verbose=False)
+        model.fitness =  net.avg_novelty
         population.append(model)
         helper.wandb.log({'gen': 0, 'individual': i, 'fitness': model.fitness})
         
@@ -109,7 +115,8 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
             child = Model()
             child.filters = mutate(parent.filters)
             net.set_filters(child.filters)
-            child.fitness = net.get_fitness(net_input)
+            trainer.validate(net, datamodule=data_module.val_dataloader(), verbose=False)
+            child.fitness = net.avg_novelty
             population.append(child)
             
         if evolution_type == 'fitness':
@@ -147,9 +154,12 @@ def run():
     data_module = helper.get_data_module(args.evo_dataset_for_novelty, batch_size=args.batch_size)
     data_module.prepare_data()
     data_module.setup()
-    data_iterator = iter(data_module.train_dataloader())
-    global net_input
-    net_input = next(data_iterator)
+    # data_iterator = iter(data_module.train_dataloader())
+    # global net_input
+    # net_input = next(data_iterator)
+    wandb_logger = WandbLogger(log_model=True)
+    global trainer
+    trainer = pl.Trainer(logger=wandb_logger, accelerator="gpu")
     global classnames
     classnames = list(data_module.dataset_test.classes)
 
