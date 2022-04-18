@@ -1,0 +1,39 @@
+{
+    "os": "Windows-10-10.0.19043-SP0",
+    "python": "3.10.0",
+    "heartbeatAt": "2022-04-18T00:08:40.635737",
+    "startedAt": "2022-04-18T00:08:35.287131",
+    "docker": null,
+    "gpu": "NVIDIA GeForce RTX 3090",
+    "gpu_count": 1,
+    "cpu_count": 32,
+    "cuda": null,
+    "args": [
+        "--dataset=cifar10",
+        "--experiment_name=longer evolution",
+        "--training_interval=1",
+        "--epochs=96",
+        "--novelty_interval=1",
+        "--test_accuracy_interval=4",
+        "--batch_size=64",
+        "--evo_gens=50",
+        "--evo_pop_size=20",
+        "--evo_dataset_for_novelty=cifar10",
+        "--evo_num_runs=5",
+        "--evo_tourney_size=4",
+        "--evo_num_winners=2",
+        "--evo_num_children=20"
+    ],
+    "state": "running",
+    "program": "C:\\Users\\Jordan\\Learning\\UVM\\Research Projects\\Novel-Feature-Detector\\train_and_eval.py",
+    "codePath": "train_and_eval.py",
+    "git": {
+        "remote": "https://github.com/jdonovancs/Novel-Feature-Detector.git",
+        "commit": "1cfd5ffdb1dc0e29e5e2f013b5d2d7a090a9644e"
+    },
+    "email": "jordan.t.donovancs@gmail.com",
+    "root": "C:/Users/Jordan/Learning/UVM/Research Projects/Novel-Feature-Detector",
+    "host": "DESKTOP-ESA8F4M",
+    "username": "Jordan",
+    "executable": "C:\\Users\\Jordan\\anaconda3\\envs\\EC2\\python.exe"
+}

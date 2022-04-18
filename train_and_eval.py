@@ -49,11 +49,6 @@ def run():
     # get filters from pickle file
     with open(filename, 'rb') as f:
         pickled_filters = pickle.load(f)
-        print(pickled_filters['fitness'].shape)
-        print(type(pickled_filters))
-    if len(pickled_filters) == 0:
-        filename = "output/" + experiment_name + "/solutions_over_time.npy"
-        pickled_filters = np.load(filename)
 
     if args.random:
         random.shuffle(pickled_filters['random'][0])
@@ -81,6 +76,7 @@ def run():
     helper.config['evo_tourney_size'] = args.evo_tourney_size
     helper.config['evo_num_winners'] = args.evo_num_winners
     helper.config['evo_num_children'] = args.evo_num_children
+    helper.config['experiment_type'] = 'training'
     helper.update_config()
     
     
@@ -111,6 +107,7 @@ def run():
                 helper.config['evo_tourney_size'] = args.evo_tourney_size
                 helper.config['evo_num_winners'] = args.evo_num_winners
                 helper.config['evo_num_children'] = args.evo_num_children
+                helper.config['experiment_type'] = 'training'
                 helper.update_config()
                 # for c in classlist:
                 #     classwise_accuracy_record[name][run_num][i][np.where(classlist==c)[0][0]] = record_accuracy[c]
