@@ -154,6 +154,7 @@ class Net(pl.LightningModule):
             for k, v in x['val_class_acc'].items():
                 avg_class_acc[k] = v
         avg_novelty = np.stack([x['val_novelty'] for x in outputs]).mean()
+        self.avg_novelty = avg_novelty
         self.log('val_loss_epoch', avg_loss)
         self.log('val_acc_epoch', avg_acc)
         self.log('val_class_acc_epoch', avg_class_acc)
@@ -212,9 +213,10 @@ class Net(pl.LightningModule):
         avg_acc = torch.stack([x['test_acc'] for x in outputs]).mean()
         avg_class_acc = {}
         for x in outputs:
-            for k, v in x['val_class_acc'].items():
+            for k, v in x['test_class_acc'].items():
                 avg_class_acc[k] = v
         avg_novelty = np.stack([x['test_novelty'] for x in outputs]).mean()
+        self.avg_novelty = avg_novelty
         self.log('test_loss_epoch', avg_loss)
         self.log('test_acc_epoch', avg_acc)
         self.log('test_class_acc_epoch', avg_class_acc)
@@ -258,11 +260,11 @@ class Net(pl.LightningModule):
         l2 = []
         for i in self.activations:
             self.activations[i][0] = self.activations[i][0].detach().cpu().numpy()
-            # l.append(helper.diversity(self.activations[i][0]))
-            l2.append(helper.diversity_orig(self.activations[i]))
+            l.append(helper.diversity(self.activations[i][0]))
+            # l2.append(helper.diversity_orig(self.activations[i]))
         
-        # return(sum(l))
+        return(sum(l))
         # print(sum(l2))
         # print(helper.diversity_orig2(np.array(self.activations.values())))
-        return(sum(l2))
+        # return(sum(l2))
 

@@ -49,11 +49,6 @@ def run():
     # get filters from pickle file
     with open(filename, 'rb') as f:
         pickled_filters = pickle.load(f)
-        print(pickled_filters['fitness'].shape)
-        print(type(pickled_filters))
-    if len(pickled_filters) == 0:
-        filename = "output/" + experiment_name + "/solutions_over_time.npy"
-        pickled_filters = np.load(filename)
 
     if args.random:
         random.shuffle(pickled_filters['random'][0])
