@@ -41,3 +41,966 @@ FileNotFoundError: [WinError 2] The system cannot find the file specified
 2022-04-14 15:46:42,745 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_created():217] file/dir created: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\conda-environment.yaml
 2022-04-14 15:46:42,745 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_created():217] file/dir created: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\requirements.txt
 2022-04-14 15:46:42,745 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_created():217] file/dir created: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:46:44,250 DEBUG   SenderThread:56204 [sender.py:send():235] send: config
+2022-04-14 15:46:44,427 DEBUG   SenderThread:56204 [sender.py:send():235] send: telemetry
+2022-04-14 15:46:44,759 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:46:46,363 DEBUG   SenderThread:56204 [sender.py:send():235] send: config
+2022-04-14 15:46:46,776 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:46:48,793 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:46:57,201 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-14 15:46:57,201 DEBUG   SenderThread:56204 [sender.py:send_request():249] send_request: stop_status
+2022-04-14 15:47:01,913 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:47:02,281 DEBUG   SenderThread:56204 [sender.py:send():235] send: files
+2022-04-14 15:47:02,281 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file media\graph\graph_0_summary_3c1d2076eeadfdbc1e8d.graph.json with policy now
+2022-04-14 15:47:02,282 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:47:02,283 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:47:02,926 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\wandb-summary.json
+2022-04-14 15:47:02,926 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_created():217] file/dir created: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\media\graph\graph_0_summary_3c1d2076eeadfdbc1e8d.graph.json
+2022-04-14 15:47:02,927 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_created():217] file/dir created: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\media
+2022-04-14 15:47:02,927 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_created():217] file/dir created: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\media\graph
+2022-04-14 15:47:02,931 INFO    Thread-18 :56204 [upload_job.py:push():137] Uploaded file C:\Users\Jordan\AppData\Local\Temp\tmpb161sj9awandb\b5pbyibs-media/graph/graph_0_summary_3c1d2076eeadfdbc1e8d.graph.json
+2022-04-14 15:47:07,978 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:47:10,000 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:47:12,375 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-14 15:47:12,375 DEBUG   SenderThread:56204 [sender.py:send_request():249] send_request: stop_status
+2022-04-14 15:47:13,025 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\config.yaml
+2022-04-14 15:47:13,276 DEBUG   SenderThread:56204 [sender.py:send():235] send: stats
+2022-04-14 15:47:22,359 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:22,360 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:47:22,361 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:47:22,362 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:47:22,796 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:22,797 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:22,798 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:22,799 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:22,801 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:22,802 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:22,804 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:22,804 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:22,805 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:22,806 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:22,808 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:22,809 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:22,810 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:22,811 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:22,812 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:22,812 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:22,814 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:22,815 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:22,816 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:22,817 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:22,818 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:22,818 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:22,819 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:22,821 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:22,824 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:22,829 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:47:22,831 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:47:22,834 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:47:23,109 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\wandb-summary.json
+2022-04-14 15:47:23,271 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:23,272 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:47:23,273 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:47:23,275 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:47:23,711 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:23,712 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:23,714 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:23,715 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:23,716 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:23,718 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:23,719 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:23,720 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:23,721 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:23,721 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:23,723 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:23,723 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:23,725 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:23,725 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:23,726 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:23,727 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:23,728 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:23,729 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:23,731 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:23,732 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:23,732 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:23,733 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:23,734 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:23,734 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:23,738 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:23,743 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:47:23,745 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:47:23,748 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:47:24,117 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:47:24,118 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\wandb-summary.json
+2022-04-14 15:47:24,126 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:24,128 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:47:24,128 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:47:24,131 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:47:24,559 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:24,560 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:24,561 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:24,563 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:24,564 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:24,566 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:24,567 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:24,568 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:24,569 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:24,571 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:24,572 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:24,573 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:24,574 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:24,575 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:24,575 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:24,576 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:24,578 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:24,579 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:24,581 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:24,581 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:24,582 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:24,583 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:24,585 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:24,585 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:24,589 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:24,594 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:47:24,596 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:47:24,600 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:47:25,029 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:25,031 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:47:25,031 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:47:25,034 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:47:25,126 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\wandb-summary.json
+2022-04-14 15:47:25,476 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:25,477 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:25,478 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:25,479 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:25,481 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:25,482 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:25,484 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:25,484 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:25,485 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:25,486 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:25,487 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:25,488 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:25,489 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:25,490 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:25,491 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:25,491 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:25,493 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:25,494 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:25,495 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:25,496 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:25,497 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:25,498 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:25,499 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:25,500 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:25,503 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:25,508 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:47:25,511 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:47:25,515 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:47:25,945 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:25,947 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:47:25,947 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:47:25,950 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:47:26,134 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:47:26,134 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\wandb-summary.json
+2022-04-14 15:47:26,330 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:26,330 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:26,331 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:26,332 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:26,334 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:26,336 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:26,337 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:26,338 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:26,338 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:26,339 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:26,341 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:26,342 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:26,343 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:26,344 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:26,345 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:26,345 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:26,347 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:26,348 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:26,349 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:26,350 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:26,351 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:26,351 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:26,352 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:26,353 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:26,357 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:26,361 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:47:26,363 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:47:26,366 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:47:26,807 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:26,809 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:47:26,809 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:47:26,814 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:47:27,142 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\wandb-summary.json
+2022-04-14 15:47:27,246 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:27,247 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:27,248 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:27,250 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:27,251 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:27,253 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:27,255 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:27,256 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:27,256 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:27,257 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:27,259 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:27,260 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:27,261 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:27,262 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:27,263 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:27,265 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:27,267 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:27,267 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:27,269 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:27,269 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:27,270 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:27,271 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:27,272 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:27,273 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:27,276 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:27,281 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:47:27,283 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:47:27,286 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:47:27,517 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-14 15:47:27,518 DEBUG   SenderThread:56204 [sender.py:send_request():249] send_request: stop_status
+2022-04-14 15:47:27,627 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:27,644 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:47:27,644 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:47:27,647 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:47:28,151 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:47:28,151 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\wandb-summary.json
+2022-04-14 15:47:30,167 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:47:40,570 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:40,572 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:47:40,572 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:47:40,577 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:47:41,010 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,011 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,012 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,013 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,015 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,017 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,018 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,019 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,019 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,020 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,022 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,022 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,024 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,024 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,025 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,026 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,028 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,029 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,030 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,031 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,032 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,032 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,033 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,034 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,038 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,042 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:47:41,045 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:47:41,048 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:47:41,260 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\wandb-summary.json
+2022-04-14 15:47:41,471 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,473 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:47:41,474 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:47:41,476 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:47:41,906 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,907 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,908 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,909 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,910 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,912 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,913 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,914 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,915 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,915 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,917 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,918 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,919 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,920 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,921 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,921 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,922 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,923 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,925 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,926 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,926 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,927 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,928 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,928 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,932 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:41,937 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:47:41,940 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:47:41,943 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:47:42,268 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:47:42,268 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\wandb-summary.json
+2022-04-14 15:47:42,323 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:42,325 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:47:42,325 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:47:42,329 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:47:42,655 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-14 15:47:42,655 DEBUG   SenderThread:56204 [sender.py:send_request():249] send_request: stop_status
+2022-04-14 15:47:42,770 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:42,771 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:42,772 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:42,773 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:42,774 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:42,776 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:42,777 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:42,779 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:42,780 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:42,780 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:42,781 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:42,782 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:42,783 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:42,784 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:42,786 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:42,786 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:42,788 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:42,788 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:42,790 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:42,791 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:42,792 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:42,793 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:42,794 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:42,794 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:42,798 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:42,803 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:47:42,806 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:47:42,809 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:47:43,241 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:43,242 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:47:43,243 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:47:43,246 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:47:43,276 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\wandb-summary.json
+2022-04-14 15:47:43,683 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:43,683 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:43,684 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:43,686 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:43,687 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:43,690 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:43,691 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:43,692 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:43,693 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:43,694 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:43,696 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:43,696 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:43,698 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:43,699 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:43,700 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:43,700 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:43,702 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:43,703 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:43,705 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:43,705 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:43,706 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:43,707 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:43,708 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:43,709 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:43,713 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:43,718 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:47:43,721 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:47:43,724 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:47:44,149 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:44,151 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:47:44,151 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:47:44,154 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:47:44,300 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:47:44,300 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\wandb-summary.json
+2022-04-14 15:47:44,552 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:44,553 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:44,554 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:44,555 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:44,556 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:44,558 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:44,560 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:44,561 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:44,562 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:44,578 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:44,604 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:44,605 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:44,607 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:44,608 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:44,608 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:44,609 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:44,611 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:44,612 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:44,614 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:44,615 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:44,615 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:44,616 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:44,617 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:44,619 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:44,622 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:44,627 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:47:44,630 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:47:44,633 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:47:45,030 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:45,032 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:47:45,032 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:47:45,035 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:47:45,309 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\wandb-summary.json
+2022-04-14 15:47:45,463 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:45,464 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:45,465 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:45,466 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:45,467 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:45,469 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:45,470 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:45,471 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:45,472 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:45,473 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:45,474 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:45,475 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:45,476 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:45,477 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:45,478 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:45,478 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:45,480 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:45,481 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:45,482 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:45,483 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:45,484 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:45,485 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:45,485 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:45,487 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:45,490 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:45,494 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:47:45,497 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:47:45,499 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:47:45,928 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:45,930 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:47:45,930 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:47:45,933 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:47:46,018 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:47:46,020 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:47:46,021 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:47:46,024 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:47:46,317 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:47:46,317 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\wandb-summary.json
+2022-04-14 15:47:46,589 DEBUG   SenderThread:56204 [sender.py:send():235] send: stats
+2022-04-14 15:47:48,334 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:47:57,812 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-14 15:47:57,812 DEBUG   SenderThread:56204 [sender.py:send_request():249] send_request: stop_status
+2022-04-14 15:48:00,029 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,030 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,032 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,033 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,034 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,037 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,038 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,039 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,040 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,041 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,043 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,043 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,045 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,045 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,046 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,047 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,049 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,050 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,051 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,052 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,053 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,054 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,054 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,056 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,059 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,064 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:48:00,066 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:48:00,069 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:48:00,434 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\wandb-summary.json
+2022-04-14 15:48:00,501 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,503 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:48:00,503 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:48:00,506 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:48:00,968 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,969 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,970 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,971 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,972 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,974 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,976 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,976 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,977 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,978 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,979 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,980 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,982 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,982 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,984 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,984 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,986 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,987 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,989 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,989 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,990 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,991 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,992 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,992 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:00,996 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:01,001 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:48:01,004 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:48:01,006 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:48:01,430 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:01,432 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:48:01,432 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:48:01,435 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:48:01,442 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:48:01,442 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\wandb-summary.json
+2022-04-14 15:48:01,880 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:01,881 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:01,883 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:01,884 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:01,885 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:01,886 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:01,888 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:01,889 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:01,890 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:01,890 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:01,891 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:01,892 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:01,894 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:01,894 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:01,896 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:01,897 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:01,898 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:01,899 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:01,900 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:01,901 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:01,902 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:01,903 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:01,904 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:01,905 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:01,908 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:01,913 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:48:01,915 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:48:01,917 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:48:02,339 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:02,341 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:48:02,341 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:48:02,344 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:48:02,451 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\wandb-summary.json
+2022-04-14 15:48:02,751 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:02,752 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:02,753 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:02,755 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:02,756 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:02,758 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:02,760 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:02,761 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:02,762 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:02,763 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:02,764 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:02,765 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:02,767 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:02,768 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:02,769 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:02,770 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:02,771 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:02,772 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:02,774 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:02,774 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:02,775 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:02,776 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:02,777 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:02,778 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:02,782 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:02,787 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:48:02,790 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:48:02,793 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:48:03,250 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:03,252 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:48:03,252 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:48:03,255 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:48:03,459 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:48:03,460 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\wandb-summary.json
+2022-04-14 15:48:03,716 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:03,717 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:03,718 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:03,719 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:03,720 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:03,723 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:03,724 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:03,725 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:03,725 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:03,726 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:03,727 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:03,727 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:03,729 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:03,730 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:03,731 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:03,732 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:03,733 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:03,733 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:03,735 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:03,736 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:03,737 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:03,737 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:03,738 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:03,739 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:03,742 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:03,747 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:48:03,749 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:48:03,752 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:48:04,164 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:04,166 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:48:04,167 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:48:04,170 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:48:04,468 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\wandb-summary.json
+2022-04-14 15:48:04,609 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:04,609 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:04,610 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:04,612 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:04,613 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:04,615 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:04,616 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:04,617 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:04,618 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:04,619 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:04,620 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:04,621 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:04,622 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:04,623 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:04,623 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:04,624 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:04,626 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:04,626 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:04,628 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:04,629 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:04,630 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:04,631 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:04,632 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:04,633 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:04,636 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:04,642 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:48:04,645 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:48:04,648 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:48:05,067 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:05,069 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:48:05,069 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:48:05,072 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:48:05,347 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:05,349 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:48:05,349 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:48:05,352 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:48:05,476 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:48:05,476 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\wandb-summary.json
+2022-04-14 15:48:07,493 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:48:13,077 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-14 15:48:13,077 DEBUG   SenderThread:56204 [sender.py:send_request():249] send_request: stop_status
+2022-04-14 15:48:18,560 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:18,560 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:18,561 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:18,563 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:18,564 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:18,566 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:18,568 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:18,568 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:18,569 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:18,570 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:18,571 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:18,572 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:18,574 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:18,574 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:18,576 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:18,576 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:18,578 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:18,578 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:18,580 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:18,581 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:18,582 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:18,583 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:18,584 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:18,585 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:18,588 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:18,593 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:48:18,595 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:48:18,598 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:48:19,005 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:19,007 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:48:19,007 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:48:19,010 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:48:19,451 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:19,452 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:19,453 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:19,455 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:19,456 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:19,458 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:19,460 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:19,461 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:19,461 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:19,462 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:19,463 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:19,464 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:19,466 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:19,467 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:19,468 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:19,468 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:19,470 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:19,470 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:19,473 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:19,473 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:19,474 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:19,475 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:19,476 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:19,476 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:19,480 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:19,486 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:48:19,489 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:48:19,492 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:48:19,593 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\wandb-summary.json
+2022-04-14 15:48:19,904 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:19,906 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:48:19,906 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:48:19,909 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:48:19,999 DEBUG   SenderThread:56204 [sender.py:send():235] send: stats
+2022-04-14 15:48:20,294 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:20,295 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:20,296 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:20,297 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:20,299 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:20,301 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:20,302 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:20,303 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:20,304 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:20,305 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:20,306 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:20,307 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:20,309 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:20,309 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:20,310 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:20,311 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:20,313 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:20,314 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:20,315 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:20,316 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:20,317 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:20,317 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:20,318 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:20,319 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:20,322 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:20,327 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:48:20,329 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:48:20,332 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:48:20,601 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:48:20,601 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\wandb-summary.json
+2022-04-14 15:48:20,755 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:20,757 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:48:20,758 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:48:20,761 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:48:21,175 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:21,176 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:21,177 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:21,178 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:21,179 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:21,182 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:21,183 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:21,184 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:21,185 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:21,185 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:21,187 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:21,187 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:21,189 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:21,190 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:21,190 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:21,191 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:21,192 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:21,193 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:21,195 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:21,195 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:21,196 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:21,197 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:21,198 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:21,198 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:21,202 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:21,206 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:48:21,209 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:48:21,212 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:48:21,610 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\wandb-summary.json
+2022-04-14 15:48:21,632 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:21,634 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:48:21,634 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:48:21,637 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:48:22,101 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:22,101 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:22,102 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:22,104 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:22,105 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:22,107 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:22,108 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:22,109 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:22,110 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:22,111 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:22,112 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:22,113 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:22,114 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:22,115 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:22,116 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:22,117 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:22,119 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:22,120 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:22,121 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:22,122 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:22,123 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:22,124 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:22,125 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:22,126 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:22,130 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:22,135 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:48:22,137 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:48:22,140 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:48:22,618 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:48:22,619 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\wandb-summary.json
+2022-04-14 15:48:22,651 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:22,653 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:48:22,653 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:48:22,657 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:48:23,094 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,095 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,096 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,097 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,098 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,100 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,102 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,102 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,103 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,104 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,106 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,106 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,108 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,108 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,109 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,110 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,112 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,112 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,114 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,115 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,115 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,116 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,118 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,119 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,122 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,127 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:48:23,129 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:48:23,133 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:48:23,526 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,527 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:48:23,528 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:48:23,531 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:48:23,627 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\wandb-summary.json
+2022-04-14 15:48:23,981 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,982 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,983 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,984 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,985 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,988 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,990 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,990 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,991 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,992 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,994 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,994 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,996 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,996 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,997 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,998 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:23,999 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:24,000 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:24,002 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:24,002 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:24,003 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:24,004 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:24,005 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:24,005 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:24,009 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-14 15:48:24,014 DEBUG   SenderThread:56204 [sender.py:send():235] send: history
+2022-04-14 15:48:24,017 DEBUG   SenderThread:56204 [sender.py:send():235] send: summary
+2022-04-14 15:48:24,020 INFO    SenderThread:56204 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-14 15:48:24,635 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\wandb-summary.json
+2022-04-14 15:48:25,643 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:48:27,660 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:48:28,218 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-14 15:48:28,218 DEBUG   SenderThread:56204 [sender.py:send_request():249] send_request: stop_status
+2022-04-14 15:48:37,744 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:48:39,771 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:48:41,793 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:48:43,371 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-14 15:48:43,372 DEBUG   SenderThread:56204 [sender.py:send_request():249] send_request: stop_status
+2022-04-14 15:48:43,841 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:48:45,901 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:48:47,921 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:48:49,972 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:48:52,027 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:48:54,067 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:48:54,807 DEBUG   SenderThread:56204 [sender.py:send():235] send: stats
+2022-04-14 15:48:56,114 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:48:58,189 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:48:58,546 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-14 15:48:58,546 DEBUG   SenderThread:56204 [sender.py:send_request():249] send_request: stop_status
+2022-04-14 15:49:00,226 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:49:02,243 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:49:04,259 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:49:06,293 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:49:08,330 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:49:10,342 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:49:12,374 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:49:13,721 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-14 15:49:13,721 DEBUG   SenderThread:56204 [sender.py:send_request():249] send_request: stop_status
+2022-04-14 15:49:14,391 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:49:16,408 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:49:18,462 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:49:20,488 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:49:22,505 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:49:24,575 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:49:26,608 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:49:28,617 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:49:29,164 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-14 15:49:29,164 DEBUG   SenderThread:56204 [sender.py:send_request():249] send_request: stop_status
+2022-04-14 15:49:30,593 DEBUG   SenderThread:56204 [sender.py:send():235] send: stats
+2022-04-14 15:49:30,634 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:49:32,683 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:49:36,731 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:49:38,748 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:49:40,765 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:49:42,782 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:49:44,385 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-14 15:49:44,386 DEBUG   SenderThread:56204 [sender.py:send_request():249] send_request: stop_status
+2022-04-14 15:49:44,798 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:49:46,816 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:49:50,896 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:49:52,916 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:49:54,930 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:49:58,994 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:49:59,605 DEBUG   HandlerThread:56204 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-14 15:49:59,606 DEBUG   SenderThread:56204 [sender.py:send_request():249] send_request: stop_status
+2022-04-14 15:50:01,013 INFO    Thread-11 :56204 [dir_watcher.py:_on_file_modified():230] file/dir modified: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:50:03,313 WARNING MainThread:56204 [internal.py:wandb_internal():155] Internal process interrupt: 1
+2022-04-14 15:50:03,514 WARNING MainThread:56204 [internal.py:wandb_internal():155] Internal process interrupt: 2
+2022-04-14 15:50:03,514 ERROR   MainThread:56204 [internal.py:wandb_internal():158] Internal process interrupted.
+2022-04-14 15:50:03,640 INFO    HandlerThread:56204 [handler.py:finish():790] shutting down handler
+2022-04-14 15:50:03,640 DEBUG   SenderThread:56204 [sender.py:send():235] send: telemetry
+2022-04-14 15:50:03,641 INFO    WriterThread:56204 [datastore.py:close():281] close: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\run-1u9qa3ls.wandb
+2022-04-14 15:50:03,641 INFO    SenderThread:56204 [sender.py:finish():1107] shutting down sender
+2022-04-14 15:50:03,641 INFO    SenderThread:56204 [dir_watcher.py:finish():283] shutting down directory watcher
+2022-04-14 15:50:04,052 INFO    SenderThread:56204 [dir_watcher.py:finish():313] scan: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files
+2022-04-14 15:50:04,053 INFO    SenderThread:56204 [dir_watcher.py:finish():327] scan save: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\conda-environment.yaml conda-environment.yaml
+2022-04-14 15:50:04,053 INFO    SenderThread:56204 [dir_watcher.py:finish():327] scan save: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\config.yaml config.yaml
+2022-04-14 15:50:04,053 INFO    SenderThread:56204 [dir_watcher.py:finish():327] scan save: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log output.log
+2022-04-14 15:50:04,056 INFO    SenderThread:56204 [dir_watcher.py:finish():327] scan save: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\requirements.txt requirements.txt
+2022-04-14 15:50:04,056 INFO    SenderThread:56204 [dir_watcher.py:finish():327] scan save: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\wandb-metadata.json wandb-metadata.json
+2022-04-14 15:50:04,058 INFO    SenderThread:56204 [dir_watcher.py:finish():327] scan save: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\wandb-summary.json wandb-summary.json
+2022-04-14 15:50:04,064 INFO    SenderThread:56204 [dir_watcher.py:finish():327] scan save: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\media\graph\graph_0_summary_3c1d2076eeadfdbc1e8d.graph.json media\graph\graph_0_summary_3c1d2076eeadfdbc1e8d.graph.json
+2022-04-14 15:50:04,064 INFO    SenderThread:56204 [file_pusher.py:finish():145] shutting down file pusher
+2022-04-14 15:50:04,064 INFO    SenderThread:56204 [file_pusher.py:join():150] waiting for file pusher
+2022-04-14 15:50:04,620 INFO    Thread-21 :56204 [upload_job.py:push():137] Uploaded file C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\requirements.txt
+2022-04-14 15:50:04,626 INFO    Thread-19 :56204 [upload_job.py:push():137] Uploaded file C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\config.yaml
+2022-04-14 15:50:04,646 INFO    Thread-20 :56204 [upload_job.py:push():137] Uploaded file C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\output.log
+2022-04-14 15:50:04,659 INFO    Thread-22 :56204 [upload_job.py:push():137] Uploaded file C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220414_154640-1u9qa3ls\files\wandb-summary.json

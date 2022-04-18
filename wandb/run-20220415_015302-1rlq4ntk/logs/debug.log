@@ -1,0 +1,158 @@
+2022-04-15 01:53:02,850 INFO    MainThread:58464 [wandb_setup.py:_flush():75] Loading settings from C:\Users\Jordan\.config\wandb\settings
+2022-04-15 01:53:02,850 INFO    MainThread:58464 [wandb_setup.py:_flush():75] Loading settings from C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\settings
+2022-04-15 01:53:02,850 INFO    MainThread:58464 [wandb_setup.py:_flush():75] Loading settings from environment variables: {}
+2022-04-15 01:53:02,850 INFO    MainThread:58464 [wandb_setup.py:_flush():75] Inferring run settings from compute environment: {'program_relpath': 'train_and_eval.py', 'program': 'C:\\Users\\Jordan\\Learning\\UVM\\Research Projects\\Novel-Feature-Detector\\train_and_eval.py'}
+2022-04-15 01:53:02,851 INFO    MainThread:58464 [wandb_init.py:_log_setup():438] Logging user logs to C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220415_015302-1rlq4ntk\logs\debug.log
+2022-04-15 01:53:02,851 INFO    MainThread:58464 [wandb_init.py:_log_setup():439] Logging internal logs to C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220415_015302-1rlq4ntk\logs\debug-internal.log
+2022-04-15 01:53:02,852 INFO    MainThread:58464 [wandb_init.py:init():472] calling init triggers
+2022-04-15 01:53:02,852 INFO    MainThread:58464 [wandb_init.py:init():475] wandb.init called with sweep_config: {}
+config: {}
+2022-04-15 01:53:02,852 INFO    MainThread:58464 [wandb_init.py:init():525] starting backend
+2022-04-15 01:53:02,852 INFO    MainThread:58464 [backend.py:_multiprocessing_setup():99] multiprocessing start_methods=spawn, using: spawn
+2022-04-15 01:53:02,854 INFO    MainThread:58464 [backend.py:ensure_launched():219] starting backend process...
+2022-04-15 01:53:02,914 INFO    MainThread:58464 [backend.py:ensure_launched():224] started backend process with pid: 85044
+2022-04-15 01:53:02,948 INFO    MainThread:58464 [wandb_init.py:init():534] backend started and connected
+2022-04-15 01:53:02,956 INFO    MainThread:58464 [wandb_init.py:init():598] updated telemetry
+2022-04-15 01:53:03,537 INFO    MainThread:58464 [wandb_init.py:init():629] communicating run to backend with 30 second timeout
+2022-04-15 01:53:05,357 INFO    MainThread:58464 [wandb_run.py:_on_init():1922] communicating current version
+2022-04-15 01:53:05,523 INFO    MainThread:58464 [wandb_run.py:_on_init():1926] got version response 
+2022-04-15 01:53:05,524 INFO    MainThread:58464 [wandb_init.py:init():660] starting run threads in backend
+2022-04-15 01:53:06,083 INFO    MainThread:58464 [wandb_run.py:_console_start():1896] atexit reg
+2022-04-15 01:53:06,086 INFO    MainThread:58464 [wandb_run.py:_redirect():1769] redirect: SettingsConsole.WRAP
+2022-04-15 01:53:06,086 INFO    MainThread:58464 [wandb_run.py:_redirect():1806] Wrapping output streams.
+2022-04-15 01:53:06,115 INFO    MainThread:58464 [wandb_run.py:_redirect():1830] Redirects installed.
+2022-04-15 01:53:06,115 INFO    MainThread:58464 [wandb_init.py:init():685] run started, returning control to user process
+2022-04-15 01:53:06,122 INFO    MainThread:58464 [wandb_run.py:_config_callback():1129] config_cb None None {'dataset': 'cifar10', 'batch_size': 64, 'experiment_name': 'original diversity', 'evo_gens': '50', 'evo_pop_size': '20', 'evo_dataset_for_novelty': 'cifar10', 'evo': False, 'evo_num_runs': '5', 'evo_tourney_size': '4', 'evo_num_winners': '2', 'evo_num_children': '20'}
+2022-04-15 01:53:06,247 INFO    MainThread:58464 [wandb_watch.py:watch():47] Watching
+2022-04-15 01:53:10,104 INFO    MainThread:58464 [wandb_run.py:_config_callback():1129] config_cb None None {'num_classes': 10, 'classnames': ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']}
+2022-04-15 05:55:32,971 INFO    MainThread:58464 [wandb_run.py:_finish():1684] finishing run jdonovan/novel-feature-detectors/1rlq4ntk
+2022-04-15 05:55:32,971 INFO    MainThread:58464 [wandb_run.py:_atexit_cleanup():1865] got exitcode: 0
+2022-04-15 05:55:32,974 INFO    MainThread:58464 [wandb_run.py:_restore():1837] restore
+2022-04-15 05:55:38,192 INFO    MainThread:58464 [wandb_run.py:_on_finish():1995] got exit ret: None
+2022-04-15 05:55:43,312 INFO    MainThread:58464 [wandb_run.py:_on_finish():1995] got exit ret: None
+2022-04-15 05:55:48,444 INFO    MainThread:58464 [wandb_run.py:_on_finish():1995] got exit ret: None
+2022-04-15 05:55:53,567 INFO    MainThread:58464 [wandb_run.py:_on_finish():1995] got exit ret: None
+2022-04-15 05:55:58,687 INFO    MainThread:58464 [wandb_run.py:_on_finish():1995] got exit ret: None
+2022-04-15 05:56:03,807 INFO    MainThread:58464 [wandb_run.py:_on_finish():1995] got exit ret: None
+2022-04-15 05:56:08,927 INFO    MainThread:58464 [wandb_run.py:_on_finish():1995] got exit ret: None
+2022-04-15 05:56:14,053 INFO    MainThread:58464 [wandb_run.py:_on_finish():1995] got exit ret: None
+2022-04-15 05:56:19,187 INFO    MainThread:58464 [wandb_run.py:_on_finish():1995] got exit ret: None
+2022-04-15 05:56:24,300 INFO    MainThread:58464 [wandb_run.py:_on_finish():1995] got exit ret: None
+2022-04-15 05:56:26,660 INFO    MainThread:58464 [wandb_run.py:_on_finish():1995] got exit ret: file_counts {
+  wandb_count: 1
+  media_count: 1
+  artifact_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 70262280
+  total_bytes: 70262280
+}
+
+2022-04-15 05:56:26,928 INFO    MainThread:58464 [wandb_run.py:_on_finish():1995] got exit ret: file_counts {
+  wandb_count: 1
+  media_count: 1
+  artifact_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 70262280
+  total_bytes: 70262280
+}
+
+2022-04-15 05:56:27,845 INFO    MainThread:58464 [wandb_run.py:_on_finish():1995] got exit ret: file_counts {
+  wandb_count: 4
+  media_count: 1
+  artifact_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 70262280
+  total_bytes: 70275432
+}
+
+2022-04-15 05:56:27,977 INFO    MainThread:58464 [wandb_run.py:_on_finish():1995] got exit ret: file_counts {
+  wandb_count: 5
+  media_count: 1
+  artifact_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 70262280
+  total_bytes: 70321517
+}
+
+2022-04-15 05:56:28,087 INFO    MainThread:58464 [wandb_run.py:_on_finish():1995] got exit ret: file_counts {
+  wandb_count: 5
+  media_count: 1
+  artifact_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 70262280
+  total_bytes: 70321517
+}
+
+2022-04-15 05:56:28,196 INFO    MainThread:58464 [wandb_run.py:_on_finish():1995] got exit ret: file_counts {
+  wandb_count: 5
+  media_count: 1
+  artifact_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 70321517
+  total_bytes: 70321517
+}
+
+2022-04-15 05:56:28,343 INFO    MainThread:58464 [wandb_run.py:_on_finish():1995] got exit ret: file_counts {
+  wandb_count: 5
+  media_count: 1
+  artifact_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 70321517
+  total_bytes: 70321517
+}
+
+2022-04-15 05:56:28,468 INFO    MainThread:58464 [wandb_run.py:_on_finish():1995] got exit ret: file_counts {
+  wandb_count: 5
+  media_count: 1
+  artifact_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 70321517
+  total_bytes: 70321517
+}
+
+2022-04-15 05:56:28,604 INFO    MainThread:58464 [wandb_run.py:_on_finish():1995] got exit ret: file_counts {
+  wandb_count: 5
+  media_count: 1
+  artifact_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 70321517
+  total_bytes: 70321517
+}
+
+2022-04-15 05:56:29,324 INFO    MainThread:58464 [wandb_run.py:_on_finish():1995] got exit ret: file_counts {
+  wandb_count: 5
+  media_count: 1
+  artifact_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 70321517
+  total_bytes: 70321517
+}
+
+2022-04-15 05:56:29,567 INFO    MainThread:58464 [wandb_run.py:_on_finish():1995] got exit ret: done: true
+exit_result {
+}
+file_counts {
+  wandb_count: 5
+  media_count: 1
+  artifact_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 70321517
+  total_bytes: 70321517
+}
+local_info {
+}
+
+2022-04-15 05:56:30,816 INFO    MainThread:58464 [wandb_run.py:_footer_history_summary_info():3087] rendering history
+2022-04-15 05:56:30,820 INFO    MainThread:58464 [wandb_run.py:_footer_history_summary_info():3116] rendering summary
+2022-04-15 05:56:30,843 INFO    MainThread:58464 [wandb_run.py:_footer_sync_info():3044] logging synced files

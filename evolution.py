@@ -139,6 +139,7 @@ def run():
     helper.config['evo_tourney_size'] = args.evo_tourney_size
     helper.config['evo_num_winners'] = args.evo_num_winners
     helper.config['evo_num_children'] = args.evo_num_children
+    helper.config['experiment_type'] = 'evolution'
     helper.update_config()
 
     random_image_paths = helper.create_random_images(64)
@@ -201,6 +202,7 @@ def run():
             helper.config['evo_tourney_size'] = args.evo_tourney_size
             helper.config['evo_num_winners'] = args.evo_num_winners
             helper.config['evo_num_children'] = args.evo_num_children
+            helper.config['experiment_type'] = 'evolution'
             helper.update_config()
             
     if not os.path.isdir('plots/' + experiment_name):
