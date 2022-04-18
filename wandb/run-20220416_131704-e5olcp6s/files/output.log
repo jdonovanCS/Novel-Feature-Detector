@@ -1,0 +1,45 @@
+Files already downloaded and verified
+Files already downloaded and verified
+Running Evolution for fitness
+Initializing
+  0%|                                                                                            | 0/5 [00:00<?, ?it/s]
+  0%|                                                                                           | 0/20 [00:00<?, ?it/s]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Validation DataLoader 0: 100%|███████████████████████████████████████████████████████| 157/157 [00:52<00:00,  2.98it/s]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Validation DataLoader 0: 100%|███████████████████████████████████████████████████████| 157/157 [00:43<00:00,  3.58it/s]

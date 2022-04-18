@@ -1,0 +1,26 @@
+Files already downloaded and verified
+Files already downloaded and verified
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 242, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 156, in run
+    data_iterator = iter(data_module.train_dataloader())
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\torch\utils\data\dataloader.py", line 368, in __iter__
+    return self._get_iterator()
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\torch\utils\data\dataloader.py", line 314, in _get_iterator
+    return _MultiProcessingDataLoaderIter(self)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\torch\utils\data\dataloader.py", line 927, in __init__
+    w.start()
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\multiprocessing\process.py", line 121, in start
+    self._popen = self._Popen(self)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\multiprocessing\context.py", line 224, in _Popen
+    return _default_context.get_context().Process._Popen(process_obj)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\multiprocessing\context.py", line 327, in _Popen
+    return Popen(process_obj)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\multiprocessing\popen_spawn_win32.py", line 93, in __init__
+    reduction.dump(process_obj, to_child)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\multiprocessing\reduction.py", line 60, in dump
+    ForkingPickler(file, protocol).dump(obj)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numpy\core\__init__.py", line 145, in _DType_reduce
+    def _DType_reduce(DType):
+KeyboardInterrupt

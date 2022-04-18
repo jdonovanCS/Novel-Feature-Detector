@@ -1,0 +1,28 @@
+Files already downloaded and verified
+Files already downloaded and verified
+Running Evolution for fitness
+Initializing
+  0%|                                                                                           | 0/20 [00:00<?, ?it/s]
+  0%|                                                                                            | 0/5 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 242, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 197, in run
+    solution_over_time, fitness_over_time = evolution(generations=n_iters, population_size=pop_size, num_children=num_children, tournament_size=tournament_size, num_winners=num_winners, evolution_type=run_name)
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 92, in evolution
+    trainer.validate(net, datamodule=data_module.val_dataloader(), verbose=False)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\trainer\trainer.py", line 851, in validate
+    return self._call_and_handle_interrupt(self._validate_impl, model, dataloaders, ckpt_path, verbose, datamodule)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\trainer\trainer.py", line 724, in _call_and_handle_interrupt
+    return trainer_fn(*args, **kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\trainer\trainer.py", line 898, in _validate_impl
+    results = self._run(model, ckpt_path=self.ckpt_path)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\trainer\trainer.py", line 1161, in _run
+    verify_loop_configurations(self)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\trainer\configuration_validator.py", line 66, in verify_loop_configurations
+    _check_datamodule_checkpoint_hooks(trainer)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\trainer\configuration_validator.py", line 411, in _check_datamodule_checkpoint_hooks
+    if is_overridden(method_name="on_save_checkpoint", instance=trainer.datamodule):
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\utilities\model_helpers.py", line 34, in is_overridden
+    raise ValueError("Expected a parent")
+ValueError: Expected a parent
