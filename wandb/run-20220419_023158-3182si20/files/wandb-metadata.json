@@ -1,0 +1,40 @@
+{
+    "os": "Windows-10-10.0.19043-SP0",
+    "python": "3.10.0",
+    "heartbeatAt": "2022-04-19T06:31:59.953544",
+    "startedAt": "2022-04-19T06:31:58.240569",
+    "docker": null,
+    "gpu": "NVIDIA GeForce RTX 3090",
+    "gpu_count": 1,
+    "cpu_count": 32,
+    "cuda": null,
+    "args": [
+        "--experiment_name=channel-wise diversity",
+        "--dataset=cifar10",
+        "--fixed_conv",
+        "--training_interval=.2",
+        "--epochs=96",
+        "--random",
+        "--novelty_interval=1",
+        "--test_accuracy_interval=4",
+        "--batch_size=64",
+        "--evo_gens=50",
+        "--evo_pop_size=20",
+        "--evo_num_children=20",
+        "--evo_num_runs=5",
+        "--evo_tourney_size=4",
+        "--evo_num_winners=2"
+    ],
+    "state": "running",
+    "program": "C:\\Users\\Jordan\\Learning\\UVM\\Research Projects\\Novel-Feature-Detector\\train_and_eval.py",
+    "codePath": "train_and_eval.py",
+    "git": {
+        "remote": "https://github.com/jdonovancs/Novel-Feature-Detector.git",
+        "commit": "b957bcba015fe8010cb3c2311cac94ce040dabad"
+    },
+    "email": "jordan.t.donovancs@gmail.com",
+    "root": "C:/Users/Jordan/Learning/UVM/Research Projects/Novel-Feature-Detector",
+    "host": "DESKTOP-ESA8F4M",
+    "username": "Jordan",
+    "executable": "C:\\Users\\Jordan\\anaconda3\\envs\\EC2\\python.exe"
+}
