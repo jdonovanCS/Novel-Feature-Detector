@@ -77,6 +77,7 @@ def run():
     helper.config['evo_num_winners'] = args.evo_num_winners
     helper.config['evo_num_children'] = args.evo_num_children
     helper.config['experiment_type'] = 'training'
+    helper.config['fixed_conv'] = args.fixed_conv
     helper.update_config()
     
     
@@ -108,6 +109,7 @@ def run():
                 helper.config['evo_num_winners'] = args.evo_num_winners
                 helper.config['evo_num_children'] = args.evo_num_children
                 helper.config['experiment_type'] = 'training'
+                helper.config['fixed_conv'] = args.fixed_conv
                 helper.update_config()
                 # for c in classlist:
                 #     classwise_accuracy_record[name][run_num][i][np.where(classlist==c)[0][0]] = record_accuracy[c]
