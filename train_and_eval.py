@@ -28,6 +28,7 @@ parser.add_argument('--evo_num_runs', help='Number of runs used in evolution', d
 parser.add_argument('--evo_tourney_size', help='Size of tournaments in evolutionary algorithm selection', default=None)
 parser.add_argument('--evo_num_winners', help='Number of winners in tournament in evolutionary algorithm', default=None)
 parser.add_argument('--evo_num_children', help='Number of children in evolutionary algorithm', default=None)
+parser.add_argument('--skip', default=0, help='skip the first n models to train, used mostly when a run fails partway through', type=int)
     
 args = parser.parse_args()
 
@@ -53,7 +54,8 @@ def run():
     if args.random:
         random.shuffle(pickled_filters['random'][0])
         pickled_filters['random'] = np.array(pickled_filters['random'])
-
+        with open(filename, 'wb') as f:
+            pickled_filters = pickle.dump(f)
     
     helper.run(seed=False)
 
@@ -77,18 +79,25 @@ def run():
     helper.config['evo_num_winners'] = args.evo_num_winners
     helper.config['evo_num_children'] = args.evo_num_children
     helper.config['experiment_type'] = 'training'
+    helper.config['fixed_conv'] = fixed_conv == True
     helper.update_config()
     
     
     # run training and evaluation and record metrics in above variables
     # for each type of evolution ran
     for name in pickled_filters.keys():
-        for run_num in range(len(pickled_filters[name])):
+        if args.evo or args.random == None or not args.random: 
+            skip = args.skip
+            rand_skip=1
+        else: 
+            skip=0
+            rand_skip = args.skip+1
+        for run_num in range(skip, len(pickled_filters[name])):
             # run_num = np.where(pickled_filters[name] == filters_list)[0][0]
             # for each generation train the solution output at that generation
             for i in range(len(pickled_filters[name][run_num])):
                 # if we only want to train the solution from the final generation, continue
-                if training_interval != 0 and i*1.0 not in [(len(pickled_filters[name][run_num])/(1/training_interval)*j)-1 for j in range(1, int(1/training_interval)+1)]:
+                if training_interval != 0 and i*1.0 not in [(len(pickled_filters[name][run_num])/(1/training_interval)*j)-1 for j in range(rand_skip, int(1/training_interval)+1)]:
                     continue
                 
                 # else train the network and collect the metrics
@@ -108,6 +117,7 @@ def run():
                 helper.config['evo_num_winners'] = args.evo_num_winners
                 helper.config['evo_num_children'] = args.evo_num_children
                 helper.config['experiment_type'] = 'training'
+                helper.config['fixed_conv'] = fixed_conv == True
                 helper.update_config()
                 # for c in classlist:
                 #     classwise_accuracy_record[name][run_num][i][np.where(classlist==c)[0][0]] = record_accuracy[c]

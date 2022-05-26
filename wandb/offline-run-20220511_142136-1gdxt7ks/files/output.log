@@ -1,0 +1,18 @@
+{'evo': False, 'dataset': 'cifar10', 'evo_gens': '50', 'batch_size': 64, 'classnames': ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck'], 'fixed_conv': False, 'num_classes': 10, 'evo_num_runs': '5', 'evo_pop_size': '20', 'evo_num_winners': '2', 'experiment_name': 'hpc full cifar10 val diversity', 'experiment_type': 'training', 'evo_num_children': '20', 'evo_tourney_size': '4', 'evo_dataset_for_novelty': 'cifar10'}
+Files already downloaded and verified
+Files already downloaded and verified
+tensor([[[119.9391, 126.1016, 133.7212],
+         [132.5360, 125.7649, 144.8615],
+         [110.8693, 134.7627, 117.5004]],
+        [[121.0662, 130.9091, 149.6078],
+         [119.6319, 113.5583, 112.8138],
+         [147.9229, 147.9459, 140.0905]],
+        [[141.9566, 143.4903, 136.3034],
+         [126.8212, 143.7653, 104.4059],
+         [138.6112, 140.8437, 108.3827]]])
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:88: LightningDeprecationWarning: DataModule property `train_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:107: LightningDeprecationWarning: DataModule property `val_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:126: LightningDeprecationWarning: DataModule property `test_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(

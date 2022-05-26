@@ -1,0 +1,20 @@
+
+{'evo': False, 'dataset': 'cifar10', 'evo_gens': '50', 'batch_size': 64, 'classnames': ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck'], 'fixed_conv': False, 'num_classes': 10, 'evo_num_runs': '5', 'evo_pop_size': '20', 'evo_num_winners': '2', 'experiment_name': 'hpc full cifar10 val diversity', 'experiment_type': 'training', 'evo_num_children': '20', 'evo_tourney_size': '4', 'evo_dataset_for_novelty': 'cifar10'}
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\visualize_filters_and_activations.py", line 96, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\visualize_filters_and_activations.py", line 68, in run
+    net = Net.load_from_checkpoint(filename)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\saving.py", line 139, in load_from_checkpoint
+    checkpoint = pl_load(checkpoint_path, map_location=lambda storage, loc: storage)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\utilities\cloud_io.py", line 46, in load
+    with fs.open(path_or_url, "rb") as f:
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\fsspec\spec.py", line 1009, in open
+    f = self._open(
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\fsspec\implementations\local.py", line 155, in _open
+    return LocalFileOpener(path, mode, fs=self, **kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\fsspec\implementations\local.py", line 250, in __init__
+    self._open()
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\fsspec\implementations\local.py", line 255, in _open
+    self.f = open(self.path, mode=self.mode)
+PermissionError: [Errno 13] Permission denied: 'C:/Users/Jordan/Learning/UVM/Research Projects/Novel-Feature-Detector/trained_models/trained/convTrue_ehpc full cifar10 val diversity_nrandom_r0_g9.pth'
