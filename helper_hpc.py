@@ -15,6 +15,7 @@ import pytorch_lightning as pl
 from net import Net
 from cifar100datamodule import CIFAR100DataModule
 import numba
+import os
 
 def create_random_images(num_images=200):
     paths = []
@@ -39,11 +40,17 @@ def train_network(data_module, filters=None, epochs=2, save_path=None, fixed_con
             if fixed_conv:
                 for param in net.conv_layers[i].parameters():
                     param.requires_grad = False
+                for param in net.BatchNorm1.parameters():
+                    param.requires_grad = False
+                for param in net.BatchNorm2.parameters():
+                    param.requires_grad = False
+                for param in net.BatchNorm3.parameters():
+                    param.requires_grad = False
 
     if save_path is None:
         save_path = PATH
     wandb_logger = WandbLogger(log_model=True)
-    trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu")
+    trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="auto")
     wandb_logger.watch(net, log="all")
     trainer.fit(net, datamodule=data_module)
 
@@ -53,9 +60,9 @@ def train_network(data_module, filters=None, epochs=2, save_path=None, fixed_con
 def get_data_module(dataset, batch_size):
     match dataset.lower():
         case 'cifar10' | 'cifar-10':
-            data_module = pl_bolts.datamodules.CIFAR10DataModule(batch_size=batch_size, data_dir="data/", num_workers=4, pin_memory=True)
+            data_module = pl_bolts.datamodules.CIFAR10DataModule(batch_size=batch_size, data_dir="data/", num_workers=os.cpu_count(), pin_memory=True)
         case 'cifar100' | 'cifar-100':
-            data_module = CIFAR100DataModule(batch_size=batch_size, data_dir="data/", num_workers=4, pin_memory=True)
+            data_module = CIFAR100DataModule(batch_size=batch_size, data_dir="data/", num_workers=os.cpu_count(), pin_memory=True)
         case _:
             print('Please supply dataset of CIFAR-10 or CIFAR-100')
             exit()
@@ -170,6 +177,7 @@ def run(seed=True):
     global config
     config = {}
     wandb.finish()
+    os.environ["WANDB_START_METHOD"] = "thread"
     wandb.init(project="novel-feature-detectors")
 
 
