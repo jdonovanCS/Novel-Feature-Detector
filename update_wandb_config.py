@@ -15,6 +15,8 @@ if args.param_type == "int":
     value = int(args.value)
 if args.param_type == "float":
     value = float(args.value)
+if args.param_type == "bool":
+    value = bool(int(args.value))
 else:
     value = str(args.value)
 run.config[args.param] = value

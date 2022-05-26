@@ -1,0 +1,85 @@
+2022-05-12 10:26:47,348 INFO    MainThread:147792 [wandb_setup.py:_flush():75] Loading settings from C:\Users\Jordan\.config\wandb\settings
+2022-05-12 10:26:47,348 INFO    MainThread:147792 [wandb_setup.py:_flush():75] Loading settings from C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\settings
+2022-05-12 10:26:47,348 INFO    MainThread:147792 [wandb_setup.py:_flush():75] Loading settings from environment variables: {'start_method': 'thread'}
+2022-05-12 10:26:47,348 INFO    MainThread:147792 [wandb_setup.py:_flush():75] Inferring run settings from compute environment: {'program_relpath': 'visualize_filters_and_activations.py', 'program': 'C:\\Users\\Jordan\\Learning\\UVM\\Research Projects\\Novel-Feature-Detector\\visualize_filters_and_activations.py'}
+2022-05-12 10:26:47,349 INFO    MainThread:147792 [wandb_init.py:_log_setup():438] Logging user logs to C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\offline-run-20220512_102647-3b52xmgj\logs\debug.log
+2022-05-12 10:26:47,349 INFO    MainThread:147792 [wandb_init.py:_log_setup():439] Logging internal logs to C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\offline-run-20220512_102647-3b52xmgj\logs\debug-internal.log
+2022-05-12 10:26:47,349 INFO    MainThread:147792 [wandb_init.py:init():472] calling init triggers
+2022-05-12 10:26:47,349 INFO    MainThread:147792 [wandb_init.py:init():475] wandb.init called with sweep_config: {}
+config: {}
+2022-05-12 10:26:47,349 INFO    MainThread:147792 [wandb_init.py:init():525] starting backend
+2022-05-12 10:26:47,355 INFO    MainThread:147792 [backend.py:ensure_launched():219] starting backend process...
+2022-05-12 10:26:47,357 INFO    MainThread:147792 [backend.py:ensure_launched():224] started backend process with pid: 0
+2022-05-12 10:26:47,358 INFO    BackendThr:147792 [internal.py:wandb_internal():92] W&B internal server running at pid: 147792, started at: 2022-05-12 10:26:47.357710
+2022-05-12 10:26:47,430 INFO    MainThread:147792 [wandb_init.py:init():534] backend started and connected
+2022-05-12 10:26:47,432 INFO    MainThread:147792 [wandb_init.py:init():598] updated telemetry
+2022-05-12 10:26:47,481 INFO    WriterThread:147792 [datastore.py:open_for_write():77] open: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\offline-run-20220512_102647-3b52xmgj\run-3b52xmgj.wandb
+2022-05-12 10:26:47,520 INFO    MainThread:147792 [wandb_init.py:init():660] starting run threads in backend
+2022-05-12 10:26:47,730 ERROR   HandlerThread:147792 [meta.py:_save_conda():85] Error saving conda packages
+Traceback (most recent call last):
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\wandb\sdk\internal\meta.py", line 81, in _save_conda
+    subprocess.call(
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\subprocess.py", line 345, in call
+    with Popen(*popenargs, **kwargs) as p:
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\subprocess.py", line 966, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\subprocess.py", line 1435, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+FileNotFoundError: [WinError 2] The system cannot find the file specified
+2022-05-12 10:26:48,957 INFO    MainThread:147792 [wandb_run.py:_console_start():1896] atexit reg
+2022-05-12 10:26:48,958 INFO    MainThread:147792 [wandb_run.py:_redirect():1769] redirect: SettingsConsole.WRAP
+2022-05-12 10:26:48,959 INFO    MainThread:147792 [wandb_run.py:_redirect():1806] Wrapping output streams.
+2022-05-12 10:26:49,052 INFO    MainThread:147792 [wandb_run.py:_redirect():1830] Redirects installed.
+2022-05-12 10:26:49,052 INFO    MainThread:147792 [wandb_init.py:init():685] run started, returning control to user process
+2022-05-12 10:26:49,487 INFO    MainThread:147792 [wandb_run.py:_config_callback():1129] config_cb None None {'experiment_type': 'training', 'evo': False, 'dataset': 'cifar10', 'evo_gens': '50', 'batch_size': 64, 'classnames': ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck'], 'fixed_conv': False, 'num_classes': 10, 'evo_num_runs': '5', 'evo_pop_size': '20', 'evo_num_winners': '2', 'experiment_name': 'hpc full cifar10 val diversity', 'evo_num_children': '20', 'evo_tourney_size': '4', 'evo_dataset_for_novelty': 'cifar10'}
+2022-05-12 10:27:59,309 INFO    MainThread:147792 [wandb_run.py:_atexit_cleanup():1865] got exitcode: 1
+2022-05-12 10:27:59,310 INFO    MainThread:147792 [wandb_run.py:_restore():1837] restore
+2022-05-12 10:28:00,190 INFO    SenderThread:147792 [sender.py:send_exit():371] handling exit code: 1
+2022-05-12 10:28:00,190 INFO    SenderThread:147792 [sender.py:send_exit():373] handling runtime: 72
+2022-05-12 10:28:00,191 INFO    SenderThread:147792 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-05-12 10:28:00,191 INFO    SenderThread:147792 [sender.py:send_exit():379] send defer
+2022-05-12 10:28:00,191 INFO    HandlerThread:147792 [handler.py:handle_request_defer():164] handle defer: 0
+2022-05-12 10:28:00,192 INFO    SenderThread:147792 [sender.py:send_request_defer():388] handle sender defer: 0
+2022-05-12 10:28:00,192 INFO    SenderThread:147792 [sender.py:transition_state():392] send defer: 1
+2022-05-12 10:28:00,192 INFO    HandlerThread:147792 [handler.py:handle_request_defer():164] handle defer: 1
+2022-05-12 10:28:00,352 INFO    SenderThread:147792 [sender.py:send_request_defer():388] handle sender defer: 1
+2022-05-12 10:28:00,352 INFO    SenderThread:147792 [sender.py:transition_state():392] send defer: 2
+2022-05-12 10:28:00,353 INFO    HandlerThread:147792 [handler.py:handle_request_defer():164] handle defer: 2
+2022-05-12 10:28:00,353 INFO    MainThread:147792 [wandb_run.py:_on_finish():1995] got exit ret: 
+2022-05-12 10:28:00,353 INFO    SenderThread:147792 [sender.py:send_request_defer():388] handle sender defer: 2
+2022-05-12 10:28:00,353 INFO    SenderThread:147792 [sender.py:transition_state():392] send defer: 3
+2022-05-12 10:28:00,353 INFO    HandlerThread:147792 [handler.py:handle_request_defer():164] handle defer: 3
+2022-05-12 10:28:00,354 INFO    SenderThread:147792 [sender.py:send_request_defer():388] handle sender defer: 3
+2022-05-12 10:28:00,354 INFO    SenderThread:147792 [sender.py:transition_state():392] send defer: 4
+2022-05-12 10:28:00,354 INFO    HandlerThread:147792 [handler.py:handle_request_defer():164] handle defer: 4
+2022-05-12 10:28:00,354 INFO    SenderThread:147792 [sender.py:send_request_defer():388] handle sender defer: 4
+2022-05-12 10:28:00,354 INFO    SenderThread:147792 [sender.py:transition_state():392] send defer: 5
+2022-05-12 10:28:00,354 INFO    HandlerThread:147792 [handler.py:handle_request_defer():164] handle defer: 5
+2022-05-12 10:28:00,355 INFO    SenderThread:147792 [sender.py:send_request_defer():388] handle sender defer: 5
+2022-05-12 10:28:00,355 INFO    SenderThread:147792 [sender.py:transition_state():392] send defer: 6
+2022-05-12 10:28:00,355 INFO    HandlerThread:147792 [handler.py:handle_request_defer():164] handle defer: 6
+2022-05-12 10:28:00,355 INFO    SenderThread:147792 [sender.py:send_request_defer():388] handle sender defer: 6
+2022-05-12 10:28:00,355 INFO    SenderThread:147792 [sender.py:transition_state():392] send defer: 7
+2022-05-12 10:28:00,355 INFO    HandlerThread:147792 [handler.py:handle_request_defer():164] handle defer: 7
+2022-05-12 10:28:00,355 INFO    SenderThread:147792 [sender.py:send_request_defer():388] handle sender defer: 7
+2022-05-12 10:28:00,356 INFO    SenderThread:147792 [sender.py:transition_state():392] send defer: 8
+2022-05-12 10:28:00,356 INFO    HandlerThread:147792 [handler.py:handle_request_defer():164] handle defer: 8
+2022-05-12 10:28:00,356 INFO    SenderThread:147792 [sender.py:send_request_defer():388] handle sender defer: 8
+2022-05-12 10:28:00,356 INFO    SenderThread:147792 [sender.py:transition_state():392] send defer: 9
+2022-05-12 10:28:00,356 INFO    HandlerThread:147792 [handler.py:handle_request_defer():164] handle defer: 9
+2022-05-12 10:28:00,356 INFO    SenderThread:147792 [sender.py:send_request_defer():388] handle sender defer: 9
+2022-05-12 10:28:00,356 INFO    SenderThread:147792 [sender.py:transition_state():392] send defer: 10
+2022-05-12 10:28:00,357 INFO    HandlerThread:147792 [handler.py:handle_request_defer():164] handle defer: 10
+2022-05-12 10:28:00,357 INFO    SenderThread:147792 [sender.py:send_request_defer():388] handle sender defer: 10
+2022-05-12 10:28:00,466 INFO    MainThread:147792 [wandb_run.py:_on_finish():1995] got exit ret: done: true
+exit_result {
+}
+local_info {
+}
+
+2022-05-12 10:28:00,575 INFO    HandlerThread:147792 [handler.py:finish():790] shutting down handler
+2022-05-12 10:28:01,365 INFO    WriterThread:147792 [datastore.py:close():281] close: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\offline-run-20220512_102647-3b52xmgj\run-3b52xmgj.wandb
+2022-05-12 10:28:01,474 INFO    SenderThread:147792 [sender.py:finish():1107] shutting down sender
+2022-05-12 10:28:01,583 INFO    MainThread:147792 [wandb_run.py:_footer_history_summary_info():3087] rendering history
+2022-05-12 10:28:01,583 INFO    MainThread:147792 [wandb_run.py:_footer_history_summary_info():3116] rendering summary
+2022-05-12 10:28:01,587 INFO    MainThread:147792 [internal.py:handle_exit():82] Internal process exited

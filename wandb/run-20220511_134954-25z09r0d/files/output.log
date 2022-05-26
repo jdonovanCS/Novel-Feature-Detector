@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\visualize_filters_and_activations.py", line 76, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\visualize_filters_and_activations.py", line 25, in run
+    for k, v in run.config:
+ValueError: too many values to unpack (expected 2)

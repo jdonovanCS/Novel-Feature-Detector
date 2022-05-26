@@ -1,0 +1,8 @@
+
+{'evo': False, 'dataset': 'cifar10', 'evo_gens': '50', 'batch_size': 64, 'classnames': ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck'], 'fixed_conv': False, 'num_classes': 10, 'evo_num_runs': '5', 'evo_pop_size': '20', 'evo_num_winners': '2', 'experiment_name': 'hpc full cifar10 val diversity', 'experiment_type': 'training', 'evo_num_children': '20', 'evo_tourney_size': '4', 'evo_dataset_for_novelty': 'cifar10'}
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\visualize_filters_and_activations.py", line 77, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\visualize_filters_and_activations.py", line 45, in run
+    filename = 'output/' + run.config.experiment_name + '/random_gen_solutions.pickle'
+AttributeError: 'dict' object has no attribute 'experiment_name'
