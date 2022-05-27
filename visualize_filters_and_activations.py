@@ -9,6 +9,7 @@ from net import Net
 import numpy as np
 import os
 
+
 # arguments
 parser=argparse.ArgumentParser(description="Process some input files")
 parser.add_argument('--run_id', help="enter id for wandb experiment to link config")
@@ -77,7 +78,7 @@ def run():
     data_module.setup()
     
     # visualize filters
-    for layer in filters:
+    for layer in [filters[0]]:
         print(layer.shape)
         plt.figure()
         for i in range(len(layer)):
@@ -97,8 +98,27 @@ def run():
         plt.show()
 
     # visualize activations
-    net = Net()
+    data_module = helper.get_data_module(run.config['evo_dataset_for_novelty'], batch_size=1)
+    data_module.prepare_data()
+    data_module.setup()
+    classnames = list(data_module.dataset_test.classes)
+    net = Net(num_classes=len(classnames), classnames=classnames)
     net.set_filters = filters
+    net.validation_step(next(iter(data_module.val_dataloader())),0)
+    activations = net.activations
+    l = []
+    for i in range(len(activations)):
+        activations[i][0] = activations[i][0].detach().cpu().numpy()
+        for j in range (len(activations[i][0])):
+            values = np.array(255*((activations[i][0][j]+1)/2)).astype(np.int64)
+            if len(np.where(values > 255)) > 0:
+                print(values)
+                print(layer[i])
+            rows = cols = int(np.cel(np.sqrt(len(activations[i][0][j]))))
+            plt.subplot(rows, cols, i+1)
+            plt.imshow(values.transpose(1,2,0), vmin=0, vmax=255, interpolation='none')
+        plt.setp(plt.gcf().get_axes(), xticks=[], yticks=[])
+        plt.show()
     exit()
     
 
