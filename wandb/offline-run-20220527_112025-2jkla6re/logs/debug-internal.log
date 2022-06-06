@@ -1,0 +1,119 @@
+2022-05-27 11:20:25,201 INFO    BackendThr:107216 [internal.py:wandb_internal():92] W&B internal server running at pid: 107216, started at: 2022-05-27 11:20:25.201305
+2022-05-27 11:20:25,201 INFO    MainThread:107216 [wandb_init.py:init():534] backend started and connected
+2022-05-27 11:20:25,202 DEBUG   MainThread:107216 [config_util.py:dict_from_config_file():102] no default config file found in config-defaults.yaml
+2022-05-27 11:20:25,203 INFO    MainThread:107216 [wandb_init.py:init():598] updated telemetry
+2022-05-27 11:20:25,204 INFO    WriterThread:107216 [datastore.py:open_for_write():77] open: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\offline-run-20220527_112025-2jkla6re\run-2jkla6re.wandb
+2022-05-27 11:20:25,235 INFO    MainThread:107216 [wandb_init.py:init():660] starting run threads in backend
+2022-05-27 11:20:25,239 DEBUG   HandlerThread:107216 [handler.py:handle_request():141] handle_request: run_start
+2022-05-27 11:20:25,253 DEBUG   HandlerThread:107216 [meta.py:__init__():37] meta init
+2022-05-27 11:20:25,253 DEBUG   HandlerThread:107216 [meta.py:__init__():51] meta init done
+2022-05-27 11:20:25,253 DEBUG   HandlerThread:107216 [meta.py:probe():211] probe
+2022-05-27 11:20:25,264 DEBUG   HandlerThread:107216 [meta.py:_setup_git():201] setup git
+2022-05-27 11:20:25,359 DEBUG   HandlerThread:107216 [meta.py:_setup_git():208] setup git done
+2022-05-27 11:20:25,359 DEBUG   HandlerThread:107216 [meta.py:_save_pip():55] save pip
+2022-05-27 11:20:25,359 DEBUG   HandlerThread:107216 [meta.py:_save_pip():69] save pip done
+2022-05-27 11:20:25,359 DEBUG   HandlerThread:107216 [meta.py:_save_conda():76] save conda
+2022-05-27 11:20:25,362 ERROR   HandlerThread:107216 [meta.py:_save_conda():85] Error saving conda packages
+Traceback (most recent call last):
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\wandb\sdk\internal\meta.py", line 81, in _save_conda
+    subprocess.call(
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\subprocess.py", line 345, in call
+    with Popen(*popenargs, **kwargs) as p:
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\subprocess.py", line 966, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\subprocess.py", line 1435, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+FileNotFoundError: [WinError 2] The system cannot find the file specified
+2022-05-27 11:20:25,363 DEBUG   HandlerThread:107216 [meta.py:_save_conda():86] save conda done
+2022-05-27 11:20:25,363 DEBUG   HandlerThread:107216 [meta.py:probe():249] probe done
+2022-05-27 11:20:25,494 INFO    MainThread:107216 [wandb_run.py:_console_start():1896] atexit reg
+2022-05-27 11:20:25,494 INFO    MainThread:107216 [wandb_run.py:_redirect():1769] redirect: SettingsConsole.WRAP
+2022-05-27 11:20:25,495 INFO    MainThread:107216 [wandb_run.py:_redirect():1806] Wrapping output streams.
+2022-05-27 11:20:25,495 INFO    MainThread:107216 [wandb_run.py:_redirect():1830] Redirects installed.
+2022-05-27 11:20:25,496 INFO    MainThread:107216 [wandb_init.py:init():685] run started, returning control to user process
+2022-05-27 11:20:25,913 INFO    MainThread:107216 [wandb_run.py:_config_callback():1129] config_cb None None {'experiment_type': 'training', 'evo': True, 'dataset': 'cifar10', 'evo_gens': '50', 'batch_size': 64, 'classnames': ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck'], 'fixed_conv': False, 'num_classes': 10, 'evo_num_runs': '5', 'evo_pop_size': '20', 'evo_num_winners': '2', 'experiment_name': 'hpc full cifar10 val diversity', 'evo_num_children': '20', 'evo_tourney_size': '4', 'evo_dataset_for_novelty': 'cifar10'}
+2022-05-27 11:22:19,083 INFO    MainThread:107216 [wandb_run.py:_atexit_cleanup():1865] got exitcode: 1
+2022-05-27 11:22:19,084 INFO    MainThread:107216 [wandb_run.py:_restore():1837] restore
+2022-05-27 11:22:19,649 DEBUG   SenderThread:107216 [sender.py:send():235] send: exit
+2022-05-27 11:22:19,649 INFO    SenderThread:107216 [sender.py:send_exit():371] handling exit code: 1
+2022-05-27 11:22:19,650 INFO    SenderThread:107216 [sender.py:send_exit():373] handling runtime: 114
+2022-05-27 11:22:19,650 DEBUG   HandlerThread:107216 [handler.py:handle_request():141] handle_request: poll_exit
+2022-05-27 11:22:19,650 INFO    SenderThread:107216 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-05-27 11:22:19,650 INFO    SenderThread:107216 [sender.py:send_exit():379] send defer
+2022-05-27 11:22:19,651 DEBUG   SenderThread:107216 [sender.py:send_request():249] send_request: poll_exit
+2022-05-27 11:22:19,651 DEBUG   HandlerThread:107216 [handler.py:handle_request():141] handle_request: defer
+2022-05-27 11:22:19,651 INFO    HandlerThread:107216 [handler.py:handle_request_defer():164] handle defer: 0
+2022-05-27 11:22:19,651 INFO    MainThread:107216 [wandb_run.py:_on_finish():1995] got exit ret: 
+2022-05-27 11:22:19,651 DEBUG   SenderThread:107216 [sender.py:send_request():249] send_request: defer
+2022-05-27 11:22:19,652 INFO    SenderThread:107216 [sender.py:send_request_defer():388] handle sender defer: 0
+2022-05-27 11:22:19,652 INFO    SenderThread:107216 [sender.py:transition_state():392] send defer: 1
+2022-05-27 11:22:19,652 DEBUG   HandlerThread:107216 [handler.py:handle_request():141] handle_request: defer
+2022-05-27 11:22:19,652 INFO    HandlerThread:107216 [handler.py:handle_request_defer():164] handle defer: 1
+2022-05-27 11:22:19,777 DEBUG   SenderThread:107216 [sender.py:send_request():249] send_request: defer
+2022-05-27 11:22:19,777 INFO    SenderThread:107216 [sender.py:send_request_defer():388] handle sender defer: 1
+2022-05-27 11:22:19,778 INFO    SenderThread:107216 [sender.py:transition_state():392] send defer: 2
+2022-05-27 11:22:19,778 DEBUG   HandlerThread:107216 [handler.py:handle_request():141] handle_request: poll_exit
+2022-05-27 11:22:19,778 DEBUG   SenderThread:107216 [sender.py:send_request():249] send_request: poll_exit
+2022-05-27 11:22:19,778 DEBUG   HandlerThread:107216 [handler.py:handle_request():141] handle_request: defer
+2022-05-27 11:22:19,778 INFO    HandlerThread:107216 [handler.py:handle_request_defer():164] handle defer: 2
+2022-05-27 11:22:19,779 DEBUG   SenderThread:107216 [sender.py:send_request():249] send_request: defer
+2022-05-27 11:22:19,779 INFO    SenderThread:107216 [sender.py:send_request_defer():388] handle sender defer: 2
+2022-05-27 11:22:19,779 INFO    MainThread:107216 [wandb_run.py:_on_finish():1995] got exit ret: 
+2022-05-27 11:22:19,779 INFO    SenderThread:107216 [sender.py:transition_state():392] send defer: 3
+2022-05-27 11:22:19,779 DEBUG   HandlerThread:107216 [handler.py:handle_request():141] handle_request: defer
+2022-05-27 11:22:19,779 INFO    HandlerThread:107216 [handler.py:handle_request_defer():164] handle defer: 3
+2022-05-27 11:22:19,780 DEBUG   SenderThread:107216 [sender.py:send_request():249] send_request: defer
+2022-05-27 11:22:19,780 INFO    SenderThread:107216 [sender.py:send_request_defer():388] handle sender defer: 3
+2022-05-27 11:22:19,780 INFO    SenderThread:107216 [sender.py:transition_state():392] send defer: 4
+2022-05-27 11:22:19,780 DEBUG   HandlerThread:107216 [handler.py:handle_request():141] handle_request: defer
+2022-05-27 11:22:19,780 INFO    HandlerThread:107216 [handler.py:handle_request_defer():164] handle defer: 4
+2022-05-27 11:22:19,780 DEBUG   SenderThread:107216 [sender.py:send_request():249] send_request: defer
+2022-05-27 11:22:19,780 INFO    SenderThread:107216 [sender.py:send_request_defer():388] handle sender defer: 4
+2022-05-27 11:22:19,780 INFO    SenderThread:107216 [sender.py:transition_state():392] send defer: 5
+2022-05-27 11:22:19,781 DEBUG   HandlerThread:107216 [handler.py:handle_request():141] handle_request: defer
+2022-05-27 11:22:19,781 INFO    HandlerThread:107216 [handler.py:handle_request_defer():164] handle defer: 5
+2022-05-27 11:22:19,781 DEBUG   SenderThread:107216 [sender.py:send_request():249] send_request: defer
+2022-05-27 11:22:19,781 INFO    SenderThread:107216 [sender.py:send_request_defer():388] handle sender defer: 5
+2022-05-27 11:22:19,781 INFO    SenderThread:107216 [sender.py:transition_state():392] send defer: 6
+2022-05-27 11:22:19,781 DEBUG   HandlerThread:107216 [handler.py:handle_request():141] handle_request: defer
+2022-05-27 11:22:19,781 INFO    HandlerThread:107216 [handler.py:handle_request_defer():164] handle defer: 6
+2022-05-27 11:22:19,781 DEBUG   SenderThread:107216 [sender.py:send_request():249] send_request: defer
+2022-05-27 11:22:19,781 INFO    SenderThread:107216 [sender.py:send_request_defer():388] handle sender defer: 6
+2022-05-27 11:22:19,782 INFO    SenderThread:107216 [sender.py:transition_state():392] send defer: 7
+2022-05-27 11:22:19,782 DEBUG   HandlerThread:107216 [handler.py:handle_request():141] handle_request: defer
+2022-05-27 11:22:19,782 INFO    HandlerThread:107216 [handler.py:handle_request_defer():164] handle defer: 7
+2022-05-27 11:22:19,782 DEBUG   SenderThread:107216 [sender.py:send_request():249] send_request: defer
+2022-05-27 11:22:19,782 INFO    SenderThread:107216 [sender.py:send_request_defer():388] handle sender defer: 7
+2022-05-27 11:22:19,782 INFO    SenderThread:107216 [sender.py:transition_state():392] send defer: 8
+2022-05-27 11:22:19,782 DEBUG   HandlerThread:107216 [handler.py:handle_request():141] handle_request: defer
+2022-05-27 11:22:19,782 INFO    HandlerThread:107216 [handler.py:handle_request_defer():164] handle defer: 8
+2022-05-27 11:22:19,782 DEBUG   SenderThread:107216 [sender.py:send_request():249] send_request: defer
+2022-05-27 11:22:19,782 INFO    SenderThread:107216 [sender.py:send_request_defer():388] handle sender defer: 8
+2022-05-27 11:22:19,783 INFO    SenderThread:107216 [sender.py:transition_state():392] send defer: 9
+2022-05-27 11:22:19,783 DEBUG   HandlerThread:107216 [handler.py:handle_request():141] handle_request: defer
+2022-05-27 11:22:19,783 INFO    HandlerThread:107216 [handler.py:handle_request_defer():164] handle defer: 9
+2022-05-27 11:22:19,783 DEBUG   SenderThread:107216 [sender.py:send_request():249] send_request: defer
+2022-05-27 11:22:19,783 INFO    SenderThread:107216 [sender.py:send_request_defer():388] handle sender defer: 9
+2022-05-27 11:22:19,783 INFO    SenderThread:107216 [sender.py:transition_state():392] send defer: 10
+2022-05-27 11:22:19,783 DEBUG   SenderThread:107216 [sender.py:send():235] send: final
+2022-05-27 11:22:19,784 DEBUG   HandlerThread:107216 [handler.py:handle_request():141] handle_request: defer
+2022-05-27 11:22:19,784 INFO    HandlerThread:107216 [handler.py:handle_request_defer():164] handle defer: 10
+2022-05-27 11:22:19,784 DEBUG   SenderThread:107216 [sender.py:send_request():249] send_request: defer
+2022-05-27 11:22:19,784 INFO    SenderThread:107216 [sender.py:send_request_defer():388] handle sender defer: 10
+2022-05-27 11:22:19,889 DEBUG   HandlerThread:107216 [handler.py:handle_request():141] handle_request: poll_exit
+2022-05-27 11:22:19,889 DEBUG   SenderThread:107216 [sender.py:send_request():249] send_request: poll_exit
+2022-05-27 11:22:19,889 INFO    MainThread:107216 [wandb_run.py:_on_finish():1995] got exit ret: done: true
+exit_result {
+}
+local_info {
+}
+
+2022-05-27 11:22:19,998 DEBUG   HandlerThread:107216 [handler.py:handle_request():141] handle_request: sampled_history
+2022-05-27 11:22:19,999 DEBUG   HandlerThread:107216 [handler.py:handle_request():141] handle_request: get_summary
+2022-05-27 11:22:19,999 DEBUG   HandlerThread:107216 [handler.py:handle_request():141] handle_request: shutdown
+2022-05-27 11:22:19,999 INFO    HandlerThread:107216 [handler.py:finish():790] shutting down handler
+2022-05-27 11:22:20,789 INFO    WriterThread:107216 [datastore.py:close():281] close: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\offline-run-20220527_112025-2jkla6re\run-2jkla6re.wandb
+2022-05-27 11:22:20,897 INFO    SenderThread:107216 [sender.py:finish():1107] shutting down sender
+2022-05-27 11:22:21,006 INFO    MainThread:107216 [wandb_run.py:_footer_history_summary_info():3087] rendering history
+2022-05-27 11:22:21,006 INFO    MainThread:107216 [wandb_run.py:_footer_history_summary_info():3116] rendering summary
+2022-05-27 11:22:21,010 INFO    MainThread:107216 [internal.py:handle_exit():82] Internal process exited
