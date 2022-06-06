@@ -60,7 +60,7 @@ def train_network(data_module, filters=None, epochs=2, save_path=None, fixed_con
 def get_data_module(dataset, batch_size):
     match dataset.lower():
         case 'cifar10' | 'cifar-10':
-            data_module = pl_bolts.datamodules.CIFAR10DataModule(batch_size=batch_size, data_dir="data/", num_workers=os.cpu_count(), pin_memory=True)
+            data_module = pl_bolts.datamodules.CIFAR10DataModule(batch_size=batch_size, data_dir="data/", num_workers=4, pin_memory=True)
         case 'cifar100' | 'cifar-100':
             data_module = CIFAR100DataModule(batch_size=batch_size, data_dir="data/", num_workers=os.cpu_count(), pin_memory=True)
         case _:
@@ -102,6 +102,62 @@ def diversity_orig(acts):
                     dist[(batch*B) + (channel*C) + channel2] = (np.abs(acts[batch][channel2] - acts[batch][channel]))
                    
     return dist.mean()
+
+@numba.njit(parallel=True)
+def diversity_relative(acts):
+    B=len(acts)
+    C=len(acts[0])
+    pairwise = np.zeros((B,C,C))
+    for batch in numba.prange(B):
+        for channel in range(C):
+            for channel2 in range(channel+1, C):
+                dist = np.abs(acts[batch, channel]-acts[batch, channel2]).sum()
+                divisor = (np.abs(acts[batch, channel]).sum()) + (np.abs(acts[batch, channel2]).sum())
+                div=(dist / divisor)
+                # div=np.abs((acts[batch, channel]-acts[batch, channel2])/(acts[batch, channel]+acts[batch, channel2])).sum()
+                pairwise[batch, channel, channel2] = div
+                pairwise[batch, channel2, channel] = div
+    return(pairwise.sum())
+
+@numba.njit(parallel=True)
+def diversity_cosine_distance(acts):
+    B=len(acts)
+    C=len(acts[0])
+    pairwise = np.zeros((B,C,C))
+    for batch in numba.prange(B):
+        for channel in range(C):
+            c_flat = acts[batch, channel].flatten()
+            for channel2 in range(channel+1, C):
+                c2_flat = acts[batch, channel2].flatten()
+                dist = cosine_dist(c_flat, c2_flat)
+                # sim = np.dot(c_flat, c2_flat)/(np.linalg.norm(c_flat)*np.linalg.norm(c2_flat))
+                # dist = 1-sim
+                pairwise[batch, channel, channel2] = dist
+                pairwise[batch, channel2, channel] = dist
+    return(pairwise.sum())
+
+@numba.jit(nopython=True, parallel=True)
+def cosine_dist(u, v):
+    uv=0
+    uu=0
+    vv=0
+    for i in range(u.shape[0]):
+        uv+=u[i]*v[i]
+        uu+=u[i]*u[i]
+        vv+=v[i]*v[i]
+    cos_theta=1
+    if uu!=0 and vv!=0:
+        cos_theta=uv/np.sqrt(uu*vv)
+    return 1-cos_theta
+
+@numba.njit(parallel=True)
+def gram_shmidt_orthonormalize(filters):
+    B=len(filters)
+    for f in filters:
+        q, r = np.linalg.qr(f.reshape(f.shape[0], np.prod(f.shape[1:])))
+        f = q.reshape(f.shape)
+    return filters
+
 
 def plot_mean_and_bootstrapped_ci_multiple(input_data = None, title = 'overall', name = "change this", x_label = "x", y_label = "y", save_name="", compute_CI=True, maximum_possible=None, show=None, sample_interval=None):
     """ 

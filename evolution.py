@@ -35,7 +35,7 @@ parser.add_argument('--evo_num_runs', type=int, help='Number of runs used in evo
 parser.add_argument('--evo_tourney_size', type=int, help='Size of tournaments in evolutionary algorithm selection', default=None)
 parser.add_argument('--evo_num_winners', type=int, help='Number of winners in tournament in evolutionary algorithm', default=None)
 parser.add_argument('--evo_num_children', type=int, help='Number of children in evolutionary algorithm', default=None)
-    
+parser.add_argument('--diversity_type', default='absolute', type=str, help='Type of diversity metric to use for this experiment (ie. relative, absolute, original, etc.)')    
 args = parser.parse_args()
 
 # @numba.njit(parallel=True)
@@ -87,7 +87,7 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
     print("\nInitializing")
     for i in tqdm(range(population_size)): #while len(population) < population_size:
         model = Model()
-        net = helper.Net(num_classes=len(classnames), classnames=classnames)
+        net = helper.Net(num_classes=len(classnames), classnames=classnames, diversity=args.diversity_type)
         model.filters = net.get_filters()
         trainer.validate(net, dataloaders=data_module.val_dataloader(), verbose=False)
         model.fitness =  net.avg_novelty
@@ -146,6 +146,7 @@ def run():
     helper.config['evo_tourney_size'] = args.evo_tourney_size
     helper.config['evo_num_winners'] = args.evo_num_winners
     helper.config['evo_num_children'] = args.evo_num_children
+    helper.config['diversity_type'] = args.diversity_type
     helper.config['experiment_type'] = 'evolution'
     helper.update_config()
 
@@ -213,6 +214,7 @@ def run():
             helper.config['evo_tourney_size'] = args.evo_tourney_size
             helper.config['evo_num_winners'] = args.evo_num_winners
             helper.config['evo_num_children'] = args.evo_num_children
+            helper.config['diversity_type'] = args.diversity_type
             helper.config['experiment_type'] = 'evolution'
             helper.update_config()
             
