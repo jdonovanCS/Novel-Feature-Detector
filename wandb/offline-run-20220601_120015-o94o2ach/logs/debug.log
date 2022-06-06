@@ -1,0 +1,34 @@
+2022-06-01 12:00:15,289 INFO    MainThread:57712 [wandb_setup.py:_flush():75] Loading settings from C:\Users\Jordan\.config\wandb\settings
+2022-06-01 12:00:15,289 INFO    MainThread:57712 [wandb_setup.py:_flush():75] Loading settings from C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\settings
+2022-06-01 12:00:15,289 INFO    MainThread:57712 [wandb_setup.py:_flush():75] Loading settings from environment variables: {'start_method': 'thread'}
+2022-06-01 12:00:15,289 INFO    MainThread:57712 [wandb_setup.py:_flush():75] Inferring run settings from compute environment: {'program_relpath': 'evolution.py', 'program': 'C:\\Users\\Jordan\\Learning\\UVM\\Research Projects\\Novel-Feature-Detector\\evolution.py'}
+2022-06-01 12:00:15,289 INFO    MainThread:57712 [wandb_init.py:_log_setup():438] Logging user logs to C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\offline-run-20220601_120015-o94o2ach\logs\debug.log
+2022-06-01 12:00:15,289 INFO    MainThread:57712 [wandb_init.py:_log_setup():439] Logging internal logs to C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\offline-run-20220601_120015-o94o2ach\logs\debug-internal.log
+2022-06-01 12:00:15,289 INFO    MainThread:57712 [wandb_init.py:init():472] calling init triggers
+2022-06-01 12:00:15,289 INFO    MainThread:57712 [wandb_init.py:init():475] wandb.init called with sweep_config: {}
+config: {}
+2022-06-01 12:00:15,290 INFO    MainThread:57712 [wandb_init.py:init():525] starting backend
+2022-06-01 12:00:15,292 INFO    MainThread:57712 [backend.py:ensure_launched():219] starting backend process...
+2022-06-01 12:00:15,293 INFO    MainThread:57712 [backend.py:ensure_launched():224] started backend process with pid: 0
+2022-06-01 12:00:15,293 INFO    BackendThr:57712 [internal.py:wandb_internal():92] W&B internal server running at pid: 57712, started at: 2022-06-01 12:00:15.292551
+2022-06-01 12:00:15,293 INFO    MainThread:57712 [wandb_init.py:init():534] backend started and connected
+2022-06-01 12:00:15,294 INFO    MainThread:57712 [wandb_init.py:init():598] updated telemetry
+2022-06-01 12:00:15,296 INFO    WriterThread:57712 [datastore.py:open_for_write():77] open: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\offline-run-20220601_120015-o94o2ach\run-o94o2ach.wandb
+2022-06-01 12:00:15,334 INFO    MainThread:57712 [wandb_init.py:init():660] starting run threads in backend
+2022-06-01 12:00:15,444 ERROR   HandlerThread:57712 [meta.py:_save_conda():85] Error saving conda packages
+Traceback (most recent call last):
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\wandb\sdk\internal\meta.py", line 81, in _save_conda
+    subprocess.call(
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\subprocess.py", line 345, in call
+    with Popen(*popenargs, **kwargs) as p:
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\subprocess.py", line 966, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\subprocess.py", line 1435, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+FileNotFoundError: [WinError 2] The system cannot find the file specified
+2022-06-01 12:00:15,452 INFO    MainThread:57712 [wandb_run.py:_console_start():1896] atexit reg
+2022-06-01 12:00:15,452 INFO    MainThread:57712 [wandb_run.py:_redirect():1769] redirect: SettingsConsole.WRAP
+2022-06-01 12:00:15,453 INFO    MainThread:57712 [wandb_run.py:_redirect():1806] Wrapping output streams.
+2022-06-01 12:00:15,453 INFO    MainThread:57712 [wandb_run.py:_redirect():1830] Redirects installed.
+2022-06-01 12:00:15,453 INFO    MainThread:57712 [wandb_init.py:init():685] run started, returning control to user process
+2022-06-01 12:00:15,454 INFO    MainThread:57712 [wandb_run.py:_config_callback():1129] config_cb None None {'batch_size': 64, 'experiment_name': 'test relative diversity', 'evo_gens': 5, 'evo_pop': 10, 'evo_dataset_for_novelty': 'cifar10', 'evo_num_runs': 1, 'evo_tourney_size': 4, 'evo_num_winners': 2, 'evo_num_children': 10, 'diversity_type': 'relative', 'experiment_type': 'evolution'}

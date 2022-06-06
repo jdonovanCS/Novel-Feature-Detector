@@ -1,0 +1,44 @@
+#!/bin/bash
+## Required PBS Directives --------------------------------------
+#PBS -A ERDCV0089CDAG
+#PBS -q standard
+#PBS -l select=1:ncpus=44:mpiprocs=44
+#PBS -l walltime=40:00:00
+#PBS -l application=novel-feature-detector
+#PBS -j oe
+
+# env | sort
+# hostname
+# uname -a
+# lsb_release -a
+
+## Execution Block ----------------------------------------------
+# Environment Setup
+# cd to your scratch directory in /work
+cd $WORK/rditljtd/Novel-Feature-Detector
+
+# create a job-specific subdirectory based on JOBID and cd to it
+# JOBID=`echo ${PBS_JOBID} | cut -d '.' -f 1`
+# if [ ! -d ${JOBID} ]; then
+#   mkdir -p ${JOBID}
+# fi
+# cd ${JOBID}
+
+## Launching -----------------------------------------------------
+
+# copy executable from $HOME and submit it
+#cp ${HOME}/oil/main.py .
+#cp ${HOME}/oil/stats.py .
+#cp ${HOME}/oil/neural_arch.py .
+
+#cp ${HOME}/OilPanReplacement/mainStudy1_AllChoice.py .
+#cp ${HOME}/OilPanReplacement/stats.py .
+
+module load $PROJECTS_HOME/datools/modulefiles/anaconda/3
+source $HOME/.bashrc
+conda activate EC2
+
+#ccmrun python ${HOME}/amrdec_oil/main.py ${JOBID} > out.dat
+wandb login --relogin e50cb709dc2bf04072661be1d9b46ec60d59e556
+wandb online
+ccmrun python evolution.py --batch_size=64 --evo_tourney_size=4 --evo_num_winners=2 --evo_dataset_for_novelty=cifar10 --evo_pop_size=20 --evo_num_children=20 --evo_num_runs=5 --evo_gens=50 --diversity_type=relative --experiment_name="hpc full cifar10 val relative diversity"

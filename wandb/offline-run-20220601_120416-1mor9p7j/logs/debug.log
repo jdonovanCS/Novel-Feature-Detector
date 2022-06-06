@@ -1,0 +1,86 @@
+2022-06-01 12:04:16,695 INFO    MainThread:61024 [wandb_setup.py:_flush():75] Loading settings from C:\Users\Jordan\.config\wandb\settings
+2022-06-01 12:04:16,695 INFO    MainThread:61024 [wandb_setup.py:_flush():75] Loading settings from C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\settings
+2022-06-01 12:04:16,695 INFO    MainThread:61024 [wandb_setup.py:_flush():75] Loading settings from environment variables: {'start_method': 'thread'}
+2022-06-01 12:04:16,695 INFO    MainThread:61024 [wandb_setup.py:_flush():75] Inferring run settings from compute environment: {'program_relpath': 'evolution.py', 'program': 'C:\\Users\\Jordan\\Learning\\UVM\\Research Projects\\Novel-Feature-Detector\\evolution.py'}
+2022-06-01 12:04:16,696 INFO    MainThread:61024 [wandb_init.py:_log_setup():438] Logging user logs to C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\offline-run-20220601_120416-1mor9p7j\logs\debug.log
+2022-06-01 12:04:16,696 INFO    MainThread:61024 [wandb_init.py:_log_setup():439] Logging internal logs to C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\offline-run-20220601_120416-1mor9p7j\logs\debug-internal.log
+2022-06-01 12:04:16,696 INFO    MainThread:61024 [wandb_init.py:init():472] calling init triggers
+2022-06-01 12:04:16,696 INFO    MainThread:61024 [wandb_init.py:init():475] wandb.init called with sweep_config: {}
+config: {}
+2022-06-01 12:04:16,696 INFO    MainThread:61024 [wandb_init.py:init():525] starting backend
+2022-06-01 12:04:16,698 INFO    MainThread:61024 [backend.py:ensure_launched():219] starting backend process...
+2022-06-01 12:04:16,699 INFO    MainThread:61024 [backend.py:ensure_launched():224] started backend process with pid: 0
+2022-06-01 12:04:16,699 INFO    BackendThr:61024 [internal.py:wandb_internal():92] W&B internal server running at pid: 61024, started at: 2022-06-01 12:04:16.699253
+2022-06-01 12:04:16,699 INFO    MainThread:61024 [wandb_init.py:init():534] backend started and connected
+2022-06-01 12:04:16,701 INFO    MainThread:61024 [wandb_init.py:init():598] updated telemetry
+2022-06-01 12:04:16,702 INFO    WriterThread:61024 [datastore.py:open_for_write():77] open: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\offline-run-20220601_120416-1mor9p7j\run-1mor9p7j.wandb
+2022-06-01 12:04:16,734 INFO    MainThread:61024 [wandb_init.py:init():660] starting run threads in backend
+2022-06-01 12:04:16,843 ERROR   HandlerThread:61024 [meta.py:_save_conda():85] Error saving conda packages
+Traceback (most recent call last):
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\wandb\sdk\internal\meta.py", line 81, in _save_conda
+    subprocess.call(
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\subprocess.py", line 345, in call
+    with Popen(*popenargs, **kwargs) as p:
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\subprocess.py", line 966, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\subprocess.py", line 1435, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+FileNotFoundError: [WinError 2] The system cannot find the file specified
+2022-06-01 12:04:16,849 INFO    MainThread:61024 [wandb_run.py:_console_start():1896] atexit reg
+2022-06-01 12:04:16,850 INFO    MainThread:61024 [wandb_run.py:_redirect():1769] redirect: SettingsConsole.WRAP
+2022-06-01 12:04:16,850 INFO    MainThread:61024 [wandb_run.py:_redirect():1806] Wrapping output streams.
+2022-06-01 12:04:16,851 INFO    MainThread:61024 [wandb_run.py:_redirect():1830] Redirects installed.
+2022-06-01 12:04:16,851 INFO    MainThread:61024 [wandb_init.py:init():685] run started, returning control to user process
+2022-06-01 12:04:16,851 INFO    MainThread:61024 [wandb_run.py:_config_callback():1129] config_cb None None {'batch_size': 64, 'experiment_name': 'test relative diversity', 'evo_gens': 5, 'evo_pop': 10, 'evo_dataset_for_novelty': 'cifar10', 'evo_num_runs': 1, 'evo_tourney_size': 4, 'evo_num_winners': 2, 'evo_num_children': 10, 'diversity_type': 'relative', 'experiment_type': 'evolution'}
+2022-06-01 12:06:07,286 INFO    MainThread:61024 [wandb_run.py:_atexit_cleanup():1865] got exitcode: 0
+2022-06-01 12:06:07,287 INFO    MainThread:61024 [wandb_run.py:_restore():1837] restore
+2022-06-01 12:06:08,252 INFO    SenderThread:61024 [sender.py:send_exit():371] handling exit code: 0
+2022-06-01 12:06:08,253 INFO    SenderThread:61024 [sender.py:send_exit():373] handling runtime: 111
+2022-06-01 12:06:08,253 INFO    SenderThread:61024 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-06-01 12:06:08,253 INFO    SenderThread:61024 [sender.py:send_exit():379] send defer
+2022-06-01 12:06:08,254 INFO    HandlerThread:61024 [handler.py:handle_request_defer():164] handle defer: 0
+2022-06-01 12:06:08,254 INFO    MainThread:61024 [wandb_run.py:_on_finish():1995] got exit ret: 
+2022-06-01 12:06:08,254 INFO    SenderThread:61024 [sender.py:send_request_defer():388] handle sender defer: 0
+2022-06-01 12:06:08,255 INFO    SenderThread:61024 [sender.py:transition_state():392] send defer: 1
+2022-06-01 12:06:08,255 INFO    HandlerThread:61024 [handler.py:handle_request_defer():164] handle defer: 1
+2022-06-01 12:06:08,388 INFO    SenderThread:61024 [sender.py:send_request_defer():388] handle sender defer: 1
+2022-06-01 12:06:08,388 INFO    SenderThread:61024 [sender.py:transition_state():392] send defer: 2
+2022-06-01 12:06:08,389 INFO    HandlerThread:61024 [handler.py:handle_request_defer():164] handle defer: 2
+2022-06-01 12:06:08,389 INFO    MainThread:61024 [wandb_run.py:_on_finish():1995] got exit ret: 
+2022-06-01 12:06:08,389 INFO    SenderThread:61024 [sender.py:send_request_defer():388] handle sender defer: 2
+2022-06-01 12:06:08,390 INFO    SenderThread:61024 [sender.py:transition_state():392] send defer: 3
+2022-06-01 12:06:08,390 INFO    HandlerThread:61024 [handler.py:handle_request_defer():164] handle defer: 3
+2022-06-01 12:06:08,390 INFO    SenderThread:61024 [sender.py:send_request_defer():388] handle sender defer: 3
+2022-06-01 12:06:08,390 INFO    SenderThread:61024 [sender.py:transition_state():392] send defer: 4
+2022-06-01 12:06:08,390 INFO    HandlerThread:61024 [handler.py:handle_request_defer():164] handle defer: 4
+2022-06-01 12:06:08,391 INFO    SenderThread:61024 [sender.py:send_request_defer():388] handle sender defer: 4
+2022-06-01 12:06:08,391 INFO    SenderThread:61024 [sender.py:transition_state():392] send defer: 5
+2022-06-01 12:06:08,391 INFO    HandlerThread:61024 [handler.py:handle_request_defer():164] handle defer: 5
+2022-06-01 12:06:08,391 INFO    SenderThread:61024 [sender.py:send_request_defer():388] handle sender defer: 5
+2022-06-01 12:06:08,391 INFO    SenderThread:61024 [sender.py:transition_state():392] send defer: 6
+2022-06-01 12:06:08,391 INFO    HandlerThread:61024 [handler.py:handle_request_defer():164] handle defer: 6
+2022-06-01 12:06:08,392 INFO    SenderThread:61024 [sender.py:send_request_defer():388] handle sender defer: 6
+2022-06-01 12:06:08,392 INFO    SenderThread:61024 [sender.py:transition_state():392] send defer: 7
+2022-06-01 12:06:08,392 INFO    HandlerThread:61024 [handler.py:handle_request_defer():164] handle defer: 7
+2022-06-01 12:06:08,392 INFO    SenderThread:61024 [sender.py:send_request_defer():388] handle sender defer: 7
+2022-06-01 12:06:08,392 INFO    SenderThread:61024 [sender.py:transition_state():392] send defer: 8
+2022-06-01 12:06:08,392 INFO    HandlerThread:61024 [handler.py:handle_request_defer():164] handle defer: 8
+2022-06-01 12:06:08,392 INFO    SenderThread:61024 [sender.py:send_request_defer():388] handle sender defer: 8
+2022-06-01 12:06:08,392 INFO    SenderThread:61024 [sender.py:transition_state():392] send defer: 9
+2022-06-01 12:06:08,393 INFO    HandlerThread:61024 [handler.py:handle_request_defer():164] handle defer: 9
+2022-06-01 12:06:08,393 INFO    SenderThread:61024 [sender.py:send_request_defer():388] handle sender defer: 9
+2022-06-01 12:06:08,393 INFO    SenderThread:61024 [sender.py:transition_state():392] send defer: 10
+2022-06-01 12:06:08,393 INFO    HandlerThread:61024 [handler.py:handle_request_defer():164] handle defer: 10
+2022-06-01 12:06:08,394 INFO    SenderThread:61024 [sender.py:send_request_defer():388] handle sender defer: 10
+2022-06-01 12:06:08,499 INFO    MainThread:61024 [wandb_run.py:_on_finish():1995] got exit ret: done: true
+exit_result {
+}
+local_info {
+}
+
+2022-06-01 12:06:08,609 INFO    HandlerThread:61024 [handler.py:finish():790] shutting down handler
+2022-06-01 12:06:09,399 INFO    WriterThread:61024 [datastore.py:close():281] close: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\offline-run-20220601_120416-1mor9p7j\run-1mor9p7j.wandb
+2022-06-01 12:06:09,507 INFO    SenderThread:61024 [sender.py:finish():1107] shutting down sender
+2022-06-01 12:06:09,616 INFO    MainThread:61024 [wandb_run.py:_footer_history_summary_info():3087] rendering history
+2022-06-01 12:06:09,616 INFO    MainThread:61024 [wandb_run.py:_footer_history_summary_info():3116] rendering summary
+2022-06-01 12:06:09,618 INFO    MainThread:61024 [internal.py:handle_exit():82] Internal process exited
