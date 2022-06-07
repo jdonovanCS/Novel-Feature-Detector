@@ -60,7 +60,7 @@ def train_network(data_module, filters=None, epochs=2, save_path=None, fixed_con
 def get_data_module(dataset, batch_size):
     match dataset.lower():
         case 'cifar10' | 'cifar-10':
-            data_module = pl_bolts.datamodules.CIFAR10DataModule(batch_size=batch_size, data_dir="data/", num_workers=4, pin_memory=True)
+            data_module = pl_bolts.datamodules.CIFAR10DataModule(batch_size=batch_size, data_dir="data/", num_workers=os.cpu_count(), pin_memory=True)
         case 'cifar100' | 'cifar-100':
             data_module = CIFAR100DataModule(batch_size=batch_size, data_dir="data/", num_workers=os.cpu_count(), pin_memory=True)
         case _:
@@ -136,7 +136,7 @@ def diversity_cosine_distance(acts):
                 pairwise[batch, channel2, channel] = dist
     return(pairwise.sum())
 
-@numba.jit(nopython=True, parallel=True)
+@numba.njit(nopython=True, parallel=True)
 def cosine_dist(u, v):
     uv=0
     uu=0
