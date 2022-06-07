@@ -237,7 +237,7 @@ class Net(pl.LightningModule):
             self.conv_layers[i].weight.data = filters[i]
     
     def get_filters(self):
-        return [m.weight.data for m in self.conv_layers]
+        return [m.weight.data.detach().cpu() for m in self.conv_layers]
 
     def compute_feature_novelty(self):
         
