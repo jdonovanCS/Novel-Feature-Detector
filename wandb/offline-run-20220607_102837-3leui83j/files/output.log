@@ -1,0 +1,69 @@
+Files already downloaded and verified
+Files already downloaded and verified
+Running Evolution for fitness
+Initializing
+Validation DataLoader 0: 100%|███████████████████████████████████████████████████████| 157/157 [01:38<00:00,  1.60it/s]
+Validation DataLoader 0: 100%|███████████████████████████████████████████████████████| 157/157 [01:35<00:00,  1.65it/s]
+Validation DataLoader 0: 100%|███████████████████████████████████████████████████████| 157/157 [01:35<00:00,  1.64it/s]
+Validation DataLoader 0: 100%|███████████████████████████████████████████████████████| 157/157 [01:35<00:00,  1.65it/s]
+Validation DataLoader 0: 100%|███████████████████████████████████████████████████████| 157/157 [01:36<00:00,  1.62it/s]
+Validation DataLoader 0: 100%|███████████████████████████████████████████████████████| 157/157 [01:34<00:00,  1.67it/s]
+Validation DataLoader 0: 100%|███████████████████████████████████████████████████████| 157/157 [01:35<00:00,  1.65it/s]
+Validation DataLoader 0: 100%|███████████████████████████████████████████████████████| 157/157 [01:35<00:00,  1.64it/s]
+Validation DataLoader 0: 100%|███████████████████████████████████████████████████████| 157/157 [01:36<00:00,  1.63it/s]
+Validation DataLoader 0: 100%|███████████████████████████████████████████████████████| 157/157 [01:36<00:00,  1.62it/s]
+Validation DataLoader 0: 100%|███████████████████████████████████████████████████████| 157/157 [01:35<00:00,  1.64it/s]
+Validation DataLoader 0: 100%|███████████████████████████████████████████████████████| 157/157 [01:34<00:00,  1.65it/s]
+Validation DataLoader 0: 100%|███████████████████████████████████████████████████████| 157/157 [01:35<00:00,  1.64it/s]
+Validation DataLoader 0: 100%|███████████████████████████████████████████████████████| 157/157 [01:34<00:00,  1.66it/s]
+Validation DataLoader 0: 100%|███████████████████████████████████████████████████████| 157/157 [01:34<00:00,  1.66it/s]
+Validation DataLoader 0: 100%|███████████████████████████████████████████████████████| 157/157 [01:35<00:00,  1.65it/s]
+Validation DataLoader 0: 100%|███████████████████████████████████████████████████████| 157/157 [01:36<00:00,  1.63it/s]
+Validation DataLoader 0: 100%|███████████████████████████████████████████████████████| 157/157 [01:37<00:00,  1.61it/s]
+Validation DataLoader 0: 100%|███████████████████████████████████████████████████████| 157/157 [01:36<00:00,  1.63it/s]
+Validation DataLoader 0: 100%|███████████████████████████████████████████████████████| 157/157 [01:33<00:00,  1.67it/s]
+Generations
+Validation DataLoader 0: 100%|███████████████████████████████████████████████████████| 157/157 [01:34<00:00,  1.66it/s]
+Validation DataLoader 0: 100%|███████████████████████████████████████████████████████| 157/157 [01:34<00:00,  1.66it/s]
+Validation DataLoader 0:  32%|█████████████████▊                                      | 50/157 [00:39<01:24,  1.27it/s]
+100%|██████████████████████████████████████████████████████████████████████████████████| 20/20 [32:05<00:00, 96.30s/it]
+  0%|                                                                                            | 0/5 [04:03<?, ?it/s]
+  0%|                                                                                            | 0/1 [36:09<?, ?it/s]
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 247, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 200, in run
+    solution_over_time, fitness_over_time = evolution(generations=n_iters, population_size=pop_size, num_children=num_children, tournament_size=tournament_size, num_winners=num_winners, evolution_type=run_name)
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 118, in evolution
+    trainer.validate(net, dataloaders=data_module.val_dataloader(), verbose=False)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\trainer\trainer.py", line 851, in validate
+    return self._call_and_handle_interrupt(self._validate_impl, model, dataloaders, ckpt_path, verbose, datamodule)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\trainer\trainer.py", line 724, in _call_and_handle_interrupt
+    return trainer_fn(*args, **kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\trainer\trainer.py", line 898, in _validate_impl
+    results = self._run(model, ckpt_path=self.ckpt_path)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\trainer\trainer.py", line 1237, in _run
+    results = self._run_stage()
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\trainer\trainer.py", line 1321, in _run_stage
+    return self._run_evaluate()
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\trainer\trainer.py", line 1366, in _run_evaluate
+    eval_loop_results = self._evaluation_loop.run()
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\loops\base.py", line 204, in run
+    self.advance(*args, **kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\loops\dataloader\evaluation_loop.py", line 153, in advance
+    dl_outputs = self.epoch_loop.run(self._data_fetcher, dl_max_batches, kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\loops\base.py", line 204, in run
+    self.advance(*args, **kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\loops\epoch\evaluation_epoch_loop.py", line 127, in advance
+    output = self._evaluation_step(**kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\loops\epoch\evaluation_epoch_loop.py", line 222, in _evaluation_step
+    output = self.trainer._call_strategy_hook("validation_step", *kwargs.values())
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\trainer\trainer.py", line 1766, in _call_strategy_hook
+    output = fn(*args, **kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\strategies\strategy.py", line 344, in validation_step
+    return self.model.validation_step(*args, **kwargs)
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\net.py", line 138, in validation_step
+    novelty_score = self.compute_feature_novelty()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\net.py", line 263, in compute_feature_novelty
+    self.activations[i][0] = self.activations[i][0].detach().cpu().numpy()
+AttributeError: 'numpy.ndarray' object has no attribute 'detach'
