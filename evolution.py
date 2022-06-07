@@ -150,7 +150,7 @@ def run():
     helper.config['experiment_type'] = 'evolution'
     helper.update_config()
 
-    random_image_paths = helper.create_random_images(64)
+    # random_image_paths = helper.create_random_images(64)
     global data_module
     data_module = helper.get_data_module(args.evo_dataset_for_novelty, batch_size=args.batch_size)
     data_module.prepare_data()
