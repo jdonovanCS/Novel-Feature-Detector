@@ -20,6 +20,8 @@ from model import Model
 import numba
 from pytorch_lightning.loggers import WandbLogger
 import pytorch_lightning as pl
+# import cProfile
+# import pstats
 
 
 # TODO: Why not use gradient descent since fitness function is differentiable. Should probably compare to that.
@@ -89,7 +91,14 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
         model = Model()
         net = helper.Net(num_classes=len(classnames), classnames=classnames, diversity=args.diversity_type)
         model.filters = net.get_filters()
+        # with torch.profiler.profile(activities=[torch.profiler.ProfilerActivity.CPU, torch.profiler.ProfilerActivity.CUDA]) as p:
+        # prof = cProfile.Profile()
+        # prof.enable()
         trainer.validate(net, dataloaders=data_module.val_dataloader(), verbose=False)
+        # prof.disable()
+        # stats = pstats.Stats(prof).strip_dirs().sort_stats("cumtime")
+        # stats.print_stats(200) # top 10 rows
+        # print(p.key_averages().table(sort_by='cpu_time_total'))
         model.fitness =  net.avg_novelty
         population.append(model)
         helper.wandb.log({'gen': 0, 'individual': i, 'fitness': model.fitness})
