@@ -136,7 +136,7 @@ def diversity_cosine_distance(acts):
                 pairwise[batch, channel2, channel] = dist
     return(pairwise.sum())
 
-@numba.njit(nopython=True, parallel=True)
+@numba.njit(parallel=True)
 def cosine_dist(u, v):
     uv=0
     uu=0
