@@ -58,6 +58,9 @@ def run():
         os.mkdir('output/' + experiment_name)
     with open('output/' + experiment_name + '/random_gen_solutions.pickle', 'wb') as f:
         pickle.dump(sol_dict, f)
+    for k,v in sol_dict.items():
+        with open('output/' + experiment_name + '/solutions_over_time_{}.npy'.format(k), 'wb') as f:
+            np.save(f, v)
     with open('output/' + experiment_name + '/random_gen_fitnesses.txt', 'a+') as f:
         f.write(str(fitnesses))
 
