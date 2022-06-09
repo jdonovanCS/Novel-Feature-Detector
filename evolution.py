@@ -17,7 +17,6 @@ from tqdm import tqdm
 import argparse
 import gc
 from model import Model
-import numba
 from pytorch_lightning.loggers import WandbLogger
 import pytorch_lightning as pl
 import cProfile
@@ -41,7 +40,6 @@ parser.add_argument('--diversity_type', default='absolute', type=str, help='Type
 parser.add_argument('--profile', help='Profile validation epoch during evolution', default=False, action='store_true') 
 args = parser.parse_args()
 
-# @numba.njit(parallel=True)
 def mutate(filters):
     # select a single 3x3 filter in one of the convolutional layers and replace it with a random new filter.
     selected_layer = random.randint(0,len(filters)-1)
@@ -204,6 +202,11 @@ def run():
     fitness_results = {}
     solution_results = {}
 
+    if not os.path.isdir('plots/' + experiment_name):
+        os.mkdir('plots/' + experiment_name)
+    if not os.path.isdir('output/' + experiment_name):
+        os.mkdir('output/' + experiment_name)
+
     for run_name in ['fitness']:
         fitness_results[run_name] = np.zeros((num_runs, n_iters))
         solution_results[run_name] = np.array([[Model() for i in range(n_iters)]for j in range(num_runs)], dtype=object)
@@ -232,11 +235,12 @@ def run():
             helper.config['diversity_type'] = args.diversity_type
             helper.config['experiment_type'] = 'evolution'
             helper.update_config()
+
             
-    if not os.path.isdir('plots/' + experiment_name):
-        os.mkdir('plots/' + experiment_name)
-    if not os.path.isdir('output/' + experiment_name):
-        os.mkdir('output/' + experiment_name)
+            for k,v in solution_results.items():
+                with open('output/' + experiment_name + '/solutions_over_time_{}.npy'.format(k), 'wb') as f:
+                    np.save(f, v)
+
     with open('output/' + experiment_name + '/solutions_over_time.pickle', 'wb') as f:
         pickle.dump(solution_results, f)
     with open('output/' + experiment_name + '/fitness_over_time.txt', 'a+') as f:
