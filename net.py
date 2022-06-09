@@ -269,6 +269,8 @@ class Net(pl.LightningModule):
                 l.append(helper.diversity(self.activations[i][0]))
             elif self.diversity=='cosine':
                 l.append(helper.diversity_cosine_distance(self.activations[i][0]))
+            elif self.diversity == 'constant':
+                l.append(helper.diversity_constant(self.activations[i][0]))
             else:
                 l.append(helper.diversity(self.activations[i][0]))
         
