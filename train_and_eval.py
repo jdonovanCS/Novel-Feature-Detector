@@ -36,26 +36,25 @@ def run():
 
     torch.multiprocessing.freeze_support()
 
-    pickled_filters = {}
+    stored_filters = {}
     
     experiment_name = args.experiment_name
     training_interval = args.training_interval
     fixed_conv = args.fixed_conv
+    name = 'random'
+    if args.evo or args.random == None or not args.random:
+        name = 'fitness'
     filename = ''
-    if args.random:
-        filename = 'output/' + experiment_name + '/random_gen_solutions.pickle'
-    else:
-        filename = "output/" + experiment_name + "/solutions_over_time.pickle"
+    filename = 'output/' + experiment_name + '/solutions_over_time_{}.npy'.format(name)
 
-    # get filters from pickle file
-    with open(filename, 'rb') as f:
-        pickled_filters = pickle.load(f)
+    # get filters from numpy file
+    stored_filters = np.load(f)
 
     if args.random:
-        random.shuffle(pickled_filters['random'][0])
-        pickled_filters['random'] = np.array(pickled_filters['random'])
+        random.shuffle(stored_filters[0])
+        stored_filters = np.array(stored_filters)
         with open(filename, 'wb') as f:
-            pickled_filters = pickle.dump(f)
+            np.save(stored_filters, f)
     
     helper.run(seed=False)
 
@@ -86,42 +85,42 @@ def run():
     
     # run training and evaluation and record metrics in above variables
     # for each type of evolution ran
-    for name in pickled_filters.keys():
-        if args.evo or args.random == None or not args.random: 
-            skip = args.skip
-            rand_skip=1
-        else: 
-            skip=0
-            rand_skip = args.skip+1
-        for run_num in range(skip, len(pickled_filters[name])):
-            # run_num = np.where(pickled_filters[name] == filters_list)[0][0]
-            # for each generation train the solution output at that generation
-            for i in range(len(pickled_filters[name][run_num])):
-                # if we only want to train the solution from the final generation, continue
-                if training_interval != 0 and i*1.0 not in [(len(pickled_filters[name][run_num])/(1/training_interval)*j)-1 for j in range(rand_skip, int(1/training_interval)+1)]:
-                    continue
-                
-                # else train the network and collect the metrics
-                save_path = "trained_models/trained/conv{}_e{}_n{}_r{}_g{}.pth".format(not fixed_conv, experiment_name, name, run_num, i)
-                print('Training and Evaluating: {} Gen: {} Run: {}'.format(name, i, run_num))
-                record_progress = helper.train_network(data_module=data_module, filters=pickled_filters[name][run_num][i], epochs=epochs, save_path=save_path, fixed_conv=fixed_conv, novelty_interval=int(args.novelty_interval), val_interval=int(args.test_accuracy_interval))
-                helper.run(seed=False)
-                helper.config['dataset'] = args.dataset.lower()
-                helper.config['batch_size'] = args.batch_size
-                helper.config['experiment_name'] = args.experiment_name
-                helper.config['evo_gens'] = args.evo_gens
-                helper.config['evo_pop_size'] = args.evo_pop_size
-                helper.config['evo_dataset_for_novelty'] = args.evo_dataset_for_novelty
-                helper.config['evo'] = args.evo or args.random == None or not args.random
-                helper.config['evo_num_runs'] = args.evo_num_runs
-                helper.config['evo_tourney_size'] = args.evo_tourney_size
-                helper.config['evo_num_winners'] = args.evo_num_winners
-                helper.config['evo_num_children'] = args.evo_num_children
-                helper.config['experiment_type'] = 'training'
-                helper.config['fixed_conv'] = fixed_conv == True
-                helper.update_config()
-                # for c in classlist:
-                #     classwise_accuracy_record[name][run_num][i][np.where(classlist==c)[0][0]] = record_accuracy[c]
+
+    if args.evo or args.random == None or not args.random: 
+        skip = args.skip
+        rand_skip=1
+    else: 
+        skip=0
+        rand_skip = args.skip+1
+    for run_num in range(skip, len(stored_filters)):
+        # run_num = np.where(stored_filters[name] == filters_list)[0][0]
+        # for each generation train the solution output at that generation
+        for i in range(len(stored_filters[run_num])):
+            # if we only want to train the solution from the final generation, continue
+            if training_interval != 0 and i*1.0 not in [(len(stored_filters[run_num])/(1/training_interval)*j)-1 for j in range(rand_skip, int(1/training_interval)+1)]:
+                continue
+            
+            # else train the network and collect the metrics
+            save_path = "trained_models/trained/conv{}_e{}_n{}_r{}_g{}.pth".format(not fixed_conv, experiment_name, name, run_num, i)
+            print('Training and Evaluating: {} Gen: {} Run: {}'.format(name, i, run_num))
+            record_progress = helper.train_network(data_module=data_module, filters=stored_filters[name][run_num][i], epochs=epochs, save_path=save_path, fixed_conv=fixed_conv, novelty_interval=int(args.novelty_interval), val_interval=int(args.test_accuracy_interval))
+            helper.run(seed=False)
+            helper.config['dataset'] = args.dataset.lower()
+            helper.config['batch_size'] = args.batch_size
+            helper.config['experiment_name'] = args.experiment_name
+            helper.config['evo_gens'] = args.evo_gens
+            helper.config['evo_pop_size'] = args.evo_pop_size
+            helper.config['evo_dataset_for_novelty'] = args.evo_dataset_for_novelty
+            helper.config['evo'] = args.evo or args.random == None or not args.random
+            helper.config['evo_num_runs'] = args.evo_num_runs
+            helper.config['evo_tourney_size'] = args.evo_tourney_size
+            helper.config['evo_num_winners'] = args.evo_num_winners
+            helper.config['evo_num_children'] = args.evo_num_children
+            helper.config['experiment_type'] = 'training'
+            helper.config['fixed_conv'] = fixed_conv == True
+            helper.update_config()
+            # for c in classlist:
+            #     classwise_accuracy_record[name][run_num][i][np.where(classlist==c)[0][0]] = record_accuracy[c]
 
     # with open('output/' + experiment_name + '/classwise_accuracy_{}over_time.pickle'.format(name_add), 'wb') as f:
     #     pickle.dump(classwise_accuracy_record,f)
