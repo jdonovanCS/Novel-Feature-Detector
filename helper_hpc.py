@@ -119,7 +119,7 @@ def diversity_relative(acts):
                 pairwise[batch, channel2, channel] = div
     return(pairwise.sum())
 
-@numba.njit(parallel=True)
+@numba.njit(parallel=True, fastmath=True)
 def diversity_cosine_distance(acts):
     B=len(acts)
     C=len(acts[0])
@@ -129,6 +129,18 @@ def diversity_cosine_distance(acts):
             c_flat = acts[batch, channel].flatten()
             for channel2 in range(channel+1, C):
                 c2_flat = acts[batch, channel2].flatten()
+                # uv=0
+                # uu=0
+                # vv=0
+                # for i in range(c_flat.shape[0]):
+                #     uv+=c_flat[i]*c2_flat[i]
+                #     uu+=c_flat[i]*c_flat[i]
+                #     vv+=c2_flat[i]*c2_flat[i]
+                # cos_theta=1
+                # if uu!=0 and vv!=0:
+                #     cos_theta=uv/np.sqrt(uu*vv)
+                # cos_theta = np.dot(c_flat, c2_flat) / (np.linalg.norm(c_flat) * np.linalg.norm(c2_flat))
+                # dist = 1-cos_theta
                 dist = cosine_dist(c_flat, c2_flat)
                 # sim = np.dot(c_flat, c2_flat)/(np.linalg.norm(c_flat)*np.linalg.norm(c2_flat))
                 # dist = 1-sim
@@ -136,8 +148,8 @@ def diversity_cosine_distance(acts):
                 pairwise[batch, channel2, channel] = dist
     return(pairwise.sum())
 
-@numba.njit(parallel=True)
-def cosine_dist(u, v):
+@numba.njit(parallel=True, fastmath=True)
+def cosine_dist(u:np.ndarray, v:np.ndarray):
     uv=0
     uu=0
     vv=0
@@ -157,6 +169,13 @@ def gram_shmidt_orthonormalize(filters):
         q, r = np.linalg.qr(f.reshape(f.shape[0], np.prod(f.shape[1:])))
         f = q.reshape(f.shape)
     return filters
+
+@numba.njit(parallel=True)
+def diversity_constant(acts):
+    constants = np.zeros((len(acts)))
+    for i in numba.prange(len(acts)):
+        constants[i] = i
+    return sum(constants)
 
 
 def plot_mean_and_bootstrapped_ci_multiple(input_data = None, title = 'overall', name = "change this", x_label = "x", y_label = "y", save_name="", compute_CI=True, maximum_possible=None, show=None, sample_interval=None):
