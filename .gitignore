@@ -1,3 +1,4 @@
 data/*
 trained_models/*
 output/*/*random_gen_solutions.*
+output/*/solutions_over_time_random.*
