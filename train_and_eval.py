@@ -29,7 +29,7 @@ parser.add_argument('--evo_tourney_size', help='Size of tournaments in evolution
 parser.add_argument('--evo_num_winners', help='Number of winners in tournament in evolutionary algorithm', default=None)
 parser.add_argument('--evo_num_children', help='Number of children in evolutionary algorithm', default=None)
 parser.add_argument('--skip', default=0, help='skip the first n models to train, used mostly when a run fails partway through', type=int)
-    
+parser.add_argument('--diversity_type', type=str, default='absolute', help='Type of diversity metric to use for this experiment (ie. absolute, relative, original etc.)')
 args = parser.parse_args()
 
 def run():
@@ -80,6 +80,7 @@ def run():
     helper.config['evo_num_children'] = args.evo_num_children
     helper.config['experiment_type'] = 'training'
     helper.config['fixed_conv'] = fixed_conv == True
+    helper.config['diversity_type'] = args.diversity_type
     helper.update_config()
     
     
