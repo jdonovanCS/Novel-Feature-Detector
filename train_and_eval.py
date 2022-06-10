@@ -7,6 +7,7 @@ import pickle
 import os
 import argparse
 import random
+from functools import partial
 
 parser=argparse.ArgumentParser(description="Process some input files")
 parser.add_argument('--dataset', help='which dataset should be used for training metric, choices are: cifar-10, cifar-100', default='random')
@@ -48,13 +49,16 @@ def run():
     filename = 'output/' + experiment_name + '/solutions_over_time_{}.npy'.format(name)
 
     # get filters from numpy file
-    stored_filters = np.load(f)
+    np_load_old = partial(np.load)
+    np.load = lambda *a,**k: np_load_old(*a, allow_pickle=True, **k)
+    stored_filters = np.load(filename)
+    np.load = np_load_old
 
     if args.random:
         random.shuffle(stored_filters[0])
         stored_filters = np.array(stored_filters)
         with open(filename, 'wb') as f:
-            np.save(stored_filters, f)
+            np.save(f, stored_filters)
     
     helper.run(seed=False)
 
@@ -93,7 +97,7 @@ def run():
         skip=0
         rand_skip = args.skip+1
     for run_num in range(skip, len(stored_filters)):
-        # run_num = np.where(stored_filters[name] == filters_list)[0][0]
+        # run_num = np.where(stored_filters == filters_list)[0][0]
         # for each generation train the solution output at that generation
         for i in range(len(stored_filters[run_num])):
             # if we only want to train the solution from the final generation, continue
@@ -103,7 +107,7 @@ def run():
             # else train the network and collect the metrics
             save_path = "trained_models/trained/conv{}_e{}_n{}_r{}_g{}.pth".format(not fixed_conv, experiment_name, name, run_num, i)
             print('Training and Evaluating: {} Gen: {} Run: {}'.format(name, i, run_num))
-            record_progress = helper.train_network(data_module=data_module, filters=stored_filters[name][run_num][i], epochs=epochs, save_path=save_path, fixed_conv=fixed_conv, novelty_interval=int(args.novelty_interval), val_interval=int(args.test_accuracy_interval))
+            record_progress = helper.train_network(data_module=data_module, filters=stored_filters[run_num][i], epochs=epochs, save_path=save_path, fixed_conv=fixed_conv, novelty_interval=int(args.novelty_interval), val_interval=int(args.test_accuracy_interval))
             helper.run(seed=False)
             helper.config['dataset'] = args.dataset.lower()
             helper.config['batch_size'] = args.batch_size
@@ -120,10 +124,11 @@ def run():
             helper.config['fixed_conv'] = fixed_conv == True
             helper.update_config()
             # for c in classlist:
-            #     classwise_accuracy_record[name][run_num][i][np.where(classlist==c)[0][0]] = record_accuracy[c]
+            #     classwise_accuracy_record[run_num][i][np.where(classlist==c)[0][0]] = record_accuracy[c]
 
     # with open('output/' + experiment_name + '/classwise_accuracy_{}over_time.pickle'.format(name_add), 'wb') as f:
     #     pickle.dump(classwise_accuracy_record,f)
 
 if __name__ == '__main__':
     run()
+
