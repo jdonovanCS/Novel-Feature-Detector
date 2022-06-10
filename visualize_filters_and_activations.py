@@ -8,6 +8,8 @@ import pickle
 from net import Net
 import numpy as np
 import os
+import time
+import torch
 
 
 # arguments
@@ -78,47 +80,60 @@ def run():
     data_module.setup()
     
     # visualize filters
-    for layer in [filters[0]]:
+    for layer in filters:
         print(layer.shape)
         plt.figure()
         for i in range(len(layer)):
-            # for j in range(len(layer[0])):
-            #     values = np.array(255*((layer[i][j] + 1) /2)).astype(np.int64)
-            #     rows = cols = int(np.ceil(np.sqrt(len(layer)*3)))
-            #     plt.subplot(rows, cols, i*len(layer[0])+j+1)
-            #     plt.imshow(values, cmap="gray", vmin = 0, vmax = 255,interpolation='none')
-            values = np.array(255*((layer[i] + 1) /2)).astype(np.int64)
-            if len(np.where(values > 255)) > 0:
-                print(values)
-                print(layer[i])
-            rows = cols = int(np.ceil(np.sqrt(len(layer))))
-            plt.subplot(rows, cols, i+1)
-            plt.imshow(values.transpose(1, 2, 0), vmin = 0, vmax = 255,interpolation='none')
+            for j in range(len(layer[i])):
+                values = np.array(255*((layer[i][j] + 1) /2)).astype(np.int64)
+                rows = len(layer[i])
+                cols = len(layer)
+                plt.subplot(rows, cols, i*len(layer[0]) + (j+1))
+                plt.imshow(values, cmap="gray", vmin = 0, vmax = 255,interpolation='none')
+            # values = np.array(255*((layer[i] + 1) /2)).astype(np.int64)
+            # if len(np.where(values > 255)) > 0:
+            #     print(values)
+            #     print(layer[i])
+            # rows = cols = int(np.ceil(np.sqrt(len(layer))))
+            # plt.subplot(rows, cols, i+1)
+            # plt.imshow(values.transpose(1, 2, 0), vmin = 0, vmax = 255,interpolation='none')
         plt.setp(plt.gcf().get_axes(), xticks=[], yticks=[])
         plt.show()
 
     # visualize activations
-    data_module = helper.get_data_module(run.config['evo_dataset_for_novelty'], batch_size=1)
-    data_module.prepare_data()
-    data_module.setup()
-    classnames = list(data_module.dataset_test.classes)
-    net = Net(num_classes=len(classnames), classnames=classnames)
-    net.set_filters = filters
-    net.validation_step(next(iter(data_module.val_dataloader())),0)
+    if os.path.isfile('tensor.pt'):
+        x = torch.load('tensor.pt')
+    else:
+        data_module = helper.get_data_module(run.config['evo_dataset_for_novelty'], batch_size=1)
+        data_module.prepare_data()
+        data_module.setup()
+        classnames = list(data_module.dataset_test.classes)
+        net = Net(num_classes=len(classnames), classnames=classnames)
+        net.set_filters = filters
+        batch = next(iter(data_module.val_dataloader()))
+        x, y = batch
+        torch.save(x, 'tensor.pt')
+        x = torch.load('tensor.pt')
+    net.forward(x, get_activations=True)
     activations = net.activations
     l = []
-    for i in range(len(activations)):
-        activations[i][0] = activations[i][0].detach().cpu().numpy()
-        for j in range (len(activations[i][0])):
-            values = np.array(255*((activations[i][0][j]+1)/2)).astype(np.int64)
-            if len(np.where(values > 255)) > 0:
-                print(values)
-                print(layer[i])
-            rows = cols = int(np.cel(np.sqrt(len(activations[i][0][j]))))
-            plt.subplot(rows, cols, i+1)
-            plt.imshow(values.transpose(1,2,0), vmin=0, vmax=255, interpolation='none')
-        plt.setp(plt.gcf().get_axes(), xticks=[], yticks=[])
-        plt.show()
+    for layer in activations: #layers
+        print(len(activations[layer]))
+        activations[layer][0] = activations[layer][0].detach().cpu().numpy()
+        print(len(activations[layer][0]))
+        print(len(activations[layer][0][0]))
+        print(len(activations[layer][0][0][0]))
+        for image in range (len(activations[layer][0])): # images in batch
+            for channel in range(len(activations[layer][0][image])): # channels in activation
+                values = np.array(activations[layer][0][image][channel]).astype(np.int64)
+                if len(np.where(values > 255)) > 0:
+                    print(values)
+                    print(activations[layer][0][image])
+                rows = cols = int(np.ceil(np.sqrt(len(activations[layer][0][image]))))
+                plt.subplot(rows, cols, channel+1)
+                plt.imshow(values, interpolation='none')
+            plt.setp(plt.gcf().get_axes(), xticks=[], yticks=[])
+            plt.show()
     exit()
     
 

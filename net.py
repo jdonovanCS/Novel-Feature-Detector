@@ -10,7 +10,7 @@ import time
 # DEFINE a CONV NN
 
 class Net(pl.LightningModule):
-    def __init__(self, num_classes=10, classnames=None):
+    def __init__(self, num_classes=10, classnames=None, diversity=None):
         super().__init__()
         self.save_hyperparameters()
         self.BatchNorm1 = nn.BatchNorm2d(32)
@@ -33,6 +33,7 @@ class Net(pl.LightningModule):
             self.activations[i] = []
 
         self.classnames = classnames
+        self.diversity = diversity
 
     def forward(self, x, get_activations=False):
         conv_count = 0
@@ -134,6 +135,7 @@ class Net(pl.LightningModule):
                     accuracy = 100 * float(correct_count) / total_pred[classname]
                 class_acc[classname] = accuracy
             # get novelty score
+            # novelty_score = 0
             novelty_score = self.compute_feature_novelty()
             # clear out activations
             for i in range(len(self.conv_layers)):
@@ -236,7 +238,7 @@ class Net(pl.LightningModule):
             self.conv_layers[i].weight.data = filters[i]
     
     def get_filters(self):
-        return [m.weight.data.detach().cpu().numpy() for m in self.conv_layers]
+        return [m.weight.data.detach().cpu() for m in self.conv_layers]
 
     def compute_feature_novelty(self):
         
@@ -257,14 +259,20 @@ class Net(pl.LightningModule):
             # layer_totals[layer] = np.abs(np.expand_dims(a, axis=2) - np.expand_dims(a, axis=1)).sum().item()
 
         l = []
-        l2 = []
         for i in self.activations:
             self.activations[i][0] = self.activations[i][0].detach().cpu().numpy()
-            l.append(helper.diversity(self.activations[i][0]))
-            # l2.append(helper.diversity_orig(self.activations[i]))
+            if self.diversity=='relative':
+                l.append(helper.diversity_relative(self.activations[i][0]))
+            elif self.diversity=='original':
+                l.append(helper.diversity_orig(self.activations[i]))
+            elif self.diversity=='absolute':
+                l.append(helper.diversity(self.activations[i][0]))
+            elif self.diversity=='cosine':
+                l.append(helper.diversity_cosine_distance(self.activations[i][0]))
+            elif self.diversity == 'constant':
+                l.append(helper.diversity_constant(self.activations[i][0]))
+            else:
+                l.append(helper.diversity(self.activations[i][0]))
         
         return(sum(l))
-        # print(sum(l2))
-        # print(helper.diversity_orig2(np.array(self.activations.values())))
-        # return(sum(l2))
 

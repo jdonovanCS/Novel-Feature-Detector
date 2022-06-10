@@ -1,0 +1,44 @@
+{'evo': True, 'dataset': 'cifar10', 'evo_gens': '50', 'batch_size': 64, 'classnames': ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck'], 'fixed_conv': False, 'num_classes': 10, 'evo_num_runs': '5', 'evo_pop_size': '20', 'evo_num_winners': '2', 'experiment_name': 'hpc full cifar10 val diversity', 'experiment_type': 'training', 'evo_num_children': '20', 'evo_tourney_size': '4', 'evo_dataset_for_novelty': 'cifar10'}
+Files already downloaded and verified
+Files already downloaded and verified
+(32, 3, 3, 3)
+(64, 32, 3, 3)
+(128, 64, 3, 3)
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:88: LightningDeprecationWarning: DataModule property `train_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:107: LightningDeprecationWarning: DataModule property `val_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:126: LightningDeprecationWarning: DataModule property `test_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\visualize_filters_and_activations.py", line 142, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\visualize_filters_and_activations.py", line 91, in run
+    plt.subplot(rows, cols, i*len(layer[0]) + (j+1))
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\matplotlib\pyplot.py", line 1283, in subplot
+    ax = fig.add_subplot(*args, **kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\matplotlib\figure.py", line 772, in add_subplot
+    ax = subplot_class_factory(projection_class)(self, *args, **pkw)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\matplotlib\axes\_subplots.py", line 34, in __init__
+    self._axes_class.__init__(self, fig, [0, 0, 1, 1], **kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\matplotlib\_api\deprecation.py", line 456, in wrapper
+    return func(*args, **kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\matplotlib\axes\_base.py", line 632, in __init__
+    self.cla()
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\matplotlib\axes\_base.py", line 1291, in cla
+    self.patch = self._gen_axes_patch()
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\matplotlib\axes\_base.py", line 1124, in _gen_axes_patch
+    return mpatches.Rectangle((0.0, 0.0), 1.0, 1.0)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\matplotlib\patches.py", line 727, in __init__
+    super().__init__(**kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\matplotlib\patches.py", line 104, in __init__
+    self.set_fill(fill)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\matplotlib\patches.py", line 464, in set_fill
+    self._set_facecolor(self._original_facecolor)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\matplotlib\patches.py", line 361, in _set_facecolor
+    self._facecolor = colors.to_rgba(color, alpha)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\matplotlib\colors.py", line 180, in to_rgba
+    colors = prop_cycler.by_key().get('color', ['k'])
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\cycler.py", line 390, in by_key
+    out[k].append(d[k])
+KeyboardInterrupt

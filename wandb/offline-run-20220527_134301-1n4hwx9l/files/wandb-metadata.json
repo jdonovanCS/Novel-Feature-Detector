@@ -1,0 +1,26 @@
+{
+    "os": "Windows-10-10.0.19043-SP0",
+    "python": "3.10.0",
+    "heartbeatAt": "2022-05-27T17:43:01.555389",
+    "startedAt": "2022-05-27T17:43:01.495337",
+    "docker": null,
+    "gpu": "NVIDIA GeForce RTX 3090",
+    "gpu_count": 1,
+    "cpu_count": 32,
+    "cuda": null,
+    "args": [
+        "--run_id=1qwy8d4g"
+    ],
+    "state": "running",
+    "program": "C:\\Users\\Jordan\\Learning\\UVM\\Research Projects\\Novel-Feature-Detector\\visualize_filters_and_activations.py",
+    "codePath": "visualize_filters_and_activations.py",
+    "git": {
+        "remote": "https://github.com/jdonovancs/Novel-Feature-Detector.git",
+        "commit": "e8c7b9543a247fe9424619a3f23f2be16d484fc8"
+    },
+    "email": "jordan.t.donovancs@gmail.com",
+    "root": "C:/Users/Jordan/Learning/UVM/Research Projects/Novel-Feature-Detector",
+    "host": "DESKTOP-ESA8F4M",
+    "username": "Jordan",
+    "executable": "C:\\Users\\Jordan\\anaconda3\\envs\\EC2\\python.exe"
+}

@@ -1,0 +1,24 @@
+Files already downloaded and verified
+Files already downloaded and verified
+Running Evolution for fitness
+Initializing
+Validation: 0it [00:00, ?it/s]
+  0%|                                                                                            | 0/5 [00:00<?, ?it/s]Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x000001E824EABEB0>
+Traceback (most recent call last):                                                              | 0/20 [00:00<?, ?it/s]
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\torch\utils\data\dataloader.py", line 1358, in __del__
+    self._shutdown_workers()
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\torch\utils\data\dataloader.py", line 1316, in _shutdown_workers
+    if self._persistent_workers or self._workers_status[worker_id]:
+AttributeError: '_MultiProcessingDataLoaderIter' object has no attribute '_workers_status'
+  0%|                                                                                           | 0/20 [01:06<?, ?it/s]
+  0%|                                                                                            | 0/5 [01:06<?, ?it/s]
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 247, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 200, in run
+    solution_over_time, fitness_over_time = evolution(generations=n_iters, population_size=pop_size, num_children=num_children, tournament_size=tournament_size, num_winners=num_winners, evolution_type=run_name)
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 93, in evolution
+    model.fitness =  net.avg_novelty
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\torch\nn\modules\module.py", line 1185, in __getattr__
+    raise AttributeError("'{}' object has no attribute '{}'".format(
+AttributeError: 'Net' object has no attribute 'avg_novelty'

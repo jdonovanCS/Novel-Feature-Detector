@@ -20,6 +20,8 @@ from model import Model
 import numba
 from pytorch_lightning.loggers import WandbLogger
 import pytorch_lightning as pl
+import cProfile
+import pstats
 
 
 # TODO: Why not use gradient descent since fitness function is differentiable. Should probably compare to that.
@@ -35,7 +37,8 @@ parser.add_argument('--evo_num_runs', type=int, help='Number of runs used in evo
 parser.add_argument('--evo_tourney_size', type=int, help='Size of tournaments in evolutionary algorithm selection', default=None)
 parser.add_argument('--evo_num_winners', type=int, help='Number of winners in tournament in evolutionary algorithm', default=None)
 parser.add_argument('--evo_num_children', type=int, help='Number of children in evolutionary algorithm', default=None)
-    
+parser.add_argument('--diversity_type', default='absolute', type=str, help='Type of diversity metric to use for this experiment (ie. relative, absolute, original, etc.)')   
+parser.add_argument('--profile', help='Profile validation epoch during evolution', default=False, action='store_true') 
 args = parser.parse_args()
 
 # @numba.njit(parallel=True)
@@ -63,6 +66,15 @@ def mutate(filters):
     filters[selected_layer][selected_dims[0]][selected_dims[1]] = selected_filter
     return filters
 
+def profile_validation_epoch(net):
+    prof = cProfile.Profile()
+    prof.enable()
+    trainer.validate(net, dataloaders=data_module.val_dataloader(), verbose=False)
+    prof.disable()
+    stats = pstats.Stats(prof).strip_dirs().sort_stats("cumtime")
+    stats.print_stats(200) # top 10 rows
+
+
 def evolution(generations, population_size, num_children, tournament_size, num_winners=1, evolution_type="fitness"):
     """Evolutionary Algorithm
 
@@ -87,9 +99,12 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
     print("\nInitializing")
     for i in tqdm(range(population_size)): #while len(population) < population_size:
         model = Model()
-        net = helper.Net(num_classes=len(classnames), classnames=classnames)
+        net = helper.Net(num_classes=len(classnames), classnames=classnames, diversity=args.diversity_type)
         model.filters = net.get_filters()
-        trainer.validate(net, dataloaders=data_module.val_dataloader(), verbose=False)
+        if args.profile:
+            profile_validation_epoch(net)
+        else:
+            trainer.validate(net, dataloaders=data_module.val_dataloader(), verbose=False)
         model.fitness =  net.avg_novelty
         population.append(model)
         helper.wandb.log({'gen': 0, 'individual': i, 'fitness': model.fitness})
@@ -146,10 +161,11 @@ def run():
     helper.config['evo_tourney_size'] = args.evo_tourney_size
     helper.config['evo_num_winners'] = args.evo_num_winners
     helper.config['evo_num_children'] = args.evo_num_children
+    helper.config['diversity_type'] = args.diversity_type
     helper.config['experiment_type'] = 'evolution'
     helper.update_config()
 
-    random_image_paths = helper.create_random_images(64)
+    # random_image_paths = helper.create_random_images(64)
     global data_module
     data_module = helper.get_data_module(args.evo_dataset_for_novelty, batch_size=args.batch_size)
     data_module.prepare_data()
@@ -213,6 +229,7 @@ def run():
             helper.config['evo_tourney_size'] = args.evo_tourney_size
             helper.config['evo_num_winners'] = args.evo_num_winners
             helper.config['evo_num_children'] = args.evo_num_children
+            helper.config['diversity_type'] = args.diversity_type
             helper.config['experiment_type'] = 'evolution'
             helper.update_config()
             

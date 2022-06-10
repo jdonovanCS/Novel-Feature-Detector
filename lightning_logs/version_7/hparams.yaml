@@ -1,0 +1,13 @@
+classnames:
+- airplane
+- automobile
+- bird
+- cat
+- deer
+- dog
+- frog
+- horse
+- ship
+- truck
+diversity: absolute
+num_classes: 10
