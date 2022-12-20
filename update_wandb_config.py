@@ -13,9 +13,9 @@ api = wandb.Api()
 run = api.run("jdonovan/novel-feature-detectors/" + run_id)
 if args.param_type == "int":
     value = int(args.value)
-if args.param_type == "float":
+elif args.param_type == "float":
     value = float(args.value)
-if args.param_type == "bool":
+elif args.param_type == "bool":
     value = bool(int(args.value))
 else:
     value = str(args.value)

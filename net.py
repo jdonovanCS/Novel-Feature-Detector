@@ -10,7 +10,7 @@ import time
 # DEFINE a CONV NN
 
 class Net(pl.LightningModule):
-    def __init__(self, num_classes=10, classnames=None, diversity=None):
+    def __init__(self, num_classes=10, classnames=None, diversity=None, lr=.001):
         super().__init__()
         self.save_hyperparameters()
         self.BatchNorm1 = nn.BatchNorm2d(32)
@@ -237,7 +237,9 @@ class Net(pl.LightningModule):
         for i in range(len(filters)):
             self.conv_layers[i].weight.data = filters[i]
     
-    def get_filters(self):
+    def get_filters(self, numpy=False):
+        if numpy:
+            return [m.weight.data.detach().cpu().numpy() for m in self.conv_layers]
         return [m.weight.data.detach().cpu() for m in self.conv_layers]
 
     def compute_feature_novelty(self):

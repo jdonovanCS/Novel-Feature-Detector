@@ -21,6 +21,7 @@ from pytorch_lightning.loggers import WandbLogger
 import pytorch_lightning as pl
 import cProfile
 import pstats
+import shortuuid
 
 
 # TODO: Why not use gradient descent since fitness function is differentiable. Should probably compare to that.
@@ -29,15 +30,17 @@ import pstats
 parser=argparse.ArgumentParser(description="Process some inputs")
 parser.add_argument('--experiment_name', help='experiment name for saving data related to training')
 parser.add_argument('--batch_size', help="batch size for computing novelty, only 1 batch is used", type=int, default=64)
-parser.add_argument('--evo_gens', type=int, help="number of generations used in evolving solutions", default=None)
-parser.add_argument('--evo_pop_size', type=int, help='Number of individuals in population when evolving solutions', default=None)
-parser.add_argument('--evo_dataset_for_novelty', help='Dataset used for novelty computation during evolution and training', default=None)
-parser.add_argument('--evo_num_runs', type=int, help='Number of runs used in evolution', default=None)
-parser.add_argument('--evo_tourney_size', type=int, help='Size of tournaments in evolutionary algorithm selection', default=None)
-parser.add_argument('--evo_num_winners', type=int, help='Number of winners in tournament in evolutionary algorithm', default=None)
-parser.add_argument('--evo_num_children', type=int, help='Number of children in evolutionary algorithm', default=None)
+parser.add_argument('--evo_gens', type=int, help="number of generations used in evolving solutions", default=50)
+parser.add_argument('--evo_pop_size', type=int, help='Number of individuals in population when evolving solutions', default=20)
+parser.add_argument('--evo_dataset_for_novelty', help='Dataset used for novelty computation during evolution and training', default='cifar10')
+parser.add_argument('--num_batches_for_evolution', help='Number of batches used of dataset when calculating diversity of filters', default=np.inf, type=int)
+parser.add_argument('--evo_num_runs', type=int, help='Number of runs used in evolution', default=5)
+parser.add_argument('--evo_tourney_size', type=int, help='Size of tournaments in evolutionary algorithm selection', default=4)
+parser.add_argument('--evo_num_winners', type=int, help='Number of winners in tournament in evolutionary algorithm', default=2)
+parser.add_argument('--evo_num_children', type=int, help='Number of children in evolutionary algorithm', default=20)
 parser.add_argument('--diversity_type', default='absolute', type=str, help='Type of diversity metric to use for this experiment (ie. relative, absolute, original, etc.)')   
-parser.add_argument('--profile', help='Profile validation epoch during evolution', default=False, action='store_true') 
+parser.add_argument('--profile', help='Profile validation epoch during evolution', default=False, action='store_true')
+parser.add_argument('--num_workers', help='Num workers to use to load data module', default=np.inf, type=int)
 args = parser.parse_args()
 
 def mutate(filters):
@@ -89,6 +92,7 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
     population = collections.deque()
     solutions_over_time = []
     fitness_over_time = []
+    uniqueID = str(shortuuid.uuid())
 
     # Initialize the population with random models.
     # data_iterator = iter(data_module.train_dataloader())
@@ -141,8 +145,7 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
         best_solution = sorted(population, key=lambda i: i.fitness, reverse=True)[0].filters
         fitness_over_time.append((best_fitness))
         solutions_over_time.append((best_solution))
-        with open('output/' + experiment_name + '/solutions_over_time_current_{}.npy'.format(evolution_type), 'wb') as f:
-            np.save(f, solutions_over_time)
+        helper.save_npy('output/' + experiment_name + '/solutions_over_time_current_{}_{}.npy'.format(evolution_type, uniqueID), solutions_over_time, index=i)
         helper.wandb.log({'gen': i, 'best_individual_fitness': best_fitness})
         # helper.wandb.log({'gen': i, 'best_individual_filters': best_solution})
         
@@ -157,6 +160,7 @@ def run():
     helper.config['evo_gens'] = args.evo_gens
     helper.config['evo_pop'] = args.evo_pop_size
     helper.config['evo_dataset_for_novelty'] = args.evo_dataset_for_novelty
+    helper.config['evo_num_batches_for_diversity'] = args.num_batches_for_evolution
     helper.config['evo_num_runs'] = args.evo_num_runs
     helper.config['evo_tourney_size'] = args.evo_tourney_size
     helper.config['evo_num_winners'] = args.evo_num_winners
@@ -167,7 +171,7 @@ def run():
 
     # random_image_paths = helper.create_random_images(64)
     global data_module
-    data_module = helper.get_data_module(args.evo_dataset_for_novelty, batch_size=args.batch_size)
+    data_module = helper.get_data_module(args.evo_dataset_for_novelty, batch_size=args.batch_size, workers=args.num_workers)
     data_module.prepare_data()
     data_module.setup()
     # data_iterator = iter(data_module.train_dataloader())
@@ -176,7 +180,7 @@ def run():
     # wandb_logger = WandbLogger(log_model=True)
     global trainer
     # trainer = pl.Trainer(logger=wandb_logger, accelerator="auto")
-    trainer = pl.Trainer(accelerator="auto")
+    trainer = pl.Trainer(accelerator="auto", limit_val_batches=args.num_batches_for_evolution)
     global classnames
     classnames = list(data_module.dataset_test.classes)
 
@@ -224,12 +228,16 @@ def run():
             print(run_name, run_num, time.time()-start_time, fitness_over_time[-1])
             with open('output.txt', 'a+') as f:
                 f.write('run_name, run_num, time, fittest individual\n{}, {}, {}, {}'.format(run_name, run_num, time.time()-start_time, fitness_over_time[-1]))
+
+            for k,v in solution_results.items():
+                helper.save_npy('output/' + experiment_name + '/solutions_over_time_{}.npy'.format(k), v, index=-1)
             helper.run(seed=False)
             helper.config['batch_size'] = args.batch_size
             helper.config['experiment_name'] = args.experiment_name
             helper.config['evo_gens'] = args.evo_gens
             helper.config['evo_pop'] = args.evo_pop_size
             helper.config['evo_dataset_for_novelty'] = args.evo_dataset_for_novelty
+            helper.config['evo_num_batches_for_diversity'] = args.num_batches_for_evolution
             helper.config['evo_num_runs'] = args.evo_num_runs
             helper.config['evo_tourney_size'] = args.evo_tourney_size
             helper.config['evo_num_winners'] = args.evo_num_winners
@@ -238,18 +246,13 @@ def run():
             helper.config['experiment_type'] = 'evolution'
             helper.update_config()
 
-            
-            for k,v in solution_results.items():
-                with open('output/' + experiment_name + '/solutions_over_time_{}.npy'.format(k), 'wb') as f:
-                    np.save(f, v)
-
     with open('output/' + experiment_name + '/solutions_over_time.pickle', 'wb') as f:
         pickle.dump(solution_results, f)
     with open('output/' + experiment_name + '/fitness_over_time.txt', 'a+') as f:
         f.write(str(fitness_results))
-    for k,v in solution_results.items():
-        with open('output/' + experiment_name + '/solutions_over_time_{}.npy'.format(k), 'wb') as f:
-            np.save(f, v)
+    # for k,v in solution_results.items():
+    #     with open('output/' + experiment_name + '/solutions_over_time_{}.npy'.format(k), 'wb') as f:
+    #         np.save(f, v)
     cut_off_beginning = 0
     helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[cut_off_beginning:] for k, x in fitness_results.items()], name=[k for k,x in fitness_results.items()], x_label="Generation", y_label="Fitness", compute_CI=True, save_name=experiment_name + "/fitness_over_time.png")
     # os.system('conda activate EC2')

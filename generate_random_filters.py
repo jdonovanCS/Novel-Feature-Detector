@@ -11,6 +11,7 @@ from model import Model
 parser=argparse.ArgumentParser(description="Process some input files")
 parser.add_argument('--experiment_name', help='experiment name for saving and data related to filters generated', default='')
 parser.add_argument('--population_size', help='number of filters to generate', type=int, default=50)
+parser.add_argument('--technique', help='random or gram-schmidt technique', type=str, default='random')
 # parser.add_argument('--batch_size', help='Number of images to use for novelty metric, only 1 batch used', default=64, type=int)
 # parser.add_argument('--dataset', help='which dataset should be used for novelty metric, choices are: random, cifar-10', default='random')
 args = parser.parse_args()
@@ -43,6 +44,8 @@ def run():
         net = helper.Net()
         model.filters = net.get_filters()
         # model.fitness =  net.get_fitness(net_input)
+        if args.technique != 'random':
+            helper.gram_shmidt_orthonormalize(model.filters)
         population.append(model)
         # helper.wandb.log({'gen': 0, 'individual': i, 'fitness': model.fitness})
         
@@ -51,8 +54,8 @@ def run():
     for i in range(1):
         solutions[i] = sols
     solutions = solutions[0]
-    sol_dict = {'random': [solutions]}
-    fitnesses = [p.fitness for p in population]
+    sol_dict = {args.technique: [solutions]}
+    # fitnesses = [p.fitness for p in population]
 
     if not os.path.isdir('output/' + experiment_name):
         os.mkdir('output/' + experiment_name)
@@ -61,8 +64,8 @@ def run():
     for k,v in sol_dict.items():
         with open('output/' + experiment_name + '/solutions_over_time_{}.npy'.format(k), 'wb') as f:
             np.save(f, v)
-    with open('output/' + experiment_name + '/random_gen_fitnesses.txt', 'a+') as f:
-        f.write(str(fitnesses))
+    # with open('output/' + experiment_name + '/random_gen_fitnesses.txt', 'a+') as f:
+    #     f.write(str(fitnesses))
 
     fitnesses = np.array([fitnesses])
     cut_off_beginning = 0

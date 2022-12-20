@@ -19,16 +19,20 @@ parser.add_argument('--training_interval', help='How often should the network be
 parser.add_argument('--epochs', help="Number of epochos to train for", type=int, default=64)
 parser.add_argument('--random', action='store_true')
 parser.add_argument('--novelty_interval', help='How often should a novelty score be captured during training?', default=0)
-parser.add_argument('--test_accuracy_interval', help='How often should test accuracy be assessed during training?', default=0)
+parser.add_argument('--test_accuracy_interval', help='How often should test accuracy be assessed during training?', default=4)
 parser.add_argument('--batch_size', help="batch size for training", type=int, default=64)
-parser.add_argument('--evo_gens', help="number of generations used in evolving solutions", default=None)
-parser.add_argument('--evo_pop_size', help='Number of individuals in population when evolving solutions', default=None)
-parser.add_argument('--evo_dataset_for_novelty', help='Dataset used for novelty computation during evolution and training', default=None)
+parser.add_argument('--lr', help='Learning rate for training', default=.001, type=float)
+parser.add_argument('--evo_gens', help="number of generations used in evolving solutions", default=50)
+parser.add_argument('--evo_pop_size', help='Number of individuals in population when evolving solutions', default=20)
+parser.add_argument('--evo_dataset_for_novelty', help='Dataset used for novelty computation during evolution and training', default='cifar10')
+parser.add_argument('--num_batches_for_evolution', help='Number of batches used of dataset when calculating diversity of filters', default=np.inf, type=int)
 parser.add_argument('--evo', help='evolved solutions, should only be true if random is not set', action='store_true')
-parser.add_argument('--evo_num_runs', help='Number of runs used in evolution', default=None)
-parser.add_argument('--evo_tourney_size', help='Size of tournaments in evolutionary algorithm selection', default=None)
-parser.add_argument('--evo_num_winners', help='Number of winners in tournament in evolutionary algorithm', default=None)
-parser.add_argument('--evo_num_children', help='Number of children in evolutionary algorithm', default=None)
+parser.add_argument('--gram-schmidt', help='gram-schmidt used to orthonormalize filters', action='store_true')
+parser.add_argument('--unique_id', help='if a unique id is associated with the file the solution is stored in give it here.', default="", type=str)
+parser.add_argument('--evo_num_runs', help='Number of runs used in evolution', default=5)
+parser.add_argument('--evo_tourney_size', help='Size of tournaments in evolutionary algorithm selection', default=4)
+parser.add_argument('--evo_num_winners', help='Number of winners in tournament in evolutionary algorithm', default=2)
+parser.add_argument('--evo_num_children', help='Number of children in evolutionary algorithm', default=20)
 parser.add_argument('--skip', default=0, help='skip the first n models to train, used mostly when a run fails partway through', type=int)
 parser.add_argument('--diversity_type', type=str, default='absolute', help='Type of diversity metric to use for this experiment (ie. absolute, relative, original etc.)')
 args = parser.parse_args()
@@ -42,9 +46,16 @@ def run():
     experiment_name = args.experiment_name
     training_interval = args.training_interval
     fixed_conv = args.fixed_conv
-    name = 'random'
-    if args.evo or args.random == None or not args.random:
+    if args.random:
+        name = 'random'
+    elif args.evo or args.random == None or not args.random:
         name = 'fitness'
+    
+    if args.gram_schmidt:
+        name = 'gram-schmidt'
+    if args.unique_id != "":
+        name = 'current_' + name + "_" + args.unique_id
+    
     filename = ''
     filename = 'output/' + experiment_name + '/solutions_over_time_{}.npy'.format(name)
 
@@ -53,6 +64,9 @@ def run():
     np.load = lambda *a,**k: np_load_old(*a, allow_pickle=True, **k)
     stored_filters = np.load(filename)
     np.load = np_load_old
+
+    if args.unique_id != '':
+        stored_filters = [stored_filters]
 
     if args.random:
         random.shuffle(stored_filters[0])
@@ -72,10 +86,12 @@ def run():
     
     helper.config['dataset'] = args.dataset.lower()
     helper.config['batch_size'] = args.batch_size
+    helper.config['lr'] = args.lr
     helper.config['experiment_name'] = args.experiment_name
     helper.config['evo_gens'] = args.evo_gens
     helper.config['evo_pop_size'] = args.evo_pop_size
     helper.config['evo_dataset_for_novelty'] = args.evo_dataset_for_novelty
+    helper.config['evo_num_batches_for_diversity'] = args.num_batches_for_evolution
     helper.config['evo'] = args.evo or args.random == None or not args.random
     helper.config['evo_num_runs'] = args.evo_num_runs
     helper.config['evo_tourney_size'] = args.evo_tourney_size
@@ -105,16 +121,20 @@ def run():
                 continue
             
             # else train the network and collect the metrics
+            helper.config['generation'] = i
+            helper.update_config()
             save_path = "trained_models/trained/conv{}_e{}_n{}_r{}_g{}.pth".format(not fixed_conv, experiment_name, name, run_num, i)
             print('Training and Evaluating: {} Gen: {} Run: {}'.format(name, i, run_num))
-            record_progress = helper.train_network(data_module=data_module, filters=stored_filters[run_num][i], epochs=epochs, save_path=save_path, fixed_conv=fixed_conv, novelty_interval=int(args.novelty_interval), val_interval=int(args.test_accuracy_interval))
+            record_progress = helper.train_network(data_module=data_module, filters=stored_filters[run_num][i], epochs=epochs, lr=args.lr, save_path=save_path, fixed_conv=fixed_conv, novelty_interval=int(args.novelty_interval), val_interval=int(args.test_accuracy_interval), diversity_type=args.diversity_type)
             helper.run(seed=False)
             helper.config['dataset'] = args.dataset.lower()
             helper.config['batch_size'] = args.batch_size
+            helper.config['lr'] = args.lr
             helper.config['experiment_name'] = args.experiment_name
             helper.config['evo_gens'] = args.evo_gens
             helper.config['evo_pop_size'] = args.evo_pop_size
             helper.config['evo_dataset_for_novelty'] = args.evo_dataset_for_novelty
+            helper.config['evo_num_batches_for_diversity'] = args.num_batches_for_evolution
             helper.config['evo'] = args.evo or args.random == None or not args.random
             helper.config['evo_num_runs'] = args.evo_num_runs
             helper.config['evo_tourney_size'] = args.evo_tourney_size
@@ -131,4 +151,3 @@ def run():
 
 if __name__ == '__main__':
     run()
-
