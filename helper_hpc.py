@@ -3,8 +3,7 @@ import torch
 import matplotlib.pyplot as plt
 import numpy as np
 import cv2
-import randomdataset as rd
-import randomdatamodule
+import randomdatamodule as rd
 import matplotlib.pyplot as plt
 import scikits.bootstrap as bootstrap
 import warnings
@@ -68,7 +67,7 @@ def get_data_module(dataset, batch_size, workers=np.inf):
         case 'imagenet':
             data_module = pl_bolts.datamodules.ImagenetDataModule(batch_size=batch_size, data_dir="data/", num_workers=min(workers, os.cpu_count()), pin_memory=True)
         case 'random':
-            data_module = randomdatamodule(data_dir='images/random/', batch_size=batch_size, num_workers=min(workers, os.cpu_count()), pin_memory=True)
+            data_module = rd.RandomDataModule(data_dir='images/random/', batch_size=batch_size, num_workers=min(workers, os.cpu_count()), pin_memory=True)
         case _:
             print('Please supply dataset of CIFAR-10 or CIFAR-100')
             exit()
