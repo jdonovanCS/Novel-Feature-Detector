@@ -42,7 +42,7 @@ class RandomDataModule(pl.LightningDataModule):
             drop_last: If true drops the last incomplete batch
         """
 
-        super(RandomDataModule).__init__(  # type: ignore[misc]
+        super().__init__(  # type: ignore[misc]
             data_dir=data_dir,
             val_split=val_split,
             transform = None,
