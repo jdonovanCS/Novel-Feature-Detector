@@ -4,3 +4,4 @@ output/*/*random_gen_solutions.*
 output/*/solutions_over_time_random.*
 *solutions_over_time_gram_schmidt.npy
 *solutions_over_time_gram-schmidt.npy
+output/*/solutions_over_time*
