@@ -3,15 +3,10 @@ import helper_hpc as helper
 import time
 import scipy.spatial.distance as dst
 import numba
-<<<<<<< HEAD
 from numpy.linalg import norm
 from numpy import dot
 
 @numba.njit(parallel=True)
-=======
-
-@numba.jit(nopython=True, parallel=True)
->>>>>>> 4174ace6 (pushing a bunch of wandb run files as well as pbs files and new diversity functions)
 def cosine_dist(u, v):
     uv=0
     uu=0
@@ -26,7 +21,6 @@ def cosine_dist(u, v):
     return 1-cos_theta
 
 answers = [[], [], []]
-<<<<<<< HEAD
 for i in range(3):
     start = time.time()
     for j in range(100000):
@@ -34,15 +28,6 @@ for i in range(3):
         two = np.random.rand(32*32)
         if i == 0:
             sim = dot(one, two)/(norm(one)*norm(two))
-=======
-for i in range(2, 3):
-    start = time.time()
-    for j in range(1000000):
-        one = np.random.rand(32*32)
-        two = np.random.rand(32*32)
-        if i == 0:
-            sim = np.dot(one, two)/(np.linalg.norm(one)*np.linalg.norm(two))
->>>>>>> 4174ace6 (pushing a bunch of wandb run files as well as pbs files and new diversity functions)
             dist = 1-sim
         if i == 1:
             dist = dst.cosine(one, two)

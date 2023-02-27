@@ -227,10 +227,15 @@ def run():
             res = [solution_results, fitness_results]
             print(run_name, run_num, time.time()-start_time, fitness_over_time[-1])
             with open('output.txt', 'a+') as f:
-                f.write('run_name, run_num, time, fittest individual\n{}, {}, {}, {}'.format(run_name, run_num, time.time()-start_time, fitness_over_time[-1]))
+                f.write('run_name, run_num, time, fittest individual\n{}, {}, {}, {}\n'.format(run_name, run_num, time.time()-start_time, fitness_over_time[-1]))
 
             for k,v in solution_results.items():
-                helper.save_npy('output/' + experiment_name + '/solutions_over_time_{}.npy'.format(k), v, index=-1)
+                if not os.path.isfile('output/' + experiment_name + '/solutions_over_time_{}.npy'.format(k)):
+                    with open('output/' + experiment_name + '/solutions_over_time_{}.npy'.format(k), 'wb') as f:
+                        np.save(f, [v[-num_runs+run_num]])
+                else:
+                    helper.save_npy('output/' + experiment_name + '/solutions_over_time_{}.npy'.format(k), v, index=-num_runs+run_num)
+            
             helper.run(seed=False)
             helper.config['batch_size'] = args.batch_size
             helper.config['experiment_name'] = args.experiment_name

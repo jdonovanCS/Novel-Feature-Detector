@@ -83,6 +83,7 @@ def save_npy(filename, data, index=0):
         with open(filename, 'wb') as f:
             after = np.append(before, [data[index]], axis=0)
             np.save(f, after)
+    
 
 @numba.njit(parallel=True)
 def diversity(acts):

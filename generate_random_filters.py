@@ -67,8 +67,8 @@ def run():
     # with open('output/' + experiment_name + '/random_gen_fitnesses.txt', 'a+') as f:
     #     f.write(str(fitnesses))
 
-    fitnesses = np.array([fitnesses])
-    cut_off_beginning = 0
+    # fitnesses = np.array([fitnesses])
+    # cut_off_beginning = 0
     # helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[cut_off_beginning:] for x in fitnesses], name=[i for i in range(len(fitnesses))], x_label="Generation", y_label="Fitness", compute_CI=True)
 
 

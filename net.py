@@ -34,6 +34,7 @@ class Net(pl.LightningModule):
 
         self.classnames = classnames
         self.diversity = diversity
+        # self.avg_novelty = 0
 
     def forward(self, x, get_activations=False):
         conv_count = 0

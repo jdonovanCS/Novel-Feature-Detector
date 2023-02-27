@@ -2,7 +2,7 @@ from typing import Any, Callable, Optional, Sequence, Union
 from torch.utils.data import random_split, DataLoader
 import pytorch_lightning as pl
 from torchvision import transforms
-import randomdataset
+import randomdataset as rds
 import os
 import cv2
 import numpy as np
@@ -61,6 +61,7 @@ class RandomDataModule(pl.LightningDataModule):
         self.transform = transform
         self.batch_size = batch_size
         self.num_workers = num_workers
+        self.dataset_test = rds.RandomDataset(self.data_dir, transform=self.transform)
 
     @property
     def num_classes(self) -> int:
@@ -69,6 +70,9 @@ class RandomDataModule(pl.LightningDataModule):
             100
         """
         return 1
+
+    # def dataset_test(self):
+    #     return rds.RandomDataset(self.data_dir, transform=self.transform)
 
     def default_transforms(self) -> Callable:
         stats = ((0.5074,0.4867,0.4411),(0.2011,0.1987,0.2025))
@@ -82,14 +86,14 @@ class RandomDataModule(pl.LightningDataModule):
     
     def prepare_data(self):
         # download data to data directory
-        num_images = len([f for f in os.listdir(self.data_dir) if '.jpg' in f])
+        num_images = len([f for f in os.listdir(self.data_dir) if '.png' in f])
         if num_images < self.batch_size:
             for i in range(num_images, self.batch_size):
                 rgb = np.random.randint(255, size=(32,32,3), dtype=np.uint8)
                 cv2.imwrite('images/random/{}.png'.format(i), rgb)
     
     def setup(self, stage=None):
-        self.random_full = randomdataset(self.data_dir, transform=self.transform)
+        self.random_full = rds.RandomDataset(self.data_dir, transform=self.transform)
             
     def train_dataloader(self):
         return DataLoader(self.random_full, batch_size=self.batch_size, num_workers=self.num_workers)
@@ -99,3 +103,11 @@ class RandomDataModule(pl.LightningDataModule):
 
     def test_dataloader(self):
         return DataLoader(self.random_full, batch_size=self.batch_size, num_workers=self.num_workers)
+
+    @property
+    def num_classes(self) -> int:
+        """
+        Return:
+            100
+        """
+        return 1

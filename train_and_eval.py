@@ -34,7 +34,9 @@ parser.add_argument('--evo_tourney_size', help='Size of tournaments in evolution
 parser.add_argument('--evo_num_winners', help='Number of winners in tournament in evolutionary algorithm', default=2)
 parser.add_argument('--evo_num_children', help='Number of children in evolutionary algorithm', default=20)
 parser.add_argument('--skip', default=0, help='skip the first n models to train, used mostly when a run fails partway through', type=int)
+parser.add_argument('--stop_after', default=np.inf, help='stop after the first n models', type=int)
 parser.add_argument('--diversity_type', type=str, default='absolute', help='Type of diversity metric to use for this experiment (ie. absolute, relative, original etc.)')
+parser.add_argument('--num_workers', help='number of workers for training', default=np.inf, type=int)
 args = parser.parse_args()
 
 def run():
@@ -78,7 +80,7 @@ def run():
 
 
     # get loader for train and test images and classes
-    data_module = helper.get_data_module(args.dataset, args.batch_size)
+    data_module = helper.get_data_module(args.dataset, args.batch_size, args.num_workers)
     data_module.prepare_data()
     data_module.setup()
 
@@ -112,12 +114,12 @@ def run():
     else: 
         skip=0
         rand_skip = args.skip+1
-    for run_num in range(skip, len(stored_filters)):
+    for run_num in range(len(stored_filters)):
         # run_num = np.where(stored_filters == filters_list)[0][0]
         # for each generation train the solution output at that generation
         for i in range(len(stored_filters[run_num])):
             # if we only want to train the solution from the final generation, continue
-            if training_interval != 0 and i*1.0 not in [(len(stored_filters[run_num])/(1/training_interval)*j)-1 for j in range(rand_skip, int(1/training_interval)+1)]:
+            if (training_interval != 0 and i*1.0 not in [(len(stored_filters[run_num])/(1/training_interval)*j)-1 for j in range(rand_skip, min(args.stop_after, int(1/training_interval)+1))]) or (training_interval==0 and i not in range(skip, args.stop_after)):
                 continue
             
             # else train the network and collect the metrics
