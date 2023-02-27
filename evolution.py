@@ -36,8 +36,12 @@ parser.add_argument('--evo_num_runs', type=int, help='Number of runs used in evo
 parser.add_argument('--evo_tourney_size', type=int, help='Size of tournaments in evolutionary algorithm selection', default=None)
 parser.add_argument('--evo_num_winners', type=int, help='Number of winners in tournament in evolutionary algorithm', default=None)
 parser.add_argument('--evo_num_children', type=int, help='Number of children in evolutionary algorithm', default=None)
+<<<<<<< HEAD
 parser.add_argument('--diversity_type', default='absolute', type=str, help='Type of diversity metric to use for this experiment (ie. relative, absolute, original, etc.)')   
 parser.add_argument('--profile', help='Profile validation epoch during evolution', default=False, action='store_true') 
+=======
+parser.add_argument('--diversity_type', default='absolute', type=str, help='Type of diversity metric to use for this experiment (ie. relative, absolute, original, etc.)')    
+>>>>>>> 4174ace6 (pushing a bunch of wandb run files as well as pbs files and new diversity functions)
 args = parser.parse_args()
 
 def mutate(filters):
