@@ -42,7 +42,7 @@ def run():
     for i in tqdm(range(population_size)): #while len(population) < population_size:
         model = Model()
         net = helper.Net()
-        model.filters = net.get_filters()
+        model.filters = net.get_filters(numpy=True)
         # model.fitness =  net.get_fitness(net_input)
         if args.technique != 'random':
             helper.gram_shmidt_orthonormalize(model.filters)
@@ -59,8 +59,8 @@ def run():
 
     if not os.path.isdir('output/' + experiment_name):
         os.mkdir('output/' + experiment_name)
-    with open('output/' + experiment_name + '/random_gen_solutions.pickle', 'wb') as f:
-        pickle.dump(sol_dict, f)
+    # with open('output/' + experiment_name + '/random_gen_solutions.pickle', 'wb') as f:
+    #     pickle.dump(sol_dict, f)
     for k,v in sol_dict.items():
         with open('output/' + experiment_name + '/solutions_over_time_{}.npy'.format(k), 'wb') as f:
             np.save(f, v)
@@ -68,7 +68,7 @@ def run():
     #     f.write(str(fitnesses))
 
     # fitnesses = np.array([fitnesses])
-    # cut_off_beginning = 0
+    cut_off_beginning = 0
     # helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[cut_off_beginning:] for x in fitnesses], name=[i for i in range(len(fitnesses))], x_label="Generation", y_label="Fitness", compute_CI=True)
 
 

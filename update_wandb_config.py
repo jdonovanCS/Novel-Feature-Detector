@@ -11,11 +11,55 @@ args = parser.parse_args()
 run_id = args.run_id
 api = wandb.Api()
 run = api.run("jdonovan/novel-feature-detectors/" + run_id)
-if args.param_type == "int":
+
+def confirm(prompt=None, resp=False):
+    """prompts for yes or no response from the user. Returns True for yes and
+    False for no.
+
+    'resp' should be set to the default value assumed by the caller when
+    user simply types ENTER.
+
+    >>> confirm(prompt='Create Directory?', resp=True)
+    Create Directory? [y]|n: 
+    True
+    >>> confirm(prompt='Create Directory?', resp=False)
+    Create Directory? [n]|y: 
+    False
+    >>> confirm(prompt='Create Directory?', resp=False)
+    Create Directory? [n]|y: y
+    True
+
+    """
+    
+    if prompt is None:
+        prompt = 'Confirm'
+
+    if resp:
+        prompt = '%s [%s]|%s: ' % (prompt, 'y', 'n')
+    else:
+        prompt = '%s [%s]|%s: ' % (prompt, 'n', 'y')
+        
+    while True:
+        ans = input(prompt)
+        if not ans:
+            return resp
+        if ans not in ['y', 'Y', 'n', 'N']:
+            print('please enter y or n.')
+            continue
+        if ans == 'y' or ans == 'Y':
+            return True
+        if ans == 'n' or ans == 'N':
+            return False
+
+
+if not args.value:
+    if confirm("Replace the value for this parameter with null / None?", True):
+        value = None
+elif args.param_type == "int":
     value = int(args.value)
-if args.param_type == "float":
+elif args.param_type == "float":
     value = float(args.value)
-if args.param_type == "bool":
+elif args.param_type == "bool":
     value = bool(int(args.value))
 else:
     value = str(args.value)
