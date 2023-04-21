@@ -3,7 +3,7 @@ import torch
 import matplotlib.pyplot as plt
 import numpy as np
 import cv2
-import randomdataset as rd
+import randomdatamodule as rd
 import matplotlib.pyplot as plt
 import scikits.bootstrap as bootstrap
 import warnings
@@ -13,6 +13,7 @@ import pl_bolts.datamodules
 from pytorch_lightning.loggers import WandbLogger
 import pytorch_lightning as pl
 from net import Net
+from ae_net import AE
 from cifar100datamodule import CIFAR100DataModule
 import numba
 import os
@@ -20,18 +21,19 @@ import os
 def create_random_images(num_images=200):
     paths = []
     for i in range(num_images):
-        rgb = np.random.randint(255, size=(32,32,3), dtype=np.uint8)
-        cv2.imwrite('images/{}.png'.format(i), rgb)
-        paths.append('images/{}.png'.format(i))
+        if not os.path.exists('images/random/{}.png'.format(i)):
+            rgb = np.random.randint(255, size=(32,32,3), dtype=np.uint8)
+            cv2.imwrite('images/random/{}.png'.format(i), rgb)
+        paths.append('images/random/{}.png'.format(i))
     return paths
 
-def load_random_images(random_image_paths, batch_size=64):
-    train_dataset = rd.RandomDataset(random_image_paths)
-    train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=2)
-    return train_loader
+# def load_random_images(random_image_paths, batch_size=64):
+#     train_dataset = rd.RandomDataset(random_image_paths)
+#     train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=2)
+#     return train_loader
 
-def train_network(data_module, filters=None, epochs=2, save_path=None, fixed_conv=False, val_interval=1, novelty_interval=None):
-    net = Net(num_classes=data_module.num_classes, classnames=list(data_module.dataset_test.classes))
+def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, fixed_conv=False, val_interval=1, novelty_interval=None, diversity_type='absolute'):
+    net = Net(num_classes=data_module.num_classes, classnames=list(data_module.dataset_test.classes), diversity=diversity_type, lr=lr)
     net = net.to(device)
     print(net.device)
     if filters is not None:
@@ -56,17 +58,42 @@ def train_network(data_module, filters=None, epochs=2, save_path=None, fixed_con
 
     # torch.save(net.state_dict(), save_path)
     # return record_progress
+def train_ae_network(data_module, epochs=100, lr=.001, save_path=None, novelty_interval=4, val_interval=1, diversity_type='absolute'):
+    net = AE(10, diversity_type, lr)
+    net = net.to(device)
+    if save_path is None:
+        save_path = PATH
+    wandb_logger = WandbLogger(log_model=True)
+    trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator='auto')
+    wandb_logger.watch(net, log='all')
+    trainer.fit(net, datamodule=data_module)
 
-def get_data_module(dataset, batch_size):
+def get_data_module(dataset, batch_size, workers=np.inf):
     match dataset.lower():
         case 'cifar10' | 'cifar-10':
-            data_module = pl_bolts.datamodules.CIFAR10DataModule(batch_size=batch_size, data_dir="data/", num_workers=os.cpu_count(), pin_memory=True)
+            data_module = pl_bolts.datamodules.CIFAR10DataModule(batch_size=batch_size, data_dir="data/", num_workers=min(workers, os.cpu_count()), pin_memory=True)
         case 'cifar100' | 'cifar-100':
-            data_module = CIFAR100DataModule(batch_size=batch_size, data_dir="data/", num_workers=os.cpu_count(), pin_memory=True)
+            data_module = CIFAR100DataModule(batch_size=batch_size, data_dir="data/", num_workers=min(workers, os.cpu_count()), pin_memory=True)
+        case 'imagenet':
+            data_module = pl_bolts.datamodules.ImagenetDataModule(batch_size=batch_size, data_dir="data/", num_workers=min(workers, os.cpu_count()), pin_memory=True)
+        case 'random':
+            data_module = rd.RandomDataModule(data_dir='images/random/', batch_size=batch_size, num_workers=min(workers, os.cpu_count()), pin_memory=True)
         case _:
             print('Please supply dataset of CIFAR-10 or CIFAR-100')
             exit()
     return data_module
+
+def save_npy(filename, data, index=0):
+    if not os.path.isfile(filename) or index==0:
+        with open(filename, 'wb') as f:
+            np.save(f, data)
+    else:
+        with open(filename, 'rb') as f:
+            before = np.load(f, allow_pickle=True)
+        with open(filename, 'wb') as f:
+            after = np.append(before, [data[index]], axis=0)
+            np.save(f, after)
+    
 
 @numba.njit(parallel=True)
 def diversity(acts):
@@ -83,6 +110,7 @@ def diversity(acts):
                 div = np.abs(acts[batch, channel] - acts[batch, channel2]).sum()
                 pairwise[batch, channel, channel2] = div
                 pairwise[batch, channel2, channel] = div
+    # max_act = max(np.abs(acts.flatten()))
     return(pairwise.sum())
 
 @numba.njit(parallel=True)
@@ -162,13 +190,44 @@ def cosine_dist(u:np.ndarray, v:np.ndarray):
         cos_theta=uv/np.sqrt(uu*vv)
     return 1-cos_theta
 
+#TODO - orthonormalize filters to one another. Flipping dimensions may not be doing what we want. 
+# Google how to detemine of two matrices are orthognal. dotproduct and crossproduct or outer product.
+# Look at randomly initialized filters as well for this property.
 @numba.njit(parallel=True)
 def gram_shmidt_orthonormalize(filters):
-    B=len(filters)
-    for f in filters:
-        q, r = np.linalg.qr(f.reshape(f.shape[0], np.prod(f.shape[1:])))
-        f = q.reshape(f.shape)
+# for layer_filters in filters:
+    for f in range(len(filters)):
+        # for k in range(len(filters[f])):
+        #     print(0)
+        #     copied = filters[f][k].copy()
+        #     shape_0 = filters[f][k].shape[0]
+        #     print(shape_0)
+        #     shape_1=np.prod(np.array(filters[f][k].shape[1:]))
+        #     print(shape_1)
+        #     input = copied.reshape((max(shape_0, shape_1), min(shape_0, shape_1)))
+        #     print(input.shape)
+        #     q,r = np.linalg.qr(input, 'reduced')
+        #     print(q.shape)
+        #     print(filters[f][k].shape)
+        #     filters[f][k] = q.reshape(filters[f][k].shape)
+        copied = filters[f].copy()
+        shape_0 = filters[f].shape[0]
+        shape_1=np.prod(np.array(filters[f].shape[1:]))
+        input = copied.reshape((max(shape_0, shape_1), min(shape_0, shape_1)))
+        q,r = np.linalg.qr(input)
+        # print(filters[f].shape)
+        copied = q.copy()
+        f = copied.reshape(filters[f].shape)
     return filters
+
+# from tqdm import tqdm
+# def gram_schmidt(vectors):
+#     basis = []
+#     for v in tqdm(range(len(vectors))):
+#         w = vectors[v] - np.sum( np.dot(vectors[v],b)*b  for b in basis )
+#         if (w > 1e-10).any():  
+#             basis.append(w/np.linalg.norm(w))
+#     return np.array(basis)
 
 @numba.njit(parallel=True)
 def diversity_constant(acts):
@@ -251,6 +310,7 @@ def run(seed=True):
     PATH = './cifar_net.pth'
     global config
     config = {}
+    wandb.login(key='e50cb709dc2bf04072661be1d9b46ec60d59e556')
     wandb.finish()
     os.environ["WANDB_START_METHOD"] = "thread"
     wandb.init(project="novel-feature-detectors")
