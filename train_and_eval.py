@@ -78,6 +78,34 @@ def run():
     
     helper.run(seed=False)
 
+    # import matplotlib.pyplot as plt
+    # for run_num in range(len(stored_filters)):
+    #     filters = stored_filters[run_num][49]
+    #     for layer in range(len(filters)):
+    #         # max(np.abs(filters[layer].flatten()))
+    #         # getting data of the histogram
+    #         count, bins_count = np.histogram(filters[layer].flatten())
+            
+    #         # finding the PDF of the histogram using count values
+    #         pdf = count / sum(count)
+            
+    #         # using numpy np.cumsum to calculate the CDF
+    #         # We can also find using the PDF values by looping and adding
+    #         cdf = np.cumsum(pdf)
+            
+    #         # plotting PDF and CDF
+    #         plt.plot(bins_count[1:], pdf, color="red", label="PDF")
+    #         # plt.plot(bins_count[1:], cdf, label="CDF")
+    #         plt.legend()
+    #         plt.show()
+    #         # print(mag)
+    #     exit()
+
+        # for i in range(len(stored_filters[run_num])):
+        #     if i*1.0 in [49.]:
+
+
+
 
     # get loader for train and test images and classes
     data_module = helper.get_data_module(args.dataset, args.batch_size, args.num_workers)

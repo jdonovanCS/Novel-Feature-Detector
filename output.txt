@@ -128,3 +128,5 @@ run_name, run_num, time, fittest individual
 fitness, 3, 318.2635087966919, 1813242144369.0273
 run_name, run_num, time, fittest individual
 fitness, 4, 322.8939986228943, 2187899231486.9336
+run_name, run_num, time, fittest individual
+fitness, 0, 306.37164187431335, 394525241.6110198

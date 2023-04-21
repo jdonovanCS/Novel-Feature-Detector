@@ -43,16 +43,16 @@ class RandomDataModule(pl.LightningDataModule):
         """
 
         super().__init__(  # type: ignore[misc]
-            data_dir=data_dir,
-            val_split=val_split,
-            transform = None,
-            num_workers=num_workers,
-            normalize=normalize,
-            batch_size=batch_size,
-            seed=seed,
-            shuffle=shuffle,
-            pin_memory=pin_memory,
-            drop_last=drop_last,
+            # data_dir=data_dir,
+            # val_split=val_split,
+            # transform = None,
+            # num_workers=num_workers,
+            # normalize=normalize,
+            # batch_size=batch_size,
+            # seed=seed,
+            # shuffle=shuffle,
+            # pin_memory=pin_memory,
+            # drop_last=drop_last,
             *args,
             **kwargs,
         )

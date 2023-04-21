@@ -65,6 +65,7 @@ def mutate(filters):
     selected_filter[(selected_filter > 1) | (selected_filter < -1)] /= torch.amax(torch.absolute(selected_filter))
     
     filters[selected_layer][selected_dims[0]][selected_dims[1]] = selected_filter
+    print(selected_filter > 1, selected_filter < -1)
     return filters
 
 def profile_validation_epoch(net):

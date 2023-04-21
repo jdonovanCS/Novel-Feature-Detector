@@ -13,6 +13,7 @@ import pl_bolts.datamodules
 from pytorch_lightning.loggers import WandbLogger
 import pytorch_lightning as pl
 from net import Net
+from ae_net import AE
 from cifar100datamodule import CIFAR100DataModule
 import numba
 import os
@@ -57,6 +58,15 @@ def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, 
 
     # torch.save(net.state_dict(), save_path)
     # return record_progress
+def train_ae_network(data_module, epochs=100, lr=.001, save_path=None, novelty_interval=4, val_interval=1, diversity_type='absolute'):
+    net = AE(10, diversity_type, lr)
+    net = net.to(device)
+    if save_path is None:
+        save_path = PATH
+    wandb_logger = WandbLogger(log_model=True)
+    trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator='auto')
+    wandb_logger.watch(net, log='all')
+    trainer.fit(net, datamodule=data_module)
 
 def get_data_module(dataset, batch_size, workers=np.inf):
     match dataset.lower():
@@ -100,6 +110,7 @@ def diversity(acts):
                 div = np.abs(acts[batch, channel] - acts[batch, channel2]).sum()
                 pairwise[batch, channel, channel2] = div
                 pairwise[batch, channel2, channel] = div
+    # max_act = max(np.abs(acts.flatten()))
     return(pairwise.sum())
 
 @numba.njit(parallel=True)
