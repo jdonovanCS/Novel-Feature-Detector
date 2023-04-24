@@ -8,3 +8,4 @@ output/*/solutions_over_time*
 wandb/*
 lightning_logs/*
 output/*
+output.zip
