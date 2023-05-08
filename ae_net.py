@@ -40,19 +40,19 @@ class AE(pl.LightningModule):
                                             nn.ConvTranspose2d(128, 64, 3, padding=1),
                                             nn.ConvTranspose2d(64, 32, 3, padding=1),
                                             nn.ConvTranspose2d(32, 3, 3, padding=1)])
-        self.t_BatchNorm1 = nn.BatchNorm2d(256)
+        self.t_BatchNorm3 = nn.BatchNorm2d(256)
         self.t_BatchNorm2 = nn.BatchNorm2d(128)
-        self.t_BatchNorm3 = nn.BatchNorm2d(32)
+        self.t_BatchNorm1 = nn.BatchNorm2d(32)
 
         self.t_upsample = nn.UpsamplingBilinear2d(scale_factor=2)
         self.t_unflatten = nn.Unflatten(1, (256, 4, 4))
 
-        self.t_dropout1 = nn.Dropout2d(0.1)
-        self.t_dropout2 = nn.Dropout2d(0.05)
+        self.t_dropout2 = nn.Dropout2d(0.1)
+        self.t_dropout1 = nn.Dropout2d(0.05)
 
-        self.t_fc1 = nn.Linear(encoded_space_dim, 512)
+        self.t_fc3 = nn.Linear(encoded_space_dim, 512)
         self.t_fc2 = nn.Linear(512, 1024)
-        self.t_fc3 = nn.Linear(1024, 4096)
+        self.t_fc1 = nn.Linear(1024, 4096)
 
         self.diversity = diversity
         self.loss_fn = torch.nn.MSELoss()
@@ -67,91 +67,102 @@ class AE(pl.LightningModule):
         conv_count += 1
         x = self.BatchNorm1(x)
         x = F.relu(x)
+        
         x = self.conv_layers[conv_count](x)
         if get_activations:
             self.activations[conv_count].append(x)
         conv_count += 1
         x = F.relu(x)
+        
         x = self.pool(x)
+        
         x = self.conv_layers[conv_count](x)
         if get_activations:
             self.activations[conv_count].append(x)
         conv_count += 1
         x = self.BatchNorm2(x)
         x = F.relu(x)
+        
         x = self.conv_layers[conv_count](x)
         if get_activations:
             self.activations[conv_count].append(x)
         conv_count += 1
         x = F.relu(x)
+        
         x = self.pool(x)
         x = self.dropout1(x)
+        
         x = self.conv_layers[conv_count](x)
         if get_activations:
             self.activations[conv_count].append(x)
         conv_count += 1
         x = self.BatchNorm3(x)
         x = F.relu(x)
+        
         x = self.conv_layers[conv_count](x)
         if get_activations:
             self.activations[conv_count].append(x)
         x = F.relu(x)
+        
         x = self.pool(x)
         x = torch.flatten(x, 1)
         x = self.dropout2(x)
-        x = self.fc1(x)
+        
+        x = self.fc1(x) # 4096 -> 1024
         x = F.relu(x)
-        x = self.fc2(x)
+        
+        x = self.fc2(x) # 1024 -> 512
         x = F.relu(x)
+        
         x = self.dropout2(x)
-        x = self.fc3(x)
+        
+        x = self.fc3(x) # 512 -> encoding size
 
         # Decode
         t_conv_count = 0
-        x = self.t_fc1(x)
+        x = self.t_fc3(x) # encoding -> 512
+        x = F.relu(x)
+
         x = self.t_dropout1(x)
+        
+        x = self.t_fc2(x) # 512 -> 1024
         x = F.relu(x)
-        x = self.t_fc2(x)
+        
+        x = self.t_fc1(x) # 1024 -> 4096
         x = F.relu(x)
-        x = self.t_fc3(x)
+        
         x = self.t_dropout2(x)
         x = self.t_unflatten(x)
         x = self.t_upsample(x)
-        x = F.relu(x)
+        
         x = self.t_conv_layers[t_conv_count](x)
-        # if get_activations:
-        #     self.activations[conv_count+1+t_conv_count].append(x)
         t_conv_count += 1
-        x = F.relu(x)
-        x = self.t_BatchNorm1(x)
-        x = self.t_conv_layers[t_conv_count](x)
-        # if get_activations:
-        #     self.activations[conv_count+1+t_conv_count].append(x)
-        t_conv_count += 1
-        x = self.t_dropout2(x)
-        x = self.t_upsample(x)
-        x = F.relu(x)
-        x = self.t_conv_layers[t_conv_count](x)
-        # if get_activations:
-        #     self.activations[conv_count+1+t_conv_count].append(x)
-        t_conv_count += 1
-        x = F.relu(x)
-        x = self.t_BatchNorm2(x)
-        x = self.t_conv_layers[t_conv_count](x)
-        # if get_activations:
-        #     self.activations[conv_count+1+t_conv_count].append(x)
-        t_conv_count += 1
-        x = self.t_upsample(x)
-        x = F.relu(x)
-        x = self.t_conv_layers[t_conv_count](x)
-        # if get_activations:
-        #     self.activations[conv_count+1+t_conv_count].append(x)
-        t_conv_count += 1
-        x = F.relu(x)
         x = self.t_BatchNorm3(x)
+        x = F.relu(x)
+
         x = self.t_conv_layers[t_conv_count](x)
-        # if get_activations:
-        #     self.activations[conv_count+1+t_conv_count].append(x)
+        t_conv_count += 1
+        x = F.relu(x)
+        x = self.t_dropout1(x)
+        x = self.t_upsample(x)
+
+        x = self.t_conv_layers[t_conv_count](x)
+        t_conv_count += 1
+        x = self.t_BatchNorm2(x)
+        x = F.relu(x)
+        
+        x = self.t_conv_layers[t_conv_count](x)
+        t_conv_count += 1
+        x = F.relu(x)
+        x = self.t_upsample(x)
+
+        x = self.t_conv_layers[t_conv_count](x)
+        t_conv_count += 1
+        x = self.t_BatchNorm1(x)
+        x = F.relu(x)
+
+        x = self.t_conv_layers[t_conv_count](x)
+
 
         return x
 

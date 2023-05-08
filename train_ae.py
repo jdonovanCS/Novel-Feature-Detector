@@ -21,6 +21,7 @@ parser.add_argument('--num_batches_for_ae', help='Number of batches used of data
 parser.add_argument('--diversity_type', type=str, default='absolute', help='Type of diversity metric to use for this experiment (ie. absolute, relative, original etc.)')
 parser.add_argument('--num_workers', help='number of workers for training', default=np.inf, type=int)
 parser.add_argument('--num_runs', help='how many ae networks to train', default=5, type=int)
+parser.add_argument('--encoded_space_dims', help='final encoding dims flattened', default=256, type=int)
 args = parser.parse_args()
 
 def run():
@@ -57,7 +58,7 @@ def run():
         # else train the network and collect the metrics
         save_path = "trained_models/trained/ae_e{}_r{}.pth".format(experiment_name, run_num)
         print('Training and Evaluating Run: {}'.format(run_num))
-        record_progress = helper.train_ae_network(data_module=data_module, epochs=epochs, lr=args.lr, save_path=save_path, novelty_interval=int(args.novelty_interval), val_interval=int(args.test_accuracy_interval), diversity_type=args.diversity_type)
+        record_progress = helper.train_ae_network(data_module=data_module, epochs=epochs, lr=args.lr, encoded_space_dims=args.encoded_space_dims, save_path=save_path, novelty_interval=int(args.novelty_interval), val_interval=int(args.test_accuracy_interval), diversity_type=args.diversity_type)
         helper.run(seed=False)
         helper.config['dataset'] = args.dataset.lower()
         helper.config['batch_size'] = args.batch_size

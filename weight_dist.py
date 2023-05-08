@@ -10,8 +10,10 @@ from functools import partial
 parser=argparse.ArgumentParser(description="Process some input files")
 parser.add_argument('--experiment_name', help='experiment name for saving data related to training')
 parser.add_argument('--random', action='store_true')
+parser.add_argument('--rand-norm', action='store_true')
 parser.add_argument('--gram-schmidt', help='gram-schmidt used to orthonormalize filters', action='store_true')
 parser.add_argument('--unique_id', help='if a unique id is associated with the file the solution is stored in give it here.', default="", type=str)
+parser.add_argument('--no-evo', action='store_true')
 args = parser.parse_args()
 
 def run():
@@ -23,14 +25,21 @@ def run():
     
     experiment_name = args.experiment_name
     
+    name = 'fitness'
     if args.gram_schmidt:
         name = 'gram-schmidt'
+    if args.rand_norm:
+        name='rand-normal'
     if args.unique_id != "":
         name = 'current_' + name + "_" + args.unique_id
     
     filename = ''
-    filename = 'output/' + experiment_name + '/solutions_over_time_{}.npy'.format('fitness')
-    random_filename = 'output/' + experiment_name + '/solutions_over_time_{}.npy'.format('random')
+    if args.no_evo:
+        filename='output/' + experiment_name + '/solutions_over_time_{}.npy'.format(name)
+        random_filename='output/' + experiment_name + '/solutions_over_time_{}.npy'.format(name)
+    else:
+        filename = 'output/' + experiment_name + '/solutions_over_time_{}.npy'.format(name)
+        random_filename = 'output/' + experiment_name + '/solutions_over_time_{}.npy'.format('random')
 
     # get filters from numpy file
     np_load_old = partial(np.load)
@@ -57,14 +66,21 @@ def run():
     num_runs = len(stored_filters)
     pdf = pdf_r = 0
     for layer in range(len(stored_filters[0][49])):
+        pdf = pdf_r = mean = mean_r = std = std_r = 0
+        divisor = max(abs(stored_filters_random[0][0][layer].flatten()))
+        multiplier = max(abs(stored_filters[0][0][layer].flatten()))
+        num_bins_ = int(100*multiplier/divisor)
+        num_outside = 0
         for run_num in range(num_runs):
             filters = stored_filters[run_num][49]
             filters_random = stored_filters_random[0][run_num]
             
+            num_outside += sum(abs(filters[layer].flatten()) > divisor)
+
             # max(np.abs(filters[layer].flatten()))
             # getting data of the histogram
-            count, bins_count = np.histogram(filters[layer].flatten(), bins=100, normed=True)
             count_r, bins_count_r = np.histogram(filters_random[layer].flatten(), bins=100, normed=True)
+            count, bins_count = np.histogram(filters[layer].flatten(), bins=num_bins_, normed=True)
             
             # verify sum to 1
             widths = bins_count[1:] - bins_count[:-1]
@@ -76,6 +92,11 @@ def run():
             # finding the PDF of the histogram using count values
             pdf += count / sum(count)
             pdf_r += count_r/sum(count_r)
+
+            mean += filters[layer].flatten().mean()
+            mean_r += filters_random[layer].flatten().mean()
+            std += filters[layer].flatten().std()
+            std_r += filters_random[layer].flatten().std()
             
             # using numpy np.cumsum to calculate the CDF
             # We can also find using the PDF values by looping and adding
@@ -84,6 +105,10 @@ def run():
             
         pdf = pdf / len(stored_filters[0][49])
         pdf_r = pdf_r / len(stored_filters[0][49])
+        mean = mean / len(stored_filters[0][49])
+        mean_r = mean_r / len(stored_filters[0][49])
+        std = std / len(stored_filters[0][49])
+        std_r = std_r / len(stored_filters[0][49])
         # plotting PDF and CDF
         # Attempt at smoothing
         # bins_count = bins_count[:-1] + (bins_count[1] - bins_count[0])/2   # convert bin edges to centers
@@ -103,13 +128,17 @@ def run():
         # plt.plot( dist_space_r, kde_r(dist_space_r) )
         
         # Original plots
-        plt.plot(bins_count[1:], pdf, color="blue", label="PDF_{}".format(layer+1))
+        if not args.no_evo:
+            plt.plot(bins_count[1:], pdf, color="blue", label="PDF_{}".format(layer+1))
         plt.plot(bins_count_r[1:], pdf_r, color="red", label="PDF_r_{}".format(layer+1))
         # plt.plot(bins_count[1:], cdf, label="CDF")
         plt.legend()
         # print(mag)
-    
-
+        perc_outside = num_outside/len(stored_filters[0][0][layer].flatten())/(num_runs)
+        perc_inside = 1-perc_outside
+        print('percentage of weights outside of the range: -{}, {}: {}'.format(divisor, divisor, perc_outside))
+        print('percentage of weights inside of the range: -{}, {}: {}'.format(divisor, divisor, perc_inside))
+        print('mean: {} mean_random: {} \t std: {} std_random: {}'.format(mean, mean_r, std, std_r))
         plt.show()
 
 if __name__ == '__main__':

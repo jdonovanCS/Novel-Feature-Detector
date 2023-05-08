@@ -41,6 +41,7 @@ parser.add_argument('--evo_num_children', type=int, help='Number of children in 
 parser.add_argument('--diversity_type', default='absolute', type=str, help='Type of diversity metric to use for this experiment (ie. relative, absolute, original, etc.)')   
 parser.add_argument('--profile', help='Profile validation epoch during evolution', default=False, action='store_true')
 parser.add_argument('--num_workers', help='Num workers to use to load data module', default=np.inf, type=int)
+parser.add_argument('--rand_tech', help='which random technique is used to initialize network weights', type=str, default=None)
 args = parser.parse_args()
 
 def mutate(filters):
@@ -103,6 +104,8 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
     for i in tqdm(range(population_size)): #while len(population) < population_size:
         model = Model()
         net = helper.Net(num_classes=len(classnames), classnames=classnames, diversity=args.diversity_type)
+        if args.rand_tech == 'normal':
+            helper.normalize(net)
         model.filters = net.get_filters()
         if args.profile:
             profile_validation_epoch(net)
@@ -168,6 +171,7 @@ def run():
     helper.config['evo_num_children'] = args.evo_num_children
     helper.config['diversity_type'] = args.diversity_type
     helper.config['experiment_type'] = 'evolution'
+    helper.config['rand_tech'] = args.rand_tech
     helper.update_config()
 
     # random_image_paths = helper.create_random_images(64)
@@ -250,6 +254,7 @@ def run():
             helper.config['evo_num_children'] = args.evo_num_children
             helper.config['diversity_type'] = args.diversity_type
             helper.config['experiment_type'] = 'evolution'
+            helper.config['rand_tech'] = args.rand_tech
             helper.update_config()
 
     with open('output/' + experiment_name + '/solutions_over_time.pickle', 'wb') as f:

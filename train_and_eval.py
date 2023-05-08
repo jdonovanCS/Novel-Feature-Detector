@@ -18,6 +18,7 @@ parser.add_argument('--training_interval', help='How often should the network be
 'If 0 is given, the filters from every generation will be trained', type=float, default=1.)
 parser.add_argument('--epochs', help="Number of epochos to train for", type=int, default=64)
 parser.add_argument('--random', action='store_true')
+parser.add_argument('--rand_norm', action='store_true')
 parser.add_argument('--novelty_interval', help='How often should a novelty score be captured during training?', default=0)
 parser.add_argument('--test_accuracy_interval', help='How often should test accuracy be assessed during training?', default=4)
 parser.add_argument('--batch_size', help="batch size for training", type=int, default=64)
@@ -28,6 +29,9 @@ parser.add_argument('--evo_dataset_for_novelty', help='Dataset used for novelty 
 parser.add_argument('--num_batches_for_evolution', help='Number of batches used of dataset when calculating diversity of filters', default=np.inf, type=int)
 parser.add_argument('--evo', help='evolved solutions, should only be true if random is not set', action='store_true')
 parser.add_argument('--gram-schmidt', help='gram-schmidt used to orthonormalize filters', action='store_true')
+parser.add_argument('--ae_epochs', help='how many epochs were used in autoencoder unsupervised training', default=None, type=int)
+parser.add_argument('--ae_dataset', help='dataset used for training autoencoder', default=None)
+parser.add_argument('--ae_num_runs', help='number of runs for autoencoder training', default=None, type=int)
 parser.add_argument('--unique_id', help='if a unique id is associated with the file the solution is stored in give it here.', default="", type=str)
 parser.add_argument('--evo_num_runs', help='Number of runs used in evolution', default=5)
 parser.add_argument('--evo_tourney_size', help='Size of tournaments in evolutionary algorithm selection', default=4)
@@ -50,11 +54,18 @@ def run():
     fixed_conv = args.fixed_conv
     if args.random:
         name = 'random'
-    elif args.evo or args.random == None or not args.random:
+        if args.rand_norm:
+            name = 'rand-normal'
+    elif args.evo or (not args.random and not args.gram_schmidt):
         name = 'fitness'
     
     if args.gram_schmidt:
         name = 'gram-schmidt'
+    if args.ae_epochs:
+        name = 'ae_unsup'
+        if training_interval < 1:
+            print('please enter valid training interval as ae filters are in the shape num_runs, 1, \{filters\}')
+            exit()
     if args.unique_id != "":
         name = 'current_' + name + "_" + args.unique_id
     
@@ -70,7 +81,7 @@ def run():
     if args.unique_id != '':
         stored_filters = [stored_filters]
 
-    if args.random:
+    if args.random or args.gram_schmidt:
         random.shuffle(stored_filters[0])
         stored_filters = np.array(stored_filters)
         with open(filename, 'wb') as f:
@@ -94,7 +105,7 @@ def run():
     helper.config['evo_pop_size'] = args.evo_pop_size
     helper.config['evo_dataset_for_novelty'] = args.evo_dataset_for_novelty
     helper.config['evo_num_batches_for_diversity'] = args.num_batches_for_evolution
-    helper.config['evo'] = args.evo or args.random == None or not args.random
+    helper.config['evo'] = args.evo or (not args.random and not args.gram_schmidt)
     helper.config['evo_num_runs'] = args.evo_num_runs
     helper.config['evo_tourney_size'] = args.evo_tourney_size
     helper.config['evo_num_winners'] = args.evo_num_winners
@@ -102,13 +113,17 @@ def run():
     helper.config['experiment_type'] = 'training'
     helper.config['fixed_conv'] = fixed_conv == True
     helper.config['diversity_type'] = args.diversity_type
+    helper.config['rand_norm'] = args.rand_norm
+    helper.config['ae_epochs'] = args.ae_epochs
+    helper.config['ae_dataset'] = args.ae_dataset
+    helper.config['ae_num_runs'] = args.ae_num_runs
     helper.update_config()
     
     
     # run training and evaluation and record metrics in above variables
     # for each type of evolution ran
 
-    if args.evo or args.random == None or not args.random: 
+    if args.evo or (not args.random and not args.gram_schmidt): 
         skip = args.skip
         rand_skip=1
     else: 
@@ -123,7 +138,7 @@ def run():
                 continue
             
             # else train the network and collect the metrics
-            helper.config['generation'] = i
+            helper.config['generation'] = i if (not args.random and not args.gram_schmidt) else None
             helper.update_config()
             save_path = "trained_models/trained/conv{}_e{}_n{}_r{}_g{}.pth".format(not fixed_conv, experiment_name, name, run_num, i)
             print('Training and Evaluating: {} Gen: {} Run: {}'.format(name, i, run_num))
@@ -137,13 +152,17 @@ def run():
             helper.config['evo_pop_size'] = args.evo_pop_size
             helper.config['evo_dataset_for_novelty'] = args.evo_dataset_for_novelty
             helper.config['evo_num_batches_for_diversity'] = args.num_batches_for_evolution
-            helper.config['evo'] = args.evo or args.random == None or not args.random
+            helper.config['evo'] = args.evo or (not args.random and not args.gram_schmidt)
             helper.config['evo_num_runs'] = args.evo_num_runs
             helper.config['evo_tourney_size'] = args.evo_tourney_size
             helper.config['evo_num_winners'] = args.evo_num_winners
             helper.config['evo_num_children'] = args.evo_num_children
             helper.config['experiment_type'] = 'training'
             helper.config['fixed_conv'] = fixed_conv == True
+            helper.config['rand_norm'] = args.rand_norm
+            helper.config['ae_epochs'] = args.ae_epochs
+            helper.config['ae_dataset'] = args.ae_dataset
+            helper.config['ae_num_runs'] = args.ae_num_runs
             helper.update_config()
             # for c in classlist:
             #     classwise_accuracy_record[run_num][i][np.where(classlist==c)[0][0]] = record_accuracy[c]
