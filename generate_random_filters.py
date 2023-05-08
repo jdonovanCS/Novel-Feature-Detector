@@ -11,7 +11,7 @@ from model import Model
 parser=argparse.ArgumentParser(description="Process some input files")
 parser.add_argument('--experiment_name', help='experiment name for saving and data related to filters generated', default='')
 parser.add_argument('--population_size', help='number of filters to generate', type=int, default=50)
-parser.add_argument('--technique', help='random or gram-schmidt technique', type=str, default='random')
+parser.add_argument('--technique', help='random, rand-normal, or gram-schmidt technique', type=str, default='random')
 # parser.add_argument('--batch_size', help='Number of images to use for novelty metric, only 1 batch used', default=64, type=int)
 # parser.add_argument('--dataset', help='which dataset should be used for novelty metric, choices are: random, cifar-10', default='random')
 args = parser.parse_args()
@@ -42,10 +42,14 @@ def run():
     for i in tqdm(range(population_size)): #while len(population) < population_size:
         model = Model()
         net = helper.Net()
-        model.filters = net.get_filters()
+        model.filters = net.get_filters(numpy=True)
         # model.fitness =  net.get_fitness(net_input)
-        if args.technique != 'random':
-            helper.gram_shmidt_orthonormalize(model.filters)
+        if args.technique == 'gram-schmidt':
+            new_filters = helper.gram_shmidt_orthonormalize(model.filters)
+            net.set_filters = new_filters
+        if args.technique == 'rand-normal':
+            helper.normalize(net)
+        model.filters = net.get_filters()
         population.append(model)
         # helper.wandb.log({'gen': 0, 'individual': i, 'fitness': model.fitness})
         

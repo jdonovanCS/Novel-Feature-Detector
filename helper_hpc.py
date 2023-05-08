@@ -38,7 +38,8 @@ def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, 
     print(net.device)
     if filters is not None:
         for i in range(len(net.conv_layers)):
-            net.conv_layers[i].weight.data = torch.tensor(filters[i])
+            if i < len(filters):
+                net.conv_layers[i].weight.data = torch.tensor(filters[i])
             if fixed_conv:
                 for param in net.conv_layers[i].parameters():
                     param.requires_grad = False
@@ -58,8 +59,8 @@ def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, 
 
     # torch.save(net.state_dict(), save_path)
     # return record_progress
-def train_ae_network(data_module, epochs=100, lr=.001, save_path=None, novelty_interval=4, val_interval=1, diversity_type='absolute'):
-    net = AE(10, diversity_type, lr)
+def train_ae_network(data_module, epochs=100, lr=.001, encoded_space_dims=256, save_path=None, novelty_interval=4, val_interval=1, diversity_type='absolute'):
+    net = AE(encoded_space_dims, diversity_type, lr)
     net = net.to(device)
     if save_path is None:
         save_path = PATH
@@ -220,6 +221,17 @@ def gram_shmidt_orthonormalize(filters):
         f = copied.reshape(filters[f].shape)
     return filters
 
+# @numba.njit(parallel=True)
+def normalize(net):
+    for m in net.modules():
+        kaiming_normalize(m)
+        
+def kaiming_normalize(m):
+    if getattr(m, 'bias', None) is not None:
+        torch.nn.init.constant_(m.bias, 0)
+    if isinstance(m, (torch.nn.Conv2d, torch.nn.Linear)):
+        torch.nn.init.kaiming_normal_(m.weight)
+    for l in m.children(): kaiming_normalize(l)
 # from tqdm import tqdm
 # def gram_schmidt(vectors):
 #     basis = []
