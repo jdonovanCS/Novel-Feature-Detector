@@ -32,8 +32,8 @@ def create_random_images(num_images=200):
 #     train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=2)
 #     return train_loader
 
-def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, fixed_conv=False, val_interval=1, novelty_interval=None, diversity_type='absolute'):
-    net = Net(num_classes=data_module.num_classes, classnames=list(data_module.dataset_test.classes), diversity=diversity_type, lr=lr)
+def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, fixed_conv=False, val_interval=1, novelty_interval=None, diversity_type='absolute', pdop=None, layerwise_op=None, neigh_params=None):
+    net = Net(num_classes=data_module.num_classes, classnames=list(data_module.dataset_test.classes), diversity=diversity_type, pdop=pdop, layerwise_op=layerwise_op, neigh_params=neigh_params, lr=lr)
     net = net.to(device)
     print(net.device)
     if filters is not None:
@@ -97,7 +97,7 @@ def save_npy(filename, data, index=0):
     
 
 @numba.njit(parallel=True)
-def diversity(acts):
+def diversity(acts, pairwise_op='sum'):
     
     # with torch.no_grad():
     # for each conv layer 4d (batch, channel, h, w)
@@ -112,7 +112,10 @@ def diversity(acts):
                 pairwise[batch, channel, channel2] = div
                 pairwise[batch, channel2, channel] = div
     # max_act = max(np.abs(acts.flatten()))
-    return(pairwise.sum())
+    if pairwise_op == 'sum':
+        return((pairwise).sum())
+    if pairwise_op == 'mean':
+        return((pairwise).mean())
 
 @numba.njit(parallel=True)
 def diversity_orig(acts):
@@ -133,7 +136,7 @@ def diversity_orig(acts):
     return dist.mean()
 
 @numba.njit(parallel=True)
-def diversity_relative(acts):
+def diversity_relative(acts, pairwise_op='sum'):
     B=len(acts)
     C=len(acts[0])
     pairwise = np.zeros((B,C,C))
@@ -146,7 +149,12 @@ def diversity_relative(acts):
                 # div=np.abs((acts[batch, channel]-acts[batch, channel2])/(acts[batch, channel]+acts[batch, channel2])).sum()
                 pairwise[batch, channel, channel2] = div
                 pairwise[batch, channel2, channel] = div
-    return(pairwise.sum())
+    if pairwise_op == 'sum':
+        return((pairwise).sum())
+    if pairwise_op == 'mean':
+        return((pairwise).mean())
+    if pairwise_op == 'rms':
+        return(np.sqrt(np.mean(pairwise**2)))
 
 @numba.njit(parallel=True, fastmath=True)
 def diversity_cosine_distance(acts):
@@ -221,6 +229,31 @@ def gram_shmidt_orthonormalize(filters):
         f = copied.reshape(filters[f].shape)
     return filters
 
+# TODO: This doesn't work quite right. We want the k-nearest filters for each of the filters, not the k-nearest overall.. at least that's what I think..
+@numba.njit(parallel=True)
+def diversity_k_neighbors(acts, k=10, closest=True, pairwise_op='sum'):
+    I = len(acts)
+    C = len(acts[0])
+    pairwise = np.zeros((I,C,C))
+    k_nearest = np.zeros((I,C,k))
+    for image in numba.prange(I):
+        for channel in range(C):
+            for channel2 in range(channel, C):
+                dist = np.abs(acts[image, channel]-acts[image, channel2]).sum()
+                divisor = (np.abs(acts[image, channel]).sum()) + (np.abs(acts[image, channel2]).sum())
+                div=(dist / divisor)
+                pairwise[image, channel, channel2] = div
+                pairwise[image, channel2, channel] = div
+            k_nearest[image, channel] = sorted(pairwise[image, channel], reverse=not closest)[0:k]
+    
+    # max_act = max(np.abs(acts.flatten()))
+    if pairwise_op == 'sum':
+        return((k_nearest).sum())
+    if pairwise_op == 'mean':
+        return((k_nearest).mean())
+    if pairwise_op == 'rms':
+        return(np.sqrt(np.mean(k_nearest**2)))
+
 # @numba.njit(parallel=True)
 def normalize(net):
     for m in net.modules():
@@ -240,6 +273,44 @@ def kaiming_normalize(m):
 #         if (w > 1e-10).any():  
 #             basis.append(w/np.linalg.norm(w))
 #     return np.array(basis)
+
+def get_dist(layer_params):
+    num_outside = 0
+    for layer in range(len(layer_params)):
+        pdf = mean = std = abs_mean = 0
+        divisor = max(abs(layer_params[layer].flatten()))
+        multiplier = max(abs(layer_params[layer].flatten()))
+        num_bins_ = int(100*multiplier/divisor)
+        num_outside = 0
+        num_outside += sum(abs(layer_params[layer].flatten()) > divisor)
+
+        # max(np.abs(layer_params[layer].flatten()))
+        # getting data of the histogram
+        count, bins_count = np.histogram(layer_params[layer].flatten(), bins=num_bins_, normed=True)
+            
+        # verify sum to 1
+        widths = bins_count[1:] - bins_count[:-1]
+        assert sum(count * widths) > .99 and sum(count * widths) < 1.01
+
+        # finding the PDF of the histogram using count values
+        pdf += count / sum(count)
+
+        mean += layer_params[layer].flatten().mean()
+        std += layer_params[layer].flatten().std()
+        abs_mean += abs(layer_params[layer].flatten()).mean()
+            
+        # using numpy np.cumsum to calculate the CDF
+        # We can also find using the PDF values by looping and adding
+        # cdf = np.cumsum(pdf)
+        # cdf_r = np.cumsum(pdf_r)
+            
+        pdf = pdf / len(layer_params)
+        mean = mean / len(layer_params)
+        std = std / len(layer_params)
+        abs_mean = abs_mean / len(layer_params)
+
+        return pdf, mean, std, abs_mean
+
 
 @numba.njit(parallel=True)
 def diversity_constant(acts):

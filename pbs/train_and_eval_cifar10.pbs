@@ -40,4 +40,4 @@ conda activate EC2
 
 #ccmrun python ${HOME}/amrdec_oil/main.py ${JOBID} > out.dat
 
-ccmrun python train_and_eval.py --batch_size=64 --experiment_name="hpc randimg diversity" --dataset=cifar10 --training_interval=1 --epochs=96 --novelty_interval=1 --test_accuracy_interval=4 --evo_num_runs=5 --num_workers=0
+ccmrun python train_and_eval.py --batch_size=64 --evo_tourney_size=4 --evo_num_winners=2 --evo_dataset_for_novelty=cifar10 --evo_pop_size=20 --evo_num_children=20 --evo_num_runs=5 --evo_gens=50 --experiment_name="hpc full cifar10 val diversity" --dataset=cifar10 --training_interval=1 --epochs=96 --novelty_interval=1 --test_accuracy_interval=4 --skip=3

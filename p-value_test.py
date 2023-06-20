@@ -37,7 +37,7 @@ def run():
         search = 'val_acc' if not args.diversity else 'val_novelty'
         history = run.scan_history(keys=[search])
         values = [row[search] for row in history if not np.isnan(row[search])]
-        print(values)
+        print(len(values))
         values_0.extend(values[epoch_range[0]:epoch_range[1]])
 
     for i in range(len(args.run_ids_1)):
@@ -47,7 +47,7 @@ def run():
         search = 'val_acc' if not args.diversity else 'val_novelty'
         history = run.scan_history(keys=[search])
         values = [row[search] for row in history if not np.isnan(row[search])]
-        print(values)
+        print(len(values))
         values_1.extend(values[epoch_range[0]: epoch_range[1]])
 
 

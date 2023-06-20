@@ -10,7 +10,7 @@ import time
 # DEFINE a CONV NN
 
 class Net(pl.LightningModule):
-    def __init__(self, num_classes=10, classnames=None, diversity=None, lr=.001):
+    def __init__(self, num_classes=10, classnames=None, diversity=None, pdop=None, layerwise_op='mean', neigh_params=None, lr=.001):
         super().__init__()
         self.save_hyperparameters()
         self.BatchNorm1 = nn.BatchNorm2d(32)
@@ -34,6 +34,9 @@ class Net(pl.LightningModule):
 
         self.classnames = classnames
         self.diversity = diversity
+        self.pdop = pdop
+        self.layerwise_op = layerwise_op
+        self.neigh_params = neigh_params
         # self.avg_novelty = 0
 
     def forward(self, x, get_activations=False):
@@ -114,9 +117,9 @@ class Net(pl.LightningModule):
     def validation_step(self, val_batch, batch_idx):
         with torch.no_grad():
             if batch_idx == 0:
-                self.step=1
+                self.step=0
             else:
-                self.step=2
+                self.step=1
             x, y = val_batch
             logits = self.forward(x, get_activations=True)
             # get loss
@@ -142,15 +145,39 @@ class Net(pl.LightningModule):
             # get novelty score
             # novelty_score = 0
             novelty_score = self.compute_feature_novelty()
+            # log loss, acc, class acc, and novelty score
             # clear out activations
             for i in range(len(self.conv_layers)):
                 self.activations[i] = []
-            # log loss, acc, class acc, and novelty score
             self.log('val_loss', loss)
             self.log('val_acc', acc)
             self.log('val_class_acc', class_acc)
             self.log('val_novelty', novelty_score)
-            batch_dictionary = {'val_loss': loss, 'val_acc': acc, 'val_class_acc': class_acc, 'val_novelty': novelty_score}
+            # weight_dist = {}
+            # act_dist = {}
+            # weight_dist['pdf'], weight_dist['mean'], weight_dist['std'], weight_dist['abs_mean'] = self.compute_weight_dist()
+            # act_dist['pdf'], act_dist['mean'], act_dist['std'], act_dist['abs_mean'] = self.compute_activation_dist()
+            # self.log('weight_dist_pdf', torch.tensor(weight_dist['pdf']))
+            # self.log('weight_dist_mean', torch.tensor(weight_dist['mean']))
+            # self.log('weight_dist_abs_mean', torch.tensor(weight_dist['abs_mean']))
+            # self.log('weight_dist_std', torch.tensor(weight_dist['std']))
+            # self.log('val_activation_dist_pdf', torch.tensor(act_dist['pdf']))
+            # self.log('val_activation_dist_mean', torch.tensor(act_dist['mean']))
+            # self.log('val_activation_dist_abs_mean', torch.tensor(act_dist['abs_mean']))
+            # self.log('val_activation_dist_std', torch.tensor(act_dist['std']))
+            batch_dictionary = {'val_loss': loss, 
+                                'val_acc': acc, 
+                                'val_class_acc': class_acc, 
+                                'val_novelty': novelty_score 
+                                # ,'weight_dist_pdf': torch.tensor(weight_dist['pdf']), 
+                                # 'weight_dist_mean': torch.tensor(weight_dist['mean']),
+                                # 'weight_dist_abs_mean': torch.tensor(weight_dist['abs_mean']), 
+                                # 'weight_dist_std': torch.tensor(weight_dist['std']), 
+                                # 'val_activation_dist_pdf': torch.tensor(act_dist['pdf']), 
+                                # 'val_activation_dist_mean': torch.tensor(act_dist['mean']),
+                                # 'val_activation_dist_abs_mean': torch.tensor(act_dist['abs_mean']), 
+                                # 'val_activation_dist_std': torch.tensor(act_dist['std'])
+                                }
         return batch_dictionary
     
     def validation_epoch_end(self, outputs):
@@ -161,11 +188,27 @@ class Net(pl.LightningModule):
             for k, v in x['val_class_acc'].items():
                 avg_class_acc[k] = v
         avg_novelty = np.stack([x['val_novelty'] for x in outputs]).mean()
+        # avg_weight_dist_pdf = torch.stack([x['weight_dist_pdf'] for x in outputs]).mean()
+        # avg_weight_dist_mean = torch.stack([x['weight_dist_mean'] for x in outputs]).mean()
+        # avg_weight_dist_abs_mean = torch.stack([x['weight_dist_abs_mean'] for x in outputs]).mean()
+        # avg_weight_dist_std = torch.stack([x['weight_dist_std'] for x in outputs]).mean()
+        # avg_act_dist_pdf = torch.stack([x['val_activation_dist_pdf'] for x in outputs]).mean()
+        # avg_act_dst_mean = torch.stack([x['val_activation_dist_mean'] for x in outputs]).mean()
+        # avg_act_dst_abs_mean = torch.stack([x['val_activation_dist_abs_mean'] for x in outputs]).mean()
+        # avg_act_dist_std = torch.stack([x['val_activation_dist_std'] for x in outputs]).mean()
         self.avg_novelty = avg_novelty
         self.log('val_loss_epoch', avg_loss)
         self.log('val_acc_epoch', avg_acc)
         self.log('val_class_acc_epoch', avg_class_acc)
         self.log('val_novelty_epoch', avg_novelty)
+        # self.log('weight_dist_pdf_epoch', avg_weight_dist_pdf)
+        # self.log('weight_dist_mean_epoch', avg_weight_dist_mean)
+        # self.log('weight_dist_mean_epoch', avg_weight_dist_abs_mean)
+        # self.log('weight_dist_std_epoch', avg_weight_dist_std)
+        # self.log('val_activation_dist_pdf_epoch', avg_act_dist_pdf)
+        # self.log('val_activation_dist_mean_epoch', avg_act_dst_mean)
+        # self.log('val_activation_dist_mean_epoch', avg_act_dst_abs_mean)
+        # self.log('val_activation_dist_std_epoch', avg_act_dist_std)
         gc.collect()
 
     def get_fitness(self, batch):
@@ -247,6 +290,19 @@ class Net(pl.LightningModule):
             return [m.weight.data.detach().cpu().numpy() for m in self.conv_layers]
         return [m.weight.data.detach().cpu() for m in self.conv_layers]
 
+    def get_features(self, numpy=False):
+        if numpy:
+            return [self.activations[a][0] for a in range(len(self.activations))]
+        return [self.activations[a][0] for a in range(len(self.activations))]
+    
+    def compute_activation_dist(self):
+        activations = self.get_features(numpy=True)
+        return helper.get_dist(activations)
+    
+    def compute_weight_dist(self):
+        weights = self.get_filters(True)
+        return helper.get_dist(weights)
+
     def compute_feature_novelty(self):
         
         # start = time.time()
@@ -269,19 +325,28 @@ class Net(pl.LightningModule):
         for i in self.activations:
             self.activations[i][0] = self.activations[i][0].detach().cpu().numpy()
             if self.diversity=='relative':
-                l.append(helper.diversity_relative(self.activations[i][0]))
+                l.append(helper.diversity_relative(self.activations[i][0], self.pdop))
             elif self.diversity=='original':
                 l.append(helper.diversity_orig(self.activations[i]))
             elif self.diversity=='absolute':
-                l.append(helper.diversity(self.activations[i][0]))
+                l.append(helper.diversity(self.activations[i][0], self.pdop))
             elif self.diversity=='cosine':
                 l.append(helper.diversity_cosine_distance(self.activations[i][0]))
             elif self.diversity == 'constant':
                 l.append(helper.diversity_constant(self.activations[i][0]))
+            elif self.diversity == 'k_neighbors':
+                l.append(helper.diversity_k_neighbors(self.activations[i][0], self.neigh_params['k'], self.neigh_params['closest'], self.pdop))
             else:
                 l.append(helper.diversity(self.activations[i][0]))
 
-        if self.step==1:
-            print([max(np.abs(x.flatten())) for x in self.get_filters(numpy=True)])
-        return(sum(l))
-
+        # if self.step==1:
+        #     print([max(np.abs(x.flatten())) for x in self.get_filters(numpy=True)])
+        if self.layerwise_op == 'sum':
+            return(sum(l))
+        elif self.layerwise_op == 'mean':
+            return(np.mean(l))
+        elif self.layerwise_op == 'w_mean':
+            total_channels = 0
+            for i in range(len(self.conv_layers)):
+                total_channels+=self.conv_layers[i].out_channels
+            return(np.mean([l[i]*(self.conv_layers[i].out_channels)/total_channels for i in range(len(l))]))

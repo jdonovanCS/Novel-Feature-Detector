@@ -40,6 +40,10 @@ parser.add_argument('--evo_num_children', help='Number of children in evolutiona
 parser.add_argument('--skip', default=0, help='skip the first n models to train, used mostly when a run fails partway through', type=int)
 parser.add_argument('--stop_after', default=np.inf, help='stop after the first n models', type=int)
 parser.add_argument('--diversity_type', type=str, default='absolute', help='Type of diversity metric to use for this experiment (ie. absolute, relative, original etc.)')
+parser.add_argument('--pairwise_diversity_op', default='mean', help='the function to use for calculating diversity metric with regard to pairwise comparisons', type=str)   
+parser.add_argument('--layerwise_diversity_op', default='w_mean', help='the function to use for calculating diversity metric with regard to layerwise comparisons', type=str)
+parser.add_argument('--k', help='If using k-neighbors for metric calculation, how many neighbors', type=int, default=10)
+parser.add_argument('--closest', help='If using k-neigbhors for metric, should we do closest? If not set to False, closest will be used', type=bool, default=True)   
 parser.add_argument('--num_workers', help='number of workers for training', default=np.inf, type=int)
 args = parser.parse_args()
 
@@ -117,6 +121,9 @@ def run():
     helper.config['ae_epochs'] = args.ae_epochs
     helper.config['ae_dataset'] = args.ae_dataset
     helper.config['ae_num_runs'] = args.ae_num_runs
+    helper.config['pairwise_diversity_op'] = args.pairwise_diversity_op
+    helper.config['layerwise_diversity_op'] = args.layerwise_diversity_op
+    helper.config['neigh_params'] = {'k': args.k, 'closest': args.closest}
     helper.update_config()
     
     
@@ -142,7 +149,7 @@ def run():
             helper.update_config()
             save_path = "trained_models/trained/conv{}_e{}_n{}_r{}_g{}.pth".format(not fixed_conv, experiment_name, name, run_num, i)
             print('Training and Evaluating: {} Gen: {} Run: {}'.format(name, i, run_num))
-            record_progress = helper.train_network(data_module=data_module, filters=stored_filters[run_num][i], epochs=epochs, lr=args.lr, save_path=save_path, fixed_conv=fixed_conv, novelty_interval=int(args.novelty_interval), val_interval=int(args.test_accuracy_interval), diversity_type=args.diversity_type)
+            record_progress = helper.train_network(data_module=data_module, filters=stored_filters[run_num][i], epochs=epochs, lr=args.lr, save_path=save_path, fixed_conv=fixed_conv, novelty_interval=int(args.novelty_interval), val_interval=int(args.test_accuracy_interval), diversity_type=args.diversity_type, pdop=args.pairwise_diversity_op, layerwise_op=args.layerwise_diversity_op, neigh_params={'k': args.k, 'closest': args.closest})
             helper.run(seed=False)
             helper.config['dataset'] = args.dataset.lower()
             helper.config['batch_size'] = args.batch_size
@@ -159,10 +166,14 @@ def run():
             helper.config['evo_num_children'] = args.evo_num_children
             helper.config['experiment_type'] = 'training'
             helper.config['fixed_conv'] = fixed_conv == True
+            helper.config['diversity_type'] = args.diversity_type
             helper.config['rand_norm'] = args.rand_norm
             helper.config['ae_epochs'] = args.ae_epochs
             helper.config['ae_dataset'] = args.ae_dataset
             helper.config['ae_num_runs'] = args.ae_num_runs
+            helper.config['pairwise_diversity_op'] = args.pairwise_diversity_op
+            helper.config['layerwise_diversity_op'] = args.layerwise_diversity_op
+            helper.config['neigh_params'] = {'k': args.k, 'closest': args.closest}
             helper.update_config()
             # for c in classlist:
             #     classwise_accuracy_record[run_num][i][np.where(classlist==c)[0][0]] = record_accuracy[c]

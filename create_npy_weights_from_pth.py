@@ -18,10 +18,9 @@ def run():
     for i in range(5):
 
         # for each grab the convolutional filter weights from them
-        try:
-            path = os.path.join('trained_models/trained/ae_ecifar100_ae_r{}.pth'.format(i), 'novel-feature-detectors/', os.listdir('trained_models/trained/ae_ecifar100_ae_r{}.pth/novel-feature-detectors/'.format(i))[0], 'checkpoints/epoch=63-step=40000.ckpt')
-        except:
-            path = os.path.join('trained_models/trained/ae_ecifar100_ae_r{}.pth'.format(i), 'novel-feature-detectors/', os.listdir('trained_models/trained/ae_ecifar100_ae_r{}.pth/novel-feature-detectors/'.format(i))[1], 'checkpoints/epoch=63-step=40000.ckpt')
+        for j in range(len(os.listdir('trained_models/trained/ae_ecifar10_ae_r{}.pth/novel-feature-detectors/'.format(i)))):
+            if os.path.exists(os.path.join('trained_models/trained/ae_ecifar10_ae_r{}.pth'.format(i), 'novel-feature-detectors/', os.listdir('trained_models/trained/ae_ecifar10_ae_r{}.pth/novel-feature-detectors/'.format(i))[j], 'checkpoints/epoch=23-step=15000.ckpt')):
+                path = os.path.join('trained_models/trained/ae_ecifar10_ae_r{}.pth'.format(i), 'novel-feature-detectors/', os.listdir('trained_models/trained/ae_ecifar10_ae_r{}.pth/novel-feature-detectors/'.format(i))[j], 'checkpoints/epoch=23-step=15000.ckpt')
         m = AE.load_from_checkpoint(path)
 
         with torch.no_grad():
@@ -31,9 +30,9 @@ def run():
             solution_results['ae_unsup'][i] = [filters]
 
     # save this np array to file using npy.save (make sure the experiment name / save location is correct)
-    if not os.path.isdir('output/cifar100_ae'):
-        os.mkdir('output/cifar100_ae')
-    with open('output/cifar100_ae/solutions_over_time_{}.npy'.format('ae_unsup'), 'wb') as f:
+    if not os.path.isdir('output/cifar10_ae_less'):
+        os.mkdir('output/cifar10_ae_less')
+    with open('output/cifar10_ae_less/solutions_over_time_{}.npy'.format('ae_unsup'), 'wb') as f:
         np.save(f, solution_results['ae_unsup'])
 
 if __name__ == '__main__':

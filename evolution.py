@@ -38,7 +38,11 @@ parser.add_argument('--evo_num_runs', type=int, help='Number of runs used in evo
 parser.add_argument('--evo_tourney_size', type=int, help='Size of tournaments in evolutionary algorithm selection', default=4)
 parser.add_argument('--evo_num_winners', type=int, help='Number of winners in tournament in evolutionary algorithm', default=2)
 parser.add_argument('--evo_num_children', type=int, help='Number of children in evolutionary algorithm', default=20)
-parser.add_argument('--diversity_type', default='absolute', type=str, help='Type of diversity metric to use for this experiment (ie. relative, absolute, original, etc.)')   
+parser.add_argument('--diversity_type', default='absolute', type=str, help='Type of diversity metric to use for this experiment (ie. relative, absolute, original, etc.)')
+parser.add_argument('--pairwise_diversity_op', default='sum', help='the function to use for calculating diversity metric with regard to pairwise comparisons', type=str)
+parser.add_argument('--layerwise_diversity_op', default='w_mean', help='the function to use for calculating diversity metric with regard to layerwise comparisons', type=str)
+parser.add_argument('--k', help='If using k-neighbors for metric calculation, how many neighbors', type=int, default=10)
+parser.add_argument('--closest', help='If using k-neigbhors for metric, should we do closest? If not set to False, closest will be used', type=bool, default=True)
 parser.add_argument('--profile', help='Profile validation epoch during evolution', default=False, action='store_true')
 parser.add_argument('--num_workers', help='Num workers to use to load data module', default=np.inf, type=int)
 parser.add_argument('--rand_tech', help='which random technique is used to initialize network weights', type=str, default=None)
@@ -66,7 +70,6 @@ def mutate(filters):
     selected_filter[(selected_filter > 1) | (selected_filter < -1)] /= torch.amax(torch.absolute(selected_filter))
     
     filters[selected_layer][selected_dims[0]][selected_dims[1]] = selected_filter
-    print(selected_filter > 1, selected_filter < -1)
     return filters
 
 def profile_validation_epoch(net):
@@ -103,7 +106,7 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
     print("\nInitializing")
     for i in tqdm(range(population_size)): #while len(population) < population_size:
         model = Model()
-        net = helper.Net(num_classes=len(classnames), classnames=classnames, diversity=args.diversity_type)
+        net = helper.Net(num_classes=len(classnames), classnames=classnames, diversity=args.diversity_type, pdop=args.pairwise_diversity_op, layerwise_op=args.layerwise_diversity_op, neigh_params={'k': args.k, 'closest': args.closest})
         if args.rand_tech == 'normal':
             helper.normalize(net)
         model.filters = net.get_filters()
@@ -170,6 +173,9 @@ def run():
     helper.config['evo_num_winners'] = args.evo_num_winners
     helper.config['evo_num_children'] = args.evo_num_children
     helper.config['diversity_type'] = args.diversity_type
+    helper.config['pairwise_diversity_op'] = args.pairwise_diversity_op
+    helper.config['layerwise_diversity_op'] = args.layerwise_diversity_op
+    helper.config['neigh_params'] = {'k': args.k, 'closest': args.closest}
     helper.config['experiment_type'] = 'evolution'
     helper.config['rand_tech'] = args.rand_tech
     helper.update_config()
@@ -253,7 +259,10 @@ def run():
             helper.config['evo_num_winners'] = args.evo_num_winners
             helper.config['evo_num_children'] = args.evo_num_children
             helper.config['diversity_type'] = args.diversity_type
+            helper.config['pairwise_diversity_op'] = args.pairwise_diversity_op
+            helper.config['layerwise_diversity_op'] = args.layerwise_diversity_op
             helper.config['experiment_type'] = 'evolution'
+            helper.config['neigh_params'] = {'k': args.k, 'closest': args.closest}
             helper.config['rand_tech'] = args.rand_tech
             helper.update_config()
 
