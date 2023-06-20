@@ -137,18 +137,18 @@ def diversity_orig(acts):
 
 @numba.njit(parallel=True)
 def diversity_relative(acts, pairwise_op='sum'):
-    B=len(acts)
+    I=len(acts)
     C=len(acts[0])
-    pairwise = np.zeros((B,C,C))
-    for batch in numba.prange(B):
+    pairwise = np.zeros((I,C,C))
+    for image in numba.prange(I):
         for channel in range(C):
             for channel2 in range(channel+1, C):
-                dist = np.abs(acts[batch, channel]-acts[batch, channel2]).sum()
-                divisor = (np.abs(acts[batch, channel]).sum()) + (np.abs(acts[batch, channel2]).sum())
+                dist = np.abs(acts[image, channel]-acts[image, channel2]).sum()
+                divisor = (np.abs(acts[image, channel]).sum()) + (np.abs(acts[image, channel2]).sum())
                 div=(dist / divisor)
                 # div=np.abs((acts[batch, channel]-acts[batch, channel2])/(acts[batch, channel]+acts[batch, channel2])).sum()
-                pairwise[batch, channel, channel2] = div
-                pairwise[batch, channel2, channel] = div
+                pairwise[image, channel, channel2] = div
+                pairwise[image, channel2, channel] = div
     if pairwise_op == 'sum':
         return((pairwise).sum())
     if pairwise_op == 'mean':
