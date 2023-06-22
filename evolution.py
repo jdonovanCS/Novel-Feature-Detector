@@ -191,7 +191,7 @@ def run():
     # wandb_logger = WandbLogger(log_model=True)
     global trainer
     # trainer = pl.Trainer(logger=wandb_logger, accelerator="auto")
-    trainer = pl.Trainer(accelerator="auto", limit_val_batches=args.num_batches_for_evolution)
+    trainer = pl.Trainer(accelerator="gpu", limit_val_batches=args.num_batches_for_evolution, gpus=-1, strategy='ddp')
     global classnames
     classnames = list(data_module.dataset_test.classes)
 

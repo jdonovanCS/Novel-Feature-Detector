@@ -30,7 +30,9 @@ def run():
     n = Net(diversity='absolute')
     for run_num in range(num_runs):
         for i in range(num_layers_to_xfer):
-            n.conv_layers[i].weight.data = torch.tensor(stored_filters[run_num][final_gen_i][i])
+            z = torch.tensor(stored_filters[run_num][final_gen_i][i])
+            z = z.type_as(n.conv_layers[i].weight.data)
+            n.conv_layers[i].weight.data = z
         for j in range(num_layers_to_xfer, len(n.conv_layers)):
             stored_filters[run_num][final_gen_i][j] = n.conv_layers[j].weight.data.cpu().numpy()
 
