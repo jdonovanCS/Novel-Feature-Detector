@@ -349,4 +349,4 @@ class Net(pl.LightningModule):
             total_channels = 0
             for i in range(len(self.conv_layers)):
                 total_channels+=self.conv_layers[i].out_channels
-            return(np.mean([l[i]*(self.conv_layers[i].out_channels)/total_channels for i in range(len(l))]))
+            return(np.sum([l[i]*(self.conv_layers[i].out_channels)/total_channels for i in range(len(l))]))

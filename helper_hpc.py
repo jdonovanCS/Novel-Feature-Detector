@@ -34,12 +34,14 @@ def create_random_images(num_images=200):
 
 def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, fixed_conv=False, val_interval=1, novelty_interval=None, diversity_type='absolute', pdop=None, layerwise_op=None, neigh_params=None):
     net = Net(num_classes=data_module.num_classes, classnames=list(data_module.dataset_test.classes), diversity=diversity_type, pdop=pdop, layerwise_op=layerwise_op, neigh_params=neigh_params, lr=lr)
-    net = net.to(device)
+    # net = net.to(device)
     print(net.device)
     if filters is not None:
         for i in range(len(net.conv_layers)):
             if i < len(filters):
-                net.conv_layers[i].weight.data = torch.tensor(filters[i])
+                z = torch.tensor(filters[i])
+                z = z.type_as(net.conv_layers[i].weight.data)
+                net.conv_layers[i].weight.data = z
             if fixed_conv:
                 for param in net.conv_layers[i].parameters():
                     param.requires_grad = False
@@ -53,7 +55,7 @@ def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, 
     if save_path is None:
         save_path = PATH
     wandb_logger = WandbLogger(log_model=True)
-    trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="auto")
+    trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu", gpus=-1, strategy='ddp')
     wandb_logger.watch(net, log="all")
     trainer.fit(net, datamodule=data_module)
 
@@ -61,11 +63,11 @@ def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, 
     # return record_progress
 def train_ae_network(data_module, epochs=100, lr=.001, encoded_space_dims=256, save_path=None, novelty_interval=4, val_interval=1, diversity_type='absolute'):
     net = AE(encoded_space_dims, diversity_type, lr)
-    net = net.to(device)
+    # net = net.to(device)
     if save_path is None:
         save_path = PATH
     wandb_logger = WandbLogger(log_model=True)
-    trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator='auto')
+    trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator='gpu', gpus=-1, strategy='ddp')
     wandb_logger.watch(net, log='all')
     trainer.fit(net, datamodule=data_module)
 
@@ -396,6 +398,7 @@ def run(seed=True):
     wandb.login(key='e50cb709dc2bf04072661be1d9b46ec60d59e556')
     wandb.finish()
     os.environ["WANDB_START_METHOD"] = "thread"
+    # TODO: could put if statement here to determine if we should be logging. This is only necessary once ddp is actually working correctly.
     wandb.init(project="novel-feature-detectors")
 
 
