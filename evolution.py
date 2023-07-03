@@ -28,24 +28,36 @@ import shortuuid
 
 
 parser=argparse.ArgumentParser(description="Process some inputs")
+
+# experiment params
 parser.add_argument('--experiment_name', help='experiment name for saving data related to training')
-parser.add_argument('--batch_size', help="batch size for computing novelty, only 1 batch is used", type=int, default=64)
+parser.add_argument('--evo_num_runs', type=int, help='Number of runs used in evolution', default=5)
+
+# evolution params
 parser.add_argument('--evo_gens', type=int, help="number of generations used in evolving solutions", default=50)
 parser.add_argument('--evo_pop_size', type=int, help='Number of individuals in population when evolving solutions', default=20)
-parser.add_argument('--evo_dataset_for_novelty', help='Dataset used for novelty computation during evolution and training', default='cifar10')
-parser.add_argument('--num_batches_for_evolution', help='Number of batches used of dataset when calculating diversity of filters', default=np.inf, type=int)
-parser.add_argument('--evo_num_runs', type=int, help='Number of runs used in evolution', default=5)
 parser.add_argument('--evo_tourney_size', type=int, help='Size of tournaments in evolutionary algorithm selection', default=4)
 parser.add_argument('--evo_num_winners', type=int, help='Number of winners in tournament in evolutionary algorithm', default=2)
 parser.add_argument('--evo_num_children', type=int, help='Number of children in evolutionary algorithm', default=20)
-parser.add_argument('--diversity_type', default='absolute', type=str, help='Type of diversity metric to use for this experiment (ie. relative, absolute, original, etc.)')
-parser.add_argument('--pairwise_diversity_op', default='sum', help='the function to use for calculating diversity metric with regard to pairwise comparisons', type=str)
-parser.add_argument('--layerwise_diversity_op', default='w_mean', help='the function to use for calculating diversity metric with regard to layerwise comparisons', type=str)
-parser.add_argument('--k', help='If using k-neighbors for metric calculation, how many neighbors', type=int, default=10)
-parser.add_argument('--closest', help='If using k-neigbhors for metric, should we do closest? If not set to False, closest will be used', type=bool, default=True)
+parser.add_argument('--rand_tech', help='which random technique is used to initialize network weights', type=str, default='uniform')
+
+# fitness params
+parser.add_argument('--evo_dataset_for_novelty', help='Dataset used for novelty computation during evolution and training', default='random')
+parser.add_argument('--diversity_type', default='relative', type=str, help='Type of diversity metric to use for this experiment (ie. relative, absolute, original, cosine)')
+parser.add_argument('--pairwise_diversity_op', default='mean', help='the function to use for calculating diversity metric with regard to pairwise comparisons (ie. mean, sum, rms)', type=str)
+parser.add_argument('--layerwise_diversity_op', default='w_mean', help='the function to use for calculating diversity metric with regard to layerwise comparisons (ie. mean, w_mean, sum)', type=str)
+parser.add_argument('--k', help='If using k-neighbors for metric calculation, how many neighbors', type=int, default=-1)
+parser.add_argument('--k_strat', help='If using k-neigbhors for metric, what strategy should be used? (ie. closest, furthest, random, etc.)', type=str, default='closest')
+
+# batch size doesn't matter since no update
+parser.add_argument('--batch_size', help="batch size for computing novelty, only 1 batch is used", type=int, default=64)
+# not sure that this matters either since we should use all of the images in the dataset? especially once a separate evolution dataset is setup for cifar-10 and cifar-100
+parser.add_argument('--num_batches_for_evolution', help='Number of batches used of dataset when calculating diversity of filters', default=1, type=int)
+# only matters for efficiency purposes
 parser.add_argument('--profile', help='Profile validation epoch during evolution', default=False, action='store_true')
+# only matters for local running when I might run out of gpu ram
 parser.add_argument('--num_workers', help='Num workers to use to load data module', default=np.inf, type=int)
-parser.add_argument('--rand_tech', help='which random technique is used to initialize network weights', type=str, default=None)
+
 args = parser.parse_args()
 
 def mutate(filters):
@@ -61,7 +73,7 @@ def mutate(filters):
     # selected_filter = torch.tensor(np.random.rand(3,3), device=helper.device)
     
     # modify the entire layer / filters by a small amount
-    selected_filter += torch.rand(selected_filter.shape[0], selected_filter.shape[1])*2-1
+    selected_filter += torch.rand(selected_filter.shape[0], selected_filter.shape[1])*2.0-1.0
     
     # normalize entire filter so that values are between -1 and 1
     # selected_filter = (selected_filter/np.linalg.norm(selected_filter))*2
@@ -106,7 +118,7 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
     print("\nInitializing")
     for i in tqdm(range(population_size)): #while len(population) < population_size:
         model = Model()
-        net = helper.Net(num_classes=len(classnames), classnames=classnames, diversity=args.diversity_type, pdop=args.pairwise_diversity_op, layerwise_op=args.layerwise_diversity_op, neigh_params={'k': args.k, 'closest': args.closest})
+        net = helper.Net(num_classes=len(classnames), classnames=classnames, diversity={"type": args.diversity_type, "pdop": args.pairwise_diversity_op, "ldop":args.layerwise_diversity_op, 'k': args.k, 'k_strat': args.k_strat})
         if args.rand_tech == 'normal':
             helper.normalize(net)
         model.filters = net.get_filters()
@@ -175,7 +187,8 @@ def run():
     helper.config['diversity_type'] = args.diversity_type
     helper.config['pairwise_diversity_op'] = args.pairwise_diversity_op
     helper.config['layerwise_diversity_op'] = args.layerwise_diversity_op
-    helper.config['neigh_params'] = {'k': args.k, 'closest': args.closest}
+    helper.config['k'] = args.k 
+    helper.config['k_strat'] =  args.k_strat
     helper.config['experiment_type'] = 'evolution'
     helper.config['rand_tech'] = args.rand_tech
     helper.update_config()
@@ -191,7 +204,7 @@ def run():
     # wandb_logger = WandbLogger(log_model=True)
     global trainer
     # trainer = pl.Trainer(logger=wandb_logger, accelerator="auto")
-    trainer = pl.Trainer(accelerator="gpu", limit_val_batches=args.num_batches_for_evolution, gpus=-1, strategy='ddp')
+    trainer = pl.Trainer(accelerator="auto", limit_val_batches=args.num_batches_for_evolution)
     global classnames
     classnames = list(data_module.dataset_test.classes)
 
@@ -261,8 +274,9 @@ def run():
             helper.config['diversity_type'] = args.diversity_type
             helper.config['pairwise_diversity_op'] = args.pairwise_diversity_op
             helper.config['layerwise_diversity_op'] = args.layerwise_diversity_op
+            helper.config['k'] = args.k 
+            helper.config['k_strat'] =  args.k_strat
             helper.config['experiment_type'] = 'evolution'
-            helper.config['neigh_params'] = {'k': args.k, 'closest': args.closest}
             helper.config['rand_tech'] = args.rand_tech
             helper.update_config()
 

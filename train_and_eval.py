@@ -10,41 +10,40 @@ import random
 from functools import partial
 
 parser=argparse.ArgumentParser(description="Process some input files")
-parser.add_argument('--dataset', help='which dataset should be used for training metric, choices are: cifar-10, cifar-100', default='random')
-parser.add_argument('--experiment_name', help='experiment name for saving data related to training')
+parser.add_argument('--dataset', help='which dataset should be used for training metric, choices are: cifar-10, cifar-100', default='cifar-100')
 parser.add_argument('--fixed_conv', help='Should the convolutional layers stay fixed, or alternatively be trained', action='store_true')
 parser.add_argument('--training_interval', help='How often should the network be trained. Values should be supplied as a fraction and will relate to the generations from evolution' +
 'For example if 1 is given the filters generated from the final generation of evolution will be the only ones trained. If 0.5 is given then the halfway point of evolutionary generations and the final generation will be trained. ' +
 'If 0 is given, the filters from every generation will be trained', type=float, default=1.)
-parser.add_argument('--epochs', help="Number of epochos to train for", type=int, default=64)
-parser.add_argument('--random', action='store_true')
-parser.add_argument('--rand_norm', action='store_true')
+parser.add_argument('--epochs', help="Number of epochos to train for", type=int, default=256)
+
+# parser.add_argument('--rand_norm', action='store_true')
+parser.add_argument('--gram-schmidt', help='gram-schmidt used to orthonormalize filters', action='store_true')
 parser.add_argument('--novelty_interval', help='How often should a novelty score be captured during training?', default=0)
 parser.add_argument('--test_accuracy_interval', help='How often should test accuracy be assessed during training?', default=4)
 parser.add_argument('--batch_size', help="batch size for training", type=int, default=64)
 parser.add_argument('--lr', help='Learning rate for training', default=.001, type=float)
-parser.add_argument('--evo_gens', help="number of generations used in evolving solutions", default=50)
-parser.add_argument('--evo_pop_size', help='Number of individuals in population when evolving solutions', default=20)
-parser.add_argument('--evo_dataset_for_novelty', help='Dataset used for novelty computation during evolution and training', default='cifar10')
-parser.add_argument('--num_batches_for_evolution', help='Number of batches used of dataset when calculating diversity of filters', default=np.inf, type=int)
-parser.add_argument('--evo', help='evolved solutions, should only be true if random is not set', action='store_true')
-parser.add_argument('--gram-schmidt', help='gram-schmidt used to orthonormalize filters', action='store_true')
-parser.add_argument('--ae_epochs', help='how many epochs were used in autoencoder unsupervised training', default=None, type=int)
-parser.add_argument('--ae_dataset', help='dataset used for training autoencoder', default=None)
-parser.add_argument('--ae_num_runs', help='number of runs for autoencoder training', default=None, type=int)
+
+# used to link to evolution
+parser.add_argument('--experiment_name', help='experiment name for saving data related to training')
+parser.add_argument('--rand_tech', help='which random technique is used to initialize network weights', type=str, default=None)
+# don't need any of the below for comparisons since I can link with the above experiment name.
+
+# used to link to autoencoder
+parser.add_argument('--ae', help="if pretrained using ae include this tag", action='store_true')
+
+# Options for flexibility
 parser.add_argument('--unique_id', help='if a unique id is associated with the file the solution is stored in give it here.', default="", type=str)
-parser.add_argument('--evo_num_runs', help='Number of runs used in evolution', default=5)
-parser.add_argument('--evo_tourney_size', help='Size of tournaments in evolutionary algorithm selection', default=4)
-parser.add_argument('--evo_num_winners', help='Number of winners in tournament in evolutionary algorithm', default=2)
-parser.add_argument('--evo_num_children', help='Number of children in evolutionary algorithm', default=20)
 parser.add_argument('--skip', default=0, help='skip the first n models to train, used mostly when a run fails partway through', type=int)
 parser.add_argument('--stop_after', default=np.inf, help='stop after the first n models', type=int)
-parser.add_argument('--diversity_type', type=str, default='absolute', help='Type of diversity metric to use for this experiment (ie. absolute, relative, original etc.)')
+parser.add_argument('--num_workers', help='number of workers for training', default=np.inf, type=int)
+
+# Options for measuring diversity over training time
+parser.add_argument('--diversity_type', type=str, default='relative', help='Type of diversity metric to use for this experiment (ie. absolute, relative, original etc.)')
 parser.add_argument('--pairwise_diversity_op', default='mean', help='the function to use for calculating diversity metric with regard to pairwise comparisons', type=str)   
 parser.add_argument('--layerwise_diversity_op', default='w_mean', help='the function to use for calculating diversity metric with regard to layerwise comparisons', type=str)
-parser.add_argument('--k', help='If using k-neighbors for metric calculation, how many neighbors', type=int, default=10)
-parser.add_argument('--closest', help='If using k-neigbhors for metric, should we do closest? If not set to False, closest will be used', type=bool, default=True)   
-parser.add_argument('--num_workers', help='number of workers for training', default=np.inf, type=int)
+parser.add_argument('--k', help='If using k-neighbors for metric calculation, how many neighbors', type=int, default=-1)
+parser.add_argument('--k_strat', help='If using k-neigbhors for metric, what strategy should be used? (ie. closest, furthest, random, etc.)', type=str, default='closest')   
 args = parser.parse_args()
 
 def run():
@@ -56,16 +55,14 @@ def run():
     experiment_name = args.experiment_name
     training_interval = args.training_interval
     fixed_conv = args.fixed_conv
-    if args.random:
-        name = 'random'
-        if args.rand_norm:
-            name = 'rand-normal'
-    elif args.evo or (not args.random and not args.gram_schmidt):
+    if args.rand_tech:
+        name = args.rand_tech
+    elif not args.rand_tech and not args.gram_schmidt and not args.ae:
         name = 'fitness'
     
     if args.gram_schmidt:
         name = 'gram-schmidt'
-    if args.ae_epochs:
+    if args.ae:
         name = 'ae_unsup'
         if training_interval < 1:
             print('please enter valid training interval as ae filters are in the shape num_runs, 1, \{filters\}')
@@ -85,11 +82,11 @@ def run():
     if args.unique_id != '':
         stored_filters = [stored_filters]
 
-    if args.random or args.gram_schmidt:
-        random.shuffle(stored_filters[0])
-        stored_filters = np.array(stored_filters)
-        with open(filename, 'wb') as f:
-            np.save(f, stored_filters)
+    # if args.random or args.gram_schmidt:
+    #     random.shuffle(stored_filters[0])
+    #     stored_filters = np.array(stored_filters)
+    #     with open(filename, 'wb') as f:
+    #         np.save(f, stored_filters)
     
     helper.run(seed=False)
 
@@ -105,75 +102,55 @@ def run():
     helper.config['batch_size'] = args.batch_size
     helper.config['lr'] = args.lr
     helper.config['experiment_name'] = args.experiment_name
-    helper.config['evo_gens'] = args.evo_gens
-    helper.config['evo_pop_size'] = args.evo_pop_size
-    helper.config['evo_dataset_for_novelty'] = args.evo_dataset_for_novelty
-    helper.config['evo_num_batches_for_diversity'] = args.num_batches_for_evolution
-    helper.config['evo'] = args.evo or (not args.random and not args.gram_schmidt)
-    helper.config['evo_num_runs'] = args.evo_num_runs
-    helper.config['evo_tourney_size'] = args.evo_tourney_size
-    helper.config['evo_num_winners'] = args.evo_num_winners
-    helper.config['evo_num_children'] = args.evo_num_children
+    helper.config['evo'] = not args.rand_tech and not args.gram_schmidt and not args.ae
     helper.config['experiment_type'] = 'training'
     helper.config['fixed_conv'] = fixed_conv == True
     helper.config['diversity_type'] = args.diversity_type
-    helper.config['rand_norm'] = args.rand_norm
-    helper.config['ae_epochs'] = args.ae_epochs
-    helper.config['ae_dataset'] = args.ae_dataset
-    helper.config['ae_num_runs'] = args.ae_num_runs
+    helper.config['ae'] = args.ae
     helper.config['pairwise_diversity_op'] = args.pairwise_diversity_op
     helper.config['layerwise_diversity_op'] = args.layerwise_diversity_op
-    helper.config['neigh_params'] = {'k': args.k, 'closest': args.closest}
+    helper.config['k'] = args.k
+    helper.config['k_strat'] = args.k_strat
     helper.update_config()
     
     
     # run training and evaluation and record metrics in above variables
     # for each type of evolution ran
-
-    if args.evo or (not args.random and not args.gram_schmidt): 
+    inner_skip = 0
+    skip = 0
+    if int(training_interval) == 1:
         skip = args.skip
-        rand_skip=1
-    else: 
-        skip=0
-        rand_skip = args.skip+1
-    for run_num in range(len(stored_filters)):
+    else:
+        inner_skip = args.skip
+    
+    for run_num in range(int(skip), len(stored_filters)):
         # run_num = np.where(stored_filters == filters_list)[0][0]
         # for each generation train the solution output at that generation
-        for i in range(len(stored_filters[run_num])):
+        for i in range(int(inner_skip), len(stored_filters[run_num]), int(1/training_interval)*len(stored_filters[run_num])):
             # if we only want to train the solution from the final generation, continue
-            if (training_interval != 0 and i*1.0 not in [(len(stored_filters[run_num])/(1/training_interval)*j)-1 for j in range(rand_skip, min(args.stop_after, int(1/training_interval)+1))]) or (training_interval==0 and i not in range(skip, args.stop_after)):
-                continue
+            # if (training_interval != 0 and i*1.0 not in [(len(stored_filters[run_num])/(1/training_interval)*j)-1 for j in range(1, min(args.stop_after, int(1/training_interval)+1))]) or (training_interval==0 and i not in range(skip, args.stop_after)):
+            #     continue
             
             # else train the network and collect the metrics
-            helper.config['generation'] = i if (not args.random and not args.gram_schmidt) else None
+            helper.config['generation'] = i if (not args.rand_tech and not args.gram_schmidt) else None
             helper.update_config()
             save_path = "trained_models/trained/conv{}_e{}_n{}_r{}_g{}.pth".format(not fixed_conv, experiment_name, name, run_num, i)
             print('Training and Evaluating: {} Gen: {} Run: {}'.format(name, i, run_num))
-            record_progress = helper.train_network(data_module=data_module, filters=stored_filters[run_num][i], epochs=epochs, lr=args.lr, save_path=save_path, fixed_conv=fixed_conv, novelty_interval=int(args.novelty_interval), val_interval=int(args.test_accuracy_interval), diversity_type=args.diversity_type, pdop=args.pairwise_diversity_op, layerwise_op=args.layerwise_diversity_op, neigh_params={'k': args.k, 'closest': args.closest})
+            record_progress = helper.train_network(data_module=data_module, filters=stored_filters[run_num][i], epochs=epochs, lr=args.lr, save_path=save_path, fixed_conv=fixed_conv, novelty_interval=int(args.novelty_interval), val_interval=int(args.test_accuracy_interval), diversity={'type': args.diversity_type, 'pdop': args.pairwise_diversity_op, 'ldop': args.layerwise_diversity_op, 'k': args.k, 'k_strat': args.k_strat})
             helper.run(seed=False)
             helper.config['dataset'] = args.dataset.lower()
             helper.config['batch_size'] = args.batch_size
             helper.config['lr'] = args.lr
             helper.config['experiment_name'] = args.experiment_name
-            helper.config['evo_gens'] = args.evo_gens
-            helper.config['evo_pop_size'] = args.evo_pop_size
-            helper.config['evo_dataset_for_novelty'] = args.evo_dataset_for_novelty
-            helper.config['evo_num_batches_for_diversity'] = args.num_batches_for_evolution
-            helper.config['evo'] = args.evo or (not args.random and not args.gram_schmidt)
-            helper.config['evo_num_runs'] = args.evo_num_runs
-            helper.config['evo_tourney_size'] = args.evo_tourney_size
-            helper.config['evo_num_winners'] = args.evo_num_winners
-            helper.config['evo_num_children'] = args.evo_num_children
+            helper.config['evo'] = not args.rand_tech and not args.gram_schmidt and not args.ae
             helper.config['experiment_type'] = 'training'
             helper.config['fixed_conv'] = fixed_conv == True
             helper.config['diversity_type'] = args.diversity_type
-            helper.config['rand_norm'] = args.rand_norm
-            helper.config['ae_epochs'] = args.ae_epochs
-            helper.config['ae_dataset'] = args.ae_dataset
-            helper.config['ae_num_runs'] = args.ae_num_runs
+            helper.config['ae'] = args.ae
             helper.config['pairwise_diversity_op'] = args.pairwise_diversity_op
             helper.config['layerwise_diversity_op'] = args.layerwise_diversity_op
-            helper.config['neigh_params'] = {'k': args.k, 'closest': args.closest}
+            helper.config['k'] = args.k
+            helper.config['k_strat'] = args.k_strat
             helper.update_config()
             # for c in classlist:
             #     classwise_accuracy_record[run_num][i][np.where(classlist==c)[0][0]] = record_accuracy[c]

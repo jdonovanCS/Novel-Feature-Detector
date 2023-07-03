@@ -13,10 +13,12 @@ import pl_bolts.datamodules
 from pytorch_lightning.loggers import WandbLogger
 import pytorch_lightning as pl
 from net import Net
+from big_net import Net as BigNet
 from ae_net import AE
 from cifar100datamodule import CIFAR100DataModule
 import numba
 import os
+import random
 
 def create_random_images(num_images=200):
     paths = []
@@ -32,8 +34,8 @@ def create_random_images(num_images=200):
 #     train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=2)
 #     return train_loader
 
-def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, fixed_conv=False, val_interval=1, novelty_interval=None, diversity_type='absolute', pdop=None, layerwise_op=None, neigh_params=None):
-    net = Net(num_classes=data_module.num_classes, classnames=list(data_module.dataset_test.classes), diversity=diversity_type, pdop=pdop, layerwise_op=layerwise_op, neigh_params=neigh_params, lr=lr)
+def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, fixed_conv=False, val_interval=1, novelty_interval=None, diversity={'type':'absolute', 'pdop':None, 'ldop':None, 'k': None, 'k_strat':True}):
+    net = Net(num_classes=data_module.num_classes, classnames=list(data_module.dataset_test.classes), diversity=diversity, lr=lr)
     # net = net.to(device)
     print(net.device)
     if filters is not None:
@@ -55,7 +57,7 @@ def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, 
     if save_path is None:
         save_path = PATH
     wandb_logger = WandbLogger(log_model=True)
-    trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu", gpus=-1, strategy='ddp')
+    trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu", gpus=-1)
     wandb_logger.watch(net, log="all")
     trainer.fit(net, datamodule=data_module)
 
@@ -67,7 +69,7 @@ def train_ae_network(data_module, epochs=100, lr=.001, encoded_space_dims=256, s
     if save_path is None:
         save_path = PATH
     wandb_logger = WandbLogger(log_model=True)
-    trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator='gpu', gpus=-1, strategy='ddp')
+    trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator='gpu', gpus=-1)
     wandb_logger.watch(net, log='all')
     trainer.fit(net, datamodule=data_module)
 
@@ -99,93 +101,170 @@ def save_npy(filename, data, index=0):
     
 
 @numba.njit(parallel=True)
-def diversity(acts, pairwise_op='sum'):
+def diversity(acts, pdop=None, k=-1, k_strat=None):
+
+    I = len(acts)
+    C = len(acts[0])
     
-    # with torch.no_grad():
-    # for each conv layer 4d (batch, channel, h, w)
+    # make array correct size
+    if k_strat == 'random':
+        pairwise = np.zeros((I,C,k))
+    else:
+        pairwise = np.zeros((I,C,C))
 
-    B = len(acts)
-    C = len(acts[0])
-    pairwise = np.zeros((B,C,C))
-    for batch in numba.prange(B):
-        for channel in range(C):
-            for channel2 in range(channel, C):
-                div = np.abs(acts[batch, channel] - acts[batch, channel2]).sum()
-                pairwise[batch, channel, channel2] = div
-                pairwise[batch, channel2, channel] = div
-    # max_act = max(np.abs(acts.flatten()))
-    if pairwise_op == 'sum':
-        return((pairwise).sum())
-    if pairwise_op == 'mean':
-        return((pairwise).mean())
-
-@numba.njit(parallel=True)
-def diversity_orig(acts):
-    B = len(acts)
-    C = len(acts[0])
-    actual_C = (len(acts[0][0]))
-    h = w = (len(acts[0][0][0]))
-    dist = np.zeros((B*C*C, actual_C, h, w))
-
-    for batch in range(B):
-            # for each activation
-            for channel in numba.prange(C):
-                
-                for channel2 in range(C):
-                    
-                    dist[(batch*B) + (channel*C) + channel2] = (np.abs(acts[batch][channel2] - acts[batch][channel]))
-                   
-    return dist.mean()
-
-@numba.njit(parallel=True)
-def diversity_relative(acts, pairwise_op='sum'):
-    I=len(acts)
-    C=len(acts[0])
-    pairwise = np.zeros((I,C,C))
     for image in numba.prange(I):
         for channel in range(C):
-            for channel2 in range(channel+1, C):
-                dist = np.abs(acts[image, channel]-acts[image, channel2]).sum()
-                divisor = (np.abs(acts[image, channel]).sum()) + (np.abs(acts[image, channel2]).sum())
-                div=(dist / divisor)
-                # div=np.abs((acts[batch, channel]-acts[batch, channel2])/(acts[batch, channel]+acts[batch, channel2])).sum()
-                pairwise[image, channel, channel2] = div
-                pairwise[image, channel2, channel] = div
-    if pairwise_op == 'sum':
-        return((pairwise).sum())
-    if pairwise_op == 'mean':
-        return((pairwise).mean())
-    if pairwise_op == 'rms':
-        return(np.sqrt(np.mean(pairwise**2)))
+            # if strategy is random, then we do fewer calculations overall
+            if k_strat=='random':
+                choices = np.random.choice(C, k, replace=False)
+                for i in range(k):
+                    div = np.abs(acts[image, channel] - acts[image, choices[i]]).sum()
+                    pairwise[image, channel, i] = div
+            # otherwise we have to loop for every other channel in the layer
+            else:
+                for channel2 in range(channel, C):
+                    div = np.abs(acts[image, channel] - acts[image, channel2]).sum()
+                    pairwise[image, channel, channel2] = div
+                    pairwise[image, channel2, channel] = div
+    
+    # if we are using k-neighbors, then we want a subset of the calculated results above
+    if k > 0 and k_strat != 'random':
+        for image in range(I):
+            for channel in range(C):
+                pairwise[image, channel] = sorted(pairwise[image, channel], reverse=k_strat=='furthest')[0:k]
+
+    # set a new variable up as a copy of pairwise. Numba fails without this.
+    res = pairwise
+
+    if pdop == 'sum':
+        return((res).sum())
+    elif pdop == 'mean':
+        return((res).mean())
+    elif pdop == 'rms':
+        return(np.sqrt(np.mean(res**2)))
+
+@numba.njit(parallel=True)
+def diversity_orig(acts, pdop="", k=0, k_strat=""):
+    B = len(acts)
+    I = len(acts[0])
+    if k_strat == 'random':
+        pairwise = np.zeros((B, I, k))
+    else:
+        pairwise = np.zeros((B, I, I))
+
+    for batch in range(B):
+        for image in numba.prange(I):
+            if k_strat=='random':
+                choices = np.random.choice(I, k, replace=False)
+                for i in range(k):
+                    div = np.abs(acts[batch][choices[i]] - acts[batch][image]).sum()
+                    pairwise[batch, image, i] = div
+            else:
+                for image2 in range(I):
+                    div = np.abs(acts[batch][image2] - acts[batch][image]).sum()
+                    pairwise[batch, image, image2] = div
+                    pairwise[batch, image2, image] = div
+                
+    if k > 0 and k_strat != 'random':
+        for batch in range(B):
+            for image in range(I):
+                pairwise[batch, image] = sorted(pairwise[batch, image], reverse=k_strat=='furthest')[0:k]
+
+    res = pairwise
+                   
+    if pdop == 'sum':
+        return((res).sum())
+    elif pdop == 'mean':
+        return((res).mean())
+    elif pdop == 'rms':
+        return(np.sqrt(np.mean(res**2)))
+
+@numba.njit(parallel=True)
+def diversity_relative(acts, pdop="", k=0, k_strat=""):
+    I=len(acts)
+    C=len(acts[0])
+    
+    if k_strat=='random':
+        pairwise = np.zeros((I,C,k))
+    else:
+        pairwise = np.zeros((I,C,C))
+    
+    for image in numba.prange(I):
+        for channel in range(C):
+            if k_strat == 'random':
+                choices = np.random.choice(C, k, replace=False)
+                for i in range(k):
+                    dist = np.abs(acts[image, channel]-acts[image, choices[i]]).sum()
+                    divisor = (np.abs(acts[image, channel]).sum()) + (np.abs(acts[image, choices[i]]).sum())
+                    div=(dist / divisor)
+                    pairwise[image, channel, i] = div
+            else:
+                for channel2 in range(channel+1, C):
+                    dist = np.abs(acts[image, channel]-acts[image, channel2]).sum()
+                    divisor = (np.abs(acts[image, channel]).sum()) + (np.abs(acts[image, channel2]).sum())
+                    div=(dist / divisor)
+                    # div=np.abs((acts[batch, channel]-acts[batch, channel2])/(acts[batch, channel]+acts[batch, channel2])).sum()
+                    pairwise[image, channel, channel2] = div
+                    pairwise[image, channel2, channel] = div
+    retVal = 0
+    if k > 0 and k_strat != 'random':
+        for image in range(I):
+            for channel in range(C):
+                if pdop == 'sum':
+                    retVal += (np.array(sorted(pairwise[image, channel], reverse=k_strat=='furthest')[0:k]).sum())
+                elif pdop == 'mean':
+                    retVal += (1.0/(I*C))*(np.array(sorted(pairwise[image, channel], reverse=k_strat=='furthest')[0:k]).mean())
+                elif pdop == 'rms':
+                    retVal += (1.0/(I*C))*(np.sqrt(np.mean(np.array(sorted(pairwise[image, channel], reverse=k_strat=='furthest')[0:k])**2)))
+        return retVal
+
+    res = pairwise
+
+    if pdop == 'sum':
+        return((res).sum())
+    elif pdop == 'mean':
+        return((res).mean())
+    elif pdop == 'rms':
+        return(np.sqrt(np.mean(res**2)))
 
 @numba.njit(parallel=True, fastmath=True)
-def diversity_cosine_distance(acts):
-    B=len(acts)
+def diversity_cosine_distance(acts, pdop="", k=0, k_strat=""):
+    I=len(acts)
     C=len(acts[0])
-    pairwise = np.zeros((B,C,C))
-    for batch in numba.prange(B):
+
+    if k_strat == 'random':
+        pairwise = np.zeros((I,C,k))
+    else:
+        pairwise = np.zeros((I,C,C))
+    
+    for image in numba.prange(I):
         for channel in range(C):
-            c_flat = acts[batch, channel].flatten()
-            for channel2 in range(channel+1, C):
-                c2_flat = acts[batch, channel2].flatten()
-                # uv=0
-                # uu=0
-                # vv=0
-                # for i in range(c_flat.shape[0]):
-                #     uv+=c_flat[i]*c2_flat[i]
-                #     uu+=c_flat[i]*c_flat[i]
-                #     vv+=c2_flat[i]*c2_flat[i]
-                # cos_theta=1
-                # if uu!=0 and vv!=0:
-                #     cos_theta=uv/np.sqrt(uu*vv)
-                # cos_theta = np.dot(c_flat, c2_flat) / (np.linalg.norm(c_flat) * np.linalg.norm(c2_flat))
-                # dist = 1-cos_theta
-                dist = cosine_dist(c_flat, c2_flat)
-                # sim = np.dot(c_flat, c2_flat)/(np.linalg.norm(c_flat)*np.linalg.norm(c2_flat))
-                # dist = 1-sim
-                pairwise[batch, channel, channel2] = dist
-                pairwise[batch, channel2, channel] = dist
-    return(pairwise.sum())
+            c_flat = acts[image, channel].flatten()
+            if k_strat == 'random':
+                choices = np.random.choice(C, k, replace=False)
+                for i in range(k):
+                    c2_flat = acts[image, choices[i]].flatten()
+                    dist = cosine_dist(c_flat, c2_flat)
+                    pairwise[image, channel, i] = dist
+            else:
+                for channel2 in range(channel+1, C):
+                    c2_flat = acts[image, channel2].flatten()
+                    dist = cosine_dist(c_flat, c2_flat)
+                    pairwise[image, channel, channel2] = dist
+                    pairwise[image, channel2, channel] = dist
+    if k > 0 and k_strat != 'random':
+        for image in range(I):
+            for channel in range(C):
+                pairwise[image, channel] = sorted(pairwise[image, channel], reverse=k_strat=='furthest')[0:k]
+    
+    res = pairwise
+
+    if pdop == 'sum':
+        return((res).sum())
+    elif pdop == 'mean':
+        return((res).mean())
+    elif pdop == 'rms':
+        return(np.sqrt(np.mean(res**2)))
 
 @numba.njit(parallel=True, fastmath=True)
 def cosine_dist(u:np.ndarray, v:np.ndarray):
@@ -208,53 +287,14 @@ def cosine_dist(u:np.ndarray, v:np.ndarray):
 def gram_shmidt_orthonormalize(filters):
 # for layer_filters in filters:
     for f in range(len(filters)):
-        # for k in range(len(filters[f])):
-        #     print(0)
-        #     copied = filters[f][k].copy()
-        #     shape_0 = filters[f][k].shape[0]
-        #     print(shape_0)
-        #     shape_1=np.prod(np.array(filters[f][k].shape[1:]))
-        #     print(shape_1)
-        #     input = copied.reshape((max(shape_0, shape_1), min(shape_0, shape_1)))
-        #     print(input.shape)
-        #     q,r = np.linalg.qr(input, 'reduced')
-        #     print(q.shape)
-        #     print(filters[f][k].shape)
-        #     filters[f][k] = q.reshape(filters[f][k].shape)
         copied = filters[f].copy()
         shape_0 = filters[f].shape[0]
         shape_1=np.prod(np.array(filters[f].shape[1:]))
         input = copied.reshape((max(shape_0, shape_1), min(shape_0, shape_1)))
         q,r = np.linalg.qr(input)
-        # print(filters[f].shape)
         copied = q.copy()
         f = copied.reshape(filters[f].shape)
     return filters
-
-# TODO: This doesn't work quite right. We want the k-nearest filters for each of the filters, not the k-nearest overall.. at least that's what I think..
-@numba.njit(parallel=True)
-def diversity_k_neighbors(acts, k=10, closest=True, pairwise_op='sum'):
-    I = len(acts)
-    C = len(acts[0])
-    pairwise = np.zeros((I,C,C))
-    k_nearest = np.zeros((I,C,k))
-    for image in numba.prange(I):
-        for channel in range(C):
-            for channel2 in range(channel, C):
-                dist = np.abs(acts[image, channel]-acts[image, channel2]).sum()
-                divisor = (np.abs(acts[image, channel]).sum()) + (np.abs(acts[image, channel2]).sum())
-                div=(dist / divisor)
-                pairwise[image, channel, channel2] = div
-                pairwise[image, channel2, channel] = div
-            k_nearest[image, channel] = sorted(pairwise[image, channel], reverse=not closest)[0:k]
-    
-    # max_act = max(np.abs(acts.flatten()))
-    if pairwise_op == 'sum':
-        return((k_nearest).sum())
-    if pairwise_op == 'mean':
-        return((k_nearest).mean())
-    if pairwise_op == 'rms':
-        return(np.sqrt(np.mean(k_nearest**2)))
 
 # @numba.njit(parallel=True)
 def normalize(net):

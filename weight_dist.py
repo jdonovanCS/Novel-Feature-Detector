@@ -9,8 +9,7 @@ from functools import partial
 
 parser=argparse.ArgumentParser(description="Process some input files")
 parser.add_argument('--experiment_name', help='experiment name for saving data related to training')
-parser.add_argument('--random', action='store_true')
-parser.add_argument('--rand-norm', action='store_true')
+parser.add_argument('--rand_tech', help="random technique used to generate filters", type=str, default=None)
 parser.add_argument('--gram-schmidt', help='gram-schmidt used to orthonormalize filters', action='store_true')
 parser.add_argument('--unique_id', help='if a unique id is associated with the file the solution is stored in give it here.', default="", type=str)
 parser.add_argument('--no-evo', action='store_true')
@@ -28,18 +27,14 @@ def run():
     name = 'fitness'
     if args.gram_schmidt:
         name = 'gram-schmidt'
-    if args.rand_norm:
-        name='rand-normal'
+    if args.rand_tech:
+        name=args.rand_tech
     if args.unique_id != "":
         name = 'current_' + name + "_" + args.unique_id
     
     filename = ''
-    if args.no_evo:
-        filename='output/' + experiment_name + '/solutions_over_time_{}.npy'.format(name)
-        random_filename='output/' + experiment_name + '/solutions_over_time_{}.npy'.format(name)
-    else:
-        filename = 'output/' + experiment_name + '/solutions_over_time_{}.npy'.format(name)
-        random_filename = 'output/' + experiment_name + '/solutions_over_time_{}.npy'.format('random')
+    filename='output/' + experiment_name + '/solutions_over_time_{}.npy'.format(name)
+    random_filename='output/' + experiment_name + '/solutions_over_time_{}.npy'.format(name)
 
     # get filters from numpy file
     np_load_old = partial(np.load)
@@ -65,15 +60,15 @@ def run():
     from scipy.stats.kde import gaussian_kde
     num_runs = len(stored_filters)
     pdf = pdf_r = 0
-    for layer in range(len(stored_filters[0][49])):
+    for layer in range(len(stored_filters[0][0])):
         pdf = pdf_r = mean = mean_r = std = std_r = 0
         divisor = max(abs(stored_filters_random[0][0][layer].flatten()))
         multiplier = max(abs(stored_filters[0][0][layer].flatten()))
         num_bins_ = int(100*multiplier/divisor)
         num_outside = 0
         for run_num in range(num_runs):
-            filters = stored_filters[run_num][49]
-            filters_random = stored_filters_random[0][run_num]
+            filters = stored_filters[run_num][0]
+            filters_random = stored_filters_random[run_num][0]
             
             num_outside += sum(abs(filters[layer].flatten()) > divisor)
 
@@ -103,12 +98,14 @@ def run():
         cdf = np.cumsum(pdf)
         cdf_r = np.cumsum(pdf_r)
             
-        pdf = pdf / len(stored_filters[0][49])
-        pdf_r = pdf_r / len(stored_filters[0][49])
-        mean = mean / len(stored_filters[0][49])
-        mean_r = mean_r / len(stored_filters[0][49])
-        std = std / len(stored_filters[0][49])
-        std_r = std_r / len(stored_filters[0][49])
+        pdf = pdf / len(stored_filters[0][0])
+        pdf_r = pdf_r / len(stored_filters[0][0])
+        mean = mean / len(stored_filters[0][0])
+        mean_r = mean_r / len(stored_filters[0][0])
+        std = std / len(stored_filters[0][0])
+        std_r = std_r / len(stored_filters[0][0])
+        # maximum = [max(stored_filters[0][0][l]) for l in range(len(stored_filters[0][0]))]
+        # minimum = [min(stored_filters[0][0][l]) for l in range(len(stored_filters[0][0]))]
         # plotting PDF and CDF
         # Attempt at smoothing
         # bins_count = bins_count[:-1] + (bins_count[1] - bins_count[0])/2   # convert bin edges to centers
@@ -136,8 +133,8 @@ def run():
         # print(mag)
         perc_outside = num_outside/len(stored_filters[0][0][layer].flatten())/(num_runs)
         perc_inside = 1-perc_outside
-        print('percentage of weights outside of the range: -{}, {}: {}'.format(divisor, divisor, perc_outside))
-        print('percentage of weights inside of the range: -{}, {}: {}'.format(divisor, divisor, perc_inside))
+        # print('percentage of weights outside of the range: -{}, {}: {}'.format(divisor, divisor, perc_outside))
+        # print('percentage of weights inside of the range: -{}, {}: {}'.format(divisor, divisor, perc_inside))
         print('mean: {} mean_random: {} \t std: {} std_random: {}'.format(mean, mean_r, std, std_r))
         plt.show()
 
