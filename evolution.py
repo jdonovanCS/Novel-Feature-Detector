@@ -33,6 +33,8 @@ parser=argparse.ArgumentParser(description="Process some inputs")
 parser.add_argument('--experiment_name', help='experiment name for saving data related to training')
 parser.add_argument('--evo_num_runs', type=int, help='Number of runs used in evolution', default=5)
 
+parser.add_argument('--scaled', action='store_true', help="Use if wanting to evolved conv layers for larger VGG-16 architecture")
+
 # evolution params
 parser.add_argument('--evo_gens', type=int, help="number of generations used in evolving solutions", default=50)
 parser.add_argument('--evo_pop_size', type=int, help='Number of individuals in population when evolving solutions', default=20)
@@ -118,7 +120,10 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
     print("\nInitializing")
     for i in tqdm(range(population_size)): #while len(population) < population_size:
         model = Model()
-        net = helper.Net(num_classes=len(classnames), classnames=classnames, diversity={"type": args.diversity_type, "pdop": args.pairwise_diversity_op, "ldop":args.layerwise_diversity_op, 'k': args.k, 'k_strat': args.k_strat})
+        if args.scaled:
+            net = helper.BigNet(num_classes=len(classnames), classnames=classnames, diversity={"type": args.diversity_type, "pdop": args.pairwise_diversity_op, "ldop": args.layerwise_diversity_op, "k": args.k, "k_strat": args.k_strat})
+        else:
+            net = helper.Net(num_classes=len(classnames), classnames=classnames, diversity={"type": args.diversity_type, "pdop": args.pairwise_diversity_op, "ldop":args.layerwise_diversity_op, 'k': args.k, 'k_strat': args.k_strat})
         if args.rand_tech == 'normal':
             helper.normalize(net)
         model.filters = net.get_filters()

@@ -15,9 +15,9 @@ class Net(pl.LightningModule):
         self.save_hyperparameters()
 
         self.pool = nn.MaxPool2d(2,2)
-        self.fc1 = nn.Linear(4096, 4096)
+        self.fc1 = nn.Linear(512, 4096)
         self.fc2 = nn.Linear(4096, 4096)
-        self.fc2 = nn.Linear(4096, num_classes)
+        self.fc3 = nn.Linear(4096, num_classes)
 
         self.conv_layers = nn.ModuleList([nn.Conv2d(3, 64, 3,padding=1),
                                           nn.Conv2d(64, 64, 3, padding=1),
