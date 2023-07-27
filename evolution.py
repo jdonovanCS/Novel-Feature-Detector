@@ -196,6 +196,7 @@ def run():
     helper.config['k_strat'] =  args.k_strat
     helper.config['experiment_type'] = 'evolution'
     helper.config['rand_tech'] = args.rand_tech
+    helper.config['scaled'] = args.scaled
     helper.update_config()
 
     # random_image_paths = helper.create_random_images(64)
@@ -283,6 +284,7 @@ def run():
             helper.config['k_strat'] =  args.k_strat
             helper.config['experiment_type'] = 'evolution'
             helper.config['rand_tech'] = args.rand_tech
+            helper.config['scaled'] = args.scaled
             helper.update_config()
 
     with open('output/' + experiment_name + '/solutions_over_time.pickle', 'wb') as f:

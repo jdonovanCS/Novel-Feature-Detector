@@ -15,7 +15,7 @@ class Net(pl.LightningModule):
         self.save_hyperparameters()
 
         self.pool = nn.MaxPool2d(2,2)
-        self.fc1 = nn.Linear(512, 4096)
+        self.fc1 = nn.Linear(25088, 4096)
         self.fc2 = nn.Linear(4096, 4096)
         self.fc3 = nn.Linear(4096, num_classes)
 
@@ -197,7 +197,7 @@ class Net(pl.LightningModule):
         for x in outputs:
             for k, v in x['val_class_acc'].items():
                 avg_class_acc[k] = v
-        avg_novelty = np.stack([x['val_novelty'] for x in outputs]).mean()
+        avg_novelty = torch.stack([x['val_novelty'] for x in outputs]).mean()
         self.avg_novelty = avg_novelty
         self.log('val_loss_epoch', avg_loss)
         self.log('val_acc_epoch', avg_acc)
@@ -259,7 +259,7 @@ class Net(pl.LightningModule):
         for x in outputs:
             for k, v in x['test_class_acc'].items():
                 avg_class_acc[k] = v
-        avg_novelty = np.stack([x['test_novelty'] for x in outputs]).mean()
+        avg_novelty = torch.stack([x['test_novelty'] for x in outputs]).mean()
         self.avg_novelty = avg_novelty
         self.log('test_loss_epoch', avg_loss)
         self.log('test_acc_epoch', avg_acc)
@@ -317,7 +317,11 @@ class Net(pl.LightningModule):
 
         l = []
         for i in self.activations:
-            self.activations[i][0] = self.activations[i][0].detach().cpu().numpy()
+            print(len(self.activations[i]))
+            if len(self.activations[i]) == 0:
+                continue
+            if type(self.activations[i][0]) == torch.Tensor:
+                self.activations[i][0] = self.activations[i][0].detach().cpu().numpy()
             if self.diversity['type']=='relative':
                 l.append(helper.diversity_relative(self.activations[i][0], self.diversity['pdop'], self.diversity['k'], self.diversity['k_strat']))
             elif self.diversity['type']=='original':

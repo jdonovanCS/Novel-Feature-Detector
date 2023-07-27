@@ -19,6 +19,9 @@ from cifar100datamodule import CIFAR100DataModule
 import numba
 import os
 import random
+import collections
+import _collections_abc
+import collections.abc
 
 def create_random_images(num_images=200):
     paths = []
@@ -34,8 +37,11 @@ def create_random_images(num_images=200):
 #     train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=2)
 #     return train_loader
 
-def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, fixed_conv=False, val_interval=1, novelty_interval=None, diversity={'type':'absolute', 'pdop':None, 'ldop':None, 'k': None, 'k_strat':True}):
-    net = Net(num_classes=data_module.num_classes, classnames=list(data_module.dataset_test.classes), diversity=diversity, lr=lr)
+def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, fixed_conv=False, val_interval=1, novelty_interval=None, diversity={'type':'absolute', 'pdop':None, 'ldop':None, 'k': None, 'k_strat':True}, scaled=False):
+    if scaled:
+        net = BigNet(num_classes=data_module.num_classes, classnames=list([x[0] for x in data_module.train_dataloader().dataset.classes]), diversity=diversity, lr=lr)
+    else:
+        net = Net(num_classes=data_module.num_classes, classnames=list(data_module.dataset_test.classes), diversity=diversity, lr=lr)
     # net = net.to(device)
     print(net.device)
     if filters is not None:
@@ -43,6 +49,7 @@ def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, 
             if i < len(filters):
                 z = torch.tensor(filters[i])
                 z = z.type_as(net.conv_layers[i].weight.data)
+                z.to(net.device)
                 net.conv_layers[i].weight.data = z
             if fixed_conv:
                 for param in net.conv_layers[i].parameters():
@@ -57,7 +64,8 @@ def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, 
     if save_path is None:
         save_path = PATH
     wandb_logger = WandbLogger(log_model=True)
-    trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu", gpus=-1)
+    print((torch.cuda.device_count()))
+    trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu", gpus=torch.cuda.device_count(), strategy='dp')
     wandb_logger.watch(net, log="all")
     trainer.fit(net, datamodule=data_module)
 
@@ -69,7 +77,7 @@ def train_ae_network(data_module, epochs=100, lr=.001, encoded_space_dims=256, s
     if save_path is None:
         save_path = PATH
     wandb_logger = WandbLogger(log_model=True)
-    trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator='gpu', gpus=-1)
+    trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator='gpu', gpus=torch.cuda.device_count(), strategy='dp')
     wandb_logger.watch(net, log='all')
     trainer.fit(net, datamodule=data_module)
 
@@ -80,7 +88,7 @@ def get_data_module(dataset, batch_size, workers=np.inf):
         case 'cifar100' | 'cifar-100':
             data_module = CIFAR100DataModule(batch_size=batch_size, data_dir="data/", num_workers=min(workers, os.cpu_count()), pin_memory=True)
         case 'imagenet':
-            data_module = pl_bolts.datamodules.ImagenetDataModule(batch_size=batch_size, data_dir="data/", num_workers=min(workers, os.cpu_count()), pin_memory=True)
+            data_module = pl_bolts.datamodules.ImagenetDataModule(batch_size=batch_size, data_dir="data/imagenet/", num_workers=min(workers, os.cpu_count()), pin_memory=True)
         case 'random':
             data_module = rd.RandomDataModule(data_dir='images/random/', batch_size=batch_size, num_workers=min(workers, os.cpu_count()), pin_memory=True)
         case _:
