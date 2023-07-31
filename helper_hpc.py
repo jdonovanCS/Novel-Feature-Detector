@@ -71,8 +71,8 @@ def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, 
 
     # torch.save(net.state_dict(), save_path)
     # return record_progress
-def train_ae_network(data_module, epochs=100, lr=.001, encoded_space_dims=256, save_path=None, novelty_interval=4, val_interval=1, diversity_type='absolute'):
-    net = AE(encoded_space_dims, diversity_type, lr)
+def train_ae_network(data_module, epochs=100, lr=.001, encoded_space_dims=256, save_path=None, novelty_interval=4, val_interval=1, diversity={'type':'absolute', 'pdop':None, 'ldop':None, 'k': None, 'k_strat':True}, scaled=False):
+    net = AE(encoded_space_dims, diversity, lr)
     # net = net.to(device)
     if save_path is None:
         save_path = PATH
