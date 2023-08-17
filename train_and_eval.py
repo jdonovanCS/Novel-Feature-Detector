@@ -16,6 +16,8 @@ parser.add_argument('--training_interval', help='How often should the network be
 'For example if 1 is given the filters generated from the final generation of evolution will be the only ones trained. If 0.5 is given then the halfway point of evolutionary generations and the final generation will be trained. ' +
 'If 0 is given, the filters from every generation will be trained', type=float, default=1.)
 parser.add_argument('--epochs', help="Number of epochos to train for", type=int, default=256)
+parser.add_argument('--devices', help='number of gpus to use', default=1, type=int)
+parser.add_argument('--local_rank', metavar="N", help='if using ddp and multiple gpus, we only want to collect metrics once, input 0 here if using ddp and multi gpus', default=-1, type=int)
 
 # parser.add_argument('--rand_norm', action='store_true')
 parser.add_argument('--gram-schmidt', help='gram-schmidt used to orthonormalize filters', action='store_true')
@@ -88,7 +90,7 @@ def run():
     #     with open(filename, 'wb') as f:
     #         np.save(f, stored_filters)
     
-    helper.run(seed=False)
+    helper.run(seed=False, rank=args.local_rank if args.devices > 1 else 0)
 
 
     # get loader for train and test images and classes
@@ -133,13 +135,17 @@ def run():
             scaled = False
             if len(stored_filters[run_num][i]) > 6:
                 scaled = True
+            if args.diversity_type == "None":
+                diversity = None
+            else:
+                diversity = {'type': args.diversity_type, 'pdop': args.pairwise_diversity_op, 'ldop': args.layerwise_diversity_op, 'k': args.k, 'k_strat': args.k_strat}
 
             # else train the network and collect the metrics
             helper.config['generation'] = i if (not args.rand_tech and not args.gram_schmidt) else None
             helper.update_config()
             save_path = "trained_models/trained/conv{}_e{}_n{}_r{}_g{}.pth".format(not fixed_conv, experiment_name, name, run_num, i)
             print('Training and Evaluating: {} Gen: {} Run: {}'.format(name, i, run_num))
-            record_progress = helper.train_network(data_module=data_module, filters=stored_filters[run_num][i], epochs=epochs, lr=args.lr, save_path=save_path, fixed_conv=fixed_conv, novelty_interval=int(args.novelty_interval), val_interval=int(args.test_accuracy_interval), diversity={'type': args.diversity_type, 'pdop': args.pairwise_diversity_op, 'ldop': args.layerwise_diversity_op, 'k': args.k, 'k_strat': args.k_strat}, scaled=scaled)
+            record_progress = helper.train_network(data_module=data_module, filters=stored_filters[run_num][i], epochs=epochs, lr=args.lr, save_path=save_path, fixed_conv=fixed_conv, novelty_interval=int(args.novelty_interval), val_interval=int(args.test_accuracy_interval), diversity=diversity, scaled=scaled, devices=args.devices)
             helper.run(seed=False)
             helper.config['dataset'] = args.dataset.lower()
             helper.config['batch_size'] = args.batch_size

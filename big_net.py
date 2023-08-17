@@ -6,6 +6,7 @@ import torch.nn.functional as F
 import numpy as np
 import helper_hpc as helper
 import time
+import torchmetrics
 
 # DEFINE a CONV NN
 
@@ -39,6 +40,8 @@ class Net(pl.LightningModule):
 
         self.classnames = classnames
         self.diversity = diversity
+        self.train_acc = torchmetrics.classification.Accuracy(task="multiclass", num_classes=num_classes)
+        self.valid_acc = torchmetrics.classification.Accuracy(task="multiclass", num_classes=num_classes)
         # self.avg_novelty = 0
 
     def forward(self, x, get_activations=False):
@@ -126,37 +129,46 @@ class Net(pl.LightningModule):
 
     def training_step(self, train_batch, batch_idx):
         x, y = train_batch
-        logits = self.forward(x)
+
+        logits = self.forward(x, get_activations=False)
+        print(y, logits)
         # get loss
         loss = self.cross_entropy_loss(logits, y)
         # get acc
         labels_hat = torch.argmax(logits, 1)
-        acc = torch.sum(y==labels_hat)/(len(y)*1.0)
+        # acc = 
+        self.train_acc(logits, y)
         # log loss and acc
-        self.log('train_loss', loss)
-        self.log('train_acc', acc)
+        self.log('train_loss', loss, sync_dist=True)
+        self.log('train_acc', self.train_acc, sync_dist=True)
         batch_dictionary={
-	            "train_loss": loss, "train_acc": acc, 'loss': loss
+	            "train_loss": loss, "train_acc": self.train_acc, 'loss': loss
 	        }
         return batch_dictionary
 
     def training_epoch_end(self,outputs):
         avg_loss = torch.stack([x['train_loss'] for x in outputs]).mean()
-        avg_acc = torch.stack([x['train_acc'] for x in outputs]).mean()
+        # avg_acc = torch.stack([x['train_acc'] for x in outputs]).mean()
         
-        self.log('train_loss_epoch', avg_loss)
-        self.log('train_acc_epoch', avg_acc)
+        self.log('train_loss_epoch', avg_loss, sync_dist=True)
+        # self.log('train_acc_epoch', avg_acc, sync_dist=True)
+        self.log('train_acc_epoch', self.train_acc, sync_dist=True)
         gc.collect()
     
     def validation_step(self, val_batch, batch_idx):
         with torch.no_grad():
             x, y = val_batch
-            logits = self.forward(x, get_activations=True)
+            if self.diversity != None:
+                ga = True
+            else:
+                ga=False
+            logits = self.forward(x, get_activations=ga)
             # get loss
             loss = self.cross_entropy_loss(logits, y)
             # get acc
             labels_hat = torch.argmax(logits, 1)
-            acc = torch.sum(y==labels_hat)/(len(y)*1.0)
+            # acc = torch.sum(y==labels_hat)/(len(y)*1.0)
+            self.valid_acc(logits, y)
             # get class acc
             class_acc = {}
             if self.classnames == None:
@@ -179,12 +191,12 @@ class Net(pl.LightningModule):
             # clear out activations
             for i in range(len(self.conv_layers)):
                 self.activations[i] = []
-            self.log('val_loss', loss)
-            self.log('val_acc', acc)
-            self.log('val_class_acc', class_acc)
-            self.log('val_novelty', novelty_score)
+            self.log('val_loss', loss, sync_dist=True)
+            self.log('val_acc', self.valid_acc, sync_dist=True)
+            self.log('val_class_acc', class_acc, sync_dist=True)
+            self.log('val_novelty', novelty_score, sync_dist=True)
             batch_dictionary = {'val_loss': loss, 
-                                'val_acc': acc, 
+                                'val_acc': self.valid_acc, 
                                 'val_class_acc': class_acc, 
                                 'val_novelty': novelty_score 
                                 }
@@ -192,17 +204,21 @@ class Net(pl.LightningModule):
     
     def validation_epoch_end(self, outputs):
         avg_loss = torch.stack([x['val_loss'] for x in outputs]).mean()
-        avg_acc = torch.stack([x['val_acc'] for x in outputs]).mean()
+        # avg_acc = torch.stack([x['val_acc'] for x in outputs]).mean()
         avg_class_acc = {}
         for x in outputs:
             for k, v in x['val_class_acc'].items():
                 avg_class_acc[k] = v
-        avg_novelty = torch.stack([x['val_novelty'] for x in outputs]).mean()
+        if torch.tensor(outputs[0]['val_novelty']).sum() == 0:
+            avg_novelty = 0
+        else:
+            avg_novelty = torch.stack([x['val_novelty'] for x in outputs]).mean()
         self.avg_novelty = avg_novelty
-        self.log('val_loss_epoch', avg_loss)
-        self.log('val_acc_epoch', avg_acc)
-        self.log('val_class_acc_epoch', avg_class_acc)
-        self.log('val_novelty_epoch', avg_novelty)
+        self.log('val_loss_epoch', avg_loss, sync_dist=True)
+        # self.log('val_acc_epoch', avg_acc, sync_dist=True)
+        self.log('val_acc_epoch', self.valid_acc, sync_dist=True)
+        self.log('val_class_acc_epoch', avg_class_acc, sync_dist=True)
+        self.log('val_novelty_epoch', avg_novelty, sync_dist=True)
         gc.collect()
 
     def get_fitness(self, batch):
@@ -218,6 +234,10 @@ class Net(pl.LightningModule):
     def test_step(self, test_batch, batch_idx):
         with torch.no_grad():
             x, y = test_batch
+            if self.diversity != None:
+                ga = True
+            else:
+                ga=False
             logits = self.forward(x, get_activations=True)
             # get loss
             loss = self.cross_entropy_loss(logits, y)
@@ -259,7 +279,10 @@ class Net(pl.LightningModule):
         for x in outputs:
             for k, v in x['test_class_acc'].items():
                 avg_class_acc[k] = v
-        avg_novelty = torch.stack([x['test_novelty'] for x in outputs]).mean()
+        if torch.tensor(outputs[0]['val_novelty']).sum() == 0:
+            avg_novelty = 0
+        else:
+            avg_novelty = torch.stack([x['test_novelty'] for x in outputs]).mean()
         self.avg_novelty = avg_novelty
         self.log('test_loss_epoch', avg_loss)
         self.log('test_acc_epoch', avg_acc)
@@ -315,6 +338,8 @@ class Net(pl.LightningModule):
 
             # layer_totals[layer] = np.abs(np.expand_dims(a, axis=2) - np.expand_dims(a, axis=1)).sum().item()
 
+        if self.diversity == None:
+            return 0
         l = []
         for i in self.activations:
             print(len(self.activations[i]))
