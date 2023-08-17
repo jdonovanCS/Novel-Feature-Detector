@@ -52,7 +52,7 @@ class AE(pl.LightningModule):
 
         self.t_fc3 = nn.Linear(encoded_space_dim, 512)
         self.t_fc2 = nn.Linear(512, 1024)
-        self.t_fc1 = nn.Linear(256, 4096)
+        self.t_fc1 = nn.Linear(encoded_space_dim, 4096)
 
         self.diversity = diversity
         self.loss_fn = torch.nn.MSELoss()

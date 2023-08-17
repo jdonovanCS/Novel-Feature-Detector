@@ -37,11 +37,23 @@ def create_random_images(num_images=200):
 #     train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=2)
 #     return train_loader
 
-def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, fixed_conv=False, val_interval=1, novelty_interval=None, diversity={'type':'absolute', 'pdop':None, 'ldop':None, 'k': None, 'k_strat':True}, scaled=False):
-    if scaled:
-        net = BigNet(num_classes=data_module.num_classes, classnames=list([x[0] for x in data_module.train_dataloader().dataset.classes]), diversity=diversity, lr=lr)
+def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, fixed_conv=False, val_interval=1, novelty_interval=None, diversity={'type':'absolute', 'pdop':None, 'ldop':None, 'k': None, 'k_strat':True}, scaled=False, devices=1):
+    # check which dataset and get the classes for it
+    if data_module.num_classes < 101:
+        classnames = list(data_module.dataset_test.classes)
     else:
-        net = Net(num_classes=data_module.num_classes, classnames=list(data_module.dataset_test.classes), diversity=diversity, lr=lr)
+        classnames = list([x[0] for x in data_module.train_dataloader().dataset.classes])
+    # check which network and instantiate it
+    if scaled:
+        total_devices = torch.cuda.device_count()
+        device = torch.device(glob_rank % total_devices)
+        torch.cuda.set_device(device)
+        torch.distributed.init_process_group(backend='gloo',
+                                     init_method='env://')
+        net = BigNet(num_classes=data_module.num_classes, classnames=classnames, diversity=diversity, lr=lr)
+        net = net.to(device)
+    else:
+        net = Net(num_classes=data_module.num_classes, classnames=classnames, diversity=diversity, lr=lr)
     # net = net.to(device)
     print(net.device)
     if filters is not None:
@@ -49,7 +61,7 @@ def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, 
             if i < len(filters):
                 z = torch.tensor(filters[i])
                 z = z.type_as(net.conv_layers[i].weight.data)
-                z.to(net.device)
+                # z.to(net.device)
                 net.conv_layers[i].weight.data = z
             if fixed_conv:
                 for param in net.conv_layers[i].parameters():
@@ -65,7 +77,9 @@ def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, 
         save_path = PATH
     wandb_logger = WandbLogger(log_model=True)
     print((torch.cuda.device_count()))
-    trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu", gpus=torch.cuda.device_count(), strategy='dp')
+    # trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu", gpus=torch.cuda.device_count(), strategy='dp')
+    trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu", devices=devices, strategy='ddp')
+    print(net.device)
     wandb_logger.watch(net, log="all")
     trainer.fit(net, datamodule=data_module)
 
@@ -89,6 +103,8 @@ def get_data_module(dataset, batch_size, workers=np.inf):
             data_module = CIFAR100DataModule(batch_size=batch_size, data_dir="data/", num_workers=min(workers, os.cpu_count()), pin_memory=True)
         case 'imagenet':
             data_module = pl_bolts.datamodules.ImagenetDataModule(batch_size=batch_size, data_dir="data/imagenet/", num_workers=min(workers, os.cpu_count()), pin_memory=True)
+        case 'miniimagenet':
+            data_module = pl_bolts.datamodules.ImagenetDataModule(batch_size=batch_size, data_dir="data/miniimagenet/", num_workers=min(workers, os.cpu_count()), pin_memory=True)
         case 'random':
             data_module = rd.RandomDataModule(data_dir='images/random/', batch_size=batch_size, num_workers=min(workers, os.cpu_count()), pin_memory=True)
         case _:
@@ -426,12 +442,14 @@ def plot_mean_and_bootstrapped_ci_multiple(input_data = None, title = 'overall',
         plt.show()
     
 def log(input):
-    wandb.log(input)
+    if glob_rank >= 0:
+        wandb.log(input)
 
 def update_config():
-    wandb.config.update(config)
+    if glob_rank >= 0:
+        wandb.config.update(config)
 
-def run(seed=True):
+def run(seed=True, rank=0):
     torch.multiprocessing.freeze_support()
     if seed:
         pl.seed_everything(42, workers=True)
@@ -447,7 +465,11 @@ def run(seed=True):
     wandb.finish()
     os.environ["WANDB_START_METHOD"] = "thread"
     # TODO: could put if statement here to determine if we should be logging. This is only necessary once ddp is actually working correctly.
-    wandb.init(project="novel-feature-detectors")
+    global glob_rank
+    glob_rank = rank
+    # if glob_rank == 0:
+    if glob_rank > -1:
+        wandb.init(project="novel-feature-detectors", group='DDP')
 
 
 if __name__ == '__main__':
