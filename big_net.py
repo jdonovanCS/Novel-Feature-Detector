@@ -42,6 +42,7 @@ class Net(pl.LightningModule):
         self.diversity = diversity
         self.train_acc = torchmetrics.classification.Accuracy(task="multiclass", num_classes=num_classes)
         self.valid_acc = torchmetrics.classification.Accuracy(task="multiclass", num_classes=num_classes)
+        self.lr = lr
         # self.avg_novelty = 0
 
     def forward(self, x, get_activations=False):
@@ -131,7 +132,8 @@ class Net(pl.LightningModule):
         x, y = train_batch
 
         logits = self.forward(x, get_activations=False)
-        print(y, logits)
+        # print('image first value:', x[0])
+        # print('label:', y, 'predictions:', logits)
         # get loss
         loss = self.cross_entropy_loss(logits, y)
         # get acc
@@ -291,7 +293,7 @@ class Net(pl.LightningModule):
         gc.collect()
 
     def configure_optimizers(self):
-        optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, self.parameters()), lr=1e-3)
+        optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, self.parameters()), lr=self.lr)
         return optimizer
     
     def cross_entropy_loss(self, logits, labels):
