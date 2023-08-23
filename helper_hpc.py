@@ -54,7 +54,8 @@ def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, 
         net = net.to(device)
     else:
         net = Net(num_classes=data_module.num_classes, classnames=classnames, diversity=diversity, lr=lr)
-    # net = net.to(device)
+        # device = torch.device(0)
+        # net = net.to(device)
     print(net.device)
     if filters is not None:
         for i in range(len(net.conv_layers)):
@@ -78,7 +79,10 @@ def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, 
     wandb_logger = WandbLogger(log_model=True)
     print((torch.cuda.device_count()))
     # trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu", gpus=torch.cuda.device_count(), strategy='dp')
-    trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu", devices=devices, strategy='ddp')
+    if scaled:
+        trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu", devices=devices, strategy='ddp')
+    else:
+        trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu")
     print(net.device)
     wandb_logger.watch(net, log="all")
     trainer.fit(net, datamodule=data_module)
