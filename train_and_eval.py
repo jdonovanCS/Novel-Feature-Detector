@@ -92,7 +92,7 @@ def run():
     #     with open(filename, 'wb') as f:
     #         np.save(f, stored_filters)
     
-    helper.run(seed=False, rank=args.local_rank if args.devices > 1 else 0)
+    helper.run(seed=False, rank=args.local_rank if args.devices > 0 else 0)
 
 
     # get loader for train and test images and classes

@@ -64,6 +64,7 @@ def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, 
                 z = z.type_as(net.conv_layers[i].weight.data)
                 # z.to(net.device)
                 net.conv_layers[i].weight.data = z
+                # print(net.conv_layers[i].weight.data == filters[i].to(device))
             if fixed_conv:
                 for param in net.conv_layers[i].parameters():
                     param.requires_grad = False
