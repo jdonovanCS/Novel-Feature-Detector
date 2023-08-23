@@ -160,7 +160,7 @@ class Net(pl.LightningModule):
         for x in outputs:
             for k, v in x['val_class_acc'].items():
                 avg_class_acc[k] = v
-        avg_novelty = torch.stack([x['val_novelty'] for x in outputs]).mean()
+        avg_novelty = np.stack([x['val_novelty'] for x in outputs]).mean()
         self.avg_novelty = avg_novelty
         self.log('val_loss_epoch', avg_loss)
         self.log('val_acc_epoch', avg_acc)
@@ -222,7 +222,7 @@ class Net(pl.LightningModule):
         for x in outputs:
             for k, v in x['test_class_acc'].items():
                 avg_class_acc[k] = v
-        avg_novelty = torch.stack([x['test_novelty'] for x in outputs]).mean()
+        avg_novelty = np.stack([x['test_novelty'] for x in outputs]).mean()
         self.avg_novelty = avg_novelty
         self.log('test_loss_epoch', avg_loss)
         self.log('test_acc_epoch', avg_acc)

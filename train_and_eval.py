@@ -37,7 +37,9 @@ parser.add_argument('--ae', help="if pretrained using ae include this tag", acti
 # Options for flexibility
 parser.add_argument('--unique_id', help='if a unique id is associated with the file the solution is stored in give it here.', default="", type=str)
 parser.add_argument('--skip', default=0, help='skip the first n models to train, used mostly when a run fails partway through', type=int)
+parser.add_argument('--inner_skip', default=0, help='skip the first n models to train withint a specific run of evolution (only applies if  training interval < 1.)', type=int)
 parser.add_argument('--stop_after', default=np.inf, help='stop after the first n models', type=int)
+parser.add_argument('--inner_stop_after', default=np.inf, help='stop after the first n models for a specific run of evolution (only applies if training interval < 1.)', type=int)
 parser.add_argument('--num_workers', help='number of workers for training', default=np.inf, type=int)
 
 # Options for measuring diversity over training time
@@ -118,17 +120,20 @@ def run():
     
     # run training and evaluation and record metrics in above variables
     # for each type of evolution ran
-    inner_skip = 0
-    skip = 0
-    if int(training_interval) == 1:
-        skip = args.skip
-    else:
-        inner_skip = args.skip
+    inner_skip = args.inner_skip if training_interval < 1 else 0
+    skip = args.skip
+    stop_after = args.stop_after
+    inner_stop_after = args.inner_stop_after if training_interval < 1 else np.inf
     
-    for run_num in range(int(skip), len(stored_filters)):
+    print(skip, stop_after, inner_skip, inner_stop_after, len(stored_filters), len(stored_filters[0]))
+
+    for run_num in range(int(skip), min(stop_after, len(stored_filters))):
         # run_num = np.where(stored_filters == filters_list)[0][0]
         # for each generation train the solution output at that generation
-        for i in range(int(inner_skip), len(stored_filters[run_num]), int(1/training_interval)*len(stored_filters[run_num])):
+        for n in range(int(inner_skip), min(inner_stop_after, len(stored_filters[run_num])+1), int((training_interval)*len(stored_filters[run_num]))):
+            if n == 0:
+                continue
+            i = n-1
             # if we only want to train the solution from the final generation, continue
             # if (training_interval != 0 and i*1.0 not in [(len(stored_filters[run_num])/(1/training_interval)*j)-1 for j in range(1, min(args.stop_after, int(1/training_interval)+1))]) or (training_interval==0 and i not in range(skip, args.stop_after)):
             #     continue
