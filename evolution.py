@@ -55,6 +55,10 @@ parser.add_argument('--k_strat', help='If using k-neigbhors for metric, what str
 parser.add_argument('--batch_size', help="batch size for computing novelty, only 1 batch is used", type=int, default=64)
 # not sure that this matters either since we should use all of the images in the dataset? especially once a separate evolution dataset is setup for cifar-10 and cifar-100
 parser.add_argument('--num_batches_for_evolution', help='Number of batches used of dataset when calculating diversity of filters', default=1, type=int)
+# shuffle the dataset each time we look at an agent
+parser.add_argument('--shuffle', help='if wanting to shuffle the images in the dataset everytime we start a new validation loop', action='store_true', default=False)
+# do we want to use the training set instead of the validation set
+parser.add_argument('--use_training_dataloader', help='use this if wanting to push training data split through networks in evolutionary pretraining', action='store_true', default=False)
 # only matters for efficiency purposes
 parser.add_argument('--profile', help='Profile validation epoch during evolution', default=False, action='store_true')
 # only matters for local running when I might run out of gpu ram
@@ -130,7 +134,10 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
         if args.profile:
             profile_validation_epoch(net)
         else:
-            trainer.validate(net, dataloaders=data_module.val_dataloader(), verbose=False)
+            if args.use_training_dataloader:
+                trainer.validate(net, dataloaders=data_module.train_dataloader(), verbose=False)
+            else:
+                trainer.validate(net, dataloaders=data_module.val_dataloader(), verbose=False)
         model.fitness =  net.avg_novelty
         population.append(model)
         helper.wandb.log({'gen': 0, 'individual': i, 'fitness': model.fitness})
@@ -156,7 +163,10 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
             child = Model()
             child.filters = mutate(parent.filters)
             net.set_filters(child.filters)
-            trainer.validate(net, dataloaders=data_module.val_dataloader(), verbose=False)
+            if args.use_training_dataloader:
+                trainer.validate(net, dataloaders=data_module.train_dataloader(), verbose=False)
+            else:
+                trainer.validate(net, dataloaders=data_module.val_dataloader(), verbose=False)
             child.fitness = net.avg_novelty
             population.append(child)
             
@@ -201,7 +211,7 @@ def run():
 
     # random_image_paths = helper.create_random_images(64)
     global data_module
-    data_module = helper.get_data_module(args.evo_dataset_for_novelty, batch_size=args.batch_size, workers=args.num_workers)
+    data_module = helper.get_data_module(args.evo_dataset_for_novelty, batch_size=args.batch_size, workers=args.num_workers, shuffle=args.shuffle)
     data_module.prepare_data()
     data_module.setup()
     # data_iterator = iter(data_module.train_dataloader())

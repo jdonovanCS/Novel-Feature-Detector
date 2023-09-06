@@ -26,6 +26,7 @@ parser.add_argument('--k_strat', help='If using k-neigbhors for metric, what str
 parser.add_argument('--num_workers', help='number of workers for training', default=np.inf, type=int)
 parser.add_argument('--num_runs', help='how many ae networks to train', default=5, type=int)
 parser.add_argument('--encoded_space_dims', help='final encoding dims flattened', default=256, type=int)
+parser.add_argument('--rand_tech', help='random distribution of weights for network', default='uniform', type=str)
 args = parser.parse_args()
 
 def run():
@@ -54,6 +55,7 @@ def run():
     helper.config['layerwise_diversity_op'] = args.layerwise_diversity_op
     helper.config['k'] = args.k
     helper.config['k_strat'] = args.k_strat
+    helper.config['rand_tech'] = args.rand_tech
     helper.update_config()
     
     
@@ -68,7 +70,7 @@ def run():
         # else train the network and collect the metrics
         save_path = "trained_models/trained/ae_e{}_r{}.pth".format(experiment_name, run_num)
         print('Training and Evaluating Run: {}'.format(run_num))
-        record_progress = helper.train_ae_network(data_module=data_module, epochs=epochs, lr=args.lr, encoded_space_dims=args.encoded_space_dims, save_path=save_path, novelty_interval=int(args.novelty_interval), val_interval=int(args.test_accuracy_interval), diversity={'type': args.diversity_type, 'pdop': args.pairwise_diversity_op, 'ldop': args.layerwise_diversity_op, 'k': args.k, 'k_strat': args.k_strat}, scaled=scaled)
+        record_progress = helper.train_ae_network(data_module=data_module, epochs=epochs, lr=args.lr, encoded_space_dims=args.encoded_space_dims, save_path=save_path, novelty_interval=int(args.novelty_interval), val_interval=int(args.test_accuracy_interval), diversity={'type': args.diversity_type, 'pdop': args.pairwise_diversity_op, 'ldop': args.layerwise_diversity_op, 'k': args.k, 'k_strat': args.k_strat}, scaled=scaled, rand_tech=args.rand_tech)
         helper.run(seed=False)
         helper.config['dataset'] = args.dataset.lower()
         helper.config['batch_size'] = args.batch_size
@@ -80,6 +82,7 @@ def run():
         helper.config['layerwise_diversity_op'] = args.layerwise_diversity_op
         helper.config['k'] = args.k
         helper.config['k_strat'] = args.k_strat
+        helper.config['rand_tech'] = args.rand_tech
         helper.update_config()
             # for c in classlist:
             #     classwise_accuracy_record[run_num][i][np.where(classlist==c)[0][0]] = record_accuracy[c]

@@ -130,7 +130,7 @@ def run():
     for run_num in range(int(skip), min(stop_after, len(stored_filters))):
         # run_num = np.where(stored_filters == filters_list)[0][0]
         # for each generation train the solution output at that generation
-        for n in range(int(inner_skip), min(inner_stop_after, len(stored_filters[run_num])+1), int((training_interval)*len(stored_filters[run_num]))):
+        for n in range(int(inner_skip*(int((training_interval)*len(stored_filters[run_num])))), min(inner_stop_after, len(stored_filters[run_num])+1), int((training_interval)*len(stored_filters[run_num]))):
             if n == 0:
                 continue
             i = n-1
@@ -151,7 +151,7 @@ def run():
             save_path = "trained_models/trained/conv{}_e{}_n{}_r{}_g{}.pth".format(not fixed_conv, experiment_name, name, run_num, i)
             print('Training and Evaluating: {} Gen: {} Run: {}'.format(name, i, run_num))
             record_progress = helper.train_network(data_module=data_module, filters=stored_filters[run_num][i], epochs=epochs, lr=args.lr, save_path=save_path, fixed_conv=fixed_conv, novelty_interval=int(args.novelty_interval), val_interval=int(args.test_accuracy_interval), diversity=diversity, scaled=scaled, devices=args.devices)
-            helper.run(seed=False)
+            helper.run(seed=False, rank=args.local_rank if args.devices > 0 else 0)
             helper.config['dataset'] = args.dataset.lower()
             helper.config['batch_size'] = args.batch_size
             helper.config['lr'] = args.lr

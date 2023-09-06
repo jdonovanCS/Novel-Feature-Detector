@@ -36,9 +36,10 @@ def create_random_images(num_images=200):
 #     train_dataset = rd.RandomDataset(random_image_paths)
 #     train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=2)
 #     return train_loader
-
+from pytorch_lightning.plugins import DDPPlugin
 def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, fixed_conv=False, val_interval=1, novelty_interval=None, diversity={'type':'absolute', 'pdop':None, 'ldop':None, 'k': None, 'k_strat':True}, scaled=False, devices=1):
     # check which dataset and get the classes for it
+    torch.cuda.empty_cache()
     if data_module.num_classes < 101:
         classnames = list(data_module.dataset_test.classes)
     else:
@@ -48,8 +49,8 @@ def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, 
         total_devices = torch.cuda.device_count()
         device = torch.device(glob_rank % total_devices)
         torch.cuda.set_device(device)
-        torch.distributed.init_process_group(backend='gloo',
-                                     init_method='env://')
+        # torch.distributed.init_process_group(backend='gloo',
+        #                              init_method='env://')
         net = BigNet(num_classes=data_module.num_classes, classnames=classnames, diversity=diversity, lr=lr)
         net = net.to(device)
     else:
@@ -81,7 +82,7 @@ def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, 
     print((torch.cuda.device_count()))
     # trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu", gpus=torch.cuda.device_count(), strategy='dp')
     if scaled:
-        trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu", devices=devices, strategy='ddp')
+        trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu", devices=devices, plugins=DDPPlugin(find_unused_parameters=False))
     else:
         trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu")
     print(net.device)
@@ -90,8 +91,10 @@ def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, 
 
     # torch.save(net.state_dict(), save_path)
     # return record_progress
-def train_ae_network(data_module, epochs=100, lr=.001, encoded_space_dims=256, save_path=None, novelty_interval=4, val_interval=1, diversity={'type':'absolute', 'pdop':None, 'ldop':None, 'k': None, 'k_strat':True}, scaled=False):
+def train_ae_network(data_module, epochs=100, lr=.001, encoded_space_dims=256, save_path=None, novelty_interval=4, val_interval=1, diversity={'type':'absolute', 'pdop':None, 'ldop':None, 'k': None, 'k_strat':True}, scaled=False, rand_tech='uniform'):
     net = AE(encoded_space_dims, diversity, lr)
+    if rand_tech == 'normal':
+        normalize(net)
     # net = net.to(device)
     if save_path is None:
         save_path = PATH
@@ -100,18 +103,18 @@ def train_ae_network(data_module, epochs=100, lr=.001, encoded_space_dims=256, s
     wandb_logger.watch(net, log='all')
     trainer.fit(net, datamodule=data_module)
 
-def get_data_module(dataset, batch_size, workers=np.inf):
+def get_data_module(dataset, batch_size, workers=np.inf, shuffle=False):
     match dataset.lower():
         case 'cifar10' | 'cifar-10':
-            data_module = pl_bolts.datamodules.CIFAR10DataModule(batch_size=batch_size, data_dir="data/", num_workers=min(workers, os.cpu_count()), pin_memory=True)
+            data_module = pl_bolts.datamodules.CIFAR10DataModule(batch_size=batch_size, data_dir="data/", num_workers=min(workers, os.cpu_count()), pin_memory=True, shuffle=shuffle)
         case 'cifar100' | 'cifar-100':
-            data_module = CIFAR100DataModule(batch_size=batch_size, data_dir="data/", num_workers=min(workers, os.cpu_count()), pin_memory=True)
+            data_module = CIFAR100DataModule(batch_size=batch_size, data_dir="data/", num_workers=min(workers, os.cpu_count()), pin_memory=True, shuffle=shuffle)
         case 'imagenet':
-            data_module = pl_bolts.datamodules.ImagenetDataModule(batch_size=batch_size, data_dir="data/imagenet/", num_workers=min(workers, os.cpu_count()), pin_memory=True)
+            data_module = pl_bolts.datamodules.ImagenetDataModule(batch_size=batch_size, data_dir="data/imagenet/", num_workers=min(workers, os.cpu_count()), pin_memory=True, shuffle=shuffle)
         case 'miniimagenet':
-            data_module = pl_bolts.datamodules.ImagenetDataModule(batch_size=batch_size, data_dir="data/miniimagenet/", num_workers=min(workers, os.cpu_count()), pin_memory=True)
+            data_module = pl_bolts.datamodules.ImagenetDataModule(batch_size=batch_size, data_dir="data/miniimagenet/", num_workers=min(workers, os.cpu_count()), pin_memory=True, shuffle=shuffle)
         case 'random':
-            data_module = rd.RandomDataModule(data_dir='images/random/', batch_size=batch_size, num_workers=min(workers, os.cpu_count()), pin_memory=True)
+            data_module = rd.RandomDataModule(data_dir='images/random/', batch_size=batch_size, num_workers=min(workers, os.cpu_count()), pin_memory=True, shuffle=shuffle)
         case _:
             print('Please supply dataset of CIFAR-10 or CIFAR-100')
             exit()
@@ -447,18 +450,24 @@ def plot_mean_and_bootstrapped_ci_multiple(input_data = None, title = 'overall',
         plt.show()
     
 def log(input):
-    if glob_rank >= 0:
+    # if glob_rank == 0:
         wandb.log(input)
 
 def update_config():
-    if glob_rank >= 0:
+    # if glob_rank == 0:
         wandb.config.update(config)
+
+def force_cudnn_initialization():
+    s = 32
+    dev = torch.device(device)
+    torch.nn.functional.conv2d(torch.zeros(s, s, s, s, device=dev), torch.zeros(s, s, s, s, device=dev))
 
 def run(seed=True, rank=0):
     torch.multiprocessing.freeze_support()
     if seed:
         pl.seed_everything(42, workers=True)
     
+    torch.cuda.empty_cache()
     global device
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -473,8 +482,9 @@ def run(seed=True, rank=0):
     global glob_rank
     glob_rank = rank
     # if glob_rank == 0:
-    if glob_rank > -1:
-        wandb.init(project="novel-feature-detectors", group='DDP')
+    # if glob_rank > -1:
+        # force_cudnn_initialization()
+    wandb.init(project="novel-feature-detectors") # group='DDP'
 
 
 if __name__ == '__main__':

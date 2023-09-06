@@ -18,9 +18,9 @@ def run():
     for i in range(5):
 
         # for each grab the convolutional filter weights from them
-        for j in range(len(os.listdir('trained_models/trained/ae_ecifar100_ae_32_4096_r{}.pth/novel-feature-detectors/'.format(i)))):
-            if os.path.exists(os.path.join('trained_models/trained/ae_ecifar100_ae_32_4096_r{}.pth'.format(i), 'novel-feature-detectors/', os.listdir('trained_models/trained/ae_ecifar100_ae_32_4096_r{}.pth/novel-feature-detectors/'.format(i))[j], 'checkpoints/epoch=31-step=20000.ckpt')):
-                path = os.path.join('trained_models/trained/ae_ecifar100_ae_32_4096_r{}.pth'.format(i), 'novel-feature-detectors/', os.listdir('trained_models/trained/ae_ecifar100_ae_32_4096_r{}.pth/novel-feature-detectors/'.format(i))[j], 'checkpoints/epoch=31-step=20000.ckpt')
+        for j in range(len(os.listdir('trained_models/trained/ae_ecifar100_ae_1_1000_normal_r{}.pth/novel-feature-detectors/'.format(i)))):
+            if os.path.exists(os.path.join('trained_models/trained/ae_ecifar100_ae_1_1000_normal_r{}.pth'.format(i), 'novel-feature-detectors/', os.listdir('trained_models/trained/ae_ecifar100_ae_1_1000_normal_r{}.pth/novel-feature-detectors/'.format(i))[j], 'checkpoints/epoch=0-step=625.ckpt')):
+                path = os.path.join('trained_models/trained/ae_ecifar100_ae_1_1000_normal_r{}.pth'.format(i), 'novel-feature-detectors/', os.listdir('trained_models/trained/ae_ecifar100_ae_1_1000_normal_r{}.pth/novel-feature-detectors/'.format(i))[j], 'checkpoints/epoch=0-step=625.ckpt')
         m = AE.load_from_checkpoint(path)
 
         with torch.no_grad():
@@ -30,9 +30,9 @@ def run():
             solution_results['ae_unsup'][i] = [filters]
 
     # save this np array to file using npy.save (make sure the experiment name / save location is correct)
-    if not os.path.isdir('output/cifar100_ae_32_4096'):
-        os.mkdir('output/cifar100_ae_32_4096')
-    with open('output/cifar100_ae_32_4096/solutions_over_time_{}.npy'.format('ae_unsup'), 'wb') as f:
+    if not os.path.isdir('output/cifar100_ae_1_1000_normal'):
+        os.mkdir('output/cifar100_ae_1_1000_normal')
+    with open('output/cifar100_ae_1_1000_normal/solutions_over_time_{}.npy'.format('ae_unsup'), 'wb') as f:
         np.save(f, solution_results['ae_unsup'])
 
 if __name__ == '__main__':
