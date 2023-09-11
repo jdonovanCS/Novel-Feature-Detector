@@ -17,7 +17,7 @@ parser.add_argument('--training_interval', help='How often should the network be
 'If 0 is given, the filters from every generation will be trained', type=float, default=1.)
 parser.add_argument('--epochs', help="Number of epochos to train for", type=int, default=256)
 parser.add_argument('--devices', help='number of gpus to use', default=1, type=int)
-parser.add_argument('--local_rank', metavar="N", help='if using ddp and multiple gpus, we only want to collect metrics once, input 0 here if using ddp and multi gpus', default=-1, type=int)
+parser.add_argument('--local_rank', metavar="N", help='if using ddp and multiple gpus, we only want to collect metrics once, input 0 here if using ddp and multi gpus', default=0, type=int)
 
 # parser.add_argument('--rand_norm', action='store_true')
 parser.add_argument('--gram-schmidt', help='gram-schmidt used to orthonormalize filters', action='store_true')
@@ -125,7 +125,7 @@ def run():
     stop_after = args.stop_after
     inner_stop_after = args.inner_stop_after if training_interval < 1 else np.inf
     
-    print(skip, stop_after, inner_skip, inner_stop_after, len(stored_filters), len(stored_filters[0]))
+    # print(skip, stop_after, inner_skip, inner_stop_after, len(stored_filters), len(stored_filters[0]))
 
     for run_num in range(int(skip), min(stop_after, len(stored_filters))):
         # run_num = np.where(stored_filters == filters_list)[0][0]
@@ -151,7 +151,7 @@ def run():
             save_path = "trained_models/trained/conv{}_e{}_n{}_r{}_g{}.pth".format(not fixed_conv, experiment_name, name, run_num, i)
             print('Training and Evaluating: {} Gen: {} Run: {}'.format(name, i, run_num))
             record_progress = helper.train_network(data_module=data_module, filters=stored_filters[run_num][i], epochs=epochs, lr=args.lr, save_path=save_path, fixed_conv=fixed_conv, novelty_interval=int(args.novelty_interval), val_interval=int(args.test_accuracy_interval), diversity=diversity, scaled=scaled, devices=args.devices)
-            helper.run(seed=False, rank=args.local_rank if args.devices > 0 else 0)
+            helper.run(seed=False, rank=args.local_rank if args.local_rank > 0 else 0)
             helper.config['dataset'] = args.dataset.lower()
             helper.config['batch_size'] = args.batch_size
             helper.config['lr'] = args.lr
