@@ -22,6 +22,7 @@ import random
 import collections
 import _collections_abc
 import collections.abc
+import gc
 
 def create_random_images(num_images=200):
     paths = []
@@ -39,6 +40,7 @@ def create_random_images(num_images=200):
 from pytorch_lightning.plugins import DDPPlugin
 def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, fixed_conv=False, val_interval=1, novelty_interval=None, diversity={'type':'absolute', 'pdop':None, 'ldop':None, 'k': None, 'k_strat':True}, scaled=False, devices=1):
     # check which dataset and get the classes for it
+    gc.collect()
     torch.cuda.empty_cache()
     if data_module.num_classes < 101:
         classnames = list(data_module.dataset_test.classes)
@@ -51,6 +53,7 @@ def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, 
         torch.cuda.set_device(device)
         # torch.distributed.init_process_group(backend='gloo',
         #                              init_method='env://')
+        print(device)
         net = BigNet(num_classes=data_module.num_classes, classnames=classnames, diversity=diversity, lr=lr)
         net = net.to(device)
     else:
@@ -78,15 +81,19 @@ def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, 
 
     if save_path is None:
         save_path = PATH
-    wandb_logger = WandbLogger(log_model=True)
+    if not scaled:
+        wandb_logger = WandbLogger(log_model=True)
+    else:
+        wandb_logger = WandbLogger(log_model=False)
     print((torch.cuda.device_count()))
     # trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu", gpus=torch.cuda.device_count(), strategy='dp')
     if scaled:
-        trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu", devices=devices, plugins=DDPPlugin(find_unused_parameters=False))
+        trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu", devices=devices)#, plugins=DDPPlugin(find_unused_parameters=False))
     else:
         trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu")
-    print(net.device)
-    wandb_logger.watch(net, log="all")
+    if not scaled:
+        wandb_logger.watch(net, log="all")
+    torch.cuda.empty_cache()
     trainer.fit(net, datamodule=data_module)
 
     # torch.save(net.state_dict(), save_path)
@@ -450,16 +457,16 @@ def plot_mean_and_bootstrapped_ci_multiple(input_data = None, title = 'overall',
         plt.show()
     
 def log(input):
-    # if glob_rank == 0:
+    if glob_rank == 0:
         wandb.log(input)
 
 def update_config():
-    # if glob_rank == 0:
+    if glob_rank == 0:
         wandb.config.update(config)
 
 def force_cudnn_initialization():
     s = 32
-    dev = torch.device(device)
+    dev = torch.device('cuda')
     torch.nn.functional.conv2d(torch.zeros(s, s, s, s, device=dev), torch.zeros(s, s, s, s, device=dev))
 
 def run(seed=True, rank=0):
@@ -481,10 +488,11 @@ def run(seed=True, rank=0):
     # TODO: could put if statement here to determine if we should be logging. This is only necessary once ddp is actually working correctly.
     global glob_rank
     glob_rank = rank
-    # if glob_rank == 0:
+    os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:300"
+    if glob_rank == 0:
     # if glob_rank > -1:
-        # force_cudnn_initialization()
-    wandb.init(project="novel-feature-detectors") # group='DDP'
+        force_cudnn_initialization()
+        wandb.init(project="novel-feature-detectors") # group='DDP'
 
 
 if __name__ == '__main__':
