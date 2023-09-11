@@ -108,13 +108,13 @@ def get_data_module(dataset, batch_size, workers=np.inf, shuffle=False):
         case 'cifar10' | 'cifar-10':
             data_module = pl_bolts.datamodules.CIFAR10DataModule(batch_size=batch_size, data_dir="data/", num_workers=min(workers, os.cpu_count()), pin_memory=True, shuffle=shuffle)
         case 'cifar100' | 'cifar-100':
-            data_module = CIFAR100DataModule(batch_size=batch_size, data_dir="data/", num_workers=min(workers, os.cpu_count()), pin_memory=True, shuffle=shuffle)
+            data_module = CIFAR100DataModule(batch_size=batch_size, data_dir="data/", num_workers=min(workers, os.cpu_count()), pin_memory=True)
         case 'imagenet':
-            data_module = pl_bolts.datamodules.ImagenetDataModule(batch_size=batch_size, data_dir="data/imagenet/", num_workers=min(workers, os.cpu_count()), pin_memory=True, shuffle=shuffle)
+            data_module = pl_bolts.datamodules.ImagenetDataModule(batch_size=batch_size, data_dir="data/imagenet/", num_workers=min(workers, os.cpu_count()), pin_memory=True)
         case 'miniimagenet':
             data_module = pl_bolts.datamodules.ImagenetDataModule(batch_size=batch_size, data_dir="data/miniimagenet/", num_workers=min(workers, os.cpu_count()), pin_memory=True, shuffle=shuffle)
         case 'random':
-            data_module = rd.RandomDataModule(data_dir='images/random/', batch_size=batch_size, num_workers=min(workers, os.cpu_count()), pin_memory=True, shuffle=shuffle)
+            data_module = rd.RandomDataModule(data_dir='images/random/', batch_size=batch_size, num_workers=min(workers, os.cpu_count()), pin_memory=True)
         case _:
             print('Please supply dataset of CIFAR-10 or CIFAR-100')
             exit()
