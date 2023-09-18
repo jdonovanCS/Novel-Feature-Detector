@@ -23,6 +23,7 @@ import collections
 import _collections_abc
 import collections.abc
 import gc
+from vgg16 import Net as vgg16
 
 def create_random_images(num_images=200):
     paths = []
@@ -84,20 +85,48 @@ def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, 
     if not scaled:
         wandb_logger = WandbLogger(log_model=True)
     else:
-        wandb_logger = WandbLogger(log_model=False)
+        wandb_logger = WandbLogger(log_model=True)
     print((torch.cuda.device_count()))
     # trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu", gpus=torch.cuda.device_count(), strategy='dp')
     if scaled:
-        trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu", devices=devices)#, plugins=DDPPlugin(find_unused_parameters=False))
+        trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu", devices=devices, plugins=DDPPlugin(find_unused_parameters=False))
     else:
         trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu")
-    if not scaled:
-        wandb_logger.watch(net, log="all")
+    wandb_logger.watch(net, log="all")
     torch.cuda.empty_cache()
     trainer.fit(net, datamodule=data_module)
 
     # torch.save(net.state_dict(), save_path)
     # return record_progress
+
+def train_vgg16(data_module, epochs=2, lr=.001, val_interval=4):
+    # check which dataset and get the classes for it
+    gc.collect()
+    torch.cuda.empty_cache()
+    if data_module.num_classes < 101:
+        classnames = list(data_module.dataset_test.classes)
+    else:
+        classnames = list([x[0] for x in data_module.train_dataloader().dataset.classes])
+    # check which network and instantiate it
+    total_devices = torch.cuda.device_count()
+    device = torch.device(glob_rank % total_devices)
+    torch.cuda.set_device(device)
+    # torch.distributed.init_process_group(backend='gloo',
+    #                              init_method='env://')
+    print(device)
+    net = vgg16(num_classes=data_module.num_classes, classnames=classnames, diversity=diversity, lr=lr)
+    net = net.to(device)
+    
+    wandb_logger = WandbLogger(log_model=True)
+    trainer = pl.Trainer(max_epochs=epochs, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu", devices=1, plugins=DDPPlugin(find_unused_parameters=False))
+
+    wandb_logger.watch(net, log="all")
+    torch.cuda.empty_cache()
+    trainer.fit(net, datamodule=data_module)
+
+    # torch.save(net.state_dict(), save_path)
+    # return record_progress
+
 def train_ae_network(data_module, epochs=100, lr=.001, encoded_space_dims=256, save_path=None, novelty_interval=4, val_interval=1, diversity={'type':'absolute', 'pdop':None, 'ldop':None, 'k': None, 'k_strat':True}, scaled=False, rand_tech='uniform'):
     net = AE(encoded_space_dims, diversity, lr)
     if rand_tech == 'normal':

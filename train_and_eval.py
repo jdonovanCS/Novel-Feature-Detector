@@ -48,6 +48,8 @@ parser.add_argument('--pairwise_diversity_op', default='mean', help='the functio
 parser.add_argument('--layerwise_diversity_op', default='w_mean', help='the function to use for calculating diversity metric with regard to layerwise comparisons', type=str)
 parser.add_argument('--k', help='If using k-neighbors for metric calculation, how many neighbors', type=int, default=-1)
 parser.add_argument('--k_strat', help='If using k-neigbhors for metric, what strategy should be used? (ie. closest, furthest, random, etc.)', type=str, default='closest')   
+
+parser.add_argument('--test_vgg16', help='for internal use only', default=False, action='store_true')
 args = parser.parse_args()
 
 def run():
@@ -150,7 +152,10 @@ def run():
             helper.update_config()
             save_path = "trained_models/trained/conv{}_e{}_n{}_r{}_g{}.pth".format(not fixed_conv, experiment_name, name, run_num, i)
             print('Training and Evaluating: {} Gen: {} Run: {}'.format(name, i, run_num))
-            record_progress = helper.train_network(data_module=data_module, filters=stored_filters[run_num][i], epochs=epochs, lr=args.lr, save_path=save_path, fixed_conv=fixed_conv, novelty_interval=int(args.novelty_interval), val_interval=int(args.test_accuracy_interval), diversity=diversity, scaled=scaled, devices=args.devices)
+            if not args.test_vgg16:
+                record_progress = helper.train_network(data_module=data_module, filters=stored_filters[run_num][i], epochs=epochs, lr=args.lr, save_path=save_path, fixed_conv=fixed_conv, novelty_interval=int(args.novelty_interval), val_interval=int(args.test_accuracy_interval), diversity=diversity, scaled=scaled, devices=args.devices)
+            else:
+                record_progress = helper.train_vgg16(data_module=data_module, epochs=4, lr=.01, val_interval=4)
             helper.run(seed=False, rank=args.local_rank if args.local_rank > 0 else 0)
             helper.config['dataset'] = args.dataset.lower()
             helper.config['batch_size'] = args.batch_size
