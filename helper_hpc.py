@@ -55,7 +55,7 @@ def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, 
         # torch.distributed.init_process_group(backend='gloo',
         #                              init_method='env://')
         print(device)
-        net = BigNet(num_classes=data_module.num_classes, classnames=classnames, diversity=diversity, lr=lr)
+        net = vgg16(num_classes=data_module.num_classes, classnames=classnames, diversity=None, lr=lr)
         net = net.to(device)
     else:
         net = Net(num_classes=data_module.num_classes, classnames=classnames, diversity=diversity, lr=lr)
@@ -63,22 +63,35 @@ def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, 
         # net = net.to(device)
     print(net.device)
     if filters is not None:
-        for i in range(len(net.conv_layers)):
-            if i < len(filters):
-                z = torch.tensor(filters[i])
-                z = z.type_as(net.conv_layers[i].weight.data)
-                # z.to(net.device)
-                net.conv_layers[i].weight.data = z
-                # print(net.conv_layers[i].weight.data == filters[i].to(device))
-            if fixed_conv:
-                for param in net.conv_layers[i].parameters():
-                    param.requires_grad = False
-                for param in net.BatchNorm1.parameters():
-                    param.requires_grad = False
-                for param in net.BatchNorm2.parameters():
-                    param.requires_grad = False
-                for param in net.BatchNorm3.parameters():
-                    param.requires_grad = False
+        if not scaled:
+            for i in range(len(net.conv_layers)):
+                if i < len(filters):
+                    z = torch.tensor(filters[i])
+                    z = z.type_as(net.conv_layers[i].weight.data)
+                    # z.to(net.device)
+                    net.conv_layers[i].weight.data = z
+                    # print(net.conv_layers[i].weight.data == filters[i].to(device))
+                if fixed_conv:
+                    for param in net.conv_layers[i].parameters():
+                        param.requires_grad = False
+                    for param in net.BatchNorm1.parameters():
+                        param.requires_grad = False
+                    for param in net.BatchNorm2.parameters():
+                        param.requires_grad = False
+                    for param in net.BatchNorm3.parameters():
+                        param.requires_grad = False
+        elif scaled:
+            count = 0
+            for m in net.model.modules():
+                if isinstance(m, (torch.nn.Conv2d)):
+                    z = torch.tensor(filters[count])
+                    z = z.type_as(m.weight.data)
+                    m.weight.data = z
+                    count += 1
+                if fixed_conv:
+                    if isinstance(m, (torch.nn.Conv2d, torch.nn.BatchNorm2d)):
+                        for param in m.parameters():
+                            param.requires_grad=False
 
     if save_path is None:
         save_path = PATH
@@ -101,31 +114,18 @@ def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, 
 
 def train_vgg16(data_module, epochs=2, lr=.001, val_interval=4):
     # check which dataset and get the classes for it
-    gc.collect()
-    torch.cuda.empty_cache()
     if data_module.num_classes < 101:
         classnames = list(data_module.dataset_test.classes)
     else:
         classnames = list([x[0] for x in data_module.train_dataloader().dataset.classes])
-    # check which network and instantiate it
-    total_devices = torch.cuda.device_count()
-    device = torch.device(glob_rank % total_devices)
-    torch.cuda.set_device(device)
-    # torch.distributed.init_process_group(backend='gloo',
-    #                              init_method='env://')
-    print(device)
-    net = vgg16(num_classes=data_module.num_classes, classnames=classnames, diversity=diversity, lr=lr)
-    net = net.to(device)
+
+    net = vgg16(num_classes=data_module.num_classes, classnames=classnames, diversity=None, lr=lr)
     
     wandb_logger = WandbLogger(log_model=True)
-    trainer = pl.Trainer(max_epochs=epochs, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu", devices=1, plugins=DDPPlugin(find_unused_parameters=False))
+    trainer = pl.Trainer(max_epochs=epochs, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu")#, devices=1, plugins=DDPPlugin(find_unused_parameters=False))
 
     wandb_logger.watch(net, log="all")
-    torch.cuda.empty_cache()
     trainer.fit(net, datamodule=data_module)
-
-    # torch.save(net.state_dict(), save_path)
-    # return record_progress
 
 def train_ae_network(data_module, epochs=100, lr=.001, encoded_space_dims=256, save_path=None, novelty_interval=4, val_interval=1, diversity={'type':'absolute', 'pdop':None, 'ldop':None, 'k': None, 'k_strat':True}, scaled=False, rand_tech='uniform'):
     net = AE(encoded_space_dims, diversity, lr)

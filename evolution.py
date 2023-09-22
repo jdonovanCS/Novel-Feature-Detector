@@ -22,6 +22,7 @@ import pytorch_lightning as pl
 import cProfile
 import pstats
 import shortuuid
+import copy
 
 
 # TODO: Why not use gradient descent since fitness function is differentiable. Should probably compare to that.
@@ -63,6 +64,9 @@ parser.add_argument('--use_training_dataloader', help='use this if wanting to pu
 parser.add_argument('--profile', help='Profile validation epoch during evolution', default=False, action='store_true')
 # only matters for local running when I might run out of gpu ram
 parser.add_argument('--num_workers', help='Num workers to use to load data module', default=np.inf, type=int)
+# realized the ea is actually rewriting parents and putting them back in the pool instead of just creating modified children.
+# Use this param to undo that and operate as intended
+parser.add_argument('--as_intended', help='use if wanting to operate the ea as intended instead of the bugged method', default=False, action='store_true')
 
 args = parser.parse_args()
 
@@ -161,7 +165,10 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
         # Create the child model and store it.
         for parent in parents:
             child = Model()
-            child.filters = mutate(parent.filters)
+            if args.as_intended:
+                child.filters = mutate(copy.deepcopy(parent.filters))
+            else:
+                child.filters = mutate(parent.filters)
             net.set_filters(child.filters)
             if args.use_training_dataloader:
                 trainer.validate(net, dataloaders=data_module.train_dataloader(), verbose=False)
@@ -178,7 +185,7 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
         best_fitness = sorted(population, key=lambda i: i.fitness, reverse=True)[0].fitness
         best_solution = sorted(population, key=lambda i: i.fitness, reverse=True)[0].filters
         fitness_over_time.append((best_fitness))
-        solutions_over_time.append((best_solution))
+        solutions_over_time.append((copy.deepcopy(best_solution)))
         helper.save_npy('output/' + experiment_name + '/solutions_over_time_current_{}_{}.npy'.format(evolution_type, uniqueID), solutions_over_time, index=i)
         helper.wandb.log({'gen': i, 'best_individual_fitness': best_fitness})
         # helper.wandb.log({'gen': i, 'best_individual_filters': best_solution})

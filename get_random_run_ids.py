@@ -9,46 +9,7 @@ import wandb
 
 # run_id = args.run_id
 api = wandb.Api()
-runs = api.runs(path="jdonovan/novel-feature-detectors", filters={"config.experiment_name": "random normal", "config.fixed_conv": False, "config.dataset": "cifar-100"})#, "config.evo": 0, "config.fixed_conv": 0})
-
-def confirm(prompt=None, resp=False):
-    """prompts for yes or no response from the user. Returns True for yes and
-    False for no.
-
-    'resp' should be set to the default value assumed by the caller when
-    user simply types ENTER.
-
-    >>> confirm(prompt='Create Directory?', resp=True)
-    Create Directory? [y]|n: 
-    True
-    >>> confirm(prompt='Create Directory?', resp=False)
-    Create Directory? [n]|y: 
-    False
-    >>> confirm(prompt='Create Directory?', resp=False)
-    Create Directory? [n]|y: y
-    True
-
-    """
-    
-    if prompt is None:
-        prompt = 'Confirm'
-
-    if resp:
-        prompt = '%s [%s]|%s: ' % (prompt, 'y', 'n')
-    else:
-        prompt = '%s [%s]|%s: ' % (prompt, 'n', 'y')
-        
-    while True:
-        ans = input(prompt)
-        if not ans:
-            return resp
-        if ans not in ['y', 'Y', 'n', 'N']:
-            print('please enter y or n.')
-            continue
-        if ans == 'y' or ans == 'Y':
-            return True
-        if ans == 'n' or ans == 'N':
-            return False
+runs = api.runs(path="jdonovan/novel-feature-detectors", filters={"config.experiment_name": "random normal", "config.fixed_conv": False, "config.dataset": "cifar10"})#, "config.State": "Crashed", "config.evo": 0, "config.fixed_conv": 0})
 
 # data = []
 # with open('artifacts/run-um0c4jr0-history-v0/0000.csv', newline='') as csvfile:
@@ -73,6 +34,10 @@ def confirm(prompt=None, resp=False):
 
 for run in runs:
     print(run.id)
+    print(run.State)
+    if run.State == 'crashed' or run.State == 'failed':
+        print('deleting', run.id)
+        run.delete()
     # print([type(row['val_novelty']) for row in history])
     # values = [row['val_novelty'] for row in history]
     # if np.mean(values) < .2:

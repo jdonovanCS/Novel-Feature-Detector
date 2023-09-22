@@ -129,10 +129,6 @@ class Net(pl.LightningModule):
             for label, prediction in zip(y, labels_hat):
                     if label == prediction:
                         corr_pred[self.classnames[label]] += 1
-                    # print(self.classnames)
-                    # print(label)
-                    # print(total_pred)
-                    # print(self.classnames[label])
                     total_pred[self.classnames[label]] += 1
             for classname, correct_count in corr_pred.items():
                 accuracy = 0
@@ -263,13 +259,6 @@ class Net(pl.LightningModule):
     def compute_weight_dist(self):
         weights = self.get_filters(True)
         return helper.get_dist(weights)
-    
-    def clear_activations(self):
-        for i in range(len(self.conv_layers)):
-            self.activations[i] = []
-    
-    def get_activations(self):
-        return self.activations
 
     def compute_feature_novelty(self):
         
@@ -291,8 +280,7 @@ class Net(pl.LightningModule):
 
         l = []
         for i in self.activations:
-            if type(self.activations[i][0]) != type(np.zeros((1))):
-                self.activations[i][0] = self.activations[i][0].detach().cpu().numpy()
+            self.activations[i][0] = self.activations[i][0].detach().cpu().numpy()
             if self.diversity['type']=='relative':
                 l.append(helper.diversity_relative(self.activations[i][0], self.diversity['pdop'], self.diversity['k'], self.diversity['k_strat']))
             elif self.diversity['type']=='original':
