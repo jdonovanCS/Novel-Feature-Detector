@@ -1,0 +1,6 @@
+wandb_version: 1
+
+evo_gens:
+  value: 250
+evo_pop_size:
+  value: 20

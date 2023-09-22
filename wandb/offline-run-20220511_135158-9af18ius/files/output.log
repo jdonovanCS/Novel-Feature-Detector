@@ -1,0 +1,14 @@
+
+{'evo': False, 'dataset': 'cifar10', 'evo_gens': '50', 'batch_size': 64, 'classnames': ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck'], 'fixed_conv': False, 'num_classes': 10, 'evo_num_runs': '5', 'evo_pop_size': '20', 'evo_num_winners': '2', 'experiment_name': 'hpc full cifar10 val diversity', 'experiment_type': 'training', 'evo_num_children': '20', 'evo_tourney_size': '4', 'evo_dataset_for_novelty': 'cifar10'}
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\visualize_filters_and_activations.py", line 77, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\visualize_filters_and_activations.py", line 36, in run
+    for r in runs:
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\wandb\apis\public.py", line 882, in __next__
+    if not self._load_page():
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\wandb\apis\public.py", line 870, in _load_page
+    self.objects.extend(self.convert_objects())
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\wandb\apis\public.py", line 1406, in convert_objects
+    raise ValueError("Could not find project %s" % self.project)
+ValueError: Could not find project novel-feature-detectors/

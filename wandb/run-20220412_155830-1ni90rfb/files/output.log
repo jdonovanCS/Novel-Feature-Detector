@@ -1,0 +1,290 @@
+updating config
+config: {'batch_size': 64, 'experiment_name': 'channel diversity metric', 'evo_gens': 50, 'evo_pop': 20, 'evo_dataset_for_novelty': 'cifar10', 'evo_num_runs': 5, 'evo_tourney_size': 4, 'evo_num_winners': 2, 'evo_num_children': 20}
+Files already downloaded and verified
+Files already downloaded and verified
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:88: LightningDeprecationWarning: DataModule property `train_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:107: LightningDeprecationWarning: DataModule property `val_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:126: LightningDeprecationWarning: DataModule property `test_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+Running Evolution for fitness
+Initializing
+  0%|                                                                                            | 0/5 [00:00<?, ?it/s]
+
+
+ 70%|█████████████████████████████████████████████████████████▍                        | 14/20 [00:04<00:01,  4.73it/s]
+100%|██████████████████████████████████████████████████████████████████████████████████| 20/20 [00:05<00:00,  4.74it/s]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 98%|████████████████████████████████████████████████████████████████████████████████▎ | 49/50 [04:06<00:05,  5.02s/it]
+fitness 0 256.6533932685852 481087020.18857193
+ 20%|████████████████▌                                                                  | 1/5 [04:16<17:06, 256.67s/it]
+
+ 75%|█████████████████████████████████████████████████████████████▌                    | 15/20 [00:03<00:01,  4.66it/s]
+100%|██████████████████████████████████████████████████████████████████████████████████| 20/20 [00:04<00:00,  4.59it/s]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 40%|█████████████████████████████████▏                                                 | 2/5 [08:31<12:46, 255.41s/it]
+  5%|████▏                                                                              | 1/20 [00:00<00:03,  5.23it/s]
+fitness 1 254.51054453849792 2079754497.5218916
+
+100%|██████████████████████████████████████████████████████████████████████████████████| 20/20 [00:04<00:00,  4.47it/s]
+  0%|                                                                                           | 0/50 [00:00<?, ?it/s]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 60%|█████████████████████████████████████████████████▊                                 | 3/5 [12:49<08:33, 256.70s/it]
+  0%|                                                                                           | 0/20 [00:00<?, ?it/s]
+fitness 2 258.2277522087097 491044639.0244694
+
+
+100%|██████████████████████████████████████████████████████████████████████████████████| 20/20 [00:04<00:00,  4.37it/s]
+  0%|                                                                                           | 0/50 [00:00<?, ?it/s]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 80%|██████████████████████████████████████████████████████████████████▍                | 4/5 [17:08<04:17, 257.57s/it]
+ 25%|████████████████████▊                                                              | 5/20 [00:01<00:03,  4.75it/s]
+fitness 3 258.88832116127014 483449042.4171686
+
+100%|██████████████████████████████████████████████████████████████████████████████████| 20/20 [00:04<00:00,  4.45it/s]
+  0%|                                                                                           | 0/50 [00:00<?, ?it/s]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+100%|███████████████████████████████████████████████████████████████████████████████████| 5/5 [21:27<00:00, 257.52s/it]
+fitness 4 259.2736542224884 490347116.23816013

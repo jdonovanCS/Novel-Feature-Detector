@@ -1,0 +1,152 @@
+Files already downloaded and verified
+Files already downloaded and verified
+  0%|                                                                                            | 0/1 [00:00<?, ?it/s]
+  0%|                                                                                           | 0/10 [00:00<?, ?it/s]
+Running Evolution for fitness
+Initializing
+tensor(6) tensor(6)
+tensor(2) tensor(0)
+tensor(8) tensor(4)
+tensor(6) tensor(0)
+tensor(6) tensor(2)
+tensor(9) tensor(1)
+tensor(4) tensor(3)
+tensor(5) tensor(2)
+tensor(4) tensor(0)
+tensor(4) tensor(0)
+tensor(5) tensor(0)
+tensor(5) tensor(2)
+tensor(6) tensor(2)
+tensor(6) tensor(2)
+tensor(9) tensor(6)
+tensor(7) tensor(0)
+tensor(7) tensor(0)
+tensor(8) tensor(4)
+tensor(0) tensor(0)
+tensor(8) tensor(6)
+tensor(5) tensor(2)
+tensor(2) tensor(0)
+tensor(3) tensor(0)
+tensor(3) tensor(0)
+tensor(7) tensor(2)
+tensor(6) tensor(4)
+tensor(4) tensor(0)
+tensor(4) tensor(2)
+tensor(3) tensor(0)
+tensor(2) tensor(4)
+tensor(4) tensor(2)
+tensor(5) tensor(4)
+tensor(9) tensor(4)
+tensor(9) tensor(1)
+tensor(8) tensor(3)
+tensor(1) tensor(4)
+tensor(3) tensor(2)
+tensor(6) tensor(0)
+tensor(0) tensor(2)
+tensor(9) tensor(0)
+tensor(6) tensor(2)
+tensor(9) tensor(4)
+tensor(7) tensor(0)
+tensor(3) tensor(4)
+tensor(1) tensor(0)
+tensor(2) tensor(2)
+tensor(5) tensor(2)
+tensor(0) tensor(2)
+tensor(3) tensor(2)
+tensor(6) tensor(0)
+tensor(8) tensor(4)
+tensor(1) tensor(0)
+tensor(8) tensor(4)
+tensor(1) tensor(4)
+tensor(5) tensor(2)
+tensor(3) tensor(0)
+tensor(8) tensor(4)
+tensor(6) tensor(0)
+tensor(7) tensor(6)
+tensor(7) tensor(1)
+tensor(3) tensor(2)
+tensor(5) tensor(0)
+tensor(7) tensor(1)
+tensor(2) tensor(0)
+tensor(6) 1
+tensor(5) 0
+tensor(8) 1
+tensor(4) 0
+tensor(8) 0
+tensor(9) 0
+tensor(8) 1
+tensor(3) 0
+tensor(9) 0
+tensor(7) 0
+tensor(3) 0
+tensor(4) 0
+tensor(0) 0
+tensor(7) 0
+tensor(6) 0
+tensor(5) 0
+tensor(6) 0
+tensor(8) 0
+tensor(2) 0
+tensor(9) 0
+tensor(3) 0
+tensor(1) 0
+tensor(7) 0
+tensor(2) 0
+tensor(4) 0
+tensor(4) 0
+tensor(3) 0
+tensor(5) 0
+tensor(6) 0
+tensor(1) 0
+tensor(8) 0
+tensor(5) 0
+tensor(7) 0
+tensor(8) 0
+tensor(5) 0
+tensor(7) 0
+tensor(6) 0
+tensor(6) 0
+tensor(3) 0
+tensor(8) 0
+tensor(5) 0
+tensor(6) 0
+tensor(0) 0
+tensor(3) 0
+tensor(1) 0
+tensor(9) 0
+tensor(7) 0
+tensor(6) 0
+tensor(4) 0
+tensor(7) 0
+tensor(3) 0
+tensor(2) 0
+tensor(5) 0
+tensor(1) 0
+tensor(3) 0
+tensor(2) 0
+tensor(6) 0
+tensor(9) 0
+tensor(5) 0
+tensor(2) 0
+tensor(4) 0
+tensor(9) 0
+tensor(0) 0
+  0%|                                                                                            | 0/1 [00:46<?, ?it/s]
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 216, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 186, in run
+    solution_over_time, fitness_over_time = evolution(generations=n_iters, population_size=pop_size, num_children=num_children, tournament_size=tournament_size, num_winners=num_winners, evolution_type=run_name)
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 108, in evolution
+    model.fitness =  model.test_step(next(iter(data_module.train_dataloader())), 0)['test_novelty']
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\helper_hpc.py", line 308, in test_step
+    self.log('test_class_acc', class_acc)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\lightning.py", line 347, in log
+    apply_to_collection(
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\utilities\apply_func.py", line 107, in apply_to_collection
+    v = apply_to_collection(
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\utilities\apply_func.py", line 99, in apply_to_collection
+    return function(data, *args, **kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\lightning.py", line 512, in __check_allowed
+    raise ValueError(f"`self.log({name}, {value})` was called, but `{type(v).__name__}` values cannot be logged")
+ValueError: `self.log(test_class_acc, {tensor(6): 33.333333333333336, tensor(5): 0.0, tensor(8): 20.0, tensor(4): 0.0, tensor(8): 0.0, tensor(9): 0.0, tensor(8): 10.0, tensor(3): 0.0, tensor(9): 0.0, tensor(7): 0.0, tensor(3): None, tensor(4): None, tensor(0): None, tensor(7): None, tensor(6): None, tensor(5): None, tensor(6): None, tensor(8): None, tensor(2): None, tensor(9): None, tensor(3): None, tensor(1): None, tensor(7): None, tensor(2): None, tensor(4): None, tensor(4): None, tensor(3): None, tensor(5): None, tensor(6): None, tensor(1): None, tensor(8): None, tensor(5): None, tensor(7): None, tensor(8): None, tensor(5): None, tensor(7): None, tensor(6): None, tensor(6): None, tensor(3): None, tensor(8): None, tensor(5): None, tensor(6): None, tensor(0): None, tensor(3): None, tensor(1): None, tensor(9): None, tensor(7): None, tensor(6): None, tensor(4): None, tensor(7): None, tensor(3): None, tensor(2): None, tensor(5): None, tensor(1): None, tensor(3): None, tensor(2): None, tensor(6): None, tensor(9): None, tensor(5): None, tensor(2): None, tensor(4): None, tensor(9): None, tensor(0): None, tensor(6): None})` was called, but `NoneType` values cannot be logged

@@ -1,0 +1,28 @@
+2022-04-25 14:39:51,557 INFO    MainThread:41876 [wandb_setup.py:_flush():75] Loading settings from C:\Users\Jordan\.config\wandb\settings
+2022-04-25 14:39:51,557 INFO    MainThread:41876 [wandb_setup.py:_flush():75] Loading settings from C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\settings
+2022-04-25 14:39:51,557 INFO    MainThread:41876 [wandb_setup.py:_flush():75] Loading settings from environment variables: {}
+2022-04-25 14:39:51,557 INFO    MainThread:41876 [wandb_setup.py:_flush():75] Inferring run settings from compute environment: {'program_relpath': 'evolution.py', 'program': 'C:\\Users\\Jordan\\Learning\\UVM\\Research Projects\\Novel-Feature-Detector\\evolution.py'}
+2022-04-25 14:39:51,557 INFO    MainThread:41876 [wandb_init.py:_log_setup():438] Logging user logs to C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220425_143951-1a6jffiv\logs\debug.log
+2022-04-25 14:39:51,558 INFO    MainThread:41876 [wandb_init.py:_log_setup():439] Logging internal logs to C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220425_143951-1a6jffiv\logs\debug-internal.log
+2022-04-25 14:39:51,558 INFO    MainThread:41876 [wandb_init.py:init():472] calling init triggers
+2022-04-25 14:39:51,558 INFO    MainThread:41876 [wandb_init.py:init():475] wandb.init called with sweep_config: {}
+config: {}
+2022-04-25 14:39:51,558 INFO    MainThread:41876 [wandb_init.py:init():525] starting backend
+2022-04-25 14:39:51,558 INFO    MainThread:41876 [backend.py:_multiprocessing_setup():99] multiprocessing start_methods=spawn, using: spawn
+2022-04-25 14:39:51,560 INFO    MainThread:41876 [backend.py:ensure_launched():219] starting backend process...
+2022-04-25 14:39:51,613 INFO    MainThread:41876 [backend.py:ensure_launched():224] started backend process with pid: 36184
+2022-04-25 14:39:51,614 INFO    MainThread:41876 [wandb_init.py:init():534] backend started and connected
+2022-04-25 14:39:51,615 INFO    MainThread:41876 [wandb_init.py:init():598] updated telemetry
+2022-04-25 14:39:51,769 INFO    MainThread:41876 [wandb_init.py:init():629] communicating run to backend with 30 second timeout
+2022-04-25 14:39:52,790 INFO    MainThread:41876 [wandb_run.py:_on_init():1922] communicating current version
+2022-04-25 14:39:52,896 INFO    MainThread:41876 [wandb_run.py:_on_init():1926] got version response upgrade_message: "wandb version 0.12.15 is available!  To upgrade, please run:\n $ pip install wandb --upgrade"
+
+2022-04-25 14:39:52,897 INFO    MainThread:41876 [wandb_init.py:init():660] starting run threads in backend
+2022-04-25 14:39:53,109 INFO    MainThread:41876 [wandb_run.py:_console_start():1896] atexit reg
+2022-04-25 14:39:53,109 INFO    MainThread:41876 [wandb_run.py:_redirect():1769] redirect: SettingsConsole.WRAP
+2022-04-25 14:39:53,110 INFO    MainThread:41876 [wandb_run.py:_redirect():1806] Wrapping output streams.
+2022-04-25 14:39:53,111 INFO    MainThread:41876 [wandb_run.py:_redirect():1830] Redirects installed.
+2022-04-25 14:39:53,111 INFO    MainThread:41876 [wandb_init.py:init():685] run started, returning control to user process
+2022-04-25 14:39:53,112 INFO    MainThread:41876 [wandb_run.py:_config_callback():1129] config_cb None None {'batch_size': 64, 'experiment_name': 'testing hpc', 'evo_gens': 5, 'evo_pop': 5, 'evo_dataset_for_novelty': 'cifar10', 'evo_num_runs': 1, 'evo_tourney_size': 4, 'evo_num_winners': 2, 'evo_num_children': 5, 'experiment_type': 'evolution'}
+2022-04-25 14:39:55,524 INFO    MainThread:41876 [wandb_run.py:_config_callback():1129] config_cb None None {'num_classes': 10, 'classnames': ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']}
+2022-04-25 14:42:04,017 INFO    MainThread:41876 [wandb_run.py:_config_callback():1129] config_cb None None {'num_classes': 10, 'classnames': ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']}

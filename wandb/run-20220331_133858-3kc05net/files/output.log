@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\train_and_eval.py", line 104, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\train_and_eval.py", line 62, in run
+    data_module = helper.get_data_module(args.dataset, args.batch_size)
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\helper_hpc.py", line 55, in get_data_module
+    data_module = pl_bolts.datamodules.CIFAR100DataModule(batch_size=batch_size)
+AttributeError: module 'pl_bolts.datamodules' has no attribute 'CIFAR100DataModule'

@@ -1,351 +1,434 @@
+# from distutils.command.config import config
 import torch
-import torchvision
-import torchvision.transforms as transforms
 import matplotlib.pyplot as plt
 import numpy as np
-import torch.nn as nn
-import torch.nn.functional as F
 import cv2
-import randomdataset as rd
+import randomdatamodule as rd
 import matplotlib.pyplot as plt
 import scikits.bootstrap as bootstrap
 import warnings
 warnings.filterwarnings('ignore')
 import wandb
-
-# Need to separate this file into functions and classes
-
-def load_CIFAR_10(batch_size=64):
-    transform = transforms.Compose(
-        [transforms.ToTensor(),
-        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))]
-    )
-
-    batch_size = batch_size
-
-    # Dowload training data
-    trainset = torchvision.datasets.CIFAR10(
-        root="data",
-        train=True,
-        download=True,
-        transform=transform
-    )
-
-    trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=2)
-
-    testset = torchvision.datasets.CIFAR10(
-        root="data",
-        train=False,
-        download=True,
-        transform=transform
-    )
-
-    testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size, shuffle=False, num_workers=2)
-
-    classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
-
-    return trainset, testset, trainloader, testloader, classes
-
-def load_CIFAR_100(batch_size=64):
-    stats = ((0.5074,0.4867,0.4411),(0.2011,0.1987,0.2025))
-    train_transform = transforms.Compose([
-        transforms.RandomHorizontalFlip(),
-        transforms.RandomCrop(32,padding=4,padding_mode="reflect"),
-        transforms.ToTensor(),
-        transforms.Normalize(*stats)
-    ])
-
-    test_transform = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize(*stats)
-    ])
-
-    batch_size = batch_size
-
-    # Dowload training data
-    trainset = torchvision.datasets.CIFAR100(
-        root="data",
-        train=True,
-        download=True,
-        transform=train_transform
-    )
-
-    trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=2)
-
-    testset = torchvision.datasets.CIFAR100(
-        root="data",
-        train=False,
-        download=True,
-        transform=test_transform
-    )
-
-    testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size, shuffle=False, num_workers=2)
-
-    classes = tuple(trainset.classes)
-
-    return trainset, testset, trainloader, testloader, classes
+import pl_bolts.datamodules
+from pytorch_lightning.loggers import WandbLogger
+import pytorch_lightning as pl
+from net import Net
+from big_net import Net as BigNet
+from ae_net import AE
+from cifar100datamodule import CIFAR100DataModule
+import numba
+import os
+import random
+import collections
+import _collections_abc
+import collections.abc
+import gc
+from vgg16 import Net as vgg16
 
 def create_random_images(num_images=200):
     paths = []
     for i in range(num_images):
-        rgb = np.random.randint(255, size=(32,32,3), dtype=np.uint8)
-        cv2.imwrite('images/{}.png'.format(i), rgb)
-        paths.append('images/{}.png'.format(i))
+        if not os.path.exists('images/random/{}.png'.format(i)):
+            rgb = np.random.randint(255, size=(32,32,3), dtype=np.uint8)
+            cv2.imwrite('images/random/{}.png'.format(i), rgb)
+        paths.append('images/random/{}.png'.format(i))
     return paths
 
-def load_random_images(random_image_paths):
-    train_dataset = rd.RandomDataset(random_image_paths)
-    train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=2)
-    return train_loader
-
-# Show some training images
-def imshow(img):
-    print(img.shape)
-    img = img / 2 + 0.5
-    npimg = img.numpy()
-    plt.imshow(np.transpose(npimg, (1,2,0)))
-    plt.show()
-
-def load_and_show_some_images(trainloader, classes, batch_size):
-    dataiter = iter(trainloader)
-    images, labels = dataiter.next()
-    imshow(torchvision.utils.make_grid(images))
-    print(' '.join('%5s' % classes[labels[j]] for j in range (batch_size)))
-
-
-# DEFINE a CONV NN
-
-class Net(nn.Module):
-    def __init__(self, num_classes=10):
-        super().__init__()
-        self.conv1 = nn.Conv2d(3, 32, 3, padding=1)
-        self.BatchNorm1 = nn.BatchNorm2d(32)
-        self.conv2 = nn.Conv2d(32, 64, 3, padding=1)
-        self.conv3 = nn.Conv2d(64, 128, 3, padding=1)
-        self.BatchNorm2 = nn.BatchNorm2d(128)
-        self.conv4 = nn.Conv2d(128, 128, 3, padding=1)
-        self.conv5 = nn.Conv2d(128, 256, 3, padding=1)
-        self.BatchNorm3 = nn.BatchNorm2d(256)
-        self.conv6 = nn.Conv2d(256, 256, 3, padding=1)
-        self.pool = nn.MaxPool2d(2,2)
-        self.fc1 = nn.Linear(4096, 1024)
-        self.fc2 = nn.Linear(1024, 512)
-        self.fc3 = nn.Linear(512, num_classes)
-        # self.fc3 = nn.Linear(84, 10)
-        self.dropout1 = nn.Dropout2d(0.05)
-        self.dropout2 = nn.Dropout2d(0.1)
-        self.conv_layers = [self.conv1, self.conv2, self.conv3, self.conv4, self.conv5, self.conv6]
-        # print(self.conv1.weight.shape)
-
-    def forward(self, x):
-        x = self.conv1(x)
-        x = self.BatchNorm1(x)
-        x = F.relu(x)
-        x = self.conv2(x)
-        x = F.relu(x)
-        x = self.pool(x)
-        x = self.conv3(x)
-        x = self.BatchNorm2(x)
-        x = F.relu(x)
-        x = self.conv4(x)
-        x = F.relu(x)
-        x = self.pool(x)
-        x = self.dropout1(x)
-        x = self.conv5(x)
-        x = self.BatchNorm3(x)
-        x = F.relu(x)
-        x = self.conv6(x)
-        x = F.relu(x)
-        x = self.pool(x)
-        x = torch.flatten(x, 1)
-        x = self.dropout2(x)
-        x = self.fc1(x)
-        x = F.relu(x)
-        x = self.fc2(x)
-        x = F.relu(x)
-        x = self.dropout2(x)
-        x = self.fc3(x)
-        return x
-
-        output = F.log_softmax(x, dim=1)
-        return output
-
-def get_activations(trainloader, filters, num_ims_used=64):
-    net = Net()
-    for i in range (len(net.conv_layers)):
-        net.conv_layers[i].weight.data = filters[i]
-    net = net.to(device)
-
-    activations = {}
-    def get_features(name):
-        def hook(model, input, output):
-            if name not in activations.keys():
-                activations[name] = []
-            activations[name].append(output.cpu().detach().numpy())
-        return hook
-
-    for i in range (len(net.conv_layers)):
-        net.conv_layers[i].register_forward_hook(get_features(i))
-
-    #TODO: The below code is far too slow
-    total = 0
-    while total < num_ims_used:
-        data = next(iter(trainloader))
-        inputs, labels = data
-        # inputs = np.transpose(inputs, (0, 3, 2, 1)).float()
-        inputs = inputs.float()
-        inputs = inputs.to(device)
-        # labels = labels.to(device)
-        outputs = net(inputs)
-        
-        total += np.array(labels).size
-    # print(activations)
-    return activations
-
-def get_random_filters():
-    net = Net().to(device)
-
-    filters = []
-    for i in range(len(net.conv_layers)):
-        filters.append(net.conv_layers[i].weight.data.cpu().detach())
-    return np.array(filters)
-
-
-def train_network(trainloader, testloader, classes, filters=None, epochs=2, save_path=None, fixed_conv=False, novelty_interval=0, test_accuracy_interval=0):
-    net = Net(num_classes=len(list(classes)))
+# def load_random_images(random_image_paths, batch_size=64):
+#     train_dataset = rd.RandomDataset(random_image_paths)
+#     train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=2)
+#     return train_loader
+from pytorch_lightning.plugins import DDPPlugin
+def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, fixed_conv=False, val_interval=1, novelty_interval=None, diversity={'type':'absolute', 'pdop':None, 'ldop':None, 'k': None, 'k_strat':True}, scaled=False, devices=1):
+    # check which dataset and get the classes for it
+    gc.collect()
+    torch.cuda.empty_cache()
+    if data_module.num_classes < 101:
+        classnames = list(data_module.dataset_test.classes)
+    else:
+        classnames = list([x[0] for x in data_module.train_dataloader().dataset.classes])
+    # check which network and instantiate it
+    if scaled:
+        total_devices = torch.cuda.device_count()
+        device = torch.device(glob_rank % total_devices)
+        torch.cuda.set_device(device)
+        # torch.distributed.init_process_group(backend='gloo',
+        #                              init_method='env://')
+        print(device)
+        net = vgg16(num_classes=data_module.num_classes, classnames=classnames, diversity=None, lr=lr)
+        net = net.to(device)
+    else:
+        net = Net(num_classes=data_module.num_classes, classnames=classnames, diversity=diversity, lr=lr)
+        # device = torch.device(0)
+        # net = net.to(device)
+    print(net.device)
     if filters is not None:
-        for i in range(len(net.conv_layers)):
-            net.conv_layers[i].weight.data = torch.tensor(filters[i])
-            if fixed_conv:
-                for param in net.conv_layers[i].parameters():
-                    param.requires_grad = False
+        if not scaled:
+            for i in range(len(net.conv_layers)):
+                if i < len(filters):
+                    z = torch.tensor(filters[i])
+                    z = z.type_as(net.conv_layers[i].weight.data)
+                    # z.to(net.device)
+                    net.conv_layers[i].weight.data = z
+                    # print(net.conv_layers[i].weight.data == filters[i].to(device))
+                if fixed_conv:
+                    for param in net.conv_layers[i].parameters():
+                        param.requires_grad = False
+                    for param in net.BatchNorm1.parameters():
+                        param.requires_grad = False
+                    for param in net.BatchNorm2.parameters():
+                        param.requires_grad = False
+                    for param in net.BatchNorm3.parameters():
+                        param.requires_grad = False
+        elif scaled:
+            count = 0
+            for m in net.model.modules():
+                if isinstance(m, (torch.nn.Conv2d)):
+                    z = torch.tensor(filters[count])
+                    z = z.type_as(m.weight.data)
+                    m.weight.data = z
+                    count += 1
+                if fixed_conv:
+                    if isinstance(m, (torch.nn.Conv2d, torch.nn.BatchNorm2d)):
+                        for param in m.parameters():
+                            param.requires_grad=False
 
-    net = net.to(device)
-    wandb.config.fixed_conv = fixed_conv
-
-    import torch.optim as optim
-
-    criterion = nn.CrossEntropyLoss()
-    optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
-    record_progress = {}
-    record_progress['running_loss'] = []
-    record_progress['running_acc'] = []
-    record_progress['novelty_score'] = []
-    record_progress['test_accuracies'] = []
-
-    # Load all images and labels into memory, then send to device instead of loading by batch from drive->mem->device.
-    epochs = epochs
-    for epoch in range(epochs):
-        running_loss = 0.0
-        correct = 0.0
-        total = 0
-        for i, data in enumerate(trainloader, 0):
-            # get the inputs; data is a list [inputs, labels]
-            inputs, labels = data
-            inputs = inputs.to(device)
-            labels = labels.to(device)
-
-            # zero the param gradients
-            optimizer.zero_grad()
-
-            # forward + backward + optimize
-            outputs = net(inputs)
-            loss = criterion(outputs, labels)
-            loss.backward()
-            optimizer.step()
-
-            # print statistics
-            running_loss += loss.item()
-            if i % 2000 == 1999:
-                print('[%d, %5d] loss: %.3f' % (epoch+1, i + 1, running_loss/2000))
-                record_progress['running_loss'].append({'epoch': epoch+1, 'iter': i+1, 'running_loss': running_loss/2000})
-                running_loss = 0.0
-
-            _, predicted = torch.max(outputs.data, 1)
-            correct += (predicted==labels).sum().item()
-            total += labels.size(0)
-        accuracy = 100 * correct / total
-        print('Accuracy of the network on training set at epoch %d: %d %%' % (epoch+1, accuracy))
-        record_progress['running_acc'].append({'epoch': epoch+1, 'accuracy': accuracy})
-        wandb.log({'epoch': epoch+1, 'train_accuracy': accuracy})
-        import evolution as evol
-        if not fixed_conv and novelty_interval != 0 and epoch % novelty_interval == 0:
-            trained_filters = []
-            for j in range(len(net.conv_layers)):
-                trained_filters.append(net.conv_layers[j].weight.data)
-                # print(trained_filters[j])
-            activations = get_activations(trainloader, trained_filters)
-            novelty_score = evol.compute_feature_novelty(activations)
-            record_progress['novelty_score'].append({'epoch': epoch+1, 'novelty': novelty_score})
-            wandb.log({'epoch': epoch+1, 'novelty': novelty_score})
-        if not fixed_conv and test_accuracy_interval != 0 and epoch % test_accuracy_interval == 0:
-            if save_path is None:
-                save_path = PATH
-            torch.save(net.state_dict(), save_path)
-            test_accuracy = assess_accuracy(testloader, classes, save_path)
-            record_progress['test_accuracies'].append({'epoch': epoch+1, 'test_accuracy': test_accuracy})
-            wandb.log({'epoch': epoch+1, 'test_accuracy': test_accuracy['overall']})
-            for c in classes:
-                wandb.log({'epoch': epoch+1, '{} test_class_accuracy'.format(c): test_accuracy[c]})
-
-
-    print('Finished Training')
     if save_path is None:
         save_path = PATH
+    if not scaled:
+        wandb_logger = WandbLogger(log_model=True)
+    else:
+        wandb_logger = WandbLogger(log_model=True)
+    print((torch.cuda.device_count()))
+    # trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu", gpus=torch.cuda.device_count(), strategy='dp')
+    if scaled:
+        trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu", devices=devices, plugins=DDPPlugin(find_unused_parameters=False))
+    else:
+        trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu")
+    wandb_logger.watch(net, log="all")
+    torch.cuda.empty_cache()
+    trainer.fit(net, datamodule=data_module)
 
-    torch.save(net.state_dict(), save_path)
-    return record_progress
+    # torch.save(net.state_dict(), save_path)
+    # return record_progress
 
-def assess_accuracy(testloader, classes, save_path=None):
-    dataiter = iter(testloader)
-    images, labels = dataiter.next()
-    # imshow(torchvision.utils.make_grid(images))
-    print("Ground Truth: ", " ".join('%5s' % classes[labels[j]] for j in range(4)))
+def train_vgg16(data_module, epochs=2, lr=.001, val_interval=4):
+    # check which dataset and get the classes for it
+    if data_module.num_classes < 101:
+        classnames = list(data_module.dataset_test.classes)
+    else:
+        classnames = list([x[0] for x in data_module.train_dataloader().dataset.classes])
+
+    net = vgg16(num_classes=data_module.num_classes, classnames=classnames, diversity=None, lr=lr)
     
-    net = Net(num_classes=len(list(classes)))
+    wandb_logger = WandbLogger(log_model=True)
+    trainer = pl.Trainer(max_epochs=epochs, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu")#, devices=1, plugins=DDPPlugin(find_unused_parameters=False))
+
+    wandb_logger.watch(net, log="all")
+    trainer.fit(net, datamodule=data_module)
+
+def train_ae_network(data_module, epochs=100, lr=.001, encoded_space_dims=256, save_path=None, novelty_interval=4, val_interval=1, diversity={'type':'absolute', 'pdop':None, 'ldop':None, 'k': None, 'k_strat':True}, scaled=False, rand_tech='uniform'):
+    net = AE(encoded_space_dims, diversity, lr)
+    if rand_tech == 'normal':
+        normalize(net)
+    # net = net.to(device)
     if save_path is None:
         save_path = PATH
-    net.load_state_dict(torch.load(save_path))
-    net = net.to(device)
-    outputs = net(images.to(device))
-    _, predicted = torch.max(outputs, 1)
-    record_accuracy = {}
+    wandb_logger = WandbLogger(log_model=True)
+    trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator='gpu', gpus=torch.cuda.device_count(), strategy='dp')
+    wandb_logger.watch(net, log='all')
+    trainer.fit(net, datamodule=data_module)
 
-    print('Predicted: ', ' '.join('%5s' % classes[predicted[j]] for j in range(4)))
+def get_data_module(dataset, batch_size, workers=np.inf, shuffle=False):
+    match dataset.lower():
+        case 'cifar10' | 'cifar-10':
+            data_module = pl_bolts.datamodules.CIFAR10DataModule(batch_size=batch_size, data_dir="data/", num_workers=min(workers, os.cpu_count()), pin_memory=True, shuffle=shuffle)
+        case 'cifar100' | 'cifar-100':
+            data_module = CIFAR100DataModule(batch_size=batch_size, data_dir="data/", num_workers=min(workers, os.cpu_count()), pin_memory=True)
+        case 'imagenet':
+            data_module = pl_bolts.datamodules.ImagenetDataModule(batch_size=batch_size, data_dir="data/imagenet/", num_workers=min(workers, os.cpu_count()), pin_memory=True)
+        case 'miniimagenet':
+            data_module = pl_bolts.datamodules.ImagenetDataModule(batch_size=batch_size, data_dir="data/miniimagenet/", num_workers=min(workers, os.cpu_count()), pin_memory=True, shuffle=shuffle)
+        case 'random':
+            data_module = rd.RandomDataModule(data_dir='images/random/', batch_size=batch_size, num_workers=min(workers, os.cpu_count()), pin_memory=True)
+        case _:
+            print('Please supply dataset of CIFAR-10 or CIFAR-100')
+            exit()
+    return data_module
+
+def save_npy(filename, data, index=0):
+    if not os.path.isfile(filename) or index==0:
+        with open(filename, 'wb') as f:
+            np.save(f, data)
+    else:
+        with open(filename, 'rb') as f:
+            before = np.load(f, allow_pickle=True)
+        with open(filename, 'wb') as f:
+            after = np.append(before, [data[index]], axis=0)
+            np.save(f, after)
     
-    correct = 0
-    total = 0
 
-    with torch.no_grad():
-        for data in testloader:
-            images, labels = data[0].to(device), data[1].to(device)
-            # images, labels = data[0].to(device), data[1].to(device)
-            outputs = net(images)
-            _, predicted = torch.max(outputs.data, 1)
-            total += labels.size(0)
-            correct += (predicted==labels).sum().item()
-    print('Accuracy of the network on the 10000 test images: %d %%' % (100 * correct/total))
-    record_accuracy['overall'] = (100 * correct/total)
+@numba.njit(parallel=True)
+def diversity(acts, pdop=None, k=-1, k_strat=None):
 
-    correct_pred = {classname: 0 for classname in classes}
-    total_pred = {classname: 0 for classname in classes}
+    I = len(acts)
+    C = len(acts[0])
+    
+    # make array correct size
+    if k_strat == 'random':
+        pairwise = np.zeros((I,C,k))
+    else:
+        pairwise = np.zeros((I,C,C))
 
-    with torch.no_grad():
-        for data in testloader:
-            images, labels = data[0].to(device), data[1].to(device)
-            outputs = net(images)
-            _, predictions = torch.max(outputs, 1)
-            for label, prediction in zip(labels, predictions):
-                if label == prediction:
-                    correct_pred[classes[label]] += 1
-                total_pred[classes[label]] += 1
+    for image in numba.prange(I):
+        for channel in range(C):
+            # if strategy is random, then we do fewer calculations overall
+            if k_strat=='random':
+                choices = np.random.choice(C, k, replace=False)
+                for i in range(k):
+                    div = np.abs(acts[image, channel] - acts[image, choices[i]]).sum()
+                    pairwise[image, channel, i] = div
+            # otherwise we have to loop for every other channel in the layer
+            else:
+                for channel2 in range(channel, C):
+                    div = np.abs(acts[image, channel] - acts[image, channel2]).sum()
+                    pairwise[image, channel, channel2] = div
+                    pairwise[image, channel2, channel] = div
+    
+    # if we are using k-neighbors, then we want a subset of the calculated results above
+    if k > 0 and k_strat != 'random':
+        for image in range(I):
+            for channel in range(C):
+                pairwise[image, channel] = sorted(pairwise[image, channel], reverse=k_strat=='furthest')[0:k]
 
-    for classname, correct_count in correct_pred.items():
-        accuracy = 100 * float(correct_count) / total_pred[classname]
-        print("Accuracy for class {:5s} is: {:.1f} %".format(classname, accuracy))
-        record_accuracy[classname] = accuracy
+    # set a new variable up as a copy of pairwise. Numba fails without this.
+    res = pairwise
 
-    return record_accuracy
+    if pdop == 'sum':
+        return((res).sum())
+    elif pdop == 'mean':
+        return((res).mean())
+    elif pdop == 'rms':
+        return(np.sqrt(np.mean(res**2)))
+
+@numba.njit(parallel=True)
+def diversity_orig(acts, pdop="", k=0, k_strat=""):
+    B = len(acts)
+    I = len(acts[0])
+    if k_strat == 'random':
+        pairwise = np.zeros((B, I, k))
+    else:
+        pairwise = np.zeros((B, I, I))
+
+    for batch in range(B):
+        for image in numba.prange(I):
+            if k_strat=='random':
+                choices = np.random.choice(I, k, replace=False)
+                for i in range(k):
+                    div = np.abs(acts[batch][choices[i]] - acts[batch][image]).sum()
+                    pairwise[batch, image, i] = div
+            else:
+                for image2 in range(I):
+                    div = np.abs(acts[batch][image2] - acts[batch][image]).sum()
+                    pairwise[batch, image, image2] = div
+                    pairwise[batch, image2, image] = div
+                
+    if k > 0 and k_strat != 'random':
+        for batch in range(B):
+            for image in range(I):
+                pairwise[batch, image] = sorted(pairwise[batch, image], reverse=k_strat=='furthest')[0:k]
+
+    res = pairwise
+                   
+    if pdop == 'sum':
+        return((res).sum())
+    elif pdop == 'mean':
+        return((res).mean())
+    elif pdop == 'rms':
+        return(np.sqrt(np.mean(res**2)))
+
+@numba.njit(parallel=True)
+def diversity_relative(acts, pdop="", k=0, k_strat=""):
+    I=len(acts)
+    C=len(acts[0])
+    
+    if k_strat=='random':
+        pairwise = np.zeros((I,C,k))
+    else:
+        pairwise = np.zeros((I,C,C))
+    
+    for image in numba.prange(I):
+        for channel in range(C):
+            if k_strat == 'random':
+                choices = np.random.choice(C, k, replace=False)
+                for i in range(k):
+                    dist = np.abs(acts[image, channel]-acts[image, choices[i]]).sum()
+                    divisor = (np.abs(acts[image, channel]).sum()) + (np.abs(acts[image, choices[i]]).sum())
+                    div=(dist / divisor)
+                    pairwise[image, channel, i] = div
+            else:
+                for channel2 in range(channel+1, C):
+                    dist = np.abs(acts[image, channel]-acts[image, channel2]).sum()
+                    divisor = (np.abs(acts[image, channel]).sum()) + (np.abs(acts[image, channel2]).sum())
+                    div=(dist / divisor)
+                    # div=np.abs((acts[batch, channel]-acts[batch, channel2])/(acts[batch, channel]+acts[batch, channel2])).sum()
+                    pairwise[image, channel, channel2] = div
+                    pairwise[image, channel2, channel] = div
+    retVal = 0
+    if k > 0 and k_strat != 'random':
+        for image in range(I):
+            for channel in range(C):
+                if pdop == 'sum':
+                    retVal += (np.array(sorted(pairwise[image, channel], reverse=k_strat=='furthest')[0:k]).sum())
+                elif pdop == 'mean':
+                    retVal += (1.0/(I*C))*(np.array(sorted(pairwise[image, channel], reverse=k_strat=='furthest')[0:k]).mean())
+                elif pdop == 'rms':
+                    retVal += (1.0/(I*C))*(np.sqrt(np.mean(np.array(sorted(pairwise[image, channel], reverse=k_strat=='furthest')[0:k])**2)))
+        return retVal
+
+    res = pairwise
+
+    if pdop == 'sum':
+        return((res).sum())
+    elif pdop == 'mean':
+        return((res).mean())
+    elif pdop == 'rms':
+        return(np.sqrt(np.mean(res**2)))
+
+@numba.njit(parallel=True, fastmath=True)
+def diversity_cosine_distance(acts, pdop="", k=0, k_strat=""):
+    I=len(acts)
+    C=len(acts[0])
+
+    if k_strat == 'random':
+        pairwise = np.zeros((I,C,k))
+    else:
+        pairwise = np.zeros((I,C,C))
+    
+    for image in numba.prange(I):
+        for channel in range(C):
+            c_flat = acts[image, channel].flatten()
+            if k_strat == 'random':
+                choices = np.random.choice(C, k, replace=False)
+                for i in range(k):
+                    c2_flat = acts[image, choices[i]].flatten()
+                    dist = cosine_dist(c_flat, c2_flat)
+                    pairwise[image, channel, i] = dist
+            else:
+                for channel2 in range(channel+1, C):
+                    c2_flat = acts[image, channel2].flatten()
+                    dist = cosine_dist(c_flat, c2_flat)
+                    pairwise[image, channel, channel2] = dist
+                    pairwise[image, channel2, channel] = dist
+    if k > 0 and k_strat != 'random':
+        for image in range(I):
+            for channel in range(C):
+                pairwise[image, channel] = sorted(pairwise[image, channel], reverse=k_strat=='furthest')[0:k]
+    
+    res = pairwise
+
+    if pdop == 'sum':
+        return((res).sum())
+    elif pdop == 'mean':
+        return((res).mean())
+    elif pdop == 'rms':
+        return(np.sqrt(np.mean(res**2)))
+
+@numba.njit(parallel=True, fastmath=True)
+def cosine_dist(u:np.ndarray, v:np.ndarray):
+    uv=0
+    uu=0
+    vv=0
+    for i in range(u.shape[0]):
+        uv+=u[i]*v[i]
+        uu+=u[i]*u[i]
+        vv+=v[i]*v[i]
+    cos_theta=1
+    if uu!=0 and vv!=0:
+        cos_theta=uv/np.sqrt(uu*vv)
+    return 1-cos_theta
+
+#TODO - orthonormalize filters to one another. Flipping dimensions may not be doing what we want. 
+# Google how to detemine of two matrices are orthognal. dotproduct and crossproduct or outer product.
+# Look at randomly initialized filters as well for this property.
+@numba.njit(parallel=True)
+def gram_shmidt_orthonormalize(filters):
+# for layer_filters in filters:
+    for f in range(len(filters)):
+        copied = filters[f].copy()
+        shape_0 = filters[f].shape[0]
+        shape_1=np.prod(np.array(filters[f].shape[1:]))
+        input = copied.reshape((max(shape_0, shape_1), min(shape_0, shape_1)))
+        q,r = np.linalg.qr(input)
+        copied = q.copy()
+        f = copied.reshape(filters[f].shape)
+    return filters
+
+# @numba.njit(parallel=True)
+def normalize(net):
+    for m in net.modules():
+        kaiming_normalize(m)
+        
+def kaiming_normalize(m):
+    if getattr(m, 'bias', None) is not None:
+        torch.nn.init.constant_(m.bias, 0)
+    if isinstance(m, (torch.nn.Conv2d, torch.nn.Linear)):
+        torch.nn.init.kaiming_normal_(m.weight)
+    for l in m.children(): kaiming_normalize(l)
+# from tqdm import tqdm
+# def gram_schmidt(vectors):
+#     basis = []
+#     for v in tqdm(range(len(vectors))):
+#         w = vectors[v] - np.sum( np.dot(vectors[v],b)*b  for b in basis )
+#         if (w > 1e-10).any():  
+#             basis.append(w/np.linalg.norm(w))
+#     return np.array(basis)
+
+def get_dist(layer_params):
+    num_outside = 0
+    for layer in range(len(layer_params)):
+        pdf = mean = std = abs_mean = 0
+        divisor = max(abs(layer_params[layer].flatten()))
+        multiplier = max(abs(layer_params[layer].flatten()))
+        num_bins_ = int(100*multiplier/divisor)
+        num_outside = 0
+        num_outside += sum(abs(layer_params[layer].flatten()) > divisor)
+
+        # max(np.abs(layer_params[layer].flatten()))
+        # getting data of the histogram
+        count, bins_count = np.histogram(layer_params[layer].flatten(), bins=num_bins_, normed=True)
+            
+        # verify sum to 1
+        widths = bins_count[1:] - bins_count[:-1]
+        assert sum(count * widths) > .99 and sum(count * widths) < 1.01
+
+        # finding the PDF of the histogram using count values
+        pdf += count / sum(count)
+
+        mean += layer_params[layer].flatten().mean()
+        std += layer_params[layer].flatten().std()
+        abs_mean += abs(layer_params[layer].flatten()).mean()
+            
+        # using numpy np.cumsum to calculate the CDF
+        # We can also find using the PDF values by looping and adding
+        # cdf = np.cumsum(pdf)
+        # cdf_r = np.cumsum(pdf_r)
+            
+        pdf = pdf / len(layer_params)
+        mean = mean / len(layer_params)
+        std = std / len(layer_params)
+        abs_mean = abs_mean / len(layer_params)
+
+        return pdf, mean, std, abs_mean
+
+
+@numba.njit(parallel=True)
+def diversity_constant(acts):
+    constants = np.zeros((len(acts)))
+    for i in numba.prange(len(acts)):
+        constants[i] = i
+    return sum(constants)
+
 
 def plot_mean_and_bootstrapped_ci_multiple(input_data = None, title = 'overall', name = "change this", x_label = "x", y_label = "y", save_name="", compute_CI=True, maximum_possible=None, show=None, sample_interval=None):
     """ 
@@ -402,35 +485,43 @@ def plot_mean_and_bootstrapped_ci_multiple(input_data = None, title = 'overall',
     if show != None:
         plt.show()
     
+def log(input):
+    if glob_rank == 0:
+        wandb.log(input)
 
-def run(batch_size_input=64):
+def update_config():
+    if glob_rank == 0:
+        wandb.config.update(config)
+
+def force_cudnn_initialization():
+    s = 32
+    dev = torch.device('cuda')
+    torch.nn.functional.conv2d(torch.zeros(s, s, s, s, device=dev), torch.zeros(s, s, s, s, device=dev))
+
+def run(seed=True, rank=0):
     torch.multiprocessing.freeze_support()
-
+    if seed:
+        pl.seed_everything(42, workers=True)
+    
+    torch.cuda.empty_cache()
     global device
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    print('Device:', device)
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
     global PATH
     PATH = './cifar_net.pth'
-    global batch_size
-    batch_size = batch_size_input
-    wandb.init(project="novel-feature-detectors")
-
-
-    
-    # trainset, testset, trainloader, testloader, classes = load_CIFAR_10(batch_size)
-    # load_and_show_some_images(trainloader, classes, batch_size)
-
-    # train_network_on_CIFAR_10(trainloader)
-    # assess_accuracy(testloader, classes)
-
-    # random_image_paths = create_random_images()
-    # trainloader = load_random_images(random_image_paths)
-    # filters = get_random_filters()
-    # for f in filters:
-    #     print(f.shape)
-    # activations = get_activations(trainloader, filters)
-    # for a in activations:
-    #     print(a.shape)
+    global config
+    config = {}
+    wandb.login(key='e50cb709dc2bf04072661be1d9b46ec60d59e556')
+    wandb.finish()
+    os.environ["WANDB_START_METHOD"] = "thread"
+    # TODO: could put if statement here to determine if we should be logging. This is only necessary once ddp is actually working correctly.
+    global glob_rank
+    glob_rank = rank
+    os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:300"
+    if glob_rank == 0:
+    # if glob_rank > -1:
+        force_cudnn_initialization()
+        wandb.init(project="novel-feature-detectors") # group='DDP'
 
 
 if __name__ == '__main__':

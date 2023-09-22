@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\train_and_eval.py", line 25, in <module>
+    parser.add_argument('--evo_dataset_for_novelty', 'Dataset used for novelty computation during evolution and training', default=None)
+  File "C:\Users\Jordan\anaconda3\envs\EC\lib\argparse.py", line 1404, in add_argument
+    kwargs = self._get_optional_kwargs(*args, **kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC\lib\argparse.py", line 1539, in _get_optional_kwargs
+    raise ValueError(msg % args)
+ValueError: invalid option string 'Dataset used for novelty computation during evolution and training': must start with a character '-'

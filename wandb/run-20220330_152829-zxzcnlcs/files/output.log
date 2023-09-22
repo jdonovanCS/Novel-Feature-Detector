@@ -1,0 +1,50 @@
+Files already downloaded and verified
+Files already downloaded and verified
+  0%|                                                                                            | 0/1 [00:00<?, ?it/s]
+Running Evolution for fitness
+Initializing
+
+
+
+
+
+
+
+100%|██████████████████████████████████████████████████████████████████████████████████| 10/10 [00:17<00:00,  1.75s/it]
+  0%|                                                                                           | 0/10 [00:00<?, ?it/s]
+
+
+
+
+
+
+
+
+
+ 90%|██████████████████████████████████████████████████████████████████████████▋        | 9/10 [02:36<00:17, 17.34s/it]
+
+100%|███████████████████████████████████████████████████████████████████████████████████| 1/1 [03:53<00:00, 233.29s/it]
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 222, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 210, in run
+    helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[cut_off_beginning:] for k, x in fitness_results.items()], name=[k for k,x in fitness_results.items()], x_label="Generation", y_label="Fitness", compute_CI=True, save_name=experiment_name + "/fitness_over_time.png")
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\helper_hpc.py", line 541, in plot_mean_and_bootstrapped_ci_multiple
+    plt.savefig('plots/' + save_name)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\matplotlib\pyplot.py", line 958, in savefig
+    res = fig.savefig(*args, **kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\matplotlib\figure.py", line 3019, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\matplotlib\backend_bases.py", line 2319, in print_figure
+    result = print_method(
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\matplotlib\backend_bases.py", line 1648, in wrapper
+    return func(*args, **kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\matplotlib\_api\deprecation.py", line 412, in wrapper
+    return func(*inner_args, **inner_kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\matplotlib\backends\backend_agg.py", line 541, in print_png
+    mpl.image.imsave(
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\matplotlib\image.py", line 1675, in imsave
+    image.save(fname, **pil_kwargs)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\PIL\Image.py", line 2209, in save
+    fp = builtins.open(filename, "w+b")
+FileNotFoundError: [Errno 2] No such file or directory: 'plots/test_wandb_and_lightning/fitness_over_time.png'

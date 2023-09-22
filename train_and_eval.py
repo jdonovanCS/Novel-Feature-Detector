@@ -7,241 +7,171 @@ import pickle
 import os
 import argparse
 import random
+from functools import partial
 
 parser=argparse.ArgumentParser(description="Process some input files")
-parser.add_argument('--dataset', help='which dataset should be used for novelty metric, choices are: cifar-10, cifar-100', default='random')
-parser.add_argument('--experiment_name', help='experiment name for saving data related to training')
+parser.add_argument('--dataset', help='which dataset should be used for training metric, choices are: cifar-10, cifar-100', default='cifar-100')
 parser.add_argument('--fixed_conv', help='Should the convolutional layers stay fixed, or alternatively be trained', action='store_true')
 parser.add_argument('--training_interval', help='How often should the network be trained. Values should be supplied as a fraction and will relate to the generations from evolution' +
 'For example if 1 is given the filters generated from the final generation of evolution will be the only ones trained. If 0.5 is given then the halfway point of evolutionary generations and the final generation will be trained. ' +
 'If 0 is given, the filters from every generation will be trained', type=float, default=1.)
-parser.add_argument('--epochs', help="Number of epochos to train for", type=int, default=64)
-parser.add_argument('--random', action='store_true')
+parser.add_argument('--epochs', help="Number of epochos to train for", type=int, default=256)
+parser.add_argument('--devices', help='number of gpus to use', default=1, type=int)
+parser.add_argument('--local_rank', metavar="N", help='if using ddp and multiple gpus, we only want to collect metrics once, input 0 here if using ddp and multi gpus', default=0, type=int)
+
+# parser.add_argument('--rand_norm', action='store_true')
+parser.add_argument('--gram-schmidt', help='gram-schmidt used to orthonormalize filters', action='store_true')
 parser.add_argument('--novelty_interval', help='How often should a novelty score be captured during training?', default=0)
-parser.add_argument('--test_accuracy_interval', help='How often should test accuracy be assessed during training?', default=0)
-parser.add_argument('--batch_size', help="batch size for training", default=64)
-parser.add_argument('--evo_gens', help="number of generations used in evolving solutions", default=None)
-parser.add_argument('--evo_pop', help='Number of individuals in population when evolving solutions', default=None)
-parser.add_argument('--evo_dataset_for_novelty', help='Dataset used for novelty computation during evolution and training', default=None)
-parser.add_argument('--evo', help='evolved solutions, should only be true if random is not set', action='store_true')
-parser.add_argument('--evo_num_runs', help='Number of runs used in evolution', default=None)
-parser.add_argument('--evo_tourney_size', help='Size of tournaments in evolutionary algorithm selection', default=None)
-parser.add_argument('--evo_num_winners', help='Number of winners in tournament in evolutionary algorithm', default=None)
-parser.add_argument('--evo_num_children', help='Number of children in evolutionary algorithm', default=None)
-    
+parser.add_argument('--test_accuracy_interval', help='How often should test accuracy be assessed during training?', default=4)
+parser.add_argument('--batch_size', help="batch size for training", type=int, default=64)
+parser.add_argument('--lr', help='Learning rate for training', default=.001, type=float)
+
+# used to link to evolution
+parser.add_argument('--experiment_name', help='experiment name for saving data related to training')
+parser.add_argument('--rand_tech', help='which random technique is used to initialize network weights', type=str, default=None)
+# don't need any of the below for comparisons since I can link with the above experiment name.
+
+# used to link to autoencoder
+parser.add_argument('--ae', help="if pretrained using ae include this tag", action='store_true')
+
+# Options for flexibility
+parser.add_argument('--unique_id', help='if a unique id is associated with the file the solution is stored in give it here.', default="", type=str)
+parser.add_argument('--skip', default=0, help='skip the first n models to train, used mostly when a run fails partway through', type=int)
+parser.add_argument('--inner_skip', default=0, help='skip the first n models to train withint a specific run of evolution (only applies if  training interval < 1.)', type=int)
+parser.add_argument('--stop_after', default=np.inf, help='stop after the first n models', type=int)
+parser.add_argument('--inner_stop_after', default=np.inf, help='stop after the first n models for a specific run of evolution (only applies if training interval < 1.)', type=int)
+parser.add_argument('--num_workers', help='number of workers for training', default=np.inf, type=int)
+
+# Options for measuring diversity over training time
+parser.add_argument('--diversity_type', type=str, default='relative', help='Type of diversity metric to use for this experiment (ie. absolute, relative, original etc.)')
+parser.add_argument('--pairwise_diversity_op', default='mean', help='the function to use for calculating diversity metric with regard to pairwise comparisons', type=str)   
+parser.add_argument('--layerwise_diversity_op', default='w_mean', help='the function to use for calculating diversity metric with regard to layerwise comparisons', type=str)
+parser.add_argument('--k', help='If using k-neighbors for metric calculation, how many neighbors', type=int, default=-1)
+parser.add_argument('--k_strat', help='If using k-neigbhors for metric, what strategy should be used? (ie. closest, furthest, random, etc.)', type=str, default='closest')   
+
 args = parser.parse_args()
-
-def save_final_accuracy_of_trained_models(pickle_path, save_path):
-
-    # read in the saved training record
-    with open(pickle_path, 'rb') as f:
-        pickled_metrics = pickle.load(f)
-    
-    #     REMOVE
-    #     for i, s in enumerate(pickled_metrics['random'][0]):
-    #         if len(s['running_acc']) > 2:
-    #             print(i)
-
-    # numbers = [9, 19, 29, 39, 49]
-    # for num in numbers:
-    #     if round((((num+1)*1.0)/(50))*10) % (args.training_interval * 10) == 0:
-    #         print(num)
-    #     else:
-    #         print(num)
-    #         print(round((((num+1)*1.0)/(50))*10))
-    #         print(round((((num+1)*1.0)/(50))*10) % (args.training_interval * 10))
-
-
-    modified_accuracies = {}
-    for key in pickled_metrics:
-        modified_accuracies[key] = np.zeros((len(pickled_metrics[key])*int(1/args.training_interval), len(pickled_metrics[key][0][-1]['running_acc'])))
-        for i in range(len(pickled_metrics[key])*int(1/args.training_interval)):
-            if args.training_interval == 1:
-                modified_accuracies[key][i] = [p['accuracy'] for p in pickled_metrics[key][i][int(len(pickled_metrics[key][i])/(int(1/args.training_interval))-1)]['running_acc']]
-            elif args.random:
-                modified_accuracies[key][i] = [p['accuracy'] for p in pickled_metrics[key][0][int(len(pickled_metrics[key][0])/(int(1/args.training_interval))*i-1)]['running_acc']]
-            elif args.random != True and args.training_interval != 1:
-                for j in range(int(1/args.training_interval)):
-                    modified_accuracies[key][i*len(pickled_metrics[key])+j] = [p['accuracy'] for p in pickled_metrics[key][i][int(len(pickled_metrics[key][i])/(int(1/args.training_interval))*j-1)]['running_acc']]
-
-    with open(save_path, 'wb') as f:
-        pickle.dump(modified_accuracies, f)
-    
-    print(modified_accuracies)
-    return modified_accuracies
-
-def save_novelty_record_of_trained_models(pickle_path, save_path):
-
-    # read in the saved training record
-    with open(pickle_path, 'rb') as f:
-        pickled_metrics = pickle.load(f)
-
-    modified_novelties = {}
-    for key in pickled_metrics:
-        modified_novelties[key] = np.zeros((len(pickled_metrics[key])*int(1/args.training_interval), len(pickled_metrics[key][0][-1]['novelty_score'])))
-        for i in range(len(pickled_metrics[key])*int(1/args.training_interval)):
-            if args.training_interval == 1:
-                modified_novelties[key][i] = [p['novelty'] for p in pickled_metrics[key][i][int(len(pickled_metrics[key][i])/(int(1/args.training_interval))-1)]['novelty_score']]
-            elif args.random:
-                modified_novelties[key][i] = [p['novelty'] for p in pickled_metrics[key][0][int(len(pickled_metrics[key][0])/(int(1/args.training_interval))*i-1)]['novelty_score']]
-            elif args.random != True and args.training_interval != 1:
-                for j in range(int(1/args.training_interval)):
-                    modified_novelties[key][i*len(pickled_metrics[key])+j] = [p['novelty'] for p in pickled_metrics[key][i][int(len(pickled_metrics[key][i])/(int(1/args.training_interval))*j-1)]['novelty_score']]
-
-    with open(save_path, 'wb') as f:
-        import copy
-        modified_novelties_for_file = copy.deepcopy(modified_novelties)
-        modified_novelties_for_file['interval'] = args.novelty_interval
-        pickle.dump(modified_novelties_for_file, f)
-    
-    print(modified_novelties)
-    return modified_novelties
-
-def save_final_test_accuracies_of_trained_models(pickle_path, save_path):
-    # read in the saved training record
-    with open(pickle_path, 'rb') as f:
-        pickled_metrics = pickle.load(f)
-        
-    print(pickled_metrics[list(pickled_metrics.keys())[0]][0][-1]['test_accuracies'])    
-
-    modified_test_accuracies = {}
-    for key in pickled_metrics:
-        modified_test_accuracies[key] = np.zeros((len(pickled_metrics[key])*int(1/args.training_interval), len(pickled_metrics[key][0][-1]['test_accuracies'])))
-        for i in range(len(pickled_metrics[key])*int(1/args.training_interval)):
-            if args.training_interval == 1:
-                modified_test_accuracies[key][i] = [p['test_accuracy']['overall'] for p in pickled_metrics[key][i][int(len(pickled_metrics[key][i])/(int(1/args.training_interval))-1)]['test_accuracies']]
-            elif args.random:
-                modified_test_accuracies[key][i] = [p['test_accuracy']['overall'] for p in pickled_metrics[key][0][int(len(pickled_metrics[key][0])/(int(1/args.training_interval))*i-1)]['test_accuracies']]
-            elif args.random != True and args.training_interval != 1:
-                for j in range(int(1/args.training_interval)):
-                    modified_test_accuracies[key][i*len(pickled_metrics[key])+j] = [p['test_accuracy']['overall'] for p in pickled_metrics[key][i][int(len(pickled_metrics[key][i])/(int(1/args.training_interval))*j-1)]['test_accuracies']]
-
-    with open(save_path, 'wb') as f:
-        import copy
-        modified_test_accuracies_for_file = copy.deepcopy(modified_test_accuracies)
-        modified_test_accuracies_for_file['interval'] = args.test_accuracy_interval
-        pickle.dump(modified_test_accuracies_for_file, f)
-    
-    print(modified_test_accuracies)
-    return modified_test_accuracies
 
 def run():
 
-    #REMOVE
-    # name_add = ''
-    # if args.random: name_add += 'random_'
-    # if args.fixed_conv: name_add += 'fixed_conv_'
-    # final_accuracies = save_final_accuracy_of_trained_models('output/' + args.experiment_name + '/training_{}over_time.pickle'.format(name_add), 'output/' + args.experiment_name + '/final_accuracies_{}over_training_time.pickle'.format(name_add))
-    # final_novelties = save_novelty_record_of_trained_models('output/' + args.experiment_name + '/training_{}over_time.pickle'.format(name_add), 'output/' + args.experiment_name + '/novelty_{}over_training_time.pickle'.format(name_add))
-    # final_test_accuracies = save_final_test_accuracies_of_trained_models('output/' + args.experiment_name + '/training_{}over_time.pickle'.format(name_add), 'output/' + args.experiment_name + '/final_test_accuracies_{}over_training_time.pickle'.format(name_add))
-    # helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[0:] for k, x in final_novelties.items()], name=[k for k,x in final_novelties.items()], x_label="Epoch", y_label="Novelty", compute_CI=True, show=True, sample_interval=4)
-    # helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[0:] for k, x in final_test_accuracies.items()], name=[k for k,x in final_test_accuracies.items()], x_label="Epoch", y_label="Accuracy", title="Final Test Accuracy on CIFAR-10, CIFAR-10 for novelty", compute_CI=True, show=True, sample_interval=4)
-    # exit()
-
     torch.multiprocessing.freeze_support()
 
-    pickled_filters = {}
+    stored_filters = {}
     
     experiment_name = args.experiment_name
     training_interval = args.training_interval
     fixed_conv = args.fixed_conv
-    filename = ''
-    if args.random:
-        filename = 'output/' + experiment_name + '/random_gen_solutions.pickle'
-    else:
-        filename = "output/" + experiment_name + "/solutions_over_time.pickle"
-
-    # get filters from pickle file
-    with open(filename, 'rb') as f:
-        pickled_filters = pickle.load(f)
-
-    if args.random:
-        random.shuffle(pickled_filters['random'][0])
-        pickled_filters['random'] = np.array(pickled_filters['random'])
-
+    if args.rand_tech:
+        name = args.rand_tech
+    elif not args.rand_tech and not args.gram_schmidt and not args.ae:
+        name = 'fitness'
     
-    helper.run(int(args.batch_size))
+    if args.gram_schmidt:
+        name = 'gram-schmidt'
+    if args.ae:
+        name = 'ae_unsup'
+        if training_interval < 1:
+            print('please enter valid training interval as ae filters are in the shape num_runs, 1, \{filters\}')
+            exit()
+    if args.unique_id != "":
+        name = 'current_' + name + "_" + args.unique_id
+    
+    filename = ''
+    filename = 'output/' + experiment_name + '/solutions_over_time_{}.npy'.format(name)
+
+    # get filters from numpy file
+    np_load_old = partial(np.load)
+    np.load = lambda *a,**k: np_load_old(*a, allow_pickle=True, **k)
+    stored_filters = np.load(filename)
+    np.load = np_load_old
+
+    if args.unique_id != '':
+        stored_filters = [stored_filters]
+
+    # if args.random or args.gram_schmidt:
+    #     random.shuffle(stored_filters[0])
+    #     stored_filters = np.array(stored_filters)
+    #     with open(filename, 'wb') as f:
+    #         np.save(f, stored_filters)
+    
+    helper.run(seed=False, rank=args.local_rank if args.devices > 0 else 0)
 
 
     # get loader for train and test images and classes
-    if args.dataset.lower() == 'cifar-100':
-        trainset, testset, trainloader, testloader, classes = helper.load_CIFAR_100(helper.batch_size)
-    else:
-        trainset, testset, trainloader, testloader, classes = helper.load_CIFAR_10(helper.batch_size)
-    
-    
-    # create variables for holding metric
-    training_record = {}
-    overall_accuracy_record = {}
-    classwise_accuracy_record = {}
-    classlist = np.array(classes)
+    data_module = helper.get_data_module(args.dataset, args.batch_size, args.num_workers)
+    data_module.prepare_data()
+    data_module.setup()
+
     epochs = args.epochs
     
-    helper.wandb.config.dataset = args.dataset.lower()
-    helper.wandb.config.batch_size = helper.batch_size
-    helper.wandb.config.experiment_name = experiment_name
-    helper.wandb.config.evo_gens = args.evo_gens
-    helper.wandb.config.evo_pop = args.evo_pop
-    helper.wandb.config.evo_dataset_for_novelty = args.evo_dataset_for_novelty
-    helper.wandb.config.evo = args.evo or args.random == None or not args.random
-    helper.wandb.config.evo_num_runs = args.evo_num_runs
-    helper.wandb.config.evo_tourney_size = args.evo_tourney_size
-    helper.wandb.config.evo_num_winners = args.evo_num_winners
-    helper.wandb.config.evo_num_children = args.evo_num_children
+    helper.config['dataset'] = args.dataset.lower()
+    helper.config['batch_size'] = args.batch_size
+    helper.config['lr'] = args.lr
+    helper.config['experiment_name'] = args.experiment_name
+    helper.config['evo'] = not args.rand_tech and not args.gram_schmidt and not args.ae
+    helper.config['experiment_type'] = 'training'
+    helper.config['fixed_conv'] = fixed_conv == True
+    helper.config['diversity_type'] = args.diversity_type
+    helper.config['ae'] = args.ae
+    helper.config['pairwise_diversity_op'] = args.pairwise_diversity_op
+    helper.config['layerwise_diversity_op'] = args.layerwise_diversity_op
+    helper.config['k'] = args.k
+    helper.config['k_strat'] = args.k_strat
+    helper.update_config()
     
     
     # run training and evaluation and record metrics in above variables
     # for each type of evolution ran
-    for name in pickled_filters.keys():
-        # instatiate entry in dictionary for this type of evolution
-        overall_accuracy_record[name] = np.zeros((len(pickled_filters[name]), len(pickled_filters[name][0])))
-        classwise_accuracy_record[name] = np.zeros((len(pickled_filters[name]), len(pickled_filters[name][0]), len(classlist)))
-        training_record[name] = np.array([[dict for i in range(len(pickled_filters[name][0]))]for j in range(len(pickled_filters[name]))], dtype=dict)
-        # for each run of this evolution type
-        for filters_list in pickled_filters[name]:
-            run_num = np.where(pickled_filters[name] == filters_list)[0][0]
-            # for each generation train the solution output at that generation
-            for i in range (len(filters_list)):
-                # if we only want to train the solution from the final generation
-                # put zeros in the metric dictionaries if this isn't the final generation
-                if training_interval != 0 and i*1.0 not in [(len(filters_list)/(1/training_interval)*j)-1 for j in range(1, int(1/training_interval)+1)]:
-                    overall_accuracy_record[name][run_num][i] = 0
-                    for c in classlist:
-                        classwise_accuracy_record[name][run_num][i][np.where(classlist==c)[0][0]] = 0
-                    training_record[name][run_num][i] = {}
-                    continue
-                
-                # else train the network and collect the metrics
-                save_path = "trained_models/trained/conv{}_e{}_n{}_r{}_g{}.pth".format(not fixed_conv, experiment_name, name, run_num, i)
-                print('Training and Evaluating: {} Gen: {} Run: {}'.format(name, i, run_num))
-                record_progress = helper.train_network(trainloader=trainloader, filters=filters_list[i], epochs=epochs, testloader=testloader, classes=classes, save_path=save_path, fixed_conv=fixed_conv, novelty_interval=int(args.novelty_interval), test_accuracy_interval=int(args.test_accuracy_interval))
-                record_accuracy = helper.assess_accuracy(testloader=testloader, classes=classes, save_path=save_path)
-                training_record[name][run_num][i] = record_progress
-                overall_accuracy_record[name][run_num][i] = record_accuracy['overall']
-                for c in classlist:
-                    classwise_accuracy_record[name][run_num][i][np.where(classlist==c)[0][0]] = record_accuracy[c]
-    name_add = ''
-    if args.random: name_add += 'random_'
-    if fixed_conv: name_add += 'fixed_conv_'
-    if not os.path.isdir('output/' + experiment_name):
-        os.mkdir('output/' + experiment_name)
-    with open('output/' + experiment_name + '/training_{}over_time.pickle'.format(name_add), 'wb') as f:
-        pickle.dump(training_record, f)
-    with open('output/' + experiment_name + '/overall_accuracy_{}over_time.pickle'.format(name_add), 'wb') as f:
-        pickle.dump(overall_accuracy_record,f)
-    with open('output/' + experiment_name + '/classwise_accuracy_{}over_time.pickle'.format(name_add), 'wb') as f:
-        pickle.dump(classwise_accuracy_record,f)
+    inner_skip = args.inner_skip if training_interval < 1 else 0
+    skip = args.skip
+    stop_after = args.stop_after
+    inner_stop_after = args.inner_stop_after if training_interval < 1 else np.inf
+    
+    # print(skip, stop_after, inner_skip, inner_stop_after, len(stored_filters), len(stored_filters[0]))
 
-    cut_off_beginning = 0
-    final_accuracies = save_final_accuracy_of_trained_models('output/' + experiment_name + '/training_{}over_time.pickle'.format(name_add), 'output/' + experiment_name + '/final_accuracies_{}over_training_time.pickle'.format(name_add))
-    final_novelties = save_novelty_record_of_trained_models('output/' + experiment_name + '/training_{}over_time.pickle'.format(name_add), 'output/' + experiment_name + '/novelty_{}over_training_time.pickle'.format(name_add))
-    final_test_accuracies = save_final_test_accuracies_of_trained_models('output/' + experiment_name + 'training_{}over_time.pickle'.format(name_add), 'output/' + experiment_name + '/final_test_accuracies {}over_training_time.pickle'.format(name_add))
-    helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[cut_off_beginning:] for k, x in overall_accuracy_record.items()], name=[k for k,x in overall_accuracy_record.items()], x_label="Generation", y_label="Fitness", compute_CI=True)
-    helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[cut_off_beginning:] for k, x in final_accuracies.items()], name=[k for k,x in final_accuracies.items()], x_label="Epoch", y_label="Accuracy", compute_CI=True)
-    helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[cut_off_beginning:] for k, x in final_novelties.items()], name=[k for k,x in final_novelties.items()], x_label="Epoch", y_label="Novelty", compute_CI=True, sample_interval=args.novelty_interval, save_path='output/' + experiment_name + 'novelty_{}over_training_time_plot'.format(name_add))
-    helper.plot_mean_and_bootstrapped_ci_multiple(input_data=[np.transpose(x)[cut_off_beginning:] for k, x in final_novelties.items()], name=[k for k,x in final_novelties.items()], x_label="Epoch", y_label="Accuracy", compute_CI=True, sample_interval=args.test_accuracy_interval, save_path='output/' + experiment_name + 'test_accuracy_{}over_training_time_plot'.format(name_add))
+    for run_num in range(int(skip), min(stop_after, len(stored_filters))):
+        # run_num = np.where(stored_filters == filters_list)[0][0]
+        # for each generation train the solution output at that generation
+        for n in range(int(inner_skip*(int((training_interval)*len(stored_filters[run_num])))), min(inner_stop_after, len(stored_filters[run_num])+1), int((training_interval)*len(stored_filters[run_num]))):
+            if n == 0:
+                continue
+            i = n-1
+            # if we only want to train the solution from the final generation, continue
+            # if (training_interval != 0 and i*1.0 not in [(len(stored_filters[run_num])/(1/training_interval)*j)-1 for j in range(1, min(args.stop_after, int(1/training_interval)+1))]) or (training_interval==0 and i not in range(skip, args.stop_after)):
+            #     continue
+            scaled = False
+            if len(stored_filters[run_num][i]) > 6:
+                scaled = True
+            if args.diversity_type == "None":
+                diversity = None
+            else:
+                diversity = {'type': args.diversity_type, 'pdop': args.pairwise_diversity_op, 'ldop': args.layerwise_diversity_op, 'k': args.k, 'k_strat': args.k_strat}
 
+            # else train the network and collect the metrics
+            helper.config['generation'] = i if (not args.rand_tech and not args.gram_schmidt) else None
+            helper.update_config()
+            save_path = "trained_models/trained/conv{}_e{}_n{}_r{}_g{}.pth".format(not fixed_conv, experiment_name, name, run_num, i)
+            print('Training and Evaluating: {} Gen: {} Run: {}'.format(name, i, run_num))
+            record_progress = helper.train_network(data_module=data_module, filters=stored_filters[run_num][i], epochs=epochs, lr=args.lr, save_path=save_path, fixed_conv=fixed_conv, novelty_interval=int(args.novelty_interval), val_interval=int(args.test_accuracy_interval), diversity=diversity, scaled=scaled, devices=args.devices)
+            helper.run(seed=False, rank=args.local_rank if args.local_rank > 0 else 0)
+            helper.config['dataset'] = args.dataset.lower()
+            helper.config['batch_size'] = args.batch_size
+            helper.config['lr'] = args.lr
+            helper.config['experiment_name'] = args.experiment_name
+            helper.config['evo'] = not args.rand_tech and not args.gram_schmidt and not args.ae
+            helper.config['experiment_type'] = 'training'
+            helper.config['fixed_conv'] = fixed_conv == True
+            helper.config['diversity_type'] = args.diversity_type
+            helper.config['ae'] = args.ae
+            helper.config['pairwise_diversity_op'] = args.pairwise_diversity_op
+            helper.config['layerwise_diversity_op'] = args.layerwise_diversity_op
+            helper.config['k'] = args.k
+            helper.config['k_strat'] = args.k_strat
+            helper.update_config()
+            # for c in classlist:
+            #     classwise_accuracy_record[run_num][i][np.where(classlist==c)[0][0]] = record_accuracy[c]
 
+    # with open('output/' + experiment_name + '/classwise_accuracy_{}over_time.pickle'.format(name_add), 'wb') as f:
+    #     pickle.dump(classwise_accuracy_record,f)
 
 if __name__ == '__main__':
     run()

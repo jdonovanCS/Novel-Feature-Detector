@@ -1,0 +1,40 @@
+{
+    "os": "Windows-10-10.0.19044-SP0",
+    "python": "3.10.0",
+    "heartbeatAt": "2022-03-31T18:52:32.980394",
+    "startedAt": "2022-03-31T18:52:32.037642",
+    "docker": null,
+    "gpu": "NVIDIA GeForce RTX 3080 Laptop GPU",
+    "gpu_count": 1,
+    "cpu_count": 16,
+    "cuda": null,
+    "args": [
+        "--dataset=cifar100",
+        "--experiment_name=further testing of logging with wandb and lightning",
+        "--fixed_conv",
+        "--training_interval=1",
+        "--epochs=1024",
+        "--novelty_interval=1",
+        "--test_accuracy_interval=4",
+        "--batch_size=64",
+        "--evo_gens=30",
+        "--evo_pop_size=10",
+        "--evo_dataset_for_novelty=cifar10",
+        "--evo_num_runs=1",
+        "--evo_tourney_size=4",
+        "--evo_num_winners=2",
+        "--evo_num_children=10"
+    ],
+    "state": "running",
+    "program": "C:\\Users\\Jordan\\Learning\\UVM\\Research\\novel-feature-detector\\train_and_eval.py",
+    "codePath": "train_and_eval.py",
+    "git": {
+        "remote": "https://github.com/jdonovancs/novel-feature-detector",
+        "commit": "a53b460fdb7dbe758681c249caae4f56c8c404d8"
+    },
+    "email": "jordan.t.donovancs@gmail.com",
+    "root": "C:/Users/Jordan/Learning/UVM/Research/novel-feature-detector",
+    "host": "LAPTOP-AUS3EALC",
+    "username": "Jordan",
+    "executable": "C:\\Users\\Jordan\\anaconda3\\envs\\EC2\\python.exe"
+}

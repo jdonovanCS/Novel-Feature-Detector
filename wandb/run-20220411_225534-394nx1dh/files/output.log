@@ -1,0 +1,72 @@
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:88: LightningDeprecationWarning: DataModule property `train_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:107: LightningDeprecationWarning: DataModule property `val_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+updating config
+config: {'batch_size': 64, 'experiment_name': 'channel diversity metric', 'evo_gens': 50, 'evo_pop': 20, 'evo_dataset_for_novelty': 'cifar10', 'evo_num_runs': 5, 'evo_tourney_size': 4, 'evo_num_winners': 2, 'evo_num_children': 20}
+Files already downloaded and verified
+Files already downloaded and verified
+Running Evolution for fitness
+C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pytorch_lightning\core\datamodule.py:126: LightningDeprecationWarning: DataModule property `test_transforms` was deprecated in v1.5 and will be removed in v1.7.
+  rank_zero_deprecation(
+  0%|                                                                                            | 0/5 [00:00<?, ?it/s]
+  0%|                                                                                           | 0/20 [00:00<?, ?it/s]
+Initializing
+1649732142.8900235
+tensor([[[ 0.0141, -0.0180,  0.0140,  ...,  0.0096, -0.0234, -0.0019],
+         [-0.0180,  0.0872, -0.0354,  ..., -0.0252,  0.1180,  0.0149],
+         [ 0.0140, -0.0354,  0.0206,  ...,  0.0130, -0.0509, -0.0039],
+         ...,
+         [ 0.0096, -0.0252,  0.0130,  ...,  0.0155, -0.0389, -0.0019],
+         [-0.0234,  0.1180, -0.0509,  ..., -0.0389,  0.1967,  0.0059],
+         [-0.0019,  0.0149, -0.0039,  ..., -0.0019,  0.0059,  0.0111]],
+        [[ 0.0132, -0.0350,  0.0185,  ...,  0.0092, -0.0504, -0.0044],
+         [-0.0350,  0.1538, -0.0697,  ..., -0.0325,  0.2132,  0.0259],
+         [ 0.0185, -0.0697,  0.0340,  ...,  0.0155, -0.0997, -0.0100],
+         ...,
+         [ 0.0092, -0.0325,  0.0155,  ...,  0.0116, -0.0470, -0.0050],
+         [-0.0504,  0.2132, -0.0997,  ..., -0.0470,  0.3070,  0.0311],
+         [-0.0044,  0.0259, -0.0100,  ..., -0.0050,  0.0311,  0.0075]],
+        [[ 0.0176, -0.0499,  0.0241,  ...,  0.0258, -0.0553, -0.0145],
+         [-0.0499,  0.2639, -0.1081,  ..., -0.1140,  0.2990,  0.0791],
+         [ 0.0241, -0.1081,  0.0477,  ...,  0.0490, -0.1250, -0.0308],
+         ...,
+         [ 0.0258, -0.1140,  0.0490,  ...,  0.0565, -0.1313, -0.0329],
+         [-0.0553,  0.2990, -0.1250,  ..., -0.1313,  0.3578,  0.0817],
+         [-0.0145,  0.0791, -0.0308,  ..., -0.0329,  0.0817,  0.0289]],
+        ...,
+        [[ 0.0094, -0.0159,  0.0094,  ...,  0.0127, -0.0250, -0.0011],
+         [-0.0159,  0.0975, -0.0375,  ..., -0.0465,  0.1411,  0.0163],
+         [ 0.0094, -0.0375,  0.0172,  ...,  0.0206, -0.0564, -0.0048],
+         ...,
+         [ 0.0127, -0.0465,  0.0206,  ...,  0.0278, -0.0709, -0.0056],
+         [-0.0250,  0.1411, -0.0564,  ..., -0.0709,  0.2160,  0.0178],
+         [-0.0011,  0.0163, -0.0048,  ..., -0.0056,  0.0178,  0.0068]],
+        [[ 0.0323, -0.0424,  0.0315,  ...,  0.0301, -0.0544, -0.0062],
+         [-0.0424,  0.2680, -0.1086,  ..., -0.0961,  0.2995,  0.0801],
+         [ 0.0315, -0.1086,  0.0547,  ...,  0.0476, -0.1288, -0.0269],
+         ...,
+         [ 0.0301, -0.0961,  0.0476,  ...,  0.0517, -0.1201, -0.0219],
+         [-0.0544,  0.2995, -0.1288,  ..., -0.1201,  0.3593,  0.0794],
+         [-0.0062,  0.0801, -0.0269,  ..., -0.0219,  0.0794,  0.0313]],
+        [[ 0.0093, -0.0279,  0.0137,  ...,  0.0170, -0.0329, -0.0067],
+         [-0.0279,  0.2998, -0.1173,  ..., -0.1238,  0.3296,  0.0948],
+         [ 0.0137, -0.1173,  0.0488,  ...,  0.0508, -0.1324, -0.0346],
+         ...,
+         [ 0.0170, -0.1238,  0.0508,  ...,  0.0580, -0.1394, -0.0368],
+         [-0.0329,  0.3296, -0.1324,  ..., -0.1394,  0.3701,  0.1002],
+         [-0.0067,  0.0948, -0.0346,  ..., -0.0368,  0.1002,  0.0334]]],
+       grad_fn=<DivBackward0>)
+  0%|                                                                                            | 0/5 [00:07<?, ?it/s]
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 220, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 186, in run
+    solution_over_time, fitness_over_time = evolution(generations=n_iters, population_size=pop_size, num_children=num_children, tournament_size=tournament_size, num_winners=num_winners, evolution_type=run_name)
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 87, in evolution
+    model.fitness =  net.get_fitness(net_input)
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\net.py", line 158, in get_fitness
+    novelty_score = self.compute_feature_novelty()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\net.py", line 257, in compute_feature_novelty
+    div = np.abs(self.activations[layer][0][batch][channel].detach().cpu().numpy() - self.activations[layer][0][batch][channel2].detach().cpu().numpy()).sum()
+KeyboardInterrupt

@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 213, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 148, in run
+    data_module = helper.get_data_module(args.evo_dataset_for_novelty, batch_size=args.batch_size)
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\helper_hpc.py", line 383, in get_data_module
+    match dataset.lower():
+AttributeError: 'NoneType' object has no attribute 'lower'

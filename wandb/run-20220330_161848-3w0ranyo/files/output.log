@@ -1,0 +1,60 @@
+Files already downloaded and verified
+Files already downloaded and verified
+Running Evolution for fitness
+Initializing
+  0%|                                                                                            | 0/1 [00:00<?, ?it/s]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+100%|██████████████████████████████████████████████████████████████████████████████████| 40/40 [01:10<00:00,  1.74s/it]
+  0%|                                                                                          | 0/100 [00:00<?, ?it/s]
+
+  0%|                                                                                            | 0/1 [03:34<?, ?it/s]
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 232, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 200, in run
+    solution_over_time, fitness_over_time = evolution(generations=n_iters, population_size=pop_size, num_children=num_children, tournament_size=tournament_size, num_winners=num_winners, evolution_type=run_name)
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 137, in evolution
+    child.fitness = net.get_fitness(net_input)
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\helper_hpc.py", line 282, in get_fitness
+    novelty_score = self.compute_feature_novelty()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\helper_hpc.py", line 362, in compute_feature_novelty
+    avg_dist[str(layer)] = np.mean((dist))
+  File "<__array_function__ internals>", line 180, in mean
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numpy\core\fromnumeric.py", line 3474, in mean
+    return _methods._mean(a, axis=axis, dtype=dtype,
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numpy\core\_methods.py", line 163, in _mean
+    arr = asanyarray(a)
+KeyboardInterrupt

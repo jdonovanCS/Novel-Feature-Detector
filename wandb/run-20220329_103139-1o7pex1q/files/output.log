@@ -1,0 +1,19 @@
+
+Files already downloaded and verified
+Files already downloaded and verified
+Training and Evaluating: fitness Gen: 49 Run: 0
+Accuracy of the network on training set at epoch 1: 42 %
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\train_and_eval.py", line 247, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\train_and_eval.py", line 217, in run
+    record_progress = helper.train_network(trainloader=trainloader, filters=filters_list[i], epochs=epochs, testloader=testloader, classes=classes, save_path=save_path, fixed_conv=fixed_conv, novelty_interval=int(args.novelty_interval), test_accuracy_interval=int(args.test_accuracy_interval))
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\helper_hpc.py", line 285, in train_network
+    torch.save(net.state_dict(), save_path)
+  File "C:\Users\Jordan\anaconda3\envs\EC\lib\site-packages\torch\serialization.py", line 376, in save
+    with _open_file_like(f, 'wb') as opened_file:
+  File "C:\Users\Jordan\anaconda3\envs\EC\lib\site-packages\torch\serialization.py", line 230, in _open_file_like
+    return _open_file(name_or_buffer, mode)
+  File "C:\Users\Jordan\anaconda3\envs\EC\lib\site-packages\torch\serialization.py", line 211, in __init__
+    super(_open_file, self).__init__(open(name, mode))
+FileNotFoundError: [Errno 2] No such file or directory: 'trained_models/trained/convTrue_emutation_multiplier_cifar10novelty_pop20_gen50_nfitness_r0_g49.pth'

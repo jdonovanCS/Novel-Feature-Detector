@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 218, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 148, in run
+    data_module = helper.get_data_module(args.evo_dataset_for_novelty, batch_size=args.batch_size)
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\helper_hpc.py", line 51, in get_data_module
+    data_module = pl_bolts.datamodules.CIFAR10DataModule(batch_size=batch_size)
+AttributeError: module 'pl_bolts.datamodules' has no attribute 'CIFAR10DataModule'

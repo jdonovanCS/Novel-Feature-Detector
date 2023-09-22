@@ -1,0 +1,29 @@
+Files already downloaded and verified
+Files already downloaded and verified
+Running Evolution for fitness
+Initializing
+  0%|                                                                                            | 0/1 [00:00<?, ?it/s]
+
+
+
+
+
+
+
+
+
+100%|██████████████████████████████████████████████████████████████████████████████████| 10/10 [01:51<00:00,  9.32s/it]
+  0%|                                                                                           | 0/10 [00:00<?, ?it/s]
+  0%|                                                                                            | 0/1 [04:18<?, ?it/s]
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 217, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 187, in run
+    solution_over_time, fitness_over_time = evolution(generations=n_iters, population_size=pop_size, num_children=num_children, tournament_size=tournament_size, num_winners=num_winners, evolution_type=run_name)
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 132, in evolution
+    child.fitness = model.test_step(net_input, 0)['test_novelty']
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\helper_hpc.py", line 299, in test_step
+    novelty_score = evol.compute_feature_novelty(self.activations)
+  File "C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\evolution.py", line 55, in compute_feature_novelty
+    dist[str(layer)].append(torch.abs(ind_activation2 - ind_activation))
+KeyboardInterrupt

@@ -1,0 +1,14 @@
+Running Evolution for fitness
+Initializing
+  0%|                                                                                           | 0/10 [00:00<?, ?it/s]
+  0%|                                                                                            | 0/1 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 213, in <module>
+    run()
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 183, in run
+    solution_over_time, fitness_over_time = evolution(generations=n_iters, population_size=pop_size, num_children=num_children, tournament_size=tournament_size, num_winners=num_winners, evolution_type=run_name)
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\evolution.py", line 108, in evolution
+    model.fitness =  model.test_step(next(iter(data_module.train_dataloader())))['test_novelty']
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\pl_bolts\datamodules\vision_datamodule.py", line 121, in train_dataloader
+    return self._data_loader(self.dataset_train, shuffle=self.shuffle)
+AttributeError: 'CIFAR10DataModule' object has no attribute 'dataset_train'

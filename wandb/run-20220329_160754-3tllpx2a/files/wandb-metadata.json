@@ -1,0 +1,34 @@
+{
+    "os": "Windows-10-10.0.19044-SP0",
+    "python": "3.10.0",
+    "heartbeatAt": "2022-03-29T20:07:55.607529",
+    "startedAt": "2022-03-29T20:07:54.688197",
+    "docker": null,
+    "gpu": "NVIDIA GeForce RTX 3080 Laptop GPU",
+    "gpu_count": 1,
+    "cpu_count": 16,
+    "cuda": null,
+    "args": [
+        "--evo_dataset_for_novelty=cifar10",
+        "--experiment_name=trying_out_wandb_and_lightning",
+        "--batch_size=64",
+        "--evo_gens=10",
+        "--evo_pop_size=10",
+        "--evo_num_runs=1",
+        "--evo_tourney_size=4",
+        "--evo_num_winners=2",
+        "--evo_num_children=10"
+    ],
+    "state": "running",
+    "program": "C:\\Users\\Jordan\\Learning\\UVM\\Research\\novel-feature-detector\\evolution.py",
+    "codePath": "evolution.py",
+    "git": {
+        "remote": "https://github.com/jdonovancs/novel-feature-detector",
+        "commit": "65ae4de55f70e1d257dc7b2849fa5e59f594747d"
+    },
+    "email": "jordan.t.donovancs@gmail.com",
+    "root": "C:/Users/Jordan/Learning/UVM/Research/novel-feature-detector",
+    "host": "LAPTOP-AUS3EALC",
+    "username": "Jordan",
+    "executable": "C:\\Users\\Jordan\\anaconda3\\envs\\EC2\\python.exe"
+}

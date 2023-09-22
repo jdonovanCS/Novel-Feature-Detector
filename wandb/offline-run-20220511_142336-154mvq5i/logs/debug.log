@@ -1,0 +1,36 @@
+2022-05-11 14:23:36,424 INFO    MainThread:96784 [wandb_setup.py:_flush():75] Loading settings from C:\Users\Jordan\.config\wandb\settings
+2022-05-11 14:23:36,424 INFO    MainThread:96784 [wandb_setup.py:_flush():75] Loading settings from C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\settings
+2022-05-11 14:23:36,424 INFO    MainThread:96784 [wandb_setup.py:_flush():75] Loading settings from environment variables: {'start_method': 'thread'}
+2022-05-11 14:23:36,424 INFO    MainThread:96784 [wandb_setup.py:_flush():75] Inferring run settings from compute environment: {'program_relpath': 'visualize_filters_and_activations.py', 'program': 'C:\\Users\\Jordan\\Learning\\UVM\\Research Projects\\Novel-Feature-Detector\\visualize_filters_and_activations.py'}
+2022-05-11 14:23:36,424 INFO    MainThread:96784 [wandb_init.py:_log_setup():438] Logging user logs to C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\offline-run-20220511_142336-154mvq5i\logs\debug.log
+2022-05-11 14:23:36,424 INFO    MainThread:96784 [wandb_init.py:_log_setup():439] Logging internal logs to C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\offline-run-20220511_142336-154mvq5i\logs\debug-internal.log
+2022-05-11 14:23:36,424 INFO    MainThread:96784 [wandb_init.py:init():472] calling init triggers
+2022-05-11 14:23:36,425 INFO    MainThread:96784 [wandb_init.py:init():475] wandb.init called with sweep_config: {}
+config: {}
+2022-05-11 14:23:36,425 INFO    MainThread:96784 [wandb_init.py:init():525] starting backend
+2022-05-11 14:23:36,427 INFO    MainThread:96784 [backend.py:ensure_launched():219] starting backend process...
+2022-05-11 14:23:36,427 INFO    MainThread:96784 [backend.py:ensure_launched():224] started backend process with pid: 0
+2022-05-11 14:23:36,428 INFO    BackendThr:96784 [internal.py:wandb_internal():92] W&B internal server running at pid: 96784, started at: 2022-05-11 14:23:36.427776
+2022-05-11 14:23:36,428 INFO    MainThread:96784 [wandb_init.py:init():534] backend started and connected
+2022-05-11 14:23:36,430 INFO    MainThread:96784 [wandb_init.py:init():598] updated telemetry
+2022-05-11 14:23:36,431 INFO    WriterThread:96784 [datastore.py:open_for_write():77] open: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\offline-run-20220511_142336-154mvq5i\run-154mvq5i.wandb
+2022-05-11 14:23:36,465 INFO    MainThread:96784 [wandb_init.py:init():660] starting run threads in backend
+2022-05-11 14:23:36,592 ERROR   HandlerThread:96784 [meta.py:_save_conda():85] Error saving conda packages
+Traceback (most recent call last):
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\wandb\sdk\internal\meta.py", line 81, in _save_conda
+    subprocess.call(
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\subprocess.py", line 345, in call
+    with Popen(*popenargs, **kwargs) as p:
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\subprocess.py", line 966, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\subprocess.py", line 1435, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+FileNotFoundError: [WinError 2] The system cannot find the file specified
+2022-05-11 14:23:36,715 INFO    MainThread:96784 [wandb_run.py:_console_start():1896] atexit reg
+2022-05-11 14:23:36,716 INFO    MainThread:96784 [wandb_run.py:_redirect():1769] redirect: SettingsConsole.WRAP
+2022-05-11 14:23:36,716 INFO    MainThread:96784 [wandb_run.py:_redirect():1806] Wrapping output streams.
+2022-05-11 14:23:36,717 INFO    MainThread:96784 [wandb_run.py:_redirect():1830] Redirects installed.
+2022-05-11 14:23:36,717 INFO    MainThread:96784 [wandb_init.py:init():685] run started, returning control to user process
+2022-05-11 14:23:37,134 INFO    MainThread:96784 [wandb_run.py:_config_callback():1129] config_cb None None {'experiment_type': 'training', 'evo': False, 'dataset': 'cifar10', 'evo_gens': '50', 'batch_size': 64, 'classnames': ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck'], 'fixed_conv': False, 'num_classes': 10, 'evo_num_runs': '5', 'evo_pop_size': '20', 'evo_num_winners': '2', 'experiment_name': 'hpc full cifar10 val diversity', 'evo_num_children': '20', 'evo_tourney_size': '4', 'evo_dataset_for_novelty': 'cifar10'}
+2022-05-11 14:25:34,403 INFO    MainThread:96784 [wandb_run.py:_atexit_cleanup():1865] got exitcode: 255
+2022-05-11 14:25:34,404 INFO    MainThread:96784 [wandb_run.py:_restore():1837] restore

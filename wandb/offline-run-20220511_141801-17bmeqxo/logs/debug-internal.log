@@ -1,0 +1,36 @@
+2022-05-11 14:18:01,394 INFO    BackendThr:210368 [internal.py:wandb_internal():92] W&B internal server running at pid: 210368, started at: 2022-05-11 14:18:01.394288
+2022-05-11 14:18:01,395 INFO    MainThread:210368 [wandb_init.py:init():534] backend started and connected
+2022-05-11 14:18:01,395 DEBUG   MainThread:210368 [config_util.py:dict_from_config_file():102] no default config file found in config-defaults.yaml
+2022-05-11 14:18:01,396 INFO    MainThread:210368 [wandb_init.py:init():598] updated telemetry
+2022-05-11 14:18:01,397 INFO    WriterThread:210368 [datastore.py:open_for_write():77] open: C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\offline-run-20220511_141801-17bmeqxo\run-17bmeqxo.wandb
+2022-05-11 14:18:01,429 INFO    MainThread:210368 [wandb_init.py:init():660] starting run threads in backend
+2022-05-11 14:18:01,433 DEBUG   HandlerThread:210368 [handler.py:handle_request():141] handle_request: run_start
+2022-05-11 14:18:01,444 DEBUG   HandlerThread:210368 [meta.py:__init__():37] meta init
+2022-05-11 14:18:01,444 DEBUG   HandlerThread:210368 [meta.py:__init__():51] meta init done
+2022-05-11 14:18:01,444 DEBUG   HandlerThread:210368 [meta.py:probe():211] probe
+2022-05-11 14:18:01,451 DEBUG   HandlerThread:210368 [meta.py:_setup_git():201] setup git
+2022-05-11 14:18:01,533 DEBUG   HandlerThread:210368 [meta.py:_setup_git():208] setup git done
+2022-05-11 14:18:01,533 DEBUG   HandlerThread:210368 [meta.py:_save_pip():55] save pip
+2022-05-11 14:18:01,534 DEBUG   HandlerThread:210368 [meta.py:_save_pip():69] save pip done
+2022-05-11 14:18:01,534 DEBUG   HandlerThread:210368 [meta.py:_save_conda():76] save conda
+2022-05-11 14:18:01,536 ERROR   HandlerThread:210368 [meta.py:_save_conda():85] Error saving conda packages
+Traceback (most recent call last):
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\wandb\sdk\internal\meta.py", line 81, in _save_conda
+    subprocess.call(
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\subprocess.py", line 345, in call
+    with Popen(*popenargs, **kwargs) as p:
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\subprocess.py", line 966, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\subprocess.py", line 1435, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+FileNotFoundError: [WinError 2] The system cannot find the file specified
+2022-05-11 14:18:01,538 DEBUG   HandlerThread:210368 [meta.py:_save_conda():86] save conda done
+2022-05-11 14:18:01,538 DEBUG   HandlerThread:210368 [meta.py:probe():249] probe done
+2022-05-11 14:18:01,544 INFO    MainThread:210368 [wandb_run.py:_console_start():1896] atexit reg
+2022-05-11 14:18:01,544 INFO    MainThread:210368 [wandb_run.py:_redirect():1769] redirect: SettingsConsole.WRAP
+2022-05-11 14:18:01,544 INFO    MainThread:210368 [wandb_run.py:_redirect():1806] Wrapping output streams.
+2022-05-11 14:18:01,545 INFO    MainThread:210368 [wandb_run.py:_redirect():1830] Redirects installed.
+2022-05-11 14:18:01,545 INFO    MainThread:210368 [wandb_init.py:init():685] run started, returning control to user process
+2022-05-11 14:18:02,544 INFO    MainThread:210368 [wandb_run.py:_config_callback():1129] config_cb None None {'experiment_type': 'training', 'evo': False, 'dataset': 'cifar10', 'evo_gens': '50', 'batch_size': 64, 'classnames': ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck'], 'fixed_conv': False, 'num_classes': 10, 'evo_num_runs': '5', 'evo_pop_size': '20', 'evo_num_winners': '2', 'experiment_name': 'hpc full cifar10 val diversity', 'evo_num_children': '20', 'evo_tourney_size': '4', 'evo_dataset_for_novelty': 'cifar10'}
+2022-05-11 14:18:19,205 INFO    MainThread:210368 [wandb_run.py:_atexit_cleanup():1865] got exitcode: 255
+2022-05-11 14:18:19,206 INFO    MainThread:210368 [wandb_run.py:_restore():1837] restore

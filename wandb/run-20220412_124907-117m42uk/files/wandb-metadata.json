@@ -1,0 +1,34 @@
+{
+    "os": "Windows-10-10.0.19044-SP0",
+    "python": "3.10.0",
+    "heartbeatAt": "2022-04-12T16:49:08.308230",
+    "startedAt": "2022-04-12T16:49:07.268227",
+    "docker": null,
+    "gpu": "NVIDIA GeForce RTX 3080 Laptop GPU",
+    "gpu_count": 1,
+    "cpu_count": 16,
+    "cuda": null,
+    "args": [
+        "--experiment_name=attempting to rewrite compute diversity fuction",
+        "--batch_size=64",
+        "--evo_gens=10",
+        "--evo_pop_size=10",
+        "--evo_dataset_for_novelty=cifar10",
+        "--evo_num_runs=1",
+        "--evo_tourney_size=4",
+        "--evo_num_winners=2",
+        "--evo_num_children=10"
+    ],
+    "state": "running",
+    "program": "C:\\Users\\Jordan\\Learning\\UVM\\Research\\novel-feature-detector\\evolution.py",
+    "codePath": "evolution.py",
+    "git": {
+        "remote": "https://github.com/jdonovancs/novel-feature-detector",
+        "commit": "e40749320a6888293fa627dc84f55df3467f9775"
+    },
+    "email": "jordan.t.donovancs@gmail.com",
+    "root": "C:/Users/Jordan/Learning/UVM/Research/novel-feature-detector",
+    "host": "LAPTOP-AUS3EALC",
+    "username": "Jordan",
+    "executable": "C:\\Users\\Jordan\\anaconda3\\envs\\EC2\\python.exe"
+}

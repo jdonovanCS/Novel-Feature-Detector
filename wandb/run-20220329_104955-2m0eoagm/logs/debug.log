@@ -1,0 +1,51 @@
+2022-03-29 10:49:55,567 INFO    MainThread:16640 [wandb_setup.py:_flush():75] Loading settings from C:\Users\Jordan\.config\wandb\settings
+2022-03-29 10:49:55,567 INFO    MainThread:16640 [wandb_setup.py:_flush():75] Loading settings from C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\settings
+2022-03-29 10:49:55,567 INFO    MainThread:16640 [wandb_setup.py:_flush():75] Loading settings from environment variables: {}
+2022-03-29 10:49:55,567 INFO    MainThread:16640 [wandb_setup.py:_flush():75] Inferring run settings from compute environment: {'program_relpath': 'train_and_eval.py', 'program': 'train_and_eval.py'}
+2022-03-29 10:49:55,568 INFO    MainThread:16640 [wandb_init.py:_log_setup():405] Logging user logs to C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220329_104955-2m0eoagm\logs\debug.log
+2022-03-29 10:49:55,568 INFO    MainThread:16640 [wandb_init.py:_log_setup():406] Logging internal logs to C:\Users\Jordan\Learning\UVM\Research Projects\Novel-Feature-Detector\wandb\run-20220329_104955-2m0eoagm\logs\debug-internal.log
+2022-03-29 10:49:55,568 INFO    MainThread:16640 [wandb_init.py:init():439] calling init triggers
+2022-03-29 10:49:55,568 INFO    MainThread:16640 [wandb_init.py:init():443] wandb.init called with sweep_config: {}
+config: {}
+2022-03-29 10:49:55,568 INFO    MainThread:16640 [wandb_init.py:init():492] starting backend
+2022-03-29 10:49:55,568 INFO    MainThread:16640 [backend.py:_multiprocessing_setup():101] multiprocessing start_methods=spawn, using: spawn
+2022-03-29 10:49:55,570 INFO    MainThread:16640 [backend.py:ensure_launched():219] starting backend process...
+2022-03-29 10:49:56,607 INFO    MainThread:16640 [backend.py:ensure_launched():225] started backend process with pid: 158908
+2022-03-29 10:49:56,608 INFO    MainThread:16640 [wandb_init.py:init():501] backend started and connected
+2022-03-29 10:49:56,609 INFO    MainThread:16640 [wandb_init.py:init():565] updated telemetry
+2022-03-29 10:49:56,653 INFO    MainThread:16640 [wandb_init.py:init():596] communicating run to backend with 30 second timeout
+2022-03-29 10:49:56,817 INFO    MainThread:16640 [wandb_run.py:_on_init():1759] communicating current version
+2022-03-29 10:49:56,939 INFO    MainThread:16640 [wandb_run.py:_on_init():1763] got version response 
+2022-03-29 10:49:56,939 INFO    MainThread:16640 [wandb_init.py:init():625] starting run threads in backend
+2022-03-29 10:49:58,615 INFO    MainThread:16640 [wandb_run.py:_console_start():1733] atexit reg
+2022-03-29 10:49:58,616 INFO    MainThread:16640 [wandb_run.py:_redirect():1606] redirect: SettingsConsole.WRAP
+2022-03-29 10:49:58,616 INFO    MainThread:16640 [wandb_run.py:_redirect():1643] Wrapping output streams.
+2022-03-29 10:49:58,618 INFO    MainThread:16640 [wandb_run.py:_redirect():1667] Redirects installed.
+2022-03-29 10:49:58,618 INFO    MainThread:16640 [wandb_init.py:init():664] run started, returning control to user process
+2022-03-29 10:49:59,827 INFO    MainThread:16640 [wandb_config.py:__setitem__():153] config set dataset = random - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x0000026E98B8DE10>>
+2022-03-29 10:49:59,827 INFO    MainThread:16640 [wandb_run.py:_config_callback():992] config_cb dataset random None
+2022-03-29 10:49:59,827 INFO    MainThread:16640 [wandb_config.py:__setitem__():153] config set batch_size = 64 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x0000026E98B8DE10>>
+2022-03-29 10:49:59,827 INFO    MainThread:16640 [wandb_run.py:_config_callback():992] config_cb batch_size 64 None
+2022-03-29 10:49:59,828 INFO    MainThread:16640 [wandb_config.py:__setitem__():153] config set experiment_name = mutation_multiplier_cifar10novelty_pop20_gen50 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x0000026E98B8DE10>>
+2022-03-29 10:49:59,828 INFO    MainThread:16640 [wandb_run.py:_config_callback():992] config_cb experiment_name mutation_multiplier_cifar10novelty_pop20_gen50 None
+2022-03-29 10:49:59,828 INFO    MainThread:16640 [wandb_config.py:__setitem__():153] config set evo_gens = 50 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x0000026E98B8DE10>>
+2022-03-29 10:49:59,828 INFO    MainThread:16640 [wandb_run.py:_config_callback():992] config_cb evo_gens 50 None
+2022-03-29 10:49:59,828 INFO    MainThread:16640 [wandb_config.py:__setitem__():153] config set evo_pop = 20 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x0000026E98B8DE10>>
+2022-03-29 10:49:59,829 INFO    MainThread:16640 [wandb_run.py:_config_callback():992] config_cb evo_pop 20 None
+2022-03-29 10:49:59,829 INFO    MainThread:16640 [wandb_config.py:__setitem__():153] config set evo_dataset_for_novelty = cifar-10 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x0000026E98B8DE10>>
+2022-03-29 10:49:59,829 INFO    MainThread:16640 [wandb_run.py:_config_callback():992] config_cb evo_dataset_for_novelty cifar-10 None
+2022-03-29 10:49:59,829 INFO    MainThread:16640 [wandb_config.py:__setitem__():153] config set evo = True - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x0000026E98B8DE10>>
+2022-03-29 10:49:59,829 INFO    MainThread:16640 [wandb_run.py:_config_callback():992] config_cb evo True None
+2022-03-29 10:49:59,829 INFO    MainThread:16640 [wandb_config.py:__setitem__():153] config set evo_num_runs = 5 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x0000026E98B8DE10>>
+2022-03-29 10:49:59,830 INFO    MainThread:16640 [wandb_run.py:_config_callback():992] config_cb evo_num_runs 5 None
+2022-03-29 10:49:59,830 INFO    MainThread:16640 [wandb_config.py:__setitem__():153] config set evo_tourney_size = 4 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x0000026E98B8DE10>>
+2022-03-29 10:49:59,830 INFO    MainThread:16640 [wandb_run.py:_config_callback():992] config_cb evo_tourney_size 4 None
+2022-03-29 10:49:59,830 INFO    MainThread:16640 [wandb_config.py:__setitem__():153] config set evo_num_winners = 2 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x0000026E98B8DE10>>
+2022-03-29 10:49:59,830 INFO    MainThread:16640 [wandb_run.py:_config_callback():992] config_cb evo_num_winners 2 None
+2022-03-29 10:49:59,830 INFO    MainThread:16640 [wandb_config.py:__setitem__():153] config set evo_num_children = 20 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x0000026E98B8DE10>>
+2022-03-29 10:49:59,831 INFO    MainThread:16640 [wandb_run.py:_config_callback():992] config_cb evo_num_children 20 None
+2022-03-29 10:50:00,327 INFO    MainThread:16640 [wandb_config.py:__setitem__():153] config set fixed_conv = False - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x0000026E98B8DE10>>
+2022-03-29 10:50:00,327 INFO    MainThread:16640 [wandb_run.py:_config_callback():992] config_cb fixed_conv False None
+2022-03-29 10:50:00,327 INFO    MainThread:16640 [wandb_watch.py:watch():47] Watching
+2022-03-29 10:57:19,744 INFO    MainThread:16640 [wandb_run.py:_atexit_cleanup():1702] got exitcode: 255
+2022-03-29 10:57:19,745 INFO    MainThread:16640 [wandb_run.py:_restore():1674] restore

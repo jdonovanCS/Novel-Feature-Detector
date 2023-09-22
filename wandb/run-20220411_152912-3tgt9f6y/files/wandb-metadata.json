@@ -1,0 +1,34 @@
+{
+    "os": "Windows-10-10.0.19043-SP0",
+    "python": "3.10.0",
+    "heartbeatAt": "2022-04-11T19:29:13.274815",
+    "startedAt": "2022-04-11T19:29:12.178369",
+    "docker": null,
+    "gpu": "NVIDIA GeForce RTX 3090",
+    "gpu_count": 1,
+    "cpu_count": 32,
+    "cuda": null,
+    "args": [
+        "--experiment_name=channel diversity metric",
+        "--batch_size=64",
+        "--evo_gens=50",
+        "--evo_pop_size=20",
+        "--evo_num_runs=5",
+        "--evo_dataset_for_novelty=cifar10",
+        "--evo_tourney_size=4",
+        "--evo_num_winners=2",
+        "--evo_num_children=20"
+    ],
+    "state": "running",
+    "program": "C:\\Users\\Jordan\\Learning\\UVM\\Research Projects\\Novel-Feature-Detector\\evolution.py",
+    "codePath": "evolution.py",
+    "git": {
+        "remote": "https://github.com/jdonovancs/Novel-Feature-Detector.git",
+        "commit": "1b89179f86fd1b7de1037c4c2d8916b4b3faf510"
+    },
+    "email": "jordan.t.donovancs@gmail.com",
+    "root": "C:/Users/Jordan/Learning/UVM/Research Projects/Novel-Feature-Detector",
+    "host": "DESKTOP-ESA8F4M",
+    "username": "Jordan",
+    "executable": "C:\\Users\\Jordan\\anaconda3\\envs\\EC2\\python.exe"
+}
