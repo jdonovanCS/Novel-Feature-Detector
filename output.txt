@@ -1,0 +1,2 @@
+run_name, run_num, time, fittest individual
+fitness, 0, 4969.678894519806, 0.7233541572334499

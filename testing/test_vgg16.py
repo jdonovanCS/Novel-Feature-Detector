@@ -13,7 +13,7 @@ import torchmetrics
 import torchvision.models as models
 from net_copy import Net as exists
 import numpy as np
-import helper_hpc as helper
+# import helper_hpc as helper
 from functools import partial
 
 # for data module
@@ -218,7 +218,7 @@ def train_vgg16(data_module, epochs=120, lr=5e-5, val_interval=4):
 if __name__ == "__main__":
     torch.multiprocessing.freeze_support()
 
-    data_module = CIFAR100DataModule(batch_size=64, data_dir="data/", num_workers=min(2, os.cpu_count()), pin_memory=True)
+    data_module = CIFAR100DataModule(batch_size=64, data_dir="../data/", num_workers=min(2, os.cpu_count()), pin_memory=True)
     data_module.prepare_data()
     data_module.setup()
 

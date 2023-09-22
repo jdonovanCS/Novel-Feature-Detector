@@ -4,6 +4,8 @@ import pytorch_lightning as pl
 import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
+import sys
+sys.path.insert(0, '../')
 import helper_hpc as helper
 import time
 
