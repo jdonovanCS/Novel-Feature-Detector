@@ -24,6 +24,7 @@ import _collections_abc
 import collections.abc
 import gc
 from vgg16 import Net as vgg16
+from v_net import Net as vNet
 
 def create_random_images(num_images=200):
     paths = []
@@ -57,10 +58,12 @@ def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, 
         print(device)
         net = vgg16(num_classes=data_module.num_classes, classnames=classnames, diversity=None, lr=lr)
         net = net.to(device)
-    else:
+    elif len(filters) == 6:
         net = Net(num_classes=data_module.num_classes, classnames=classnames, diversity=diversity, lr=lr)
         # device = torch.device(0)
         # net = net.to(device)
+    else:
+        net = vNet(num_classes=data_module.num_classes, classnames=classnames, diversity=diversity, lr=lr, size=len(filters))
     print(net.device)
     if filters is not None:
         if not scaled:

@@ -67,6 +67,9 @@ parser.add_argument('--num_workers', help='Num workers to use to load data modul
 # realized the ea is actually rewriting parents and putting them back in the pool instead of just creating modified children.
 # Use this param to undo that and operate as intended
 parser.add_argument('--as_intended', help='use if wanting to operate the ea as intended instead of the bugged method', default=False, action='store_true')
+# check for convergence, if set to true, run num needs to set to 1
+parser.add_argument('--check_convergence', help='check for when algorithm converges, runs needs to be set to 1', default=False, action='store_true')
+
 
 args = parser.parse_args()
 
@@ -116,6 +119,7 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
     history: a list of `Model` instances, representing all the models computed
         during the evolution experiment.
     """
+    stagnant = 0
     population = collections.deque()
     solutions_over_time = []
     fitness_over_time = []
@@ -188,6 +192,9 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
         solutions_over_time.append((copy.deepcopy(best_solution)))
         helper.save_npy('output/' + experiment_name + '/solutions_over_time_current_{}_{}.npy'.format(evolution_type, uniqueID), solutions_over_time, index=i)
         helper.wandb.log({'gen': i, 'best_individual_fitness': best_fitness})
+        if args.check_convergence:
+            if len(set(fitness_over_time[-5:])) == 1:
+                exit()
         # helper.wandb.log({'gen': i, 'best_individual_filters': best_solution})
         
     return solutions_over_time, np.array(fitness_over_time)
