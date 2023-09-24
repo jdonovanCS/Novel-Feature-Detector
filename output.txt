@@ -1,0 +1,8 @@
+run_name, run_num, time, fittest individual
+fitness, 0, 4969.678894519806, 0.7233541572334499
+run_name, run_num, time, fittest individual
+fitness, 0, 4185.790937423706, 0.7616480642159047
+run_name, run_num, time, fittest individual
+fitness, 0, 3952.9930143356323, 0.7319907690586263
+run_name, run_num, time, fittest individual
+fitness, 0, 1208.0013554096222, 0.7407951560260244
