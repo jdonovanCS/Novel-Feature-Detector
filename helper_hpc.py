@@ -521,7 +521,7 @@ def run(seed=True, rank=0):
     if glob_rank == 0:
     # if glob_rank > -1:
         force_cudnn_initialization()
-        wandb.init(project="novel-feature-detectors") # group='DDP'
+        wandb.init(project="vnet_diverse_feature_detectors") # group='DDP'
 
 
 if __name__ == '__main__':
