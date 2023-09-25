@@ -69,7 +69,7 @@ class RandomDataModule(pl.LightningDataModule):
         Return:
             100
         """
-        return 1
+        return 2
 
     # def dataset_test(self):
     #     return rds.RandomDataset(self.data_dir, transform=self.transform)
@@ -103,11 +103,3 @@ class RandomDataModule(pl.LightningDataModule):
 
     def test_dataloader(self):
         return DataLoader(self.random_full, batch_size=self.batch_size, num_workers=self.num_workers)
-
-    @property
-    def num_classes(self) -> int:
-        """
-        Return:
-            100
-        """
-        return 1

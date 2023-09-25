@@ -12,10 +12,7 @@ import wandb
 import pl_bolts.datamodules
 from pytorch_lightning.loggers import WandbLogger
 import pytorch_lightning as pl
-from net import Net
-from big_net import Net as BigNet
 from ae_net import AE
-from cifar100datamodule import CIFAR100DataModule
 import numba
 import os
 import random
@@ -23,7 +20,7 @@ import collections
 import _collections_abc
 import collections.abc
 import gc
-from vgg16 import Net as vgg16
+from v_net import Net as vNet
 
 def create_random_images(num_images=200):
     paths = []
@@ -39,7 +36,7 @@ def create_random_images(num_images=200):
 #     train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=2)
 #     return train_loader
 from pytorch_lightning.plugins import DDPPlugin
-def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, fixed_conv=False, val_interval=1, novelty_interval=None, diversity={'type':'absolute', 'pdop':None, 'ldop':None, 'k': None, 'k_strat':True}, scaled=False, devices=1):
+def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, fixed_conv=False, val_interval=1, novelty_interval=None, diversity={'type':'absolute', 'pdop':None, 'ldop':None, 'k': None, 'k_strat':True}):
     # check which dataset and get the classes for it
     gc.collect()
     torch.cuda.empty_cache()
@@ -48,61 +45,23 @@ def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, 
     else:
         classnames = list([x[0] for x in data_module.train_dataloader().dataset.classes])
     # check which network and instantiate it
-    if scaled:
-        total_devices = torch.cuda.device_count()
-        device = torch.device(glob_rank % total_devices)
-        torch.cuda.set_device(device)
-        # torch.distributed.init_process_group(backend='gloo',
-        #                              init_method='env://')
-        print(device)
-        net = vgg16(num_classes=data_module.num_classes, classnames=classnames, diversity=None, lr=lr)
-        net = net.to(device)
-    else:
-        net = Net(num_classes=data_module.num_classes, classnames=classnames, diversity=diversity, lr=lr)
-        # device = torch.device(0)
-        # net = net.to(device)
+    net = vNet(num_classes=data_module.num_classes,classnames=classnames, diversity=diversity, lr=lr, size=len(filters))
     print(net.device)
     if filters is not None:
-        if not scaled:
-            for i in range(len(net.conv_layers)):
-                if i < len(filters):
-                    z = torch.tensor(filters[i])
-                    z = z.type_as(net.conv_layers[i].weight.data)
-                    # z.to(net.device)
-                    net.conv_layers[i].weight.data = z
-                    # print(net.conv_layers[i].weight.data == filters[i].to(device))
-                if fixed_conv:
-                    for param in net.conv_layers[i].parameters():
-                        param.requires_grad = False
-                    for param in net.BatchNorm1.parameters():
-                        param.requires_grad = False
-                    for param in net.BatchNorm2.parameters():
-                        param.requires_grad = False
-                    for param in net.BatchNorm3.parameters():
-                        param.requires_grad = False
-        elif scaled:
-            count = 0
-            for m in net.model.modules():
-                if isinstance(m, (torch.nn.Conv2d)):
-                    z = torch.tensor(filters[count])
-                    z = z.type_as(m.weight.data)
-                    m.weight.data = z
-                    count += 1
-                if fixed_conv:
-                    if isinstance(m, (torch.nn.Conv2d, torch.nn.BatchNorm2d)):
-                        for param in m.parameters():
-                            param.requires_grad=False
+        for i in range(len(net.conv_layers)):
+            if i < len(filters):
+                z = torch.tensor(filters[i])
+                z = z.type_as(net.conv_layers[i].weight.data)
+                # z.to(net.device)
+                net.conv_layers[i].weight.data = z
+                # print(net.conv_layers[i].weight.data == filters[i].to(device))
 
     if save_path is None:
         save_path = PATH
-    if not scaled:
-        wandb_logger = WandbLogger(log_model=True)
-    else:
-        wandb_logger = WandbLogger(log_model=True)
-    print((torch.cuda.device_count()))
+    wandb_logger = WandbLogger(log_model=True)
     # trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu", gpus=torch.cuda.device_count(), strategy='dp')
-    if scaled:
-        trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu", devices=devices, plugins=DDPPlugin(find_unused_parameters=False))
+    if torch.cuda.device_count() > 1:
+        trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu", devices=torch.cuda.device_count(), plugins=DDPPlugin(find_unused_parameters=False))
     else:
         trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu")
     wandb_logger.watch(net, log="all")
@@ -520,7 +479,8 @@ def run(seed=True, rank=0):
     os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:300"
     if glob_rank == 0:
     # if glob_rank > -1:
-        force_cudnn_initialization()
+        if torch.cuda.is_available():
+            force_cudnn_initialization()
         wandb.init(project="vnet_diverse_feature_detectors") # group='DDP'
 
 

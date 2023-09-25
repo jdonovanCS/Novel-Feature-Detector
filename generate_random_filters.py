@@ -6,13 +6,14 @@ import numpy as np
 import torch
 import argparse
 from model import Model
+import re
 
 
 parser=argparse.ArgumentParser(description="Process some input files")
 parser.add_argument('--experiment_name', help='experiment name for saving and data related to filters generated', default='')
 parser.add_argument('--population_size', help='number of filters to generate', type=int, default=50)
 parser.add_argument('--technique', help='uniform, normal, or gram-schmidt technique', type=str, default='uniform')
-parser.add_argument('--scaled', help="if wanting to generate random filters for VGG architecture use this option", action="store_true")
+parser.add_argument('--network', help="if wanting to generate random filters for VGG architecture use this option", default='conv6')
 # parser.add_argument('--batch_size', help='Number of images to use for novelty metric, only 1 batch used', default=64, type=int)
 # parser.add_argument('--dataset', help='which dataset should be used for novelty metric, choices are: random, cifar-10', default='random')
 args = parser.parse_args()
@@ -43,10 +44,10 @@ def run():
 
     for i in tqdm(range(population_size)): #while len(population) < population_size:
         model = Model()
-        if args.scaled:
+        if args.network == 'vgg16':
             net = helper.BigNet()
         else:
-            net = helper.Net()
+            net = helper.vNet(size=int(re.findall(r'\d+', args.network)[0]))
         # model.fitness =  net.get_fitness(net_input)
         if args.technique == 'gram-schmidt':
             model.filters = net.get_filters(numpy=True)

@@ -23,6 +23,7 @@ import cProfile
 import pstats
 import shortuuid
 import copy
+import re
 
 
 # TODO: Why not use gradient descent since fitness function is differentiable. Should probably compare to that.
@@ -34,7 +35,7 @@ parser=argparse.ArgumentParser(description="Process some inputs")
 parser.add_argument('--experiment_name', help='experiment name for saving data related to training')
 parser.add_argument('--evo_num_runs', type=int, help='Number of runs used in evolution', default=5)
 
-parser.add_argument('--scaled', action='store_true', help="Use if wanting to evolved conv layers for larger VGG-16 architecture")
+parser.add_argument('--network', help="Specify which architecture to train", default='conv6', type=str)
 
 # evolution params
 parser.add_argument('--evo_gens', type=int, help="number of generations used in evolving solutions", default=50)
@@ -66,7 +67,10 @@ parser.add_argument('--profile', help='Profile validation epoch during evolution
 parser.add_argument('--num_workers', help='Num workers to use to load data module', default=np.inf, type=int)
 # realized the ea is actually rewriting parents and putting them back in the pool instead of just creating modified children.
 # Use this param to undo that and operate as intended
-parser.add_argument('--as_intended', help='use if wanting to operate the ea as intended instead of the bugged method', default=False, action='store_true')
+parser.add_argument('--disallow_multi_mutation', help='use if wanting to operate the ea as intended instead of the bugged method', default=False, action='store_true')
+# check for convergence, if set to true, run num needs to set to 1
+parser.add_argument('--check_convergence', help='check for when algorithm converges, runs needs to be set to 1', default=False, action='store_true')
+
 
 args = parser.parse_args()
 
@@ -116,6 +120,7 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
     history: a list of `Model` instances, representing all the models computed
         during the evolution experiment.
     """
+    stagnant = 0
     population = collections.deque()
     solutions_over_time = []
     fitness_over_time = []
@@ -128,10 +133,10 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
     print("\nInitializing")
     for i in tqdm(range(population_size)): #while len(population) < population_size:
         model = Model()
-        if args.scaled:
+        if args.network.lower() == "vgg16":
             net = helper.BigNet(num_classes=len(classnames), classnames=classnames, diversity={"type": args.diversity_type, "pdop": args.pairwise_diversity_op, "ldop": args.layerwise_diversity_op, "k": args.k, "k_strat": args.k_strat})
         else:
-            net = helper.Net(num_classes=len(classnames), classnames=classnames, diversity={"type": args.diversity_type, "pdop": args.pairwise_diversity_op, "ldop":args.layerwise_diversity_op, 'k': args.k, 'k_strat': args.k_strat})
+            net = helper.vNet(num_classes=len(classnames), classnames=classnames, diversity={"type": args.diversity_type, "pdop": args.pairwise_diversity_op, "ldop":args.layerwise_diversity_op, 'k': args.k, 'k_strat': args.k_strat}, size=int(re.findall(r'\d+', args.network)[0]))
         if args.rand_tech == 'normal':
             helper.normalize(net)
         model.filters = net.get_filters()
@@ -165,7 +170,7 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
         # Create the child model and store it.
         for parent in parents:
             child = Model()
-            if args.as_intended:
+            if args.disallow_multi_mutation:
                 child.filters = mutate(copy.deepcopy(parent.filters))
             else:
                 child.filters = mutate(parent.filters)
@@ -188,6 +193,9 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
         solutions_over_time.append((copy.deepcopy(best_solution)))
         helper.save_npy('output/' + experiment_name + '/solutions_over_time_current_{}_{}.npy'.format(evolution_type, uniqueID), solutions_over_time, index=i)
         helper.wandb.log({'gen': i, 'best_individual_fitness': best_fitness})
+        if args.check_convergence:
+            if len(set(fitness_over_time[-5:])) == 1 and i > 4:
+                exit()
         # helper.wandb.log({'gen': i, 'best_individual_filters': best_solution})
         
     return solutions_over_time, np.array(fitness_over_time)
@@ -213,7 +221,7 @@ def run():
     helper.config['k_strat'] =  args.k_strat
     helper.config['experiment_type'] = 'evolution'
     helper.config['rand_tech'] = args.rand_tech
-    helper.config['scaled'] = args.scaled
+    helper.config['network'] = args.network
     helper.update_config()
 
     # random_image_paths = helper.create_random_images(64)
@@ -301,7 +309,7 @@ def run():
             helper.config['k_strat'] =  args.k_strat
             helper.config['experiment_type'] = 'evolution'
             helper.config['rand_tech'] = args.rand_tech
-            helper.config['scaled'] = args.scaled
+            helper.config['network'] = args.network
             helper.update_config()
 
     with open('output/' + experiment_name + '/solutions_over_time.pickle', 'wb') as f:
