@@ -15,12 +15,10 @@ import pytorch_lightning as pl
 from ae_net import AE
 import numba
 import os
-import random
-import collections
-import _collections_abc
-import collections.abc
 import gc
 from v_net import Net as vNet
+from pytorch_lightning.callbacks.early_stopping import EarlyStopping
+
 
 def create_random_images(num_images=200):
     paths = []
@@ -50,10 +48,13 @@ def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, 
     if filters is not None:
         for i in range(len(net.conv_layers)):
             if i < len(filters):
-                z = torch.tensor(filters[i])
+                z = torch.tensor(filters[i][0])
                 z = z.type_as(net.conv_layers[i].weight.data)
                 # z.to(net.device)
                 net.conv_layers[i].weight.data = z
+                z = torch.tensor(filters[i][1])
+                z = z.type_as(net.conv_layers[i].bias.data)
+                net.conv_layers[i].bias.data = z
                 # print(net.conv_layers[i].weight.data == filters[i].to(device))
 
     if save_path is None:
@@ -61,11 +62,12 @@ def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, 
     wandb_logger = WandbLogger(log_model=True)
     # trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu", gpus=torch.cuda.device_count(), strategy='dp')
     if torch.cuda.device_count() > 1:
-        trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu", devices=torch.cuda.device_count(), plugins=DDPPlugin(find_unused_parameters=False))
+        trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, val_check_interval=val_interval, accelerator="gpu", callbacks=[EarlyStopping(monitor='val_loss_epoch', patience=4)], devices=torch.cuda.device_count(), plugins=DDPPlugin(find_unused_parameters=False))
     else:
-        trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu")
+        trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, val_check_interval=val_interval, accelerator="gpu", callbacks=[EarlyStopping(monitor='val_loss_epoch', patience=4)])
     wandb_logger.watch(net, log="all")
     torch.cuda.empty_cache()
+    trainer.validate(net, datamodule=data_module)
     trainer.fit(net, datamodule=data_module)
 
     # torch.save(net.state_dict(), save_path)

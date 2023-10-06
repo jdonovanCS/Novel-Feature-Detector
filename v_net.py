@@ -6,7 +6,6 @@ import torch.nn.functional as F
 import numpy as np
 import helper_hpc as helper
 import torchmetrics
-
 # DEFINE a CONV NN
 
 class Net(pl.LightningModule):
@@ -155,12 +154,13 @@ class Net(pl.LightningModule):
         
     def set_filters(self, filters):
         for i in range(len(filters)):
-            self.conv_layers[i].weight.data = filters[i]
+            self.conv_layers[i].weight.data = filters[i][0]
+            self.conv_layers[i].bias.data = filters[i][1]
     
     def get_filters(self, numpy=False):
         if numpy:
-            return [m.weight.data.detach().cpu().numpy() for m in self.conv_layers]
-        return [m.weight.data.detach().cpu() for m in self.conv_layers]
+            return [(m.weight.data.detach().cpu().numpy(), m.bias.data.detach().cup().numpy()) for m in self.conv_layers]
+        return [(m.weight.data.detach().cpu(), m.bias.data.detach().cpu()) for m in self.conv_layers]
 
     def get_features(self, numpy=False):
         if numpy:

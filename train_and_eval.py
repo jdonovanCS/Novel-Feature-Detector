@@ -22,9 +22,10 @@ parser.add_argument('--local_rank', metavar="N", help='if using ddp and multiple
 # parser.add_argument('--rand_norm', action='store_true')
 parser.add_argument('--gram-schmidt', help='gram-schmidt used to orthonormalize filters', action='store_true')
 parser.add_argument('--novelty_interval', help='How often should a novelty score be captured during training?', default=0)
-parser.add_argument('--test_accuracy_interval', help='How often should test accuracy be assessed during training?', default=4)
+parser.add_argument('--test_accuracy_interval', help='How often should test accuracy be assessed during training?', default=4.0)
 parser.add_argument('--batch_size', help="batch size for training", type=int, default=64)
-parser.add_argument('--lr', help='Learning rate for training', default=.001, type=float)
+parser.add_argument('--lr', help='Learning rate for training', default=.0002, type=float)
+parser.add_argument('--shuffle', help='shuffle training data when training', default=False, action='store_true')
 
 # used to link to evolution
 parser.add_argument('--experiment_name', help='experiment name for saving data related to training')
@@ -97,7 +98,7 @@ def run():
 
 
     # get loader for train and test images and classes
-    data_module = helper.get_data_module(args.dataset, args.batch_size, args.num_workers)
+    data_module = helper.get_data_module(args.dataset, args.batch_size, args.num_workers, shuffle=args.shuffle)
     data_module.prepare_data()
     data_module.setup()
 
@@ -148,7 +149,7 @@ def run():
             helper.update_config()
             save_path = "trained_models/trained/conv{}_e{}_n{}_r{}_g{}.pth".format(not fixed_conv, experiment_name, name, run_num, i)
             print('Training and Evaluating: {} Gen: {} Run: {}'.format(name, i, run_num))
-            record_progress = helper.train_network(data_module=data_module, filters=stored_filters[run_num][i], epochs=epochs, lr=args.lr, save_path=save_path, fixed_conv=fixed_conv, novelty_interval=int(args.novelty_interval), val_interval=int(args.test_accuracy_interval), diversity=diversity)
+            record_progress = helper.train_network(data_module=data_module, filters=stored_filters[run_num][i], epochs=epochs, lr=args.lr, save_path=save_path, fixed_conv=fixed_conv, novelty_interval=int(args.novelty_interval), val_interval=float(args.test_accuracy_interval), diversity=diversity)
             helper.run(seed=False, rank=args.local_rank if args.local_rank > 0 else 0)
             helper.config['dataset'] = args.dataset.lower()
             helper.config['batch_size'] = args.batch_size

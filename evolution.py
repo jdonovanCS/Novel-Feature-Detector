@@ -78,10 +78,10 @@ def mutate(filters):
     # select a single 3x3 filter in one of the convolutional layers and replace it with a random new filter.
     selected_layer = random.randint(0,len(filters)-1)
     selected_dims = []
-    for v in list(filters[selected_layer].shape)[0:2]:
+    for v in list(filters[selected_layer][0].shape)[0:2]:
         selected_dims.append(random.randint(0,v-1))
     
-    selected_filter = filters[selected_layer][selected_dims[0]][selected_dims[1]]
+    selected_filter = filters[selected_layer][0][selected_dims[0]][selected_dims[1]]
     
     # create new random filter to replace the selected filter
     # selected_filter = torch.tensor(np.random.rand(3,3), device=helper.device)
@@ -95,7 +95,7 @@ def mutate(filters):
     # normalize just the values that are outside of -1, 1 range
     selected_filter[(selected_filter > 1) | (selected_filter < -1)] /= torch.amax(torch.absolute(selected_filter))
     
-    filters[selected_layer][selected_dims[0]][selected_dims[1]] = selected_filter
+    filters[selected_layer][0][selected_dims[0]][selected_dims[1]] = selected_filter
     return filters
 
 def profile_validation_epoch(net):
