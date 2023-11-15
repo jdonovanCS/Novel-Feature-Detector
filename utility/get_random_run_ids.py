@@ -9,7 +9,7 @@ import wandb
 
 # run_id = args.run_id
 api = wandb.Api()
-runs = api.runs(path="jdonovan/novel-feature-detectors", filters={"config.experiment_name": "random normal", "config.fixed_conv": False, "config.dataset": "cifar10"})#, "config.State": "Crashed", "config.evo": 0, "config.fixed_conv": 0})
+runs = api.runs(path="jdonovan/novel-feature-detectors", filters={"config.experiment_name": {"$in": ["relative diversity", "absolute diversity", "cosine diversity"]}, "config.experiment_type": "evolution"})#"config.fixed_conv": False, "config.dataset": "cifar10"})#, "config.State": "Crashed", "config.evo": 0, "config.fixed_conv": 0})
 
 # data = []
 # with open('artifacts/run-um0c4jr0-history-v0/0000.csv', newline='') as csvfile:
@@ -31,14 +31,14 @@ runs = api.runs(path="jdonovan/novel-feature-detectors", filters={"config.experi
 # artifact = api.artifact('jdonovan/novel-feature-detectors/run-3doqm1v1-history:v0', type='wandb-history')
 # artifact.delete()
 
-
+print("{} runs found".format(len(runs)))
 for run in runs:
     print(run.id)
-    print(run.State)
-    if run.State == 'crashed' or run.State == 'failed':
-        print('deleting', run.id)
-        run.delete()
-    # print([type(row['val_novelty']) for row in history])
+    # print(run.State)
+    # if run.State == 'crashed' or run.State == 'failed':
+    #     print('deleting', run.id)
+    #     run.delete()
+    # # print([type(row['val_novelty']) for row in history])
     # values = [row['val_novelty'] for row in history]
     # if np.mean(values) < .2:
     #     values = np.array(values)*6

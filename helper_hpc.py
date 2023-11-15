@@ -523,7 +523,8 @@ def run(seed=True, rank=0):
     os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:300"
     if glob_rank == 0:
     # if glob_rank > -1:
-        force_cudnn_initialization()
+        if torch.cuda.is_available():
+            force_cudnn_initialization()
         wandb.init(project="novel-feature-detectors") # group='DDP'
 
 
