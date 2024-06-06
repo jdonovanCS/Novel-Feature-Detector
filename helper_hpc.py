@@ -433,7 +433,7 @@ def diversity_constant(acts):
     return sum(constants)
 
 
-def plot_mean_and_bootstrapped_ci_multiple(input_data = None, title = 'overall', name = "change this", x_label = "x", y_label = "y", save_name="", compute_CI=True, maximum_possible=None, show=None, sample_interval=None):
+def plot_mean_and_bootstrapped_ci_multiple(input_data = None, title = 'overall', name = "change this", x_label = "x", y_label = "y", x_mult=1, y_mult=1, save_name="", compute_CI=True, maximum_possible=None, show=None, sample_interval=None, legend_loc=None, alpha=1, y=None):
     """ 
      
     parameters:  
@@ -471,13 +471,17 @@ def plot_mean_and_bootstrapped_ci_multiple(input_data = None, title = 'overall',
         low = np.array(low) 
         high = np.array(high) 
 
-        y = range(0, generations)
+        if type(y) == type(None):
+            y = range(0, generations)
         if (sample_interval != None):
             y = np.array(y)*sample_interval 
-        ax.plot(y, mean_values, label=name[i])
+        ax.plot(y, mean_values, label=name[i], alpha=alpha)
         if compute_CI:
             ax.fill_between(y, high, low, alpha=.2) 
-        ax.legend()
+        if legend_loc is not None:
+            ax.legend(bbox_to_anchor=legend_loc['bbox'], loc=legend_loc['loc'], ncol=1)
+        else:
+            ax.legend()
     
     if maximum_possible:
         ax.hlines(y=maximum_possible, xmin=0, xmax=generations, linewidth=2, color='r', linestyle='--', label='best poss. acc.')

@@ -43,6 +43,8 @@ parser.add_argument('--evo_tourney_size', type=int, help='Size of tournaments in
 parser.add_argument('--evo_num_winners', type=int, help='Number of winners in tournament in evolutionary algorithm', default=2)
 parser.add_argument('--evo_num_children', type=int, help='Number of children in evolutionary algorithm', default=20)
 parser.add_argument('--rand_tech', help='which random technique is used to initialize network weights', type=str, default='uniform')
+parser.add_argument('--mr', help='mutation rate', default=1., type=float)
+parser.add_argument('--broad_mutation', help='mutate entire individual by small amount, versus a single filter', default=False, action='store_true')
 
 # fitness params
 parser.add_argument('--evo_dataset_for_novelty', help='Dataset used for novelty computation during evolution and training', default='random')
@@ -74,28 +76,43 @@ parser.add_argument('--check_convergence', help='check for when algorithm conver
 args = parser.parse_args()
 
 def mutate(filters):
-    # select a single 3x3 filter in one of the convolutional layers and replace it with a random new filter.
-    selected_layer = random.randint(0,len(filters)-1)
-    selected_dims = []
-    for v in list(filters[selected_layer].shape)[0:2]:
-        selected_dims.append(random.randint(0,v-1))
-    
-    selected_filter = filters[selected_layer][selected_dims[0]][selected_dims[1]]
-    
-    # create new random filter to replace the selected filter
-    # selected_filter = torch.tensor(np.random.rand(3,3), device=helper.device)
-    
-    # modify the entire layer / filters by a small amount
-    selected_filter += torch.rand(selected_filter.shape[0], selected_filter.shape[1])*2.0-1.0
-    
-    # normalize entire filter so that values are between -1 and 1
-    # selected_filter = (selected_filter/np.linalg.norm(selected_filter))*2
-    
-    # normalize just the values that are outside of -1, 1 range
-    selected_filter[(selected_filter > 1) | (selected_filter < -1)] /= torch.amax(torch.absolute(selected_filter))
-    
-    filters[selected_layer][selected_dims[0]][selected_dims[1]] = selected_filter
-    return filters
+
+    if not args.broad_mutation:
+        # select a single 3x3 filter in one of the convolutional layers and replace it with a random new filter.
+        selected_layer = random.randint(0,len(filters)-1)
+        selected_dims = []
+        for v in list(filters[selected_layer].shape)[0:2]:
+            selected_dims.append(random.randint(0,v-1))
+        
+        selected_filter = filters[selected_layer][selected_dims[0]][selected_dims[1]]
+        
+        # create new random filter to replace the selected filter
+        # selected_filter = torch.tensor(np.random.rand(3,3), device=helper.device)
+        
+        # modify the entire layer / filters by a small amount
+        # TODO: play around with lr multiplier on noise
+        # TODO: implement broader mutation with low learning rate
+        selected_filter += (torch.rand(selected_filter.shape[0], selected_filter.shape[1])*2.0-1.0)*args.mr
+
+        # normalize entire filter so that values are between -1 and 1
+        # selected_filter = (selected_filter/np.linalg.norm(selected_filter))*2
+        
+        # normalize just the values that are outside of -1, 1 range
+        selected_filter[(selected_filter > 1) | (selected_filter < -1)] /= torch.amax(torch.absolute(selected_filter))
+        
+        filters[selected_layer][selected_dims[0]][selected_dims[1]] = selected_filter
+        return filters
+    else:
+        for i in range(len(filters)):
+            mut = (torch.rand(filters[i].shape[0], filters[i].shape[1], filters[i].shape[2], filters[i].shape[3])*2-1.0)*args.mr
+            print(filters[i].shape)
+            print(mut.shape)
+            filters[i] += mut
+            divisor = torch.amax(torch.absolute(filters[i]))
+            # condition = filters[i][(filters[i] > 1) | (filters[i] < -1)]
+            # filters[i].where(condition, filters[i], filters[i] / divisor)
+            filters[i][(filters[i] > 1) | (filters[i] < -1)] /= divisor
+        return filters
 
 def profile_validation_epoch(net):
     prof = cProfile.Profile()
@@ -308,7 +325,7 @@ def run():
             helper.config['k_strat'] =  args.k_strat
             helper.config['experiment_type'] = 'evolution'
             helper.config['rand_tech'] = args.rand_tech
-            helper.config['scaled'] = args.scaled
+            helper.config['network'] = args.network
             helper.update_config()
 
     with open('output/' + experiment_name + '/solutions_over_time.pickle', 'wb') as f:

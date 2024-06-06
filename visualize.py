@@ -50,8 +50,9 @@ def run():
             # all_filters[name+str(9)] = stored_filters[0][9]
             all_filters[name+str(49)] = stored_filters[0][49]
             # if i == len(stored_filters[0])-1:
-            with open(name +'/fitness_over_time.txt') as f:
-                print(f.read())
+            if os.path.isfile(name+'/fitness_over_time.txt'):
+                with open(name +'/fitness_over_time.txt') as f:
+                    print(f.read())
 
     # get data to push into network
     data_module_eval = helper.get_data_module(args.dataset_eval, batch_size=64, workers=2)
@@ -84,25 +85,28 @@ def run():
             plt.imshow(np.transpose(x[0], (1, 2, 0)))
             plt.show()
 
-    for filename in args.trained_models:
-        net = net.load_from_checkpoint(filename)
-        name = filename.split("trained")[-1].split('novel-feature-detectors')[0]
-        all_filters[name] = net.get_filters()
+    if args.trained_models:
+        for filename in args.trained_models:
+            net = net.load_from_checkpoint(filename)
+            name = filename.split("trained")[-1].split('novel-feature-detectors')[0]
+            all_filters[name] = net.get_filters()
 
 
     # visualize filters
+    first3 = {}
     for k, filters in all_filters.items():
-        # continue
+        continue
         print(k)
         # net.set_filters(filters)
         # trainer.validate(net, dataloaders=data_module.val_dataloader(), verbose=False)
         # print('diversity score:', net.avg_novelty)
             
-        for layer in filters:
-            # if layer.shape[1] > 3:
-            #     continue
+        for l, layer in enumerate(filters):
+            if layer.shape[1] > 3:
+                continue
+            first3[k+str(l)] = []
             print(layer.shape)
-            plt.figure(figsize=(50,4))
+            plt.figure(figsize=(36,3))
             for i in range(len(layer)):
                 for j in range(len(layer[i])):
                     values = np.array(255*((layer[i][j] + 1) /2)).astype(np.int64)
@@ -110,10 +114,12 @@ def run():
                     cols = len(layer)
                     plt.subplot(rows, cols, i*len(layer[0]) + (j+1))
                     plt.imshow(values, cmap="gray", vmin = 0, vmax = 255,interpolation='none')
+                    if i<3 and j == 0:
+                        first3[k+str(l)].append(values[::])
+                    # plt.imshow(values, cmap="gray",interpolation='none')
             plt.setp(plt.gcf().get_axes(), xticks=[], yticks=[])
             plt.tight_layout()
             plt.show()
-    
     
         # visualize activations
         for f in range(len(filters)):
@@ -124,13 +130,28 @@ def run():
         #     print('Matches')
         # trainer.validate(net, dataloaders=data_module_eval.val_dataloader(), verbose=False)
         # print('diversity score:', net.avg_novelty)
+    
+    # fig, ax = plt.subplots(3, len(first3.keys()), figsize=(len(first3.keys()),3))
+    # print(len(first3.keys()))
+    # for i, k in enumerate(first3.keys()):
+    #     print(len(first3[k]))
+    #     for j, vals in enumerate(first3[k]):
+    #         ax[j, i].imshow(vals, cmap="gray", vmin=0, vmax=255, interpolation='none')
+    #         if j == 0:
+    #             ax[j,i].set_title(k)
+    # plt.setp(plt.gcf().get_axes(), xticks=[], yticks=[])
+    # plt.tight_layout()
+    # plt.show()
 
-    min_for_layer = [np.inf for i in range(6)]
-    max_for_layer = [-np.inf for i in range(6)]
-    min_for_layer_for_exp = {k: [np.inf for i in range(6)] for k, filters in all_filters.items()}
-    max_for_layer_for_exp = {k: [-np.inf for i in range(6)] for k, filters in all_filters.items()}
+    # first3={}
+    # min_for_layer = [np.inf for i in range(6)]
+    # max_for_layer = [-np.inf for i in range(6)]
+    # min_for_layer_for_exp = {k: [np.inf for i in range(6)] for k, filters in all_filters.items()}
+    # max_for_layer_for_exp = {k: [-np.inf for i in range(6)] for k, filters in all_filters.items()}
+    
+    
     for k, filters in all_filters.items():
-        # continue
+        continue
         print(k)
 
         if args.network.lower() == 'vgg16':
@@ -153,6 +174,9 @@ def run():
         l = []
         for index, layer in enumerate(activations): #layers
             # plt.figure()
+            if index > 0:
+                continue
+            first3[k+str(index)] = []
             if type(activations[layer][0]) != type(np.zeros((1))):
                 activations[layer][0] = activations[layer][0].detach().cpu().numpy()
             for image in range (len(activations[layer][0])): # images in batch
@@ -162,24 +186,40 @@ def run():
                     if np.max(values) > max_for_layer[index]: max_for_layer[index] = np.max(values)
                     if np.min(values) < min_for_layer_for_exp[k][index]: min_for_layer_for_exp[k][index] = np.min(values)
                     if np.max(values) > max_for_layer_for_exp[k][index]: max_for_layer_for_exp[k][index] = np.max(values)
+                    if image==0 and channel < 3:
+                        first3[k+str(index)].append(values[::])
                     rows = cols = int(np.ceil(np.sqrt(len(activations[layer][0][image]))))
                     plt.subplot(rows, cols, channel+1)
-                    plt.imshow(values, vmin=np.min(values), vmax=np.max(values), interpolation='none')
+                    # plt.imshow(values, vmin=np.min(values), vmax=np.max(values), interpolation='none')
+                    plt.imshow(values, vmin=-19, vmax=19, interpolation='none')
                 plt.setp(plt.gcf().get_axes(), xticks=[], yticks=[])
                 plt.show()
-    print(min_for_layer_for_exp, max_for_layer_for_exp, min_for_layer, max_for_layer)
+    # print(min_for_layer_for_exp, max_for_layer_for_exp, min_for_layer, max_for_layer)
     
+    # fig, ax = plt.subplots(3, len(first3.keys()), figsize=(len(first3.keys()),3))
+    # print(len(first3.keys()))
+    # for i, k in enumerate(first3.keys()):
+    #     print(len(first3[k]))
+    #     for j, vals in enumerate(first3[k]):
+    #         ax[j, i].imshow(vals, cmap='gray', vmin=-19, vmax=16, interpolation='none')
+    #         if j == 0:
+    #             ax[j,i].set_title(k)
+    # plt.setp(plt.gcf().get_axes(), xticks=[], yticks=[])
+    # plt.tight_layout()
+    # plt.show()
+
+
     # weight dist
     # load filters from trained models?
     from scipy.interpolate import UnivariateSpline
     from scipy.stats.kde import gaussian_kde 
     for k, filters in all_filters.items():
-        # continue
+        continue
         print(k)
         filters = [filters]
         num_runs = len(filters)
         pdf = 0
-        fig, axes = plt.subplots(len(filters[0]))
+        fig, axes = plt.subplots(len(filters[0]), figsize=(25, 15))
         for layer in range(len(filters[0])):
             pdf = mean = std = 0
             # divisor = max(abs(filters[0][layer].flatten()))
@@ -240,11 +280,52 @@ def run():
             # print('percentage of weights outside of the range: -{}, {}: {}'.format(divisor, divisor, perc_outside))
             # print('percentage of weights inside of the range: -{}, {}: {}'.format(divisor, divisor, perc_inside))
             print('mean: {} \t std: {}'.format(mean, std))
+        plt.tight_layout()
         plt.show()
+    from scipy.interpolate import make_interp_spline, BSpline
+    fk = list(all_filters.keys())[0]
+    input_data = []
+    for layer in range(len(all_filters[fk])):
+        continue
+        fig, axes = plt.subplots(len(all_filters.keys()), figsize=(25,15))
+        i = 0
+        for k, filters in all_filters.items():
+            input_data.append([])
+            filters = [filters]
+            num_runs = len(filters)
+            pdf = mean = std = 0
+            # divisor = max(abs(filters[0][layer].flatten()))
+            multiplier = max(abs(filters[0][layer].flatten()))
+            num_bins_ = int(500*multiplier)
+            num_outside = 0
+            for run_num in range(num_runs):
+                filters_local=filters[run_num]
+                num_outside += sum(abs(filters_local[layer].flatten()))
+
+                # getting data of the histogram
+                count, bins_count = np.histogram(filters_local[layer].flatten(), range=[-1, 1], bins=100, normed=True)
+                
+                # verify sum to 1
+                widths = bins_count[1:] - bins_count[:-1]
+                assert sum(count * widths) > .99 and sum(count * widths) < 1.01
+
+                # finding the PDF of the histogram using count values
+                pdf = count / sum(count)
+
+                mean = filters_local[layer].flatten().mean()
+                std = filters_local[layer].flatten().std()
+
+                input_data[i].append(pdf)
+                    
+            i+=1
+        
+        plt.rcParams.update({'font.size': 22, "figure.figsize": (7, 6)})
+        helper.plot_mean_and_bootstrapped_ci_multiple([np.transpose(x) for x in input_data], '', ['Relative', 'Absolute', 'Cosine', 'Autoencoder', 'Random Normal', 'Random Uniform'], 'Weight', 'Percentage', show=True, alpha=.5, y=bins_count[1:])
+
 
 
     for k, filters in all_filters.items():
-        # continue
+        continue
         print(k)
         if args.network.lower() == 'vgg16':
             net = BigNet(num_classes=len(classnames), classnames=classnames, diversity = {'type': 'relative', 'ldop':'w_mean', 'pdop':'mean', 'k': -1, 'k_strat': 'closest'})
@@ -264,7 +345,7 @@ def run():
         activations = [list(activations.values())]
         num_runs = len(activations)
         pdf = 0
-        fig, axes = plt.subplots(len(activations[0]))
+        fig, axes = plt.subplots(len(activations[0]), figsize=(25,15))
         for layer in range(len(activations[0])):
             pdf = mean = std = 0
             # divisor = max(abs(filters[0][layer].flatten()))
@@ -308,6 +389,67 @@ def run():
             
             print('mean: {} \t std: {}'.format(mean, std))
         plt.show()
+
+    fk = list(all_filters.keys())[0]
+    input_data = []
+    for layer in range(len(all_filters[fk])):
+        # continue
+        i = 0
+        for k, filters in all_filters.items():
+            print(k)
+            input_data.append([])
+            if args.network.lower() == 'vgg16':
+                net = BigNet(num_classes=len(classnames), classnames=classnames, diversity = {'type': 'relative', 'ldop':'w_mean', 'pdop':'mean', 'k': -1, 'k_strat': 'closest'})
+            else:
+                net = Net(num_classes=len(classnames), classnames=classnames, diversity={'type': 'relative', 'ldop':'w_mean', 'pdop':'mean', 'k': -1, 'k_strat': 'closest'})
+            print(type(filters[0]), type(np.array([])))
+            if type(filters[0]) == type(np.array([])):
+                filters_copy = copy.deepcopy([torch.from_numpy(f) for f in filters])
+            else:
+                filters_copy = copy.deepcopy(filters)
+            net.set_filters(filters_copy)
+
+            with torch.no_grad():
+                x, y = batch
+                logits = net.forward(x, get_activations=True)
+                
+                # torch.save(x, 'tensor.pt')
+                # x = torch.load('tensor.pt')
+                net.forward(x, get_activations=True)
+                activations = net.get_activations()
+
+            activations = [list(activations.values())]
+            num_runs = len(activations)
+            pdf = mean = std = 0
+            # divisor = max(abs(filters[0][layer].flatten()))
+            # multiplier = max(abs(filters[0][layer].flatten()))
+            # num_bins_ = int(500*multiplier)
+            num_outside = 0
+            for run_num in range(num_runs):
+                activations_local=activations[run_num]
+                num_outside += sum(abs(activations_local[layer][0].flatten()))
+
+                # getting data of the histogram
+                count, bins_count = np.histogram(activations_local[layer][0].flatten(), range=[-20, 20], bins=100, normed=True)
+                
+                # verify sum to 1
+                widths = bins_count[1:] - bins_count[:-1]
+                assert sum(count * widths) > .99 and sum(count * widths) < 1.01
+
+                # finding the PDF of the histogram using count values
+                pdf = count / sum(count)
+
+                mean = activations_local[layer][0].flatten().mean()
+                std = activations_local[layer][0].flatten().std()
+
+                input_data[i].append(pdf)
+                    
+            i+=1
+        
+        plt.rcParams.update({'font.size': 22, "figure.figsize": (7, 6)})
+        helper.plot_mean_and_bootstrapped_ci_multiple([np.transpose(x) for x in input_data], '', ['Relative', 'Absolute', 'Cosine', 'Autoencoder', 'Random Normal', 'Random Uniform'], 'Feature Map Value', 'Percentage', show=True, alpha=.5, y=bins_count[1:])
+
+
     
 
 
