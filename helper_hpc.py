@@ -433,6 +433,46 @@ def diversity_constant(acts):
     return sum(constants)
 
 
+def mutate(filters, broad_mutation=False, mr=1.0):
+
+    if not broad_mutation:
+        # select a single 3x3 filter in one of the convolutional layers and replace it with a random new filter.
+        selected_layer = random.randint(0,len(filters)-1)
+        selected_dims = []
+        for v in list(filters[selected_layer].shape)[0:2]:
+            selected_dims.append(random.randint(0,v-1))
+        
+        selected_filter = filters[selected_layer][selected_dims[0]][selected_dims[1]]
+        
+        # create new random filter to replace the selected filter
+        # selected_filter = torch.tensor(np.random.rand(3,3), device=helper.device)
+        
+        # modify the entire layer / filters by a small amount
+        # TODO: play around with lr multiplier on noise
+        # TODO: implement broader mutation with low learning rate
+        selected_filter += (torch.rand(selected_filter.shape[0], selected_filter.shape[1])*2.0-1.0)*mr
+
+        # normalize entire filter so that values are between -1 and 1
+        # selected_filter = (selected_filter/np.linalg.norm(selected_filter))*2
+        
+        # normalize just the values that are outside of -1, 1 range
+        selected_filter[(selected_filter > 1) | (selected_filter < -1)] /= torch.amax(torch.absolute(selected_filter))
+        
+        filters[selected_layer][selected_dims[0]][selected_dims[1]] = selected_filter
+        return filters
+    else:
+        for i in range(len(filters)):
+            mut = (torch.rand(filters[i].shape[0], filters[i].shape[1], filters[i].shape[2], filters[i].shape[3])*2-1.0)*mr
+            print(filters[i].shape)
+            print(mut.shape)
+            filters[i] += mut
+            divisor = torch.amax(torch.absolute(filters[i]))
+            # condition = filters[i][(filters[i] > 1) | (filters[i] < -1)]
+            # filters[i].where(condition, filters[i], filters[i] / divisor)
+            filters[i][(filters[i] > 1) | (filters[i] < -1)] /= divisor
+        return filters
+
+
 def plot_mean_and_bootstrapped_ci_multiple(input_data = None, title = 'overall', name = "change this", x_label = "x", y_label = "y", x_mult=1, y_mult=1, save_name="", compute_CI=True, maximum_possible=None, show=None, sample_interval=None, legend_loc=None, alpha=1, y=None):
     """ 
      

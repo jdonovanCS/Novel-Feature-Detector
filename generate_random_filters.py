@@ -6,12 +6,13 @@ import numpy as np
 import torch
 import argparse
 from model import Model
+import copy
 
 
 parser=argparse.ArgumentParser(description="Process some input files")
 parser.add_argument('--experiment_name', help='experiment name for saving and data related to filters generated', default='')
 parser.add_argument('--population_size', help='number of filters to generate', type=int, default=50)
-parser.add_argument('--technique', help='uniform, normal, or gram-schmidt technique', type=str, default='uniform')
+parser.add_argument('--technique', help='uniform, normal, gram-schmidt, or mutate-only technique', type=str, default='uniform')
 parser.add_argument('--scaled', help="if wanting to generate random filters for VGG architecture use this option", action="store_true")
 # parser.add_argument('--batch_size', help='Number of images to use for novelty metric, only 1 batch used', default=64, type=int)
 # parser.add_argument('--dataset', help='which dataset should be used for novelty metric, choices are: random, cifar-10', default='random')
@@ -54,6 +55,9 @@ def run():
             net.set_filters = new_filters
         if args.technique == 'normal':
             helper.normalize(net)
+        if args.technique == 'mutate-only':
+            for k in range(800):
+                model.filters = helper.mutate(copy.deepcopy(net.get_filters()))
         model.filters = net.get_filters()
         population.append(model)
         # helper.wandb.log({'gen': 0, 'individual': i, 'fitness': model.fitness})
@@ -84,4 +88,6 @@ def run():
 
 
 if __name__ == '__main__':
+
     run()
+
