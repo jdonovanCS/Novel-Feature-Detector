@@ -6,12 +6,14 @@ import numpy as np
 import torch
 import argparse
 from model import Model
+import evolution
+import copy
 
 
 parser=argparse.ArgumentParser(description="Process some input files")
 parser.add_argument('--experiment_name', help='experiment name for saving and data related to filters generated', default='')
 parser.add_argument('--population_size', help='number of filters to generate', type=int, default=50)
-parser.add_argument('--technique', help='random, rand-normal, or gram-schmidt technique', type=str, default='random')
+parser.add_argument('--technique', help='random, rand-normal, gram-schmidt, or mutation-only technique', type=str, default='random')
 # parser.add_argument('--batch_size', help='Number of images to use for novelty metric, only 1 batch used', default=64, type=int)
 # parser.add_argument('--dataset', help='which dataset should be used for novelty metric, choices are: random, cifar-10', default='random')
 args = parser.parse_args()
@@ -49,6 +51,9 @@ def run():
             net.set_filters = new_filters
         if args.technique == 'rand-normal':
             helper.normalize(net)
+        if args.technique == 'mutate-only':
+            for k in range(400):
+                model.filters = evolution.mutate(copy.deepcopy(model.filters))
         model.filters = net.get_filters()
         population.append(model)
         # helper.wandb.log({'gen': 0, 'individual': i, 'fitness': model.fitness})
