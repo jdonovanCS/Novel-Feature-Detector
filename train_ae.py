@@ -13,6 +13,7 @@ parser=argparse.ArgumentParser(description="Process some input files")
 parser.add_argument('--dataset', help='which dataset should be used for training metric, choices are: cifar-10, cifar-100', default='random')
 parser.add_argument('--experiment_name', help='experiment name for saving data related to training')
 parser.add_argument('--epochs', help="Number of epochos to train for", type=int, default=64)
+parser.add_argument('--steps', help='Number of steps to train for', default=10000, type=int)
 parser.add_argument('--test_accuracy_interval', help='How often should test accuracy be assessed during training?', default=4)
 parser.add_argument('--novelty_interval', help='How often should a novelty score be captured during training?', default=0)
 parser.add_argument('--batch_size', help="batch size for training", type=int, default=64)
@@ -44,6 +45,7 @@ def run():
     data_module.setup()
 
     epochs = args.epochs
+    steps = args.steps
     
     helper.config['dataset'] = args.dataset.lower()
     helper.config['batch_size'] = args.batch_size
@@ -70,7 +72,7 @@ def run():
         # else train the network and collect the metrics
         save_path = "trained_models/trained/ae_e{}_r{}.pth".format(experiment_name, run_num)
         print('Training and Evaluating Run: {}'.format(run_num))
-        record_progress = helper.train_ae_network(data_module=data_module, epochs=epochs, lr=args.lr, encoded_space_dims=args.encoded_space_dims, save_path=save_path, novelty_interval=int(args.novelty_interval), val_interval=int(args.test_accuracy_interval), diversity={'type': args.diversity_type, 'pdop': args.pairwise_diversity_op, 'ldop': args.layerwise_diversity_op, 'k': args.k, 'k_strat': args.k_strat}, scaled=scaled, rand_tech=args.rand_tech)
+        record_progress = helper.train_ae_network(data_module=data_module, epochs=epochs, steps=steps, lr=args.lr, encoded_space_dims=args.encoded_space_dims, save_path=save_path, novelty_interval=int(args.novelty_interval), val_interval=int(args.test_accuracy_interval), diversity={'type': args.diversity_type, 'pdop': args.pairwise_diversity_op, 'ldop': args.layerwise_diversity_op, 'k': args.k, 'k_strat': args.k_strat}, scaled=scaled, rand_tech=args.rand_tech)
         helper.run(seed=False)
         helper.config['dataset'] = args.dataset.lower()
         helper.config['batch_size'] = args.batch_size

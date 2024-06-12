@@ -121,7 +121,7 @@ def run():
     
     # run training and evaluation and record metrics in above variables
     # for each type of evolution ran
-    inner_skip = args.inner_skip if training_interval < 1 else 0
+    inner_skip = args.inner_skip+1 if training_interval < 1 else 0
     skip = args.skip
     stop_after = args.stop_after
     inner_stop_after = args.inner_stop_after if training_interval < 1 else np.inf
@@ -131,15 +131,18 @@ def run():
     for run_num in range(int(skip), min(stop_after, len(stored_filters))):
         # run_num = np.where(stored_filters == filters_list)[0][0]
         # for each generation train the solution output at that generation
-        for n in range(int(inner_skip*(int((training_interval)*len(stored_filters[run_num])))), min(inner_stop_after, len(stored_filters[run_num])+1), int((training_interval)*len(stored_filters[run_num]))):
-            if n == 0:
+        inner_interval = (int((training_interval)*len(stored_filters[run_num])))
+        if inner_interval == 0:
+            inner_interval = 1
+        for n in range(int(inner_skip*inner_interval)-1, min(inner_stop_after, len(stored_filters[run_num])), max (1, inner_interval)):
+            if n < 0:
                 continue
-            i = n-1
+            # i = n-1
             # if we only want to train the solution from the final generation, continue
             # if (training_interval != 0 and i*1.0 not in [(len(stored_filters[run_num])/(1/training_interval)*j)-1 for j in range(1, min(args.stop_after, int(1/training_interval)+1))]) or (training_interval==0 and i not in range(skip, args.stop_after)):
             #     continue
             scaled = False
-            if len(stored_filters[run_num][i]) > 6:
+            if len(stored_filters[run_num][n]) > 6:
                 scaled = True
             if args.diversity_type == "None":
                 diversity = None
@@ -147,11 +150,11 @@ def run():
                 diversity = {'type': args.diversity_type, 'pdop': args.pairwise_diversity_op, 'ldop': args.layerwise_diversity_op, 'k': args.k, 'k_strat': args.k_strat}
 
             # else train the network and collect the metrics
-            helper.config['generation'] = i if (not args.rand_tech and not args.gram_schmidt) else None
+            helper.config['generation'] = n+1 if (not args.rand_tech and not args.gram_schmidt) else None
             helper.update_config()
-            save_path = "trained_models/trained/conv{}_e{}_n{}_r{}_g{}.pth".format(not fixed_conv, experiment_name, name, run_num, i)
-            print('Training and Evaluating: {} Gen: {} Run: {}'.format(name, i, run_num))
-            record_progress = helper.train_network(data_module=data_module, filters=stored_filters[run_num][i], epochs=epochs, lr=args.lr, save_path=save_path, fixed_conv=fixed_conv, novelty_interval=int(args.novelty_interval), val_interval=int(args.test_accuracy_interval), diversity=diversity, scaled=scaled, devices=args.devices)
+            save_path = "trained_models/trained/conv{}_e{}_n{}_r{}_g{}.pth".format(not fixed_conv, experiment_name, name, run_num, n)
+            print('Training and Evaluating: {} Gen: {} Run: {}'.format(name, n, run_num))
+            record_progress = helper.train_network(data_module=data_module, filters=stored_filters[run_num][n], epochs=epochs, lr=args.lr, save_path=save_path, fixed_conv=fixed_conv, novelty_interval=int(args.novelty_interval), val_interval=int(args.test_accuracy_interval), diversity=diversity, scaled=scaled, devices=args.devices)
             helper.run(seed=False, rank=args.local_rank if args.local_rank > 0 else 0)
             helper.config['dataset'] = args.dataset.lower()
             helper.config['batch_size'] = args.batch_size

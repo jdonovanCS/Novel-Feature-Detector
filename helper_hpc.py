@@ -109,7 +109,7 @@ def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, 
     else:
         trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu")
     wandb_logger.watch(net, log="all")
-    torch.cuda.empty_cache()
+    # torch.cuda.empty_cache()
     trainer.fit(net, datamodule=data_module)
 
     # torch.save(net.state_dict(), save_path)
@@ -130,7 +130,7 @@ def train_vgg16(data_module, epochs=2, lr=.001, val_interval=4):
     wandb_logger.watch(net, log="all")
     trainer.fit(net, datamodule=data_module)
 
-def train_ae_network(data_module, epochs=100, lr=.001, encoded_space_dims=256, save_path=None, novelty_interval=4, val_interval=1, diversity={'type':'absolute', 'pdop':None, 'ldop':None, 'k': None, 'k_strat':True}, scaled=False, rand_tech='uniform'):
+def train_ae_network(data_module, epochs=100, steps=-1, lr=.001, encoded_space_dims=256, save_path=None, novelty_interval=4, val_interval=1, diversity={'type':'absolute', 'pdop':None, 'ldop':None, 'k': None, 'k_strat':True}, scaled=False, rand_tech='uniform'):
     net = AE(encoded_space_dims, diversity, lr)
     if rand_tech == 'normal':
         normalize(net)
@@ -138,7 +138,7 @@ def train_ae_network(data_module, epochs=100, lr=.001, encoded_space_dims=256, s
     if save_path is None:
         save_path = PATH
     wandb_logger = WandbLogger(log_model=True)
-    trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator='gpu', gpus=torch.cuda.device_count(), strategy='dp')
+    trainer = pl.Trainer(max_epochs=epochs, max_steps=steps, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator='gpu', gpus=torch.cuda.device_count(), strategy='dp')
     wandb_logger.watch(net, log='all')
     trainer.fit(net, datamodule=data_module)
 

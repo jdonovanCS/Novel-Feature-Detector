@@ -205,7 +205,7 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
         
         best_fitness = sorted(population, key=lambda i: i.fitness, reverse=True)[0].fitness
         best_solution = sorted(population, key=lambda i: i.fitness, reverse=True)[0].filters
-        fitness_over_time.append((best_fitness))
+        fitness_over_time.append((copy.deepcopy(best_fitness)))
         solutions_over_time.append((copy.deepcopy(best_solution)))
         helper.save_npy('output/' + experiment_name + '/solutions_over_time_current_{}_{}.npy'.format(evolution_type, uniqueID), solutions_over_time, index=i)
         helper.wandb.log({'gen': i, 'best_individual_fitness': best_fitness})
