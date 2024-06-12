@@ -22,55 +22,97 @@ import pytorch_lightning as pl
 import cProfile
 import pstats
 import shortuuid
+import copy
 
 
 # TODO: Why not use gradient descent since fitness function is differentiable. Should probably compare to that.
 
 
 parser=argparse.ArgumentParser(description="Process some inputs")
+
+# experiment params
 parser.add_argument('--experiment_name', help='experiment name for saving data related to training')
-parser.add_argument('--batch_size', help="batch size for computing novelty, only 1 batch is used", type=int, default=64)
+parser.add_argument('--evo_num_runs', type=int, help='Number of runs used in evolution', default=5)
+
+parser.add_argument('--network', help="Specify which architecture to train", default='conv6', type=str)
+
+# evolution params
 parser.add_argument('--evo_gens', type=int, help="number of generations used in evolving solutions", default=50)
 parser.add_argument('--evo_pop_size', type=int, help='Number of individuals in population when evolving solutions', default=20)
-parser.add_argument('--evo_dataset_for_novelty', help='Dataset used for novelty computation during evolution and training', default='cifar10')
-parser.add_argument('--num_batches_for_evolution', help='Number of batches used of dataset when calculating diversity of filters', default=np.inf, type=int)
-parser.add_argument('--evo_num_runs', type=int, help='Number of runs used in evolution', default=5)
 parser.add_argument('--evo_tourney_size', type=int, help='Size of tournaments in evolutionary algorithm selection', default=4)
 parser.add_argument('--evo_num_winners', type=int, help='Number of winners in tournament in evolutionary algorithm', default=2)
 parser.add_argument('--evo_num_children', type=int, help='Number of children in evolutionary algorithm', default=20)
-parser.add_argument('--diversity_type', default='absolute', type=str, help='Type of diversity metric to use for this experiment (ie. relative, absolute, original, etc.)')
-parser.add_argument('--pairwise_diversity_op', default='sum', help='the function to use for calculating diversity metric with regard to pairwise comparisons', type=str)
-parser.add_argument('--layerwise_diversity_op', default='w_mean', help='the function to use for calculating diversity metric with regard to layerwise comparisons', type=str)
-parser.add_argument('--k', help='If using k-neighbors for metric calculation, how many neighbors', type=int, default=10)
-parser.add_argument('--closest', help='If using k-neigbhors for metric, should we do closest? If not set to False, closest will be used', type=bool, default=True)
+parser.add_argument('--rand_tech', help='which random technique is used to initialize network weights', type=str, default='uniform')
+parser.add_argument('--mr', help='mutation rate', default=1., type=float)
+parser.add_argument('--broad_mutation', help='mutate entire individual by small amount, versus a single filter', default=False, action='store_true')
+
+# fitness params
+parser.add_argument('--evo_dataset_for_novelty', help='Dataset used for novelty computation during evolution and training', default='random')
+parser.add_argument('--diversity_type', default='relative', type=str, help='Type of diversity metric to use for this experiment (ie. relative, absolute, original, cosine)')
+parser.add_argument('--pairwise_diversity_op', default='mean', help='the function to use for calculating diversity metric with regard to pairwise comparisons (ie. mean, sum, rms)', type=str)
+parser.add_argument('--layerwise_diversity_op', default='w_mean', help='the function to use for calculating diversity metric with regard to layerwise comparisons (ie. mean, w_mean, sum)', type=str)
+parser.add_argument('--k', help='If using k-neighbors for metric calculation, how many neighbors', type=int, default=-1)
+parser.add_argument('--k_strat', help='If using k-neigbhors for metric, what strategy should be used? (ie. closest, furthest, random, etc.)', type=str, default='closest')
+
+# batch size doesn't matter since no update
+parser.add_argument('--batch_size', help="batch size for computing novelty, only 1 batch is used", type=int, default=64)
+# not sure that this matters either since we should use all of the images in the dataset? especially once a separate evolution dataset is setup for cifar-10 and cifar-100
+parser.add_argument('--num_batches_for_evolution', help='Number of batches used of dataset when calculating diversity of filters', default=1, type=int)
+# shuffle the dataset each time we look at an agent
+parser.add_argument('--shuffle', help='if wanting to shuffle the images in the dataset everytime we start a new validation loop', action='store_true', default=False)
+# do we want to use the training set instead of the validation set
+parser.add_argument('--use_training_dataloader', help='use this if wanting to push training data split through networks in evolutionary pretraining', action='store_true', default=False)
+# only matters for efficiency purposes
 parser.add_argument('--profile', help='Profile validation epoch during evolution', default=False, action='store_true')
+# only matters for local running when I might run out of gpu ram
 parser.add_argument('--num_workers', help='Num workers to use to load data module', default=np.inf, type=int)
-parser.add_argument('--rand_tech', help='which random technique is used to initialize network weights', type=str, default=None)
+# realized the ea is actually rewriting parents and putting them back in the pool instead of just creating modified children.
+# Use this param to undo that and operate as intended
+parser.add_argument('--as_intended', help='use if wanting to operate the ea as intended instead of the bugged method', default=False, action='store_true')
+# check for convergence, if set to true, run num needs to set to 1
+parser.add_argument('--check_convergence', help='check for when algorithm converges, runs needs to be set to 1', default=False, action='store_true')
+
+
 args = parser.parse_args()
 
 def mutate(filters):
-    # select a single 3x3 filter in one of the convolutional layers and replace it with a random new filter.
-    selected_layer = random.randint(0,len(filters)-1)
-    selected_dims = []
-    for v in list(filters[selected_layer].shape)[0:2]:
-        selected_dims.append(random.randint(0,v-1))
-    
-    selected_filter = filters[selected_layer][selected_dims[0]][selected_dims[1]]
-    
-    # create new random filter to replace the selected filter
-    # selected_filter = torch.tensor(np.random.rand(3,3), device=helper.device)
-    
-    # modify the entire layer / filters by a small amount
-    selected_filter += torch.rand(selected_filter.shape[0], selected_filter.shape[1])*2-1
-    
-    # normalize entire filter so that values are between -1 and 1
-    # selected_filter = (selected_filter/np.linalg.norm(selected_filter))*2
-    
-    # normalize just the values that are outside of -1, 1 range
-    selected_filter[(selected_filter > 1) | (selected_filter < -1)] /= torch.amax(torch.absolute(selected_filter))
-    
-    filters[selected_layer][selected_dims[0]][selected_dims[1]] = selected_filter
-    return filters
+
+    if not args.broad_mutation:
+        # select a single 3x3 filter in one of the convolutional layers and replace it with a random new filter.
+        selected_layer = random.randint(0,len(filters)-1)
+        selected_dims = []
+        for v in list(filters[selected_layer].shape)[0:2]:
+            selected_dims.append(random.randint(0,v-1))
+        
+        selected_filter = filters[selected_layer][selected_dims[0]][selected_dims[1]]
+        
+        # create new random filter to replace the selected filter
+        # selected_filter = torch.tensor(np.random.rand(3,3), device=helper.device)
+        
+        # modify the entire layer / filters by a small amount
+        # TODO: play around with lr multiplier on noise
+        # TODO: implement broader mutation with low learning rate
+        selected_filter += (torch.rand(selected_filter.shape[0], selected_filter.shape[1])*2.0-1.0)*args.mr
+
+        # normalize entire filter so that values are between -1 and 1
+        # selected_filter = (selected_filter/np.linalg.norm(selected_filter))*2
+        
+        # normalize just the values that are outside of -1, 1 range
+        selected_filter[(selected_filter > 1) | (selected_filter < -1)] /= torch.amax(torch.absolute(selected_filter))
+        
+        filters[selected_layer][selected_dims[0]][selected_dims[1]] = selected_filter
+        return filters
+    else:
+        for i in range(len(filters)):
+            mut = (torch.rand(filters[i].shape[0], filters[i].shape[1], filters[i].shape[2], filters[i].shape[3])*2-1.0)*args.mr
+            print(filters[i].shape)
+            print(mut.shape)
+            filters[i] += mut
+            divisor = torch.amax(torch.absolute(filters[i]))
+            # condition = filters[i][(filters[i] > 1) | (filters[i] < -1)]
+            # filters[i].where(condition, filters[i], filters[i] / divisor)
+            filters[i][(filters[i] > 1) | (filters[i] < -1)] /= divisor
+        return filters
 
 def profile_validation_epoch(net):
     prof = cProfile.Profile()
@@ -94,6 +136,7 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
     history: a list of `Model` instances, representing all the models computed
         during the evolution experiment.
     """
+    stagnant = 0
     population = collections.deque()
     solutions_over_time = []
     fitness_over_time = []
@@ -106,14 +149,20 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
     print("\nInitializing")
     for i in tqdm(range(population_size)): #while len(population) < population_size:
         model = Model()
-        net = helper.Net(num_classes=len(classnames), classnames=classnames, diversity=args.diversity_type, pdop=args.pairwise_diversity_op, layerwise_op=args.layerwise_diversity_op, neigh_params={'k': args.k, 'closest': args.closest})
+        if args.network.lower() == "vgg16":
+            net = helper.BigNet(num_classes=len(classnames), classnames=classnames, diversity={"type": args.diversity_type, "pdop": args.pairwise_diversity_op, "ldop": args.layerwise_diversity_op, "k": args.k, "k_strat": args.k_strat})
+        else:
+            net = helper.Net(num_classes=len(classnames), classnames=classnames, diversity={"type": args.diversity_type, "pdop": args.pairwise_diversity_op, "ldop":args.layerwise_diversity_op, 'k': args.k, 'k_strat': args.k_strat})
         if args.rand_tech == 'normal':
             helper.normalize(net)
         model.filters = net.get_filters()
         if args.profile:
             profile_validation_epoch(net)
         else:
-            trainer.validate(net, dataloaders=data_module.val_dataloader(), verbose=False)
+            if args.use_training_dataloader:
+                trainer.validate(net, dataloaders=data_module.train_dataloader(), verbose=False)
+            else:
+                trainer.validate(net, dataloaders=data_module.val_dataloader(), verbose=False)
         model.fitness =  net.avg_novelty
         population.append(model)
         helper.wandb.log({'gen': 0, 'individual': i, 'fitness': model.fitness})
@@ -137,9 +186,15 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
         # Create the child model and store it.
         for parent in parents:
             child = Model()
-            child.filters = mutate(parent.filters)
+            if args.as_intended:
+                child.filters = mutate(copy.deepcopy(parent.filters))
+            else:
+                child.filters = mutate(parent.filters)
             net.set_filters(child.filters)
-            trainer.validate(net, dataloaders=data_module.val_dataloader(), verbose=False)
+            if args.use_training_dataloader:
+                trainer.validate(net, dataloaders=data_module.train_dataloader(), verbose=False)
+            else:
+                trainer.validate(net, dataloaders=data_module.val_dataloader(), verbose=False)
             child.fitness = net.avg_novelty
             population.append(child)
             
@@ -150,10 +205,13 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
         
         best_fitness = sorted(population, key=lambda i: i.fitness, reverse=True)[0].fitness
         best_solution = sorted(population, key=lambda i: i.fitness, reverse=True)[0].filters
-        fitness_over_time.append((best_fitness))
-        solutions_over_time.append((best_solution))
+        fitness_over_time.append((copy.deepcopy(best_fitness)))
+        solutions_over_time.append((copy.deepcopy(best_solution)))
         helper.save_npy('output/' + experiment_name + '/solutions_over_time_current_{}_{}.npy'.format(evolution_type, uniqueID), solutions_over_time, index=i)
         helper.wandb.log({'gen': i, 'best_individual_fitness': best_fitness})
+        if args.check_convergence:
+            if len(set(fitness_over_time[-5:])) == 1:
+                exit()
         # helper.wandb.log({'gen': i, 'best_individual_filters': best_solution})
         
     return solutions_over_time, np.array(fitness_over_time)
@@ -175,14 +233,16 @@ def run():
     helper.config['diversity_type'] = args.diversity_type
     helper.config['pairwise_diversity_op'] = args.pairwise_diversity_op
     helper.config['layerwise_diversity_op'] = args.layerwise_diversity_op
-    helper.config['neigh_params'] = {'k': args.k, 'closest': args.closest}
+    helper.config['k'] = args.k 
+    helper.config['k_strat'] =  args.k_strat
     helper.config['experiment_type'] = 'evolution'
     helper.config['rand_tech'] = args.rand_tech
+    helper.config['network'] = args.network
     helper.update_config()
 
     # random_image_paths = helper.create_random_images(64)
     global data_module
-    data_module = helper.get_data_module(args.evo_dataset_for_novelty, batch_size=args.batch_size, workers=args.num_workers)
+    data_module = helper.get_data_module(args.evo_dataset_for_novelty, batch_size=args.batch_size, workers=args.num_workers, shuffle=args.shuffle)
     data_module.prepare_data()
     data_module.setup()
     # data_iterator = iter(data_module.train_dataloader())
@@ -261,9 +321,11 @@ def run():
             helper.config['diversity_type'] = args.diversity_type
             helper.config['pairwise_diversity_op'] = args.pairwise_diversity_op
             helper.config['layerwise_diversity_op'] = args.layerwise_diversity_op
+            helper.config['k'] = args.k 
+            helper.config['k_strat'] =  args.k_strat
             helper.config['experiment_type'] = 'evolution'
-            helper.config['neigh_params'] = {'k': args.k, 'closest': args.closest}
             helper.config['rand_tech'] = args.rand_tech
+            helper.config['network'] = args.network
             helper.update_config()
 
     with open('output/' + experiment_name + '/solutions_over_time.pickle', 'wb') as f:

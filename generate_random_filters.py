@@ -13,7 +13,8 @@ import copy
 parser=argparse.ArgumentParser(description="Process some input files")
 parser.add_argument('--experiment_name', help='experiment name for saving and data related to filters generated', default='')
 parser.add_argument('--population_size', help='number of filters to generate', type=int, default=50)
-parser.add_argument('--technique', help='random, rand-normal, gram-schmidt, or mutation-only technique', type=str, default='random')
+parser.add_argument('--technique', help='uniform, normal, or gram-schmidt technique', type=str, default='uniform')
+parser.add_argument('--scaled', help="if wanting to generate random filters for VGG architecture use this option", action="store_true")
 # parser.add_argument('--batch_size', help='Number of images to use for novelty metric, only 1 batch used', default=64, type=int)
 # parser.add_argument('--dataset', help='which dataset should be used for novelty metric, choices are: random, cifar-10', default='random')
 args = parser.parse_args()
@@ -40,16 +41,20 @@ def run():
     experiment_name = args.experiment_name    
     population_size = args.population_size
     population = []
+    helper.config['experiment_name'] = experiment_name
 
     for i in tqdm(range(population_size)): #while len(population) < population_size:
         model = Model()
-        net = helper.Net()
-        model.filters = net.get_filters(numpy=True)
+        if args.scaled:
+            net = helper.BigNet()
+        else:
+            net = helper.Net()
         # model.fitness =  net.get_fitness(net_input)
         if args.technique == 'gram-schmidt':
+            model.filters = net.get_filters(numpy=True)
             new_filters = helper.gram_shmidt_orthonormalize(model.filters)
             net.set_filters = new_filters
-        if args.technique == 'rand-normal':
+        if args.technique == 'normal':
             helper.normalize(net)
         if args.technique == 'mutate-only':
             for k in range(400):
@@ -58,21 +63,22 @@ def run():
         population.append(model)
         # helper.wandb.log({'gen': 0, 'individual': i, 'fitness': model.fitness})
         
+    # sols = [p.filters for p in population]
     sols = [p.filters for p in population]
-    solutions = np.array([[Model() for i in range(population_size)]for j in range(1)], dtype=object)
-    for i in range(1):
-        solutions[i] = sols
-    solutions = solutions[0]
-    sol_dict = {args.technique: [solutions]}
+    solutions = np.array([[Model() for i in range(1)]for j in range(population_size)], dtype=object)
+    for i in range(population_size):
+        solutions[i][0] = sols[i]
+    # solutions = solutions[0]
+    sol_dict = {args.technique: solutions}
     # fitnesses = [p.fitness for p in population]
 
     if not os.path.isdir('output/' + experiment_name):
         os.mkdir('output/' + experiment_name)
-    with open('output/' + experiment_name + '/random_gen_solutions.pickle', 'wb') as f:
-        pickle.dump(sol_dict, f)
+    # with open('output/' + experiment_name + '/random_gen_solutions.pickle', 'wb') as f:
+    #     pickle.dump(sol_dict, f)
     for k,v in sol_dict.items():
         with open('output/' + experiment_name + '/solutions_over_time_{}.npy'.format(k), 'wb') as f:
-            np.save(f, v)
+            np.save(f, v[::])
     # with open('output/' + experiment_name + '/random_gen_fitnesses.txt', 'a+') as f:
     #     f.write(str(fitnesses))
 

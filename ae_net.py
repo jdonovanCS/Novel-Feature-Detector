@@ -18,9 +18,9 @@ class AE(pl.LightningModule):
         self.BatchNorm2 = nn.BatchNorm2d(128)
         self.BatchNorm3 = nn.BatchNorm2d(256)
         self.pool = nn.MaxPool2d(2,2)
-        self.fc1 = nn.Linear(4096, 1024)
-        self.fc2 = nn.Linear(1024, 512)
-        self.fc3 = nn.Linear(512, encoded_space_dim)
+        self.fc1 = nn.Linear(4096, encoded_space_dim)
+        # self.fc2 = nn.Linear(1024, 512)
+        # self.fc3 = nn.Linear(512, encoded_space_dim)
         self.dropout1 = nn.Dropout2d(0.05)
         self.dropout2 = nn.Dropout2d(0.1)
         self.conv_layers = nn.ModuleList([nn.Conv2d(3, 32, 3, padding=1), 
@@ -52,7 +52,7 @@ class AE(pl.LightningModule):
 
         self.t_fc3 = nn.Linear(encoded_space_dim, 512)
         self.t_fc2 = nn.Linear(512, 1024)
-        self.t_fc1 = nn.Linear(1024, 4096)
+        self.t_fc1 = nn.Linear(encoded_space_dim, 4096)
 
         self.diversity = diversity
         self.loss_fn = torch.nn.MSELoss()
@@ -111,22 +111,22 @@ class AE(pl.LightningModule):
         x = self.fc1(x) # 4096 -> 1024
         x = F.relu(x)
         
-        x = self.fc2(x) # 1024 -> 512
-        x = F.relu(x)
+        # x = self.fc2(x) # 1024 -> 512
+        # x = F.relu(x)
         
-        x = self.dropout2(x)
+        # x = self.dropout2(x)
         
-        x = self.fc3(x) # 512 -> encoding size
+        # x = self.fc3(x) # 512 -> encoding size
 
         # Decode
         t_conv_count = 0
-        x = self.t_fc3(x) # encoding -> 512
-        x = F.relu(x)
+        # x = self.t_fc3(x) # encoding -> 512
+        # x = F.relu(x)
 
-        x = self.t_dropout1(x)
+        # x = self.t_dropout1(x)
         
-        x = self.t_fc2(x) # 512 -> 1024
-        x = F.relu(x)
+        # x = self.t_fc2(x) # 512 -> 1024
+        # x = F.relu(x)
         
         x = self.t_fc1(x) # 1024 -> 4096
         x = F.relu(x)
@@ -195,10 +195,6 @@ class AE(pl.LightningModule):
     
     def validation_step(self, val_batch, batch_idx):
         with torch.no_grad():
-            if batch_idx == 0:
-                self.step=1
-            else:
-                self.step=2
             x, y = val_batch
             logits = self.forward(x, get_activations=True)
             # get loss
@@ -216,7 +212,7 @@ class AE(pl.LightningModule):
     
     def validation_epoch_end(self, outputs):
         avg_loss = torch.stack([x['val_loss'] for x in outputs]).mean()
-        avg_novelty = np.stack([x['val_novelty'] for x in outputs]).mean()
+        avg_novelty = torch.stack([x['val_novelty'] for x in outputs]).mean()
         self.avg_novelty = avg_novelty
         self.log('val_loss_epoch', avg_loss)
         self.log('val_novelty_epoch', avg_novelty)
@@ -241,7 +237,7 @@ class AE(pl.LightningModule):
 
     def test_epoch_end(self, outputs):
         avg_loss = torch.stack([x['test_loss'] for x in outputs]).mean()
-        avg_novelty = np.stack([x['test_novelty'] for x in outputs]).mean()
+        avg_novelty = torch.stack([x['test_novelty'] for x in outputs]).mean()
         self.avg_novelty = avg_novelty
         self.log('test_loss_epoch', avg_loss)
         self.log('test_novelty_epoch', avg_novelty)
@@ -285,20 +281,26 @@ class AE(pl.LightningModule):
         l = []
         for i in self.activations:
             self.activations[i][0] = self.activations[i][0].detach().cpu().numpy()
-            if self.diversity=='relative':
-                l.append(helper.diversity_relative(self.activations[i][0]))
-            elif self.diversity=='original':
-                l.append(helper.diversity_orig(self.activations[i]))
-            elif self.diversity=='absolute':
-                l.append(helper.diversity(self.activations[i][0]))
-            elif self.diversity=='cosine':
-                l.append(helper.diversity_cosine_distance(self.activations[i][0]))
-            elif self.diversity == 'constant':
-                l.append(helper.diversity_constant(self.activations[i][0]))
+            if self.diversity['type']=='relative':
+                l.append(helper.diversity_relative(self.activations[i][0], self.diversity['pdop'], self.diversity['k'], self.diversity['k_strat']))
+            elif self.diversity['type']=='original':
+                l.append(helper.diversity_orig(self.activations[i], self.diversity['pdop'], self.diversity['k'], self.diversity['k_strat']))
+            elif self.diversity['type']=='absolute':
+                l.append(helper.diversity(self.activations[i][0], self.diversity['pdop'], self.diversity['k'], self.diversity['k_strat']))
+            elif self.diversity['type']=='cosine':
+                l.append(helper.diversity_cosine_distance(self.activations[i][0], self.diversity['pdop'], self.diversity['k'], self.diversity['k_strat']))
+            elif self.diversity['type'] == 'constant':
+                l.append(helper.diversity_constant(self.activations[i][0], self.diversity['pdop'], self.diversity['k'], self.diversity['k_strat']))
             else:
-                l.append(helper.diversity(self.activations[i][0]))
+                l.append(helper.diversity(self.activations[i][0], self.diversity['pdop'], self.diversity['k'], self.diversity['k_strat']))
 
-        if self.step==1:
-            print([max(np.abs(x.flatten())) for x in self.get_filters(numpy=True)])
-        return(sum(l))
+        if self.diversity['ldop'] == 'sum':
+            return(sum(l))
+        elif self.diversity['ldop'] == 'mean':
+            return(np.mean(l))
+        elif self.diversity['ldop'] == 'w_mean':
+            total_channels = 0
+            for i in range(len(self.conv_layers)):
+                total_channels+=self.conv_layers[i].out_channels
+            return(np.sum([l[i]*(self.conv_layers[i].out_channels)/total_channels for i in range(len(l))]))
 

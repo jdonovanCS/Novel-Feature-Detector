@@ -1,0 +1,30 @@
+wandb_version: 1
+
+_wandb:
+  desc: null
+  value:
+    code_path: code/testing/test_vgg16.py
+    python_version: 3.10.0
+    cli_version: 0.15.4
+    framework: lightning
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    start_time: 1695403054.638331
+    t:
+      1:
+      - 1
+      - 9
+      - 41
+      - 55
+      2:
+      - 1
+      - 9
+      - 41
+      - 55
+      3:
+      - 23
+      4: 3.10.0
+      5: 0.15.4
+      8:
+      - 3
+      - 5

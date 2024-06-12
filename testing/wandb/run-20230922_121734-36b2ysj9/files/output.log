@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\testing\test_vgg16.py", line 229, in <module>
+    train_vgg16(data_module)
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\testing\test_vgg16.py", line 194, in train_vgg16
+    stored_filters = np.load('output/relative diversity scaled/solutions_over_time_fitness.npy')
+  File "C:\Users\Jordan\Learning\UVM\Research\novel-feature-detector\testing\test_vgg16.py", line 193, in <lambda>
+    np.load = lambda *a,**k: np_load_old(*a, allow_pickle=True, **k)
+  File "C:\Users\Jordan\anaconda3\envs\EC2\lib\site-packages\numpy\lib\npyio.py", line 405, in load
+    fid = stack.enter_context(open(os_fspath(file), "rb"))
+FileNotFoundError: [Errno 2] No such file or directory: 'output/relative diversity scaled/solutions_over_time_fitness.npy'

@@ -7,7 +7,7 @@ class RandomDataset(torch.utils.data.Dataset):
         self.data_dir = data_dir
         self.transform = transform
         self.images = [f for f in os.listdir(self.data_dir) if '.png' in f]
-        self.classes = ['random']
+        self.classes = ['random', 'not_random']
 
     def __len__(self):
         return len(self.images)
