@@ -45,6 +45,7 @@ parser.add_argument('--evo_num_children', type=int, help='Number of children in 
 parser.add_argument('--rand_tech', help='which random technique is used to initialize network weights', type=str, default='uniform')
 parser.add_argument('--mr', help='mutation rate', default=1., type=float)
 parser.add_argument('--broad_mutation', help='mutate entire individual by small amount, versus a single filter', default=False, action='store_true')
+parser.add_argument('--weighted_mutation', help="weighted mutation function to choose filters weighted to how many are in each layer", default=False, action='store_true')
 
 # fitness params
 parser.add_argument('--evo_dataset_for_novelty', help='Dataset used for novelty computation during evolution and training', default='random')
@@ -187,9 +188,9 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
         for parent in parents:
             child = Model()
             if args.as_intended:
-                child.filters = mutate(copy.deepcopy(parent.filters))
+                child.filters = helper.mutate(copy.deepcopy(parent.filters), broad_mutation=args.broad_mutation, mr=args.mr, weighted_mut=args.weighted_mutation)
             else:
-                child.filters = mutate(parent.filters)
+                child.filters = helper.mutate(parent.filters, broad_mutation=args.broad_mutation, mr=args.mr, weighted_mut=args.weighted_mutation)
             net.set_filters(child.filters)
             if args.use_training_dataloader:
                 trainer.validate(net, dataloaders=data_module.train_dataloader(), verbose=False)

@@ -34,6 +34,7 @@ class Net(pl.LightningModule):
 
         self.classnames = classnames
         self.diversity = diversity
+        self.lr = lr
         # self.avg_novelty = 0
 
     def forward(self, x, get_activations=False):
@@ -235,7 +236,7 @@ class Net(pl.LightningModule):
         gc.collect()
 
     def configure_optimizers(self):
-        optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, self.parameters()), lr=1e-3)
+        optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, self.parameters()), lr=self.lr)
         return optimizer
     
     def cross_entropy_loss(self, logits, labels):

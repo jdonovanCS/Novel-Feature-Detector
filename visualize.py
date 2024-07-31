@@ -38,7 +38,7 @@ def run():
         stored_filters = np.load(filename)
         np.load = np_load_old
         print(stored_filters.shape)
-        if 'random' in filename:
+        if 'random' in filename or 'mutate-only' in filename or 'orthogonal' in filename or 'xavier' in filename:
             all_filters[filename.split('/solutions_over_time')[0]] = stored_filters[0][0]
         elif 'ae_unsup' in filename:
             all_filters[filename.split('/solutions_over_time')[0]] = stored_filters[0][0]
@@ -214,7 +214,7 @@ def run():
     from scipy.interpolate import UnivariateSpline
     from scipy.stats.kde import gaussian_kde 
     for k, filters in all_filters.items():
-        continue
+        # continue
         print(k)
         filters = [filters]
         num_runs = len(filters)
@@ -223,8 +223,10 @@ def run():
         for layer in range(len(filters[0])):
             pdf = mean = std = 0
             # divisor = max(abs(filters[0][layer].flatten()))
-            multiplier = max(abs(filters[0][layer].flatten()))
-            num_bins_ = int(500*multiplier)
+            # multiplier = max(abs(filters[0][layer].flatten()))
+            # num_bins_ = int(500*multiplier)
+            multiplier = len(filters[0][layer].flatten())
+            num_bins_ = int(.3*multiplier)
             num_outside = 0
             for run_num in range(num_runs):
                 filters_local = filters[run_num]

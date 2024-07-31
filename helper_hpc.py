@@ -386,6 +386,62 @@ def kaiming_normalize(m):
 #         if (w > 1e-10).any():  
 #             basis.append(w/np.linalg.norm(w))
 #     return np.array(basis)
+    
+def xavier_uniform(net, gain):
+    for m in net.modules():
+        xavier_uniform_inner(m, gain)
+
+def xavier_uniform_inner(m, gain):
+    if getattr(m, 'bias', None) is not None:
+        torch.nn.init.constant_(m.bias, 0)
+    if isinstance(m, (torch.nn.Conv2d, torch.nn.Linear)):
+        torch.nn.init.xavier_uniform_(m.weight, gain=gain)
+    for l in m.children(): xavier_uniform_inner(l, gain)
+
+
+def xavier_normal(net, gain):
+    for m in net.modules():
+        xavier_normal_inner(m, gain)
+
+def xavier_normal_inner(m, gain):
+    if getattr(m, 'bias', None) is not None:
+        torch.nn.init.constant_(m.bias, 0)
+    if isinstance(m, (torch.nn.Conv2d, torch.nn.Linear)):
+        torch.nn.init.xavier_normal_(m.weight, gain=gain)
+    for l in m.children(): xavier_normal_inner(l, gain)
+
+def orthogonal(net, gain):
+    for m in net.modules():
+        orthogonal_inner(m, gain)
+
+def orthogonal_inner(m, gain):
+    if getattr(m, 'bias', None) is not None:
+        torch.nn.init.constant_(m.bias, 0)
+    if isinstance(m, (torch.nn.Conv2d, torch.nn.Linear)):
+        torch.nn.init.orthogonal_(m.weight, gain=gain)
+    for l in m.children(): orthogonal_inner(l, gain)
+
+def default_uniform(net):
+    for m in net.modules():
+        default_uniform_inner(m)
+
+def default_uniform_inner(m):
+    if getattr(m, 'bias', None) is not None:
+        torch.nn.init.constant_(m.bias, 0)
+    if isinstance(m, (torch.nn.Conv2d, torch.nn.Linear)):
+        torch.nn.init.uniform_(m.weight)
+    for l in m.children(): default_uniform_inner(l)
+
+def default_normal(net):
+    for m in net.modules():
+        default_normal_inner(m)
+
+def default_normal_inner(m):
+    if getattr(m, 'bias', None) is not None:
+        torch.nn.init.constant_(m.bias, 0)
+    if isinstance(m, (torch.nn.Conv2d, torch.nn.Linear)):
+        torch.nn.init.normal_(m.weight)
+    for l in m.children(): default_normal_inner(l)
 
 def get_dist(layer_params):
     num_outside = 0
@@ -433,15 +489,42 @@ def diversity_constant(acts):
     return sum(constants)
 
 
-def mutate(filters, broad_mutation=False, mr=1.0):
+def mutate(filters, broad_mutation=False, mr=1.0, weighted_mut=False):
 
     if not broad_mutation:
         # select a single 3x3 filter in one of the convolutional layers and replace it with a random new filter.
-        selected_layer = random.randint(0,len(filters)-1)
-        selected_dims = []
-        for v in list(filters[selected_layer].shape)[0:2]:
-            selected_dims.append(random.randint(0,v-1))
-        
+        if weighted_mut:
+            total_filters = sum([len(x.flatten()) for x in filters])
+            rand_filter = random.randint(1, total_filters)
+            selected_layer = 0
+            selected_dims = [0,0]
+            count = 0
+            for i in range(len(filters)):
+                if len(filters[i].flatten()) + count > rand_filter:
+                    selected_layer = i
+                    break
+                count += len(filters[i].flatten())
+            
+            for i in range(len(filters[selected_layer])):
+                if len(filters[selected_layer][i].flatten()) + count > rand_filter:
+                    selected_dims[0] = i
+                    break
+                count += len(filters[selected_layer][i].flatten())
+            
+            for i in range(len(filters[selected_layer][selected_dims[0]])):
+                if len(filters[selected_layer][selected_dims[0]][i].flatten()) + count > rand_filter:
+                    selected_dims[1] = i
+                    break
+                count += len(filters[selected_layer][selected_dims[0]][i].flatten())
+            # print(rand_filter)
+            # print(selected_layer, selected_dims)
+
+        else:
+            selected_layer = random.randint(0,len(filters)-1)
+            selected_dims = []
+            for v in list(filters[selected_layer].shape)[0:2]:
+                selected_dims.append(random.randint(0,v-1))
+            
         selected_filter = filters[selected_layer][selected_dims[0]][selected_dims[1]]
         
         # create new random filter to replace the selected filter
@@ -459,12 +542,13 @@ def mutate(filters, broad_mutation=False, mr=1.0):
         selected_filter[(selected_filter > 1) | (selected_filter < -1)] /= torch.amax(torch.absolute(selected_filter))
         
         filters[selected_layer][selected_dims[0]][selected_dims[1]] = selected_filter
+        # print(selected_filter)
         return filters
     else:
         for i in range(len(filters)):
             mut = (torch.rand(filters[i].shape[0], filters[i].shape[1], filters[i].shape[2], filters[i].shape[3])*2-1.0)*mr
-            print(filters[i].shape)
-            print(mut.shape)
+            # print(filters[i].shape)
+            # print(mut.shape)
             filters[i] += mut
             divisor = torch.amax(torch.absolute(filters[i]))
             # condition = filters[i][(filters[i] > 1) | (filters[i] < -1)]

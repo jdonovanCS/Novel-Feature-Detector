@@ -121,20 +121,21 @@ def run():
     
     # run training and evaluation and record metrics in above variables
     # for each type of evolution ran
-    inner_skip = args.inner_skip+1 if training_interval < 1 else 0
+    inner_skip = args.inner_skip+1
     skip = args.skip
     stop_after = args.stop_after
-    inner_stop_after = args.inner_stop_after if training_interval < 1 else np.inf
+    inner_stop_after = args.inner_stop_after if training_interval < 1 else len(stored_filters[0])
     
     # print(skip, stop_after, inner_skip, inner_stop_after, len(stored_filters), len(stored_filters[0]))
 
-    for run_num in range(int(skip), min(stop_after, len(stored_filters))):
+    for run_num in range(int(skip), min(skip+stop_after, len(stored_filters))):
         # run_num = np.where(stored_filters == filters_list)[0][0]
         # for each generation train the solution output at that generation
         inner_interval = (int((training_interval)*len(stored_filters[run_num])))
         if inner_interval == 0:
             inner_interval = 1
-        for n in range(int(inner_skip*inner_interval)-1, min(inner_stop_after, len(stored_filters[run_num])), max (1, inner_interval)):
+        print("inner interval", inner_interval, "inner_skip", inner_skip, "inner_stop_after", inner_stop_after)
+        for n in range(int(inner_skip*inner_interval)-1, min(int(inner_skip*inner_interval*inner_stop_after), len(stored_filters[run_num])), max (1, inner_interval)):
             if n < 0:
                 continue
             # i = n-1

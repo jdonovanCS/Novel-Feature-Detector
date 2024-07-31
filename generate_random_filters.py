@@ -13,7 +13,12 @@ parser=argparse.ArgumentParser(description="Process some input files")
 parser.add_argument('--experiment_name', help='experiment name for saving and data related to filters generated', default='')
 parser.add_argument('--population_size', help='number of filters to generate', type=int, default=50)
 parser.add_argument('--technique', help='uniform, normal, gram-schmidt, or mutate-only technique', type=str, default='uniform')
-parser.add_argument('--scaled', help="if wanting to generate random filters for VGG architecture use this option", action="store_true")
+parser.add_argument('--network', help="specify network to generate filters for (vgg16, conv6, etc.)", type=str, default='conv6')
+parser.add_argument('--mr', help="mutation rate to use if using mutation-only", default=1.0, type=float)
+parser.add_argument('--broad_mut', help="use broad muation", default=False, action="store_true")
+parser.add_argument('--num_mutations', help='how many times to run the mutation function on the filters', default=500, type=int)
+parser.add_argument('--gain', help='optional scaling factor for some of the technqiues', default=1.0, type=float)
+parser.add_argument('--weighted_mut', help="would we like for the mutation function to weight its selection based on number of filters in each layer", default=False, action='store_true')
 # parser.add_argument('--batch_size', help='Number of images to use for novelty metric, only 1 batch used', default=64, type=int)
 # parser.add_argument('--dataset', help='which dataset should be used for novelty metric, choices are: random, cifar-10', default='random')
 args = parser.parse_args()
@@ -44,20 +49,32 @@ def run():
 
     for i in tqdm(range(population_size)): #while len(population) < population_size:
         model = Model()
-        if args.scaled:
+        if args.network == 'vgg16':
             net = helper.BigNet()
-        else:
+        elif args.network == 'conv6':
             net = helper.Net()
         # model.fitness =  net.get_fitness(net_input)
         if args.technique == 'gram-schmidt':
             model.filters = net.get_filters(numpy=True)
             new_filters = helper.gram_shmidt_orthonormalize(model.filters)
             net.set_filters = new_filters
-        if args.technique == 'normal':
+        elif  'xavier-normal' in args.technique:
+            helper.xavier_normal(net, args.gain)
+        elif 'xavier' in args.technique:
+            helper.xavier_uniform(net, args.gain)
+        elif 'orthogonal' in args.technique:
+            helper.orthogonal(net, args.gain)
+        elif 'default_normal' in args.technique:
+            helper.default_normal(net)
+        elif 'normal' in args.technique:
             helper.normalize(net)
-        if args.technique == 'mutate-only':
-            for k in range(800):
-                model.filters = helper.mutate(copy.deepcopy(net.get_filters()))
+        elif 'default uniform' in args.technique:
+            helper.default_uniform(net)
+        if 'mutate-only' in args.technique:
+            model.filters = copy.deepcopy(net.get_filters())
+            for k in range(args.num_mutations):
+                model.filters = helper.mutate(model.filters, args.broad_mut, args.mr, args.weighted_mut)
+            net.set_filters(copy.deepcopy(model.filters))
         model.filters = net.get_filters()
         population.append(model)
         # helper.wandb.log({'gen': 0, 'individual': i, 'fitness': model.fitness})
