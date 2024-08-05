@@ -3,10 +3,7 @@ import warnings
 warnings.filterwarnings('ignore') # Danger, Will Robinson! (not a scalable hack, and may surpress other helpful warning other than for ill-conditioned bootstrapped CI distributions)
 import helper_hpc as helper
 import torch
-import pickle
-import os
 import argparse
-import random
 from functools import partial
 
 parser=argparse.ArgumentParser(description="Process some input files")
@@ -86,12 +83,6 @@ def run():
 
     if args.unique_id != '':
         stored_filters = [stored_filters]
-
-    # if args.random or args.gram_schmidt:
-    #     random.shuffle(stored_filters[0])
-    #     stored_filters = np.array(stored_filters)
-    #     with open(filename, 'wb') as f:
-    #         np.save(f, stored_filters)
     
     helper.run(seed=False, rank=args.local_rank if args.devices > 0 else 0)
 

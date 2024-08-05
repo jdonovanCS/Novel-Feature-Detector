@@ -9,11 +9,10 @@
 
 cd $WORK/rditljtd/Novel-Feature-Detector
 
-module load $PROJECTS_HOME/datools/modulefiles/anaconda/3
 source $HOME/.bashrc
-conda activate EC2
+module load cseinit
+module load cse/anaconda/latest
+conda activate /p/home/rditljtd/miniconda/envs/ec2
+ulimit -n 4096
 
-wandb login --relogin e50cb709dc2bf04072661be1d9b46ec60d59e556
-wandb online
-ccmrun python evolution.py --evo_num_runs=1 --experiment_name="relative diversity intended 750" --as_intended --weighted_mutation
-# rsync -av --update /p/work/rditljtd/Novel-Feature-Detector/* /p/home/rditljtd/Novel-Feature-Detector/ --exclude wandb/ --exclude lightning_logs/
+python evolution.py --evo_num_runs=1 --experiment_name="relative diversity intended 750" --as_intended --weighted_mutation --evo_gens=750

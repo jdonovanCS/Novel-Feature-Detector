@@ -214,7 +214,7 @@ def run():
     from scipy.interpolate import UnivariateSpline
     from scipy.stats.kde import gaussian_kde 
     for k, filters in all_filters.items():
-        # continue
+        continue
         print(k)
         filters = [filters]
         num_runs = len(filters)
@@ -284,6 +284,74 @@ def run():
             print('mean: {} \t std: {}'.format(mean, std))
         plt.tight_layout()
         plt.show()
+
+    # weight dist, but remove filters that haven't been mutated
+    # load filters from trained models?
+    from scipy.interpolate import UnivariateSpline
+    from scipy.stats.kde import gaussian_kde 
+    for key, filters in all_filters.items():
+        # continue
+        print(key)
+
+        filters = [filters]
+        num_runs = len(filters)
+        pdf = 0
+        fig, axes = plt.subplots(len(filters[0]), figsize=(25, 15))
+        for layer in range(1, len(filters[0])):
+            pdf = mean = std = 0
+            num_bins_ = 1000
+            num_outside = 0
+            for run_num in range(num_runs):
+                filters_local = filters[run_num]
+                
+                num_outside += sum(abs(filters_local[layer].flatten()))
+
+                filter_values_local = []
+
+                for channel in filters_local[layer]:
+                    for filter in channel:
+                        if torch.sum(torch.abs(filter) > (1/np.sqrt(len(channel))) + .1) > 0:
+                            for val in filter:
+                                filter_values_local.append(val[0])
+
+                filter_values_local = np.array(filter_values_local)
+                if len(filter_values_local) == 0:
+                    continue
+                print(filter_values_local)
+                count, bins_count = np.histogram(filter_values_local.flatten(), bins=num_bins_, normed=True)
+                
+                # verify sum to 1
+                widths = bins_count[1:] - bins_count[:-1]
+                assert sum(count * widths) > .99 and sum(count * widths) < 1.01
+
+
+                # finding the PDF of the histogram using count values
+                pdf += count / sum(count)
+
+                mean += filter_values_local[layer].flatten().mean()
+                std += filter_values_local[layer].flatten().std()
+                
+                # using numpy np.cumsum to calculate the CDF
+                # We can also find using the PDF values by looping and adding
+            cdf = np.cumsum(pdf)
+                
+            pdf = pdf / len(filters_local[0])
+            mean = mean / len(filters_local[0])
+            std = std / len(filters_local[0])
+            
+            # Original plots
+            axes[layer].plot(bins_count[1:], pdf, color="blue")
+            axes[layer].set_title("PDF_{}".format(layer+1))
+            # plt.plot(bins_count[1:], cdf, label="CDF")
+            # print(mag)
+            perc_outside = num_outside/len(filters_local[0][layer].flatten())/(num_runs)
+            perc_inside = 1-perc_outside
+            # print('percentage of weights outside of the range: -{}, {}: {}'.format(divisor, divisor, perc_outside))
+            # print('percentage of weights inside of the range: -{}, {}: {}'.format(divisor, divisor, perc_inside))
+            print('mean: {} \t std: {}'.format(mean, std))
+        plt.tight_layout()
+        plt.show()
+
     from scipy.interpolate import make_interp_spline, BSpline
     fk = list(all_filters.keys())[0]
     input_data = []

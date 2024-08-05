@@ -151,24 +151,25 @@ def old():
 # old()
     
 def func2():
-    e_file = 'D:/Learning/UVM/Research Projects/Novel-Feature-Detector/output/mutate weighted 750/solutions_over_time_mutate-only.npy'
+    e_file = 'C:/Users/Jordan/Learning/UVM/Research/novel-feature-detector/output/mutate weighted 750/solutions_over_time_mutate-only.npy'
     np_load_old = partial(np.load)
     np.load = lambda *a,**k: np_load_old(*a, allow_pickle=True, **k)
     e_filters = np.load(e_file)
     np.load = np_load_old
 
+    glob_layer_diffs = []
     indices = []
     non_mutated = []
     mutated = []
     mutated_layer = []
     non_mutated_layer = []
-    for i in range(min(len(e_filters), 1)):
+    for i in range(min(len(e_filters), 1000)):
         # For each network
         num_diffs_by_val = 0
         total = 0
         layer_diffs = []
         total_layer = []
-        for j in range(0, len(e_filters[i]), len(e_filters[i])):
+        for j in range(0, len(e_filters[i])):
             
             # For each layer
             total_diffs=0
@@ -196,6 +197,9 @@ def func2():
                         total += 1
                         total_layer[k] += 1
 
+        glob_layer_diffs.append(np.array(layer_diffs))
+        print(np.mean(np.array(glob_layer_diffs), axis=0))
+        print('run num', i)
         print('layer diffs', layer_diffs)
         print('total layer filters', total_layer)
         print('num diffs by val', num_diffs_by_val)
@@ -203,6 +207,12 @@ def func2():
         print()
         print()
     
+
+    glob_layer_diffs = np.array(glob_layer_diffs)
+    mean_glob_layer_diffs = np.mean(glob_layer_diffs, axis=1)
+
+    print('mean global layer diffs', mean_glob_layer_diffs)
+
     print('mutated magnitude mean', np.array(mutated).mean())
     print('non mutated magnitude mean', np.array(non_mutated).mean())
     print()
@@ -231,7 +241,7 @@ def func2():
     print()
 
     
-
+    return
 
     n = Net.load_from_checkpoint('D:/Learning/UVM/Research Projects/Novel-Feature-Detector/trained_models/trained/convTrue_emutate weighted 750_nmutate-only_r0_g0.pth/novel-feature-detectors/0z402yzx/checkpoints/epoch=255-step=160000.ckpt')
 
@@ -297,7 +307,7 @@ func2()
 
 def create_pruned_networks():
 
-    e_file = 'D:/Learning/UVM/Research Projects/Novel-Feature-Detector/output/mutate weighted 750/solutions_over_time_mutate-only.npy'
+    e_file = 'C:/Users/Jordan/Learning/UVM/Research/novel-feature-detector/output/mutate weighted 750/solutions_over_time_mutate-only.npy'
     np_load_old = partial(np.load)
     np.load = lambda *a,**k: np_load_old(*a, allow_pickle=True, **k)
     e_filters = np.load(e_file)
@@ -327,6 +337,7 @@ def create_pruned_networks():
     np.save(e_file, e_filters)
 
 # create_pruned_networks()
+# func2()
 
 
 
