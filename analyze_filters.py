@@ -8,7 +8,7 @@ import copy
 
 
 
-filename = "output/random uniform/solutions_over_time_uniform.npy"
+filename = "output/mass_mutate_weighted_750/solutions_over_time_mutate-only.npy"
 
 # get filters from numpy file
 np_load_old = partial(np.load)
@@ -16,7 +16,7 @@ np.load = lambda *a,**k: np_load_old(*a, allow_pickle=True, **k)
 stored_filters = np.load(filename)
 np.load = np_load_old
 
-data_module = helper.get_data_module('cifar-10', batch_size=64, workers=0, shuffle=False)
+data_module = helper.get_data_module('random', batch_size=64, workers=0, shuffle=False)
 data_module.prepare_data()
 data_module.setup()
 trainer = pl.Trainer(accelerator="auto", limit_val_batches=1)
@@ -24,11 +24,22 @@ classnames = list(data_module.dataset_test.classes)
 net = helper.Net(num_classes=len(classnames), classnames=classnames, diversity={"type": 'relative', "pdop": 'mean', "ldop":'w_mean', 'k': -1, 'k_strat': 'closest'})
 
 
-novelties = []
+diversities = {}
+features_list = []
+novelties = {}
+
 for i in range(len(stored_filters)):
     for j in range(len(stored_filters[i])):
         net.set_filters(stored_filters[i][j])
         trainer.validate(net, dataloaders=data_module.train_dataloader(), verbose=False)
-        novelties.append(copy.deepcopy(net.avg_novelty))
+        features_list.append(copy.deepcopy(net.get_features(numpy=True)))
+        diversities[i] = (copy.deepcopy(net.avg_novelty))
 
-print(novelties)
+for i in range(len(features_list)):
+    novelties[i] = (helper.feature_novelty(features_list[i], features_list))
+
+print('diversities', {k: v for k, v in sorted(diversities.items(), key=lambda item: item[1])})
+print('max diversity', max(diversities.values()))
+print('novelties', {k: v for k, v in sorted(novelties.items(), key=lambda item: item[1])})
+print('max novelty', max(novelties.values()))
+

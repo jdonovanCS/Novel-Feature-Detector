@@ -114,6 +114,8 @@ class Net(pl.LightningModule):
     
     def validation_step(self, val_batch, batch_idx):
         with torch.no_grad():
+            for i in range(len(self.conv_layers)):
+                self.activations[i] = []
             x, y = val_batch
             logits = self.forward(x, get_activations=True)
             # get loss
@@ -145,8 +147,7 @@ class Net(pl.LightningModule):
 
             # log loss, acc, class acc, and novelty score
             # clear out activations
-            for i in range(len(self.conv_layers)):
-                self.activations[i] = []
+            
             self.log('val_loss', loss)
             self.log('val_acc', acc)
             self.log('val_class_acc', class_acc)

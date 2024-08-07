@@ -367,6 +367,14 @@ def gram_shmidt_orthonormalize(filters):
         f = copied.reshape(filters[f].shape)
     return filters
 
+def feature_novelty(features, history):
+    novelty = 0
+
+    for feat in history:
+        for i, l in enumerate(feat):
+            novelty += np.sum(np.abs(features[i]-l))
+    return novelty
+
 # @numba.njit(parallel=True)
 def normalize(net):
     for m in net.modules():
