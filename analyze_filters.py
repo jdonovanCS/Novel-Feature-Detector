@@ -5,10 +5,10 @@ import helper_hpc as helper
 from functools import partial
 import pytorch_lightning as pl
 import copy
+from tqdm import tqdm
 
 
-
-filename = "output/mass_mutate_weighted_750/solutions_over_time_mutate-only.npy"
+filename = "output/mutate 1250 weighted .37 .08 .08 .18 .12 .17/solutions_over_time_mutate-only.npy"
 
 # get filters from numpy file
 np_load_old = partial(np.load)
@@ -27,6 +27,8 @@ net = helper.Net(num_classes=len(classnames), classnames=classnames, diversity={
 diversities = {}
 features_list = []
 novelties = {}
+filters_list = []
+filter_novelties = {}
 
 for i in range(len(stored_filters)):
     for j in range(len(stored_filters[i])):
@@ -34,12 +36,17 @@ for i in range(len(stored_filters)):
         trainer.validate(net, dataloaders=data_module.train_dataloader(), verbose=False)
         features_list.append(copy.deepcopy(net.get_features(numpy=True)))
         diversities[i] = (copy.deepcopy(net.avg_novelty))
+        filters_list.append(copy.deepcopy(net.get_filters(numpy=True)))
+        
 
-for i in range(len(features_list)):
+for i in tqdm(range(len(features_list))):
     novelties[i] = (helper.feature_novelty(features_list[i], features_list))
+    filter_novelties[i] = (helper.filter_novelty(filters_list[i], filters_list))
 
 print('diversities', {k: v for k, v in sorted(diversities.items(), key=lambda item: item[1])})
 print('max diversity', max(diversities.values()))
 print('novelties', {k: v for k, v in sorted(novelties.items(), key=lambda item: item[1])})
 print('max novelty', max(novelties.values()))
+print('filter novelties', {k: v for k, v in sorted(filter_novelties.items(), key=lambda item: item[1])})
+print('max filter novelty', max(filter_novelties.values()))
 

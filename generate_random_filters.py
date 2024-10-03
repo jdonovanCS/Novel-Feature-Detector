@@ -19,10 +19,14 @@ parser.add_argument('--broad_mut', help="use broad muation", default=False, acti
 parser.add_argument('--num_mutations', help='how many times to run the mutation function on the filters', default=500, type=int)
 parser.add_argument('--gain', help='optional scaling factor for some of the technqiues', default=1.0, type=float)
 parser.add_argument('--weighted_mut', help="would we like for the mutation function to weight its selection based on number of filters in each layer", default=False, action='store_true')
+parser.add_argument('--weights_for_mut', help='specify weights for each layer during mutation', nargs=6, default=None, type=float)
 # parser.add_argument('--batch_size', help='Number of images to use for novelty metric, only 1 batch used', default=64, type=int)
 # parser.add_argument('--dataset', help='which dataset should be used for novelty metric, choices are: random, cifar-10', default='random')
 args = parser.parse_args()
 
+if args.weights_for_mut and (sum(args.weights_for_mut) < 0.99999999 or sum(args.weights_for_mut) > 1.000000001):
+    print('weights must add to 1.0. Current sum is: ', sum(args.weights_for_mut))
+    exit()
 
 def run():
     torch.multiprocessing.freeze_support()
@@ -73,7 +77,7 @@ def run():
         if 'mutate-only' in args.technique:
             model.filters = copy.deepcopy(net.get_filters())
             for k in range(args.num_mutations):
-                model.filters = helper.mutate(model.filters, args.broad_mut, args.mr, args.weighted_mut)
+                model.filters = helper.mutate(model.filters, args.broad_mut, args.mr, args.weighted_mut, args.weights_for_mut)
             net.set_filters(copy.deepcopy(model.filters))
         model.filters = net.get_filters()
         population.append(model)

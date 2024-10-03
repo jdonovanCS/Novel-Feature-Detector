@@ -375,6 +375,14 @@ def feature_novelty(features, history):
             novelty += np.sum(np.abs(features[i]-l))
     return novelty
 
+def filter_novelty(filters, history):
+    novelty = 0
+
+    for filter in history:
+        for i, l in enumerate(filter):
+            novelty += np.sum(np.abs(filters[i]-l))
+    return novelty
+
 # @numba.njit(parallel=True)
 def normalize(net):
     for m in net.modules():
@@ -497,11 +505,11 @@ def diversity_constant(acts):
     return sum(constants)
 
 
-def mutate(filters, broad_mutation=False, mr=1.0, weighted_mut=False):
+def mutate(filters, broad_mutation=False, mr=1.0, weighted_mut=False, weights_for_mut=None):
 
     if not broad_mutation:
         # select a single 3x3 filter in one of the convolutional layers and replace it with a random new filter.
-        if weighted_mut:
+        if weighted_mut and not weights_for_mut:
             total_filters = sum([len(x.flatten()) for x in filters])
             rand_filter = random.randint(1, total_filters)
             selected_layer = 0
@@ -526,6 +534,33 @@ def mutate(filters, broad_mutation=False, mr=1.0, weighted_mut=False):
                 count += len(filters[selected_layer][selected_dims[0]][i].flatten())
             # print(rand_filter)
             # print(selected_layer, selected_dims)
+        elif weighted_mut and weights_for_mut:
+            total_filters = int(sum([len(filters[i].flatten())*weights_for_mut[i] for i in range(len(filters))]))
+            rand_layer = random.randint(1, total_filters)
+            count = 0
+            for i in range(len(weights_for_mut)):
+                if weights_for_mut[i]*len(filters[i].flatten()) + count > rand_layer:
+                    selected_layer = i
+                    break
+                count += weights_for_mut[i]*len(filters[i].flatten())
+
+            rand_filter = random.randint(1, int(len(filters[selected_layer].flatten())))
+            count = 0
+            selected_dims = [0,0]
+
+            for i in range(len(filters[selected_layer])):
+                if len(filters[selected_layer][i].flatten()) + count > rand_filter:
+                    selected_dims[0] = i
+                    break
+                count += len(filters[selected_layer][i].flatten())
+            
+            for i in range(len(filters[selected_layer][selected_dims[0]])):
+                if len(filters[selected_layer][selected_dims[0]][i].flatten()) + count > rand_filter:
+                    selected_dims[1] = i
+                    break
+                count += len(filters[selected_layer][selected_dims[0]][i].flatten())
+
+            
 
         else:
             selected_layer = random.randint(0,len(filters)-1)

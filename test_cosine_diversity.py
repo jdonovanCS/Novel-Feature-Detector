@@ -151,7 +151,7 @@ def old():
 # old()
     
 def func2():
-    e_file = 'C:/Users/Jordan/Learning/UVM/Research/novel-feature-detector/output/mutate weighted 750/solutions_over_time_mutate-only.npy'
+    e_file = 'D:/Learning/UVM/Research Projects/Novel-Feature-Detector/output/mutate 750 weighted .75 .04 .05 .05 .05 .06/solutions_over_time_mutate-only.npy'
     np_load_old = partial(np.load)
     np.load = lambda *a,**k: np_load_old(*a, allow_pickle=True, **k)
     e_filters = np.load(e_file)
@@ -163,6 +163,7 @@ def func2():
     mutated = []
     mutated_layer = []
     non_mutated_layer = []
+    # for i in [5, 347, 13, 22, 138, 188, 94, 82, 48, 130, 305, 424, 471, 393, 430, 455, 351, 145, 419]: 
     for i in range(min(len(e_filters), 1000)):
         # For each network
         num_diffs_by_val = 0
