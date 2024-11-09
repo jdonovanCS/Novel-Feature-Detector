@@ -46,6 +46,7 @@ parser.add_argument('--rand_tech', help='which random technique is used to initi
 parser.add_argument('--mr', help='mutation rate', default=1., type=float)
 parser.add_argument('--broad_mutation', help='mutate entire individual by small amount, versus a single filter', default=False, action='store_true')
 parser.add_argument('--weighted_mutation', help="weighted mutation function to choose filters weighted to how many are in each layer", default=False, action='store_true')
+parser.add_argument('--weights_for_mut', help="weights for each layer in the mutation operation", default=None, nargs=6)
 
 # fitness params
 parser.add_argument('--evo_dataset_for_novelty', help='Dataset used for novelty computation during evolution and training', default='random')
@@ -187,10 +188,11 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
         # Create the child model and store it.
         for parent in parents:
             child = Model()
+            mutate_indices = helper.choose_mutate_index(weighted_mut=args.weighted_mutation, weights_for_mut=args.weights_for_mut)
             if args.as_intended:
-                child.filters = helper.mutate(copy.deepcopy(parent.filters), broad_mutation=args.broad_mutation, mr=args.mr, weighted_mut=args.weighted_mutation)
+                child.filters = helper.mutate(copy.deepcopy(parent.filters), broad_mutation=args.broad_mutation, mr=args.mr, mutate_indices)
             else:
-                child.filters = helper.mutate(parent.filters, broad_mutation=args.broad_mutation, mr=args.mr, weighted_mut=args.weighted_mutation)
+                child.filters = helper.mutate(parent.filters, broad_mutation=args.broad_mutation, mr=args.mr, mutate_indices)
             net.set_filters(child.filters)
             if args.use_training_dataloader:
                 trainer.validate(net, dataloaders=data_module.train_dataloader(), verbose=False)

@@ -8,6 +8,7 @@ import copy
 from tqdm import tqdm
 
 
+# list of filters to load
 filename = "output/mutate 1250 weighted .37 .08 .08 .18 .12 .17/solutions_over_time_mutate-only.npy"
 
 # get filters from numpy file
@@ -16,6 +17,7 @@ np.load = lambda *a,**k: np_load_old(*a, allow_pickle=True, **k)
 stored_filters = np.load(filename)
 np.load = np_load_old
 
+# create pytorch data_module, trainer, and network
 data_module = helper.get_data_module('random', batch_size=64, workers=0, shuffle=False)
 data_module.prepare_data()
 data_module.setup()
@@ -23,13 +25,14 @@ trainer = pl.Trainer(accelerator="auto", limit_val_batches=1)
 classnames = list(data_module.dataset_test.classes)
 net = helper.Net(num_classes=len(classnames), classnames=classnames, diversity={"type": 'relative', "pdop": 'mean', "ldop":'w_mean', 'k': -1, 'k_strat': 'closest'})
 
-
+# variables to store calculations
 diversities = {}
 features_list = []
 novelties = {}
 filters_list = []
 filter_novelties = {}
 
+# for each set of filters in list of imported filters (shape=(1, # of layers, # of filters, # of in-channels, size of filters, size of filters))
 for i in range(len(stored_filters)):
     for j in range(len(stored_filters[i])):
         net.set_filters(stored_filters[i][j])

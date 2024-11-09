@@ -504,71 +504,75 @@ def diversity_constant(acts):
         constants[i] = i
     return sum(constants)
 
+def choose_mutate_index(filters, weighted_mut=False, weights_for_mut=None):
+    if weighted_mut and not weights_for_mut:
+        total_filters = sum([len(x.flatten()) for x in filters])
+        rand_filter = random.randint(1, total_filters)
+        selected_layer = 0
+        selected_dims = [0,0]
+        count = 0
+        for i in range(len(filters)):
+            if len(filters[i].flatten()) + count > rand_filter:
+                selected_layer = i
+                break
+            count += len(filters[i].flatten())
+        
+        for i in range(len(filters[selected_layer])):
+            if len(filters[selected_layer][i].flatten()) + count > rand_filter:
+                selected_dims[0] = i
+                break
+            count += len(filters[selected_layer][i].flatten())
+        
+        for i in range(len(filters[selected_layer][selected_dims[0]])):
+            if len(filters[selected_layer][selected_dims[0]][i].flatten()) + count > rand_filter:
+                selected_dims[1] = i
+                break
+            count += len(filters[selected_layer][selected_dims[0]][i].flatten())
+        # print(rand_filter)
+        # print(selected_layer, selected_dims)
+    elif weighted_mut and weights_for_mut:
+        total_filters = int(sum([len(filters[i].flatten())*weights_for_mut[i] for i in range(len(filters))]))
+        rand_layer = random.randint(1, total_filters)
+        count = 0
+        for i in range(len(weights_for_mut)):
+            if weights_for_mut[i]*len(filters[i].flatten()) + count > rand_layer:
+                selected_layer = i
+                break
+            count += weights_for_mut[i]*len(filters[i].flatten())
 
-def mutate(filters, broad_mutation=False, mr=1.0, weighted_mut=False, weights_for_mut=None):
+        rand_filter = random.randint(1, int(len(filters[selected_layer].flatten())))
+        count = 0
+        selected_dims = [0,0]
+
+        for i in range(len(filters[selected_layer])):
+            if len(filters[selected_layer][i].flatten()) + count > rand_filter:
+                selected_dims[0] = i
+                break
+            count += len(filters[selected_layer][i].flatten())
+        
+        for i in range(len(filters[selected_layer][selected_dims[0]])):
+            if len(filters[selected_layer][selected_dims[0]][i].flatten()) + count > rand_filter:
+                selected_dims[1] = i
+                break
+            count += len(filters[selected_layer][selected_dims[0]][i].flatten())
+       
+    else:
+        selected_layer = random.randint(0,len(filters)-1)
+        selected_dims = []
+        for v in list(filters[selected_layer].shape)[0:2]:
+            selected_dims.append(random.randint(0,v-1))
+
+    return (selected_layer, selected_dims[0], selected_dims[1])
+
+
+def mutate(filters, broad_mutation=False, mr=1.0, dims=None):
 
     if not broad_mutation:
         # select a single 3x3 filter in one of the convolutional layers and replace it with a random new filter.
-        if weighted_mut and not weights_for_mut:
-            total_filters = sum([len(x.flatten()) for x in filters])
-            rand_filter = random.randint(1, total_filters)
-            selected_layer = 0
-            selected_dims = [0,0]
-            count = 0
-            for i in range(len(filters)):
-                if len(filters[i].flatten()) + count > rand_filter:
-                    selected_layer = i
-                    break
-                count += len(filters[i].flatten())
+        if dims == None:
+            dims = choose_mutate_index(filters)
             
-            for i in range(len(filters[selected_layer])):
-                if len(filters[selected_layer][i].flatten()) + count > rand_filter:
-                    selected_dims[0] = i
-                    break
-                count += len(filters[selected_layer][i].flatten())
-            
-            for i in range(len(filters[selected_layer][selected_dims[0]])):
-                if len(filters[selected_layer][selected_dims[0]][i].flatten()) + count > rand_filter:
-                    selected_dims[1] = i
-                    break
-                count += len(filters[selected_layer][selected_dims[0]][i].flatten())
-            # print(rand_filter)
-            # print(selected_layer, selected_dims)
-        elif weighted_mut and weights_for_mut:
-            total_filters = int(sum([len(filters[i].flatten())*weights_for_mut[i] for i in range(len(filters))]))
-            rand_layer = random.randint(1, total_filters)
-            count = 0
-            for i in range(len(weights_for_mut)):
-                if weights_for_mut[i]*len(filters[i].flatten()) + count > rand_layer:
-                    selected_layer = i
-                    break
-                count += weights_for_mut[i]*len(filters[i].flatten())
-
-            rand_filter = random.randint(1, int(len(filters[selected_layer].flatten())))
-            count = 0
-            selected_dims = [0,0]
-
-            for i in range(len(filters[selected_layer])):
-                if len(filters[selected_layer][i].flatten()) + count > rand_filter:
-                    selected_dims[0] = i
-                    break
-                count += len(filters[selected_layer][i].flatten())
-            
-            for i in range(len(filters[selected_layer][selected_dims[0]])):
-                if len(filters[selected_layer][selected_dims[0]][i].flatten()) + count > rand_filter:
-                    selected_dims[1] = i
-                    break
-                count += len(filters[selected_layer][selected_dims[0]][i].flatten())
-
-            
-
-        else:
-            selected_layer = random.randint(0,len(filters)-1)
-            selected_dims = []
-            for v in list(filters[selected_layer].shape)[0:2]:
-                selected_dims.append(random.randint(0,v-1))
-            
-        selected_filter = filters[selected_layer][selected_dims[0]][selected_dims[1]]
+        selected_filter = filters[dims[0]][dims[1]][dims[2]]
         
         # create new random filter to replace the selected filter
         # selected_filter = torch.tensor(np.random.rand(3,3), device=helper.device)
@@ -584,7 +588,7 @@ def mutate(filters, broad_mutation=False, mr=1.0, weighted_mut=False, weights_fo
         # normalize just the values that are outside of -1, 1 range
         selected_filter[(selected_filter > 1) | (selected_filter < -1)] /= torch.amax(torch.absolute(selected_filter))
         
-        filters[selected_layer][selected_dims[0]][selected_dims[1]] = selected_filter
+        filters[dims[0]][dims[1]][dims[2]] = selected_filter
         # print(selected_filter)
         return filters
     else:

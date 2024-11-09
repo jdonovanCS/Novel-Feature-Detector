@@ -51,6 +51,8 @@ def run():
     population = []
     helper.config['experiment_name'] = experiment_name
 
+    mutated_filter_indices = []
+
     for i in tqdm(range(population_size)): #while len(population) < population_size:
         model = Model()
         if args.network == 'vgg16':
@@ -76,8 +78,10 @@ def run():
             helper.default_uniform(net)
         if 'mutate-only' in args.technique:
             model.filters = copy.deepcopy(net.get_filters())
+            mutated_filter_indices.append([])
             for k in range(args.num_mutations):
-                model.filters = helper.mutate(model.filters, args.broad_mut, args.mr, args.weighted_mut, args.weights_for_mut)
+                mutated_filter_indices[i].append(helper.choose_mutate_index(model.filters, args.weighted_mut, args.weights_for_mut))
+                model.filters = helper.mutate(model.filters, args.broad_mut, args.mr, mutated_filter_indices[i][k])
             net.set_filters(copy.deepcopy(model.filters))
         model.filters = net.get_filters()
         population.append(model)
@@ -99,6 +103,10 @@ def run():
     for k,v in sol_dict.items():
         with open('output/' + experiment_name + '/solutions_over_time_{}.npy'.format(k), 'wb') as f:
             np.save(f, v[::])
+
+    for k,v in sol_dict.items():
+        with open('output/' + experiment_name + '/mutated_filter_indices_{}.npy'.format(k), 'wb') as f:
+            np.save(f, mutated_filter_indices)
     # with open('output/' + experiment_name + '/random_gen_fitnesses.txt', 'a+') as f:
     #     f.write(str(fitnesses))
 
