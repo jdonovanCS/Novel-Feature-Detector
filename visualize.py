@@ -17,6 +17,7 @@ import re
 import copy
 from scipy import stats
 import seaborn as sns
+import json
 
 # arguments
 parser=argparse.ArgumentParser(description="Process some input files")
@@ -31,34 +32,59 @@ def run():
     
     helper.run(seed=False)
     global all_filters
+    global data 
+    data = {}
     all_filters = {}
     trained_model_filters = {}
     pattern = r'[0-9]'
+    print("importing filters")
     import_filters()
+    print("setting up datamodules")
     setup_datamodules()
-    test_datamodules()
-    visualize_filters()
-    verify_activations()
-    visualize_activations()
-    visualize_weight_dist()
-    visualize_weight_dist_only_mutated()
-    visualize_weight_dist_only_nonmutated()
+    # print("testing datamodules")
+    # test_datamodules()
+    # print("visualizing filters")
+    # visualize_filters()
+    # print("verifying activations")
+    # verify_activations()
+    # print("visualizing activations")
+    # visualize_activations()
+    # print("visualizing all weight dist")
+    # visualize_weight_dist()
+    # print("visualizing mutated weight dist")
+    # visualize_weight_dist_only_mutated()
+    # print("visualizing non-mutated weight dist")
+    # visualize_weight_dist_only_nonmutated()
 
     all_filters={}
+    print("importing trained filters")
     import_trained_filters()
-    visualize_weight_dist()
+    # print("visualizing all trained weight dist")
+    # visualize_weight_dist()
+    print("getting indices from file")
     indices = get_mutated_filter_indices_from_file()
-    visualize_weight_dist_only_mutated(indices)
+    # print("visualizing mutated trained weight dist")
+    # visualize_weight_dist_only_mutated(indices)
+    print("visualizing non-mutated trained weight dist")
     visualize_weight_dist_only_nonmutated(indices)
-    visualize_weight_dist_only_mutated()
-    visualize_weight_dist_only_nonmutated()
+    # print("visualizing high trained weight dist")
+    # visualize_weight_dist_only_mutated()
+    # print("visualizing low trained weight dist")
+    # visualize_weight_dist_only_nonmutated()
 
     
         
 
 
 def import_filters():
-    for filename in args.filenames:
+    with open('visualize_specs.json', 'r') as file:
+        global data
+        data = json.load(file)
+
+    # Print the data
+    print(data)
+
+    for filename in data['filenames']:
         # get filters from numpy file
         np_load_old = partial(np.load)
         np.load = lambda *a,**k: np_load_old(*a, allow_pickle=True, **k)
@@ -124,16 +150,19 @@ def test_datamodules():
             plt.show()
 
 def import_trained_filters():
-    if args.trained_models:
-        for filename in args.trained_models:
-            
-            net = Net(num_classes=len(classnames), classnames=classnames, diversity={'type': 'relative', 'ldop':'w_mean', 'pdop':'mean', 'k': -1, 'k_strat': 'closest'}) 
-            if args.network.lower() == 'vgg16':
-                net = BigNet(num_classes=len(classnames), classnames=classnames, diversity = {'type': 'relative', 'ldop':'w_mean', 'pdop':'mean', 'k': -1, 'k_strat': 'closest'})
+    
+    for filename in data['trained_models']:
         
-            net = net.load_from_checkpoint(filename)
-            name = filename.split("trained")[-1].split('novel-feature-detectors')[0]
-            all_filters[name] = net.get_filters()
+        name = filename.split("trained")[-1].split('novel-feature-detectors')[0].split('_')[1]
+        if name not in all_filters:
+            all_filters[name] = []
+        
+        net = Net(num_classes=len(classnames), classnames=classnames, diversity={'type': 'relative', 'ldop':'w_mean', 'pdop':'mean', 'k': -1, 'k_strat': 'closest'}) 
+        if args.network.lower() == 'vgg16':
+            net = BigNet(num_classes=len(classnames), classnames=classnames, diversity = {'type': 'relative', 'ldop':'w_mean', 'pdop':'mean', 'k': -1, 'k_strat': 'closest'})
+    
+        net = net.load_from_checkpoint(filename)
+        all_filters[name].append(net.get_filters())
 
 
 # visualize filters
@@ -383,15 +412,15 @@ def old_visualize_weight_dist_only_mutated(indices=None):
         plt.tight_layout()
         plt.show()
 
-        if not os.path.isfile('output/' + args.filenames[i].split('solutions_over_time')[0].split('output')[1].replace('\\', '') + '/mutated_filter_indices.npy'):
-            with open('output/' + args.filenames[i].split('solutions_over_time')[0].split('output')[1].replace('\\', '') + '/mutated_filter_indices.npy', 'wb') as f:
+        if not os.path.isfile('output/' + data['filenames'][i].split('solutions_over_time')[0].split('output')[1].replace('\\', '') + '/mutated_filter_indices.npy'):
+            with open('output/' + data['filenames'][i].split('solutions_over_time')[0].split('output')[1].replace('\\', '') + '/mutated_filter_indices.npy', 'wb') as f:
                 np.save(f, mutated_filter_indices)
 
 def get_mutated_filter_indices_from_file():
-    for i in range(len(args.filenames)):
+    for i in range(len(data['filenames'])):
         np_load_old = partial(np.load)
         np.load = lambda *a,**k: np_load_old(*a, allow_pickle=True, **k)
-        indices_file = 'output/' + args.filenames[i].split('solutions_over_time')[0].split('output')[1].replace('\\', '') + '/mutated_filter_indices.npy'
+        indices_file = 'output/' + data['filenames'][i].split('solutions_over_time')[0].split('output')[1].replace('\\', '') + '/mutated_filter_indices.npy'
         indices = np.load(indices_file)
         np.load = np_load_old
         return indices
@@ -471,7 +500,6 @@ def old_visualize_weight_dist_only_nonmutated(indices=None):
 
 def visualize_weight_dist():
     for i, (key, filters) in enumerate(all_filters.items()):
-        mutated_filter_indices = []
 
         # filters = [filters]
         # continue
@@ -507,57 +535,85 @@ def visualize_weight_dist():
 
 def visualize_weight_dist_only_mutated(indices=None):
     for i, (key, filters) in enumerate(all_filters.items()):
-        mutated_filter_indices = []
 
         # continue
         print(key)
 
         # filters = [filters]
         num_runs = len(filters)
+        mutated_filter_indices = [(-1,-1,-1,-1) for j in range(10000)]
+        count = 0
         fig, ax = plt.subplots(figsize=(25, 15))
         handles, labels = ax.get_legend_handles_labels()
         fig.legend(handles, ["layer {}".format(i) for i in range(len(filters[0]))], loc='lower right')
         # can put if statement here for if indices == None. If not, then just add the ones we know matter.. duh
-        for layer in range(0, len(filters[0])):
-            num_bins_ = 100
-            filter_values_local = []
-            for run_num in range(num_runs):
-                filters_local = filters[run_num]
-                mutated_filter_indices.append([])
-                
-                
-                for c, channel in enumerate(filters_local[layer]):
-                    for f, filter in enumerate(channel):
-                        # could make this if a bit more efficient if I break out the np_equal
-                        if ((indices is None) and (torch.sum(torch.abs(filter) > (1/np.sqrt(len(channel))) + .1) > 0)) or ((indices is not None) and (any(np.array_equal([run_num, layer, c, f], row) for row in indices[run_num]))): 
-                                mutated_filter_indices[run_num].append((run_num, layer, c, f))
-                                for val in filter:
-                                    filter_values_local.append(val[0])
-            
-            if len(filter_values_local) == 0:
-                continue
+        if indices is None:
+            for layer in range(0, len(filters[0])):
+                num_bins_ = 100
+                filter_values_local = []
+                for run_num in range(num_runs):
+                    filters_local = filters[run_num]
+                    
+                    for c, channel in enumerate(filters_local[layer]):
+                        for f, filter in enumerate(channel):
+                            # could make this if a bit more efficient if I break out the np_equal
+                            if torch.sum(torch.abs(filter) > (1/np.sqrt(len(channel))) + .1) > 0:
+                                    mutated_filter_indices[count] = ((run_num, layer, c, f))
+                                    count += 1
+                                    for val in filter:
+                                        filter_values_local.append(val[0])
 
-            filter_values_local = np.array(filter_values_local)
-            kde = stats.gaussian_kde(filter_values_local)
-            filter_values_local_x = np.linspace(filter_values_local.min(), filter_values_local.max(), 100)
+                print(len(filter_values_local))
+                if len(filter_values_local) == 0:
+                    continue
+
+                filter_values_local = np.array(filter_values_local)
+                kde = stats.gaussian_kde(filter_values_local)
+                filter_values_local_x = np.linspace(filter_values_local.min(), filter_values_local.max(), 100)
+                
+                # Original plots
+                # axes[layer].hist(filter_values_local, bins=num_bins_, alpha=.4, density=True)
+                ax.plot(filter_values_local_x, kde(filter_values_local_x))
+                # axes[layer].set_title("PDF_{}".format(layer+1))
+                
+                print('mean: {} \t std: {}'.format(filter_values_local.mean(), filter_values_local.std()))
+
+        else:
+            for layer in range(0, len(filters[0])):
+                filter_values_local = []
+                for ind_indices in indices:
+                    if not all(np.equal(ind_indices, [-1,-1,-1,-1])) and ind_indices[1] == layer:
+                        for val in filters[ind_indices[0]][ind_indices[1]][ind_indices[2]][ind_indices[3]]:
+                            filter_values_local.append(val[0])
             
-            # Original plots
-            # axes[layer].hist(filter_values_local, bins=num_bins_, alpha=.4, density=True)
-            ax.plot(filter_values_local_x, kde(filter_values_local_x))
-            # axes[layer].set_title("PDF_{}".format(layer+1))
+
             
-            print('mean: {} \t std: {}'.format(filter_values_local.mean(), filter_values_local.std()))
+                print(len(filter_values_local))
+                if len(filter_values_local) == 0:
+                    continue
+
+                filter_values_local = np.array(filter_values_local)
+                kde = stats.gaussian_kde(filter_values_local)
+                filter_values_local_x = np.linspace(filter_values_local.min(), filter_values_local.max(), 100)
+                
+                # Original plots
+                # axes[layer].hist(filter_values_local, bins=num_bins_, alpha=.4, density=True)
+                ax.plot(filter_values_local_x, kde(filter_values_local_x))
+                # axes[layer].set_title("PDF_{}".format(layer+1))
+                
+                print('mean: {} \t std: {}'.format(filter_values_local.mean(), filter_values_local.std()))
         plt.tight_layout()
         plt.show()
 
         
-        if not os.path.isfile('output/' + args.filenames[i].split('solutions_over_time')[0].split('output')[1].replace('\\', '') + '/mutated_filter_indices.npy'):
-            with open('output/' + args.filenames[i].split('solutions_over_time')[0].split('output')[1].replace('\\', '') + '/mutated_filter_indices.npy', 'wb') as f:
+        if not os.path.isfile('output/' + data['filenames'][i].split('solutions_over_time')[0].split('output')[1].replace('\\', '') + '/mutated_filter_indices.npy'):
+            with open('output/' + data['filenames'][i].split('solutions_over_time')[0].split('output')[1].replace('\\', '') + '/mutated_filter_indices.npy', 'wb') as f:
+                print(len(mutated_filter_indices))
+                print(len(mutated_filter_indices[0]))
                 np.save(f, mutated_filter_indices)
 
 def visualize_weight_dist_only_nonmutated(indices=None):
     for i, (key, filters) in enumerate(all_filters.items()):
-        mutated_filter_indices = []
 
         # continue
         print(key)
@@ -568,34 +624,63 @@ def visualize_weight_dist_only_nonmutated(indices=None):
         handles, labels = ax.get_legend_handles_labels()
         fig.legend(handles, ["layer {}".format(i) for i in range(len(filters[0]))], loc='lower right')
         # can put if statement here for if indices == None. If not, then just add the ones we know matter.. duh
-        for layer in range(0, len(filters[0])):
-            num_bins_ = 100
-            filter_values_local = []
-            for run_num in range(num_runs):
-                filters_local = filters[run_num]
+        if indices is None:
+            for layer in range(0, len(filters[0])):
+                num_bins_ = 100
+                filter_values_local = []
+                for run_num in range(num_runs):
+                    filters_local = filters[run_num]
+                    
+                    
+                    for c, channel in enumerate(filters_local[layer]):
+                        for f, filter in enumerate(channel):
+                            # could make this if a bit more efficient if I break out the np_equal
+                            if (indices is None and torch.sum(torch.abs(filter) > (1/np.sqrt(len(channel))) + .1) == 0) or (indices is not None and not any(np.array_equal([run_num, layer, c, f], row) for row in indices)):
+                                    for val in filter:
+                                        filter_values_local.append(val[0])
                 
-                
-                for c, channel in enumerate(filters_local[layer]):
-                    for f, filter in enumerate(channel):
-                        # could make this if a bit more efficient if I break out the np_equal
-                        if (indices is None and torch.sum(torch.abs(filter) > (1/np.sqrt(len(channel))) + .1) == 0) or (indices is not None and not any(np.array_equal([run_num, layer, c, f], row) for row in indices[run_num])):
-                                mutated_filter_indices.append((run_num, layer, c, f))
-                                for val in filter:
-                                    filter_values_local.append(val[0])
-            
-            if len(filter_values_local) == 0:
-                continue
+                if len(filter_values_local) == 0:
+                    continue
 
-            filter_values_local = np.array(filter_values_local)
-            kde = stats.gaussian_kde(filter_values_local)
-            filter_values_local_x = np.linspace(filter_values_local.min(), filter_values_local.max(), 100)
+                filter_values_local = np.array(filter_values_local)
+                kde = stats.gaussian_kde(filter_values_local)
+                filter_values_local_x = np.linspace(filter_values_local.min(), filter_values_local.max(), 100)
+                
+                # Original plots
+                # axes[layer].hist(filter_values_local, bins=num_bins_, alpha=.4, density=True)
+                ax.plot(filter_values_local_x, kde(filter_values_local_x))
+                # axes[layer].set_title("PDF_{}".format(layer+1))
+                
+                print('mean: {} \t std: {}'.format(filter_values_local.mean(), filter_values_local.std()))
+
+        else:
+            for layer in range(0, len(filters[0])):
+                filter_values_local = []
+                for run_num in range(num_runs):
+                    filters_local = filters[run_num]
+                    filter_values_local = np.append(filter_values_local, filters_local[layer].flatten())     
             
-            # Original plots
-            # axes[layer].hist(filter_values_local, bins=num_bins_, alpha=.4, density=True)
-            ax.plot(filter_values_local_x, kde(filter_values_local_x))
-            # axes[layer].set_title("PDF_{}".format(layer+1))
-            
-            print('mean: {} \t std: {}'.format(filter_values_local.mean(), filter_values_local.std()))
+                indices_values = []
+                for ind_indices in indices:
+                    if not all(np.equal([-1,-1,-1,-1], ind_indices)) and ind_indices[1] == layer:
+                        indices_values = np.append(indices_values, filters[ind_indices[0]][ind_indices[1]][ind_indices[2]][ind_indices[3]].flatten())
+                for val in indices_values:
+                    filter_values_local = np.delete(filter_values_local, np.where(np.around(filter_values_local, 2) == np.around(val, 2))[0][0])
+
+                if len(filter_values_local) == 0:
+                    continue
+
+                filter_values_local = np.array(filter_values_local)
+                kde = stats.gaussian_kde(filter_values_local)
+                filter_values_local_x = np.linspace(filter_values_local.min(), filter_values_local.max(), 100)
+                
+                # Original plots
+                # axes[layer].hist(filter_values_local, bins=num_bins_, alpha=.4, density=True)
+                ax.plot(filter_values_local_x, kde(filter_values_local_x))
+                # axes[layer].set_title("PDF_{}".format(layer+1))
+                
+                print('mean: {} \t std: {}'.format(filter_values_local.mean(), filter_values_local.std()))
+
         plt.tight_layout()
         plt.show()
 

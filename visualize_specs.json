@@ -1,0 +1,17 @@
+{
+    "trained_models": [
+        "D:\\Learning\\UVM\\Research Projects\\Novel-Feature-Detector\\trained_models\\trained\\convTrue_emutate weighted 750_nmutate-only_r0_g0.pth\\novel-feature-detectors\\0z402yzx\\checkpoints\\epoch=255-step=160000.ckpt",
+        "D:\\Learning\\UVM\\Research Projects\\Novel-Feature-Detector\\trained_models\\trained\\convTrue_emutate weighted 750_nmutate-only_r1_g0.pth\\novel-feature-detectors\\dwssw22v\\checkpoints\\epoch=255-step=160000.ckpt",
+        "D:\\Learning\\UVM\\Research Projects\\Novel-Feature-Detector\\trained_models\\trained\\convTrue_emutate weighted 750_nmutate-only_r2_g0.pth\\novel-feature-detectors\\506zm9pn\\checkpoints\\epoch=255-step=160000.ckpt",
+        "D:\\Learning\\UVM\\Research Projects\\Novel-Feature-Detector\\trained_models\\trained\\convTrue_emutate weighted 750_nmutate-only_r3_g0.pth\\novel-feature-detectors\\ge8i12q2\\checkpoints\\epoch=255-step=160000.ckpt",
+        "D:\\Learning\\UVM\\Research Projects\\Novel-Feature-Detector\\trained_models\\trained\\convTrue_emutate weighted 750_nmutate-only_r4_g0.pth\\novel-feature-detectors\\61gzzz72\\checkpoints\\epoch=255-step=160000.ckpt",
+        "D:\\Learning\\UVM\\Research Projects\\Novel-Feature-Detector\\trained_models\\trained\\convTrue_emutate weighted 750_nmutate-only_r5_g0.pth\\novel-feature-detectors\\chbazvf4\\checkpoints\\epoch=255-step=160000.ckpt",
+        "D:\\Learning\\UVM\\Research Projects\\Novel-Feature-Detector\\trained_models\\trained\\convTrue_emutate weighted 750_nmutate-only_r6_g0.pth\\novel-feature-detectors\\voc4vote\\checkpoints\\epoch=255-step=160000.ckpt",
+        "D:\\Learning\\UVM\\Research Projects\\Novel-Feature-Detector\\trained_models\\trained\\convTrue_emutate weighted 750_nmutate-only_r7_g0.pth\\novel-feature-detectors\\sa033crx\\checkpoints\\epoch=255-step=160000.ckpt",
+        "D:\\Learning\\UVM\\Research Projects\\Novel-Feature-Detector\\trained_models\\trained\\convTrue_emutate weighted 750_nmutate-only_r8_g0.pth\\novel-feature-detectors\\jz9bawtz\\checkpoints\\epoch=255-step=160000.ckpt",
+        "D:\\Learning\\UVM\\Research Projects\\Novel-Feature-Detector\\trained_models\\trained\\convTrue_emutate weighted 750_nmutate-only_r9_g0.pth\\novel-feature-detectors\\fjz6jsz1\\checkpoints\\epoch=255-step=160000.ckpt"
+    ],
+    "filenames": [
+        "D:\\Learning\\UVM\\Research Projects\\Novel-Feature-Detector\\output\\mutate weighted 750\\solutions_over_time_mutate-only.npy"
+    ]
+}
