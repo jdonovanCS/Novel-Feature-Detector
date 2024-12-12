@@ -16,6 +16,7 @@ from net import Net
 from big_net import Net as BigNet
 from ae_net import AE
 from cifar100datamodule import CIFAR100DataModule
+from tinyimagenetdatamodule import TinyImageNetDataModule
 import numba
 import os
 import random
@@ -40,7 +41,7 @@ def create_random_images(num_images=200):
 #     train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=2)
 #     return train_loader
 from pytorch_lightning.plugins import DDPPlugin
-def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, fixed_conv=False, val_interval=1, novelty_interval=None, diversity={'type':'absolute', 'pdop':None, 'ldop':None, 'k': None, 'k_strat':True}, scaled=False, devices=1):
+def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, fixed_conv=False, val_interval=1, novelty_interval=None, diversity={'type':'absolute', 'pdop':None, 'ldop':None, 'k': None, 'k_strat':True}, scaled=False, devices=1, save_interval=None):
     # check which dataset and get the classes for it
     gc.collect()
     torch.cuda.empty_cache()
@@ -98,6 +99,10 @@ def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, 
 
     if save_path is None:
         save_path = PATH
+    callbacks=[]
+    if save_interval is not None:
+        callbacks=[pl.callbacks.ModelCheckpoint(every_n_epochs=val_interval,save_top_k=-1)]
+    
     if not scaled:
         wandb_logger = WandbLogger(log_model=True)
     else:
@@ -105,9 +110,9 @@ def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, 
     print((torch.cuda.device_count()))
     # trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu", gpus=torch.cuda.device_count(), strategy='dp')
     if scaled:
-        trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu", devices=devices, plugins=DDPPlugin(find_unused_parameters=False))
+        trainer = pl.Trainer(callbacks=callbacks,max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu", devices=devices, plugins=DDPPlugin(find_unused_parameters=False))
     else:
-        trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu")
+        trainer = pl.Trainer(callbacks=callbacks, max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu")
     wandb_logger.watch(net, log="all")
     # torch.cuda.empty_cache()
     trainer.fit(net, datamodule=data_module)
@@ -152,6 +157,8 @@ def get_data_module(dataset, batch_size, workers=np.inf, shuffle=False):
             data_module = pl_bolts.datamodules.ImagenetDataModule(batch_size=batch_size, data_dir="data/imagenet/", num_workers=min(workers, os.cpu_count()), pin_memory=True)
         case 'miniimagenet':
             data_module = pl_bolts.datamodules.ImagenetDataModule(batch_size=batch_size, data_dir="data/miniimagenet/", num_workers=min(workers, os.cpu_count()), pin_memory=True, shuffle=shuffle)
+        case'tinyimagenet':
+            data_module = TinyImageNetDataModule(batch_size=batch_size, data_dir="data/tinyimagenet", num_workers=min(workers, os.cpu_count()), pin_memory=True)
         case 'random':
             data_module = rd.RandomDataModule(data_dir='images/random/', batch_size=batch_size, num_workers=min(workers, os.cpu_count()), pin_memory=True)
         case _:
