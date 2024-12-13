@@ -41,7 +41,7 @@ def create_random_images(num_images=200):
 #     train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=2)
 #     return train_loader
 from pytorch_lightning.plugins import DDPPlugin
-def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, fixed_conv=False, val_interval=1, novelty_interval=None, diversity={'type':'absolute', 'pdop':None, 'ldop':None, 'k': None, 'k_strat':True}, scaled=False, devices=1, save_interval=None):
+def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, fixed_conv=False, val_interval=1, novelty_interval=None, diversity={'type':'absolute', 'pdop':None, 'ldop':None, 'k': None, 'k_strat':True}, scaled=False, devices=1, save_interval=None, bn=True):
     # check which dataset and get the classes for it
     gc.collect()
     torch.cuda.empty_cache()
@@ -57,10 +57,10 @@ def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, 
         # torch.distributed.init_process_group(backend='gloo',
         #                              init_method='env://')
         print(device)
-        net = vgg16(num_classes=data_module.num_classes, classnames=classnames, diversity=None, lr=lr)
+        net = vgg16(num_classes=data_module.num_classes, classnames=classnames, diversity=None, lr=lr, bn=bn)
         net = net.to(device)
     elif len(filters) == 6:
-        net = Net(num_classes=data_module.num_classes, classnames=classnames, diversity=diversity, lr=lr)
+        net = Net(num_classes=data_module.num_classes, classnames=classnames, diversity=diversity, lr=lr, bn=bn)
         # device = torch.device(0)
         # net = net.to(device)
     else:

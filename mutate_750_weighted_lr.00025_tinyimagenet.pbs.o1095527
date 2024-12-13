@@ -1,0 +1,21 @@
+
+Running prologue...
+
+Warning: '/p/home/rditljtd/miniconda3/envs' already in 'envs_dirs' list, moving to the bottom
+Warning: '/p/home/rditljtd/miniconda3/envs' already in 'envs_dirs' list, moving to the bottom
+-bash: /var/spool/pbs/mom_priv/jobs/1095527.pbs01.SC: /bin/bash^M: bad interpreter: No such file or directory
+
+Running epilogue...
+
+
++------------------------------------------------------------------------+
+Memory usage reported in GB
+                       % of     user     user     user    total    total
+Node                  limit      max    limit  current  current     phys
+carpenter-g06         Error   cgroup      not configured                  
+Memory summary:
+		min9999999999990.00 GB
+		max    0.00 GB
+		ave    0.00 GB
++------------------------------------------------------------------------+
+

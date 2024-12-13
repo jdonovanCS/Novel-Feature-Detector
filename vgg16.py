@@ -7,7 +7,7 @@ import torchvision.models as models
 
 
 class Net(pl.LightningModule):
-    def __init__(self, num_classes=10, classnames=None, diversity=None, lr=5e-5):
+    def __init__(self, num_classes=10, classnames=None, diversity=None, lr=5e-5, bn=True):
         super().__init__()
 
         self.save_hyperparameters()
@@ -19,7 +19,10 @@ class Net(pl.LightningModule):
         self.valid_acc = torchmetrics.classification.Accuracy(task="multiclass", num_classes=num_classes)
         self.lr = lr
 
-        self.model = models.vgg16_bn(pretrained=False, num_classes=self.num_classes)
+        if bn:
+            self.model = models.vgg16_bn(pretrained=False, num_classes=self.num_classes)
+        else:
+            self.model = models.vgg16(pretrained=False, num_classes=self.num_classes)
         self.model.classifier[6] = nn.Linear(in_features=4096, out_features=self.num_classes)
 
         # self.activations = {}
