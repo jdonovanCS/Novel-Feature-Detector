@@ -13,14 +13,9 @@ class Net(pl.LightningModule):
     def __init__(self, num_classes=10, classnames=None, diversity=None, lr=.001, bn=True):
         super().__init__()
         self.save_hyperparameters()
-        if bn:
-            self.BatchNorm1 = nn.BatchNorm2d(32)
-            self.BatchNorm2 = nn.BatchNorm2d(128)
-            self.BatchNorm3 = nn.BatchNorm2d(256)
-        else:
-            self.BatchNorm1 = nn.Identity()
-            self.BatchNorm2 = nn.Identity()
-            self.BatchNorm3 = nn.Identity()
+        self.BatchNorm1 = nn.BatchNorm2d(32)
+        self.BatchNorm2 = nn.BatchNorm2d(128)
+        self.BatchNorm3 = nn.BatchNorm2d(256)
         self.pool = nn.MaxPool2d(2,2)
         self.fc1 = nn.Linear(4096, 1024)
         self.fc2 = nn.Linear(1024, 512)
@@ -40,6 +35,7 @@ class Net(pl.LightningModule):
         self.classnames = classnames
         self.diversity = diversity
         self.lr = lr
+        self.bn = bn
         # self.avg_novelty = 0
 
     def forward(self, x, get_activations=False):
@@ -48,7 +44,8 @@ class Net(pl.LightningModule):
         if get_activations:
             self.activations[conv_count].append(x)
         conv_count += 1
-        x = self.BatchNorm1(x)
+        if self.bn:
+            x = self.BatchNorm1(x)
         x = F.relu(x)
         x = self.conv_layers[conv_count](x)
         if get_activations:
@@ -60,7 +57,8 @@ class Net(pl.LightningModule):
         if get_activations:
             self.activations[conv_count].append(x)
         conv_count += 1
-        x = self.BatchNorm2(x)
+        if self.bn:
+            x = self.BatchNorm2(x)
         x = F.relu(x)
         x = self.conv_layers[conv_count](x)
         if get_activations:
@@ -73,7 +71,8 @@ class Net(pl.LightningModule):
         if get_activations:
             self.activations[conv_count].append(x)
         conv_count += 1
-        x = self.BatchNorm3(x)
+        if self.bn:
+            x = self.BatchNorm3(x)
         x = F.relu(x)
         x = self.conv_layers[conv_count](x)
         if get_activations:
