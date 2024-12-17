@@ -26,6 +26,8 @@ import collections.abc
 import gc
 from vgg16 import Net as vgg16
 from v_net import Net as vNet
+from pl_bolts.utils.stability import UnderReviewWarning
+
 
 def create_random_images(num_images=200):
     paths = []
@@ -48,7 +50,11 @@ def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, 
     if data_module.num_classes < 101:
         classnames = list(data_module.dataset_test.classes)
     else:
-        classnames = list([x[0] for x in data_module.train_dataloader().dataset.classes])
+        # classnames = list([x[0] for x in data_module.train_dataloader().dataset.classes])
+        try:
+            classnames = data_module.dataset_train.get_classes()
+        except:
+            classnames = None
     # check which network and instantiate it
     if scaled:
         total_devices = torch.cuda.device_count()
@@ -112,7 +118,7 @@ def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, 
     if scaled:
         trainer = pl.Trainer(callbacks=callbacks,max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu", devices=devices, plugins=DDPPlugin(find_unused_parameters=False))
     else:
-        trainer = pl.Trainer(callbacks=callbacks, max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu")
+        trainer = pl.Trainer(callbacks=callbacks, max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval)#, accelerator="gpu")
     wandb_logger.watch(net, log="all")
     # torch.cuda.empty_cache()
     trainer.fit(net, datamodule=data_module)
@@ -708,6 +714,8 @@ def run(seed=True, rank=0):
         if torch.cuda.is_available():
             force_cudnn_initialization()
         wandb.init(project="novel-feature-detectors") # group='DDP'
+
+    warnings.filterwarnings('ignore', category=UnderReviewWarning)
 
 
 if __name__ == '__main__':
