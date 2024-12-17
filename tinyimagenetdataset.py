@@ -140,7 +140,7 @@ Members:
 
 
 class TinyImageNetDataset(Dataset):
-  def __init__(self, root_dir, mode='train', preload=True, load_transform=None,
+  def __init__(self, root_dir, mode='train', preload=False, load_transform=None,
                transform=None, download=False, max_samples=None):
     tinp = TinyImageNetPaths(root_dir, download)
     self.mode = mode
@@ -203,4 +203,4 @@ class TinyImageNetDataset(Dataset):
     return sample['image'], sample['label']
   
   def get_classes(self):
-    return list(set(self.label_data))
+    return list(set([x[self.label_idx] for x in self.samples]))

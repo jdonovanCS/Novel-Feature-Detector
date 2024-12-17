@@ -10,14 +10,15 @@ import time
 # DEFINE a CONV NN
 
 class Net(pl.LightningModule):
-    def __init__(self, num_classes=10, classnames=None, diversity=None, lr=.001, bn=True):
+    def __init__(self, num_classes=10, classnames=None, diversity=None, lr=.001, bn=True, data_dims=(3,32,32)):
         super().__init__()
         self.save_hyperparameters()
         self.BatchNorm1 = nn.BatchNorm2d(32)
         self.BatchNorm2 = nn.BatchNorm2d(128)
         self.BatchNorm3 = nn.BatchNorm2d(256)
         self.pool = nn.MaxPool2d(2,2)
-        self.fc1 = nn.Linear(4096, 1024)
+        # x4 because I have 2 pools in forward
+        self.fc1 = nn.Linear(data_dims[1]*data_dims[2]*4, 1024)
         self.fc2 = nn.Linear(1024, 512)
         self.fc3 = nn.Linear(512, num_classes)
         self.dropout1 = nn.Dropout2d(0.05)
@@ -28,6 +29,7 @@ class Net(pl.LightningModule):
                             nn.Conv2d(128, 128, 3, padding=1), 
                             nn.Conv2d(128, 256, 3, padding=1), 
                             nn.Conv2d(256, 256, 3, padding=1)])
+        
         self.activations = {}
         for i in range(len(self.conv_layers)):
             self.activations[i] = []
@@ -37,6 +39,7 @@ class Net(pl.LightningModule):
         self.lr = lr
         self.bn = bn
         # self.avg_novelty = 0
+
 
     def forward(self, x, get_activations=False):
         conv_count = 0
@@ -134,13 +137,13 @@ class Net(pl.LightningModule):
             corr_pred = {classname: 0 for classname in self.classnames}
             total_pred = {classname: 0 for classname in self.classnames}
             for label, prediction in zip(y, labels_hat):
-                    if label == prediction:
-                        corr_pred[self.classnames[label]] += 1
-                    # print(self.classnames)
-                    # print(label)
-                    # print(total_pred)
-                    # print(self.classnames[label])
-                    total_pred[self.classnames[label]] += 1
+                if label == prediction:
+                    corr_pred[self.classnames[label]] += 1
+                # print(self.classnames)
+                # print(label)
+                # print(total_pred)
+                # print(self.classnames[label])
+                total_pred[self.classnames[label]] += 1
             for classname, correct_count in corr_pred.items():
                 accuracy = 0
                 if correct_count != 0 and total_pred[classname] != 0:

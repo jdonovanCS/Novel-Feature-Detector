@@ -26,7 +26,7 @@ import collections.abc
 import gc
 from vgg16 import Net as vgg16
 from v_net import Net as vNet
-from pl_bolts.utils.stability import UnderReviewWarning
+# from pl_bolts.utils.self_supervised import UnderReviewWarning
 
 
 def create_random_images(num_images=200):
@@ -66,7 +66,7 @@ def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, 
         net = vgg16(num_classes=data_module.num_classes, classnames=classnames, diversity=None, lr=lr, bn=bn)
         net = net.to(device)
     elif len(filters) == 6:
-        net = Net(num_classes=data_module.num_classes, classnames=classnames, diversity=diversity, lr=lr, bn=bn)
+        net = Net(num_classes=data_module.num_classes, classnames=classnames, diversity=diversity, lr=lr, bn=bn, data_dims=data_module.dims)
         # device = torch.device(0)
         # net = net.to(device)
     else:
@@ -108,7 +108,7 @@ def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, 
     callbacks=[]
     if save_interval is not None:
         callbacks=[pl.callbacks.ModelCheckpoint(every_n_epochs=val_interval,save_top_k=-1)]
-    
+
     if not scaled:
         wandb_logger = WandbLogger(log_model=True)
     else:
@@ -715,7 +715,7 @@ def run(seed=True, rank=0):
             force_cudnn_initialization()
         wandb.init(project="novel-feature-detectors") # group='DDP'
 
-    warnings.filterwarnings('ignore', category=UnderReviewWarning)
+    # warnings.filterwarnings('ignore', category=pl_bolts.utils.  .UnderReviewWarning)
 
 
 if __name__ == '__main__':

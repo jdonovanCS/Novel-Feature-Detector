@@ -25,6 +25,8 @@ class TinyImageNetDataModule(pl.LightningDataModule):
             transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
         ])
 
+        self.dims = (3,64,64)
+
     @property
     def num_classes(self) -> int:
         """
@@ -44,16 +46,16 @@ class TinyImageNetDataModule(pl.LightningDataModule):
             train_dataset = TinyImageNetDataset(self.data_dir, transform=self.train_transform, mode='train')
             val_dataset = TinyImageNetDataset(self.data_dir, transform=self.val_transform, mode='val')
 
-            self.train_dataset, self.val_dataset = train_dataset, val_dataset
+            self.dataset_train, self.dataset_val = train_dataset, val_dataset
 
         if stage == "test" or stage is None:
-            self.test_dataset = TinyImageNetDataset(self.data_dir, transform=self.val_transform, mode='val')
+            self.dataset_test = TinyImageNetDataset(self.data_dir, transform=self.val_transform, mode='val')
 
     def train_dataloader(self):
-        return DataLoader(self.train_dataset, batch_size=self.batch_size, shuffle=True, num_workers=self.num_workers)
+        return DataLoader(self.dataset_train, batch_size=self.batch_size, shuffle=True, num_workers=self.num_workers)
 
     def val_dataloader(self):
-        return DataLoader(self.val_dataset, batch_size=self.batch_size, num_workers=self.num_workers)
+        return DataLoader(self.dataset_val, batch_size=self.batch_size, num_workers=self.num_workers)
 
     def test_dataloader(self):
-        return DataLoader(self.test_dataset, batch_size=self.batch_size, num_workers=self.num_workers)
+        return DataLoader(self.dataset_test, batch_size=self.batch_size, num_workers=self.num_workers)
