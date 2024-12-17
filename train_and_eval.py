@@ -31,7 +31,7 @@ parser.add_argument('--rand_tech', help='which random technique is used to initi
 # don't need any of the below for comparisons since I can link with the above experiment name.
 
 # used to link to autoencoder
-parser.add_argument('--ae', help="if pretrained using ae include this tag", action='store_true')
+parser.add_argument('--ae', help="if pretrained using ae include this tag", action='store_true', default=False)
 
 # Options for flexibility
 parser.add_argument('--unique_id', help='if a unique id is associated with the file the solution is stored in give it here.', default="", type=str)
@@ -66,10 +66,11 @@ def run():
     
     if args.gram_schmidt:
         name = 'gram-schmidt'
+    
     if args.ae:
         name = 'ae_unsup'
         if training_interval < 1:
-            print('please enter valid training interval as ae filters are in the shape num_runs, 1, \{filters\}')
+            print('please enter valid training interval as ae filters are in the shape num_runs, 1, filters')
             exit()
     if args.unique_id != "":
         name = 'current_' + name + "_" + args.unique_id

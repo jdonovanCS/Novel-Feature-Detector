@@ -1,9 +1,10 @@
 import os
 from typing import Optional
 import pytorch_lightning as pl
-from torchvision import transforms
+from torchvision import transforms, datasets
 from torchvision.datasets import ImageFolder
 from torch.utils.data import DataLoader, random_split
+from tinyimagenetdataset import TinyImageNetDataset
 
 class TinyImageNetDataModule(pl.LightningDataModule):
     def __init__(self, data_dir: str = "tiny-imagenet-200", batch_size: int = 64, num_workers: int = 4, pin_memory=False):
@@ -24,21 +25,29 @@ class TinyImageNetDataModule(pl.LightningDataModule):
             transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
         ])
 
+    @property
+    def num_classes(self) -> int:
+        """
+        Return:
+            100
+        """
+        return 200
+    
     def prepare_data(self):
         # Download the dataset if not present
         if not os.path.exists(self.data_dir):
             # Download the dataset (you'll need to implement this part)
-            pass
+            TinyImageNetDataset(self.data_dir, download=True)
 
     def setup(self, stage: Optional[str] = None):
         if stage == "fit" or stage is None:
-            train_dataset = ImageFolder(os.path.join(self.data_dir, "train"), transform=self.train_transform)
-            val_dataset = ImageFolder(os.path.join(self.data_dir, "val"), transform=self.val_transform)
+            train_dataset = TinyImageNetDataset(self.data_dir, transform=self.train_transform, mode='train')
+            val_dataset = TinyImageNetDataset(self.data_dir, transform=self.val_transform, mode='val')
 
             self.train_dataset, self.val_dataset = train_dataset, val_dataset
 
         if stage == "test" or stage is None:
-            self.test_dataset = ImageFolder(os.path.join(self.data_dir, "test"), transform=self.val_transform)
+            self.test_dataset = TinyImageNetDataset(self.data_dir, transform=self.val_transform, mode='val')
 
     def train_dataloader(self):
         return DataLoader(self.train_dataset, batch_size=self.batch_size, shuffle=True, num_workers=self.num_workers)
