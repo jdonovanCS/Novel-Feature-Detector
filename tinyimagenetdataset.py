@@ -201,6 +201,7 @@ class TinyImageNetDataset(Dataset):
     sample = {'image': img, 'label': lbl}
 
     if self.transform:
+      sample['image'] = sample['image'].astype(np.uint8)
       sample['image'] = Image.fromarray(sample['image'])
       sample['image'] = self.transform(sample['image'])
       
