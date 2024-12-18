@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import warnings
 warnings.filterwarnings('ignore') # Danger, Will Robinson! (not a scalable hack, and may surpress other helpful warning other than for ill-conditioned bootstrapped CI distributions)
@@ -48,6 +49,9 @@ parser.add_argument('--layerwise_diversity_op', default='w_mean', help='the func
 parser.add_argument('--k', help='If using k-neighbors for metric calculation, how many neighbors', type=int, default=-1)
 parser.add_argument('--k_strat', help='If using k-neigbhors for metric, what strategy should be used? (ie. closest, furthest, random, etc.)', type=str, default='closest')   
 
+parser.add_argument('--continue_from_ckpt', help='continue training from ckpt', action='store_true', default=False)
+parser.add_argument('--continue_at_epoch', help='continue with training a certain epoch', default=7)
+
 args = parser.parse_args()
 
 def run():
@@ -76,17 +80,34 @@ def run():
         name = 'current_' + name + "_" + args.unique_id
     
     filename = ''
-    filename = 'output/' + experiment_name + '/solutions_over_time_{}.npy'.format(name)
+    if not args.continue_from_ckpt:
+        filename = 'output/' + experiment_name + '/solutions_over_time_{}.npy'.format(name)
 
-    # get filters from numpy file
-    np_load_old = partial(np.load)
-    np.load = lambda *a,**k: np_load_old(*a, allow_pickle=True, **k)
-    stored_filters = np.load(filename)
-    np.load = np_load_old
+        # get filters from numpy file
+        np_load_old = partial(np.load)
+        np.load = lambda *a,**k: np_load_old(*a, allow_pickle=True, **k)
+        stored_filters = np.load(filename)
+        np.load = np_load_old
 
-    if args.unique_id != '':
-        stored_filters = [stored_filters]
-    
+        if args.unique_id != '':
+            stored_filters = [stored_filters]
+
+    # TODO: jdonovancs - the training for continuing will act like this is an initialization and will not 
+    # take into account the # of epochs, lr decay, or any other factors unless I write that in here or helper
+    else:
+        stored_filters=[]
+        count = 0
+        path_to_pth = 'trained_models/trained/conv' + str(not args.fixed_conv) + '_e' + args.experiment_name + '_n' + name + "_r" + str(count) + 'g0.pth/novel-feature-detectors/'
+        while os.path.exists(path_to_pth) and len(os.listdir(path_to_pth)) > 0:
+            path_to_ckpt = path_to_pth+os.listdir(path_to_pth)[0] + '/checkpoints/'
+            for f in os.listdir(path_to_ckpt):
+                if ('epoch=' + args.continue_at_epoch + '-') in f:
+                    path_to_ckpt = path_to_ckpt + f
+            stored_filters.append(helper.get_weights_from_ckpt(path_to_ckpt))
+            count+=1
+            path_to_pth = 'trained_models/trained/conv' + str(not args.fixed_conv) + '_e' + args.experiment_name + '_n' + name + "_r" + str(count) + 'g0.pth/novel-feature-detectors/'
+
+
     helper.run(seed=False, rank=args.local_rank if args.devices > 0 else 0)
 
 

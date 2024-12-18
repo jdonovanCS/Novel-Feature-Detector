@@ -689,6 +689,14 @@ def force_cudnn_initialization():
     dev = torch.device('cuda')
     torch.nn.functional.conv2d(torch.zeros(s, s, s, s, device=dev), torch.zeros(s, s, s, s, device=dev))
 
+def get_weights_from_ckpt(ckpt_path, network='conv6'):
+    if network == 'vgg16'
+        net = BigNet(num_classes=0, classnames=[], diversity = {'type': 'relative', 'ldop':'w_mean', 'pdop':'mean', 'k': -1, 'k_strat': 'closest'})
+    else:
+        net = Net(num_classes=0, classnames=[], diversity={'type': 'relative', 'ldop':'w_mean', 'pdop':'mean', 'k': -1, 'k_strat': 'closest'})
+    net.load_from_checkpoint(ckpt_path)
+    return net.get_filters()
+
 def run(seed=True, rank=0):
     torch.multiprocessing.freeze_support()
     if seed:
