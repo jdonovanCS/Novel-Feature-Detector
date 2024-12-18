@@ -146,6 +146,7 @@ class TinyImageNetDataset(Dataset):
     self.mode = mode
     self.label_idx = 1  # from [image, id, nid, box]
     self.preload = preload
+    self.preloaded = False
     self.transform = transform
     self.transform_results = dict()
 
@@ -162,7 +163,7 @@ class TinyImageNetDataset(Dataset):
       self.samples_num = min(self.max_samples, self.samples_num)
       self.samples = np.random.permutation(self.samples)[:self.samples_num]
 
-    if self.preload:
+    if self.preload and self.preloaded==False:
       load_desc = "Preloading {} data...".format(mode)
       self.img_data = np.zeros((self.samples_num,) + self.IMAGE_SHAPE,
                                dtype=np.float32)
@@ -182,6 +183,7 @@ class TinyImageNetDataset(Dataset):
           self.img_data, self.label_data = result[:2]
           if len(result) > 2:
             self.transform_results.update(result[2])
+    self.preloaded = True
 
   def __len__(self):
     return self.samples_num
@@ -199,7 +201,9 @@ class TinyImageNetDataset(Dataset):
     sample = {'image': img, 'label': lbl}
 
     if self.transform:
+      sample['image'] = Image.fromarray(sample['image'])
       sample['image'] = self.transform(sample['image'])
+      
     return sample['image'], sample['label']
   
   def get_classes(self):
