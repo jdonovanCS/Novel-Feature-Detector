@@ -114,12 +114,14 @@ def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, 
     else:
         wandb_logger = WandbLogger(log_model=True)
     print((torch.cuda.device_count()))
+    accelerator = "cpu" if torch.cuda.device_count() < 1 else 'gpu'
     # trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu", gpus=torch.cuda.device_count(), strategy='dp')
     if scaled:
-        trainer = pl.Trainer(callbacks=callbacks,max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu", devices=devices, plugins=DDPPlugin(find_unused_parameters=False))
+        trainer = pl.Trainer(callbacks=callbacks,max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator=accelerator, devices=devices, plugins=DDPPlugin(find_unused_parameters=False))
     else:
-        trainer = pl.Trainer(callbacks=callbacks, max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval)#, accelerator="gpu")
+        trainer = pl.Trainer(callbacks=callbacks, max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator=accelerator if torch.cuda.device_count() < 1 else 'cpu')
     wandb_logger.watch(net, log="all")
+    find_best_lr(trainer, net, data_module)
     # torch.cuda.empty_cache()
     trainer.fit(net, datamodule=data_module)
 
@@ -690,12 +692,25 @@ def force_cudnn_initialization():
     torch.nn.functional.conv2d(torch.zeros(s, s, s, s, device=dev), torch.zeros(s, s, s, s, device=dev))
 
 def get_weights_from_ckpt(ckpt_path, network='conv6'):
-    if network == 'vgg16'
+    if network == 'vgg16':
         net = BigNet(num_classes=0, classnames=[], diversity = {'type': 'relative', 'ldop':'w_mean', 'pdop':'mean', 'k': -1, 'k_strat': 'closest'})
     else:
         net = Net(num_classes=0, classnames=[], diversity={'type': 'relative', 'ldop':'w_mean', 'pdop':'mean', 'k': -1, 'k_strat': 'closest'})
     net.load_from_checkpoint(ckpt_path)
     return net.get_filters()
+
+def find_best_lr(trainer, net, data_module):
+    trainer.auto_lr_find=True
+    trainer.datamodule = data_module
+    lr_finder = trainer.tuner.lr_find(net, datamodule=data_module, num_training=1000, min_lr=1e-12)
+    import matplotlib.pyplot as plt
+    fig = lr_finder.plot(suggest=True)
+    fig.tight_layout()
+    fig.savefig('lr_finder.png', dpi=300, format='png')
+    fig.show()
+    print(lr_finder.suggestion())
+    input()
+    exit()
 
 def run(seed=True, rank=0):
     torch.multiprocessing.freeze_support()
