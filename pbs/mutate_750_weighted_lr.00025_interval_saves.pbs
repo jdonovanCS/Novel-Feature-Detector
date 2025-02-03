@@ -36,4 +36,4 @@ source $HOME/.bashrc
 conda activate ec2
 ulimit -n 4096
 
-python train_and_eval.py --experiment_name="mutate weighted 750" --rand_tech="mutate-only" --no_bn --lr=.00025 --stop_after=1 --skip=9
+python train_and_eval.py --experiment_name="mutate weighted 750" --rand_tech="mutate-only" --save_interval=4 --lr=.00025 --stop_after=1 --skip=0
