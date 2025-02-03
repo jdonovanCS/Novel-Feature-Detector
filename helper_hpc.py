@@ -690,7 +690,7 @@ def force_cudnn_initialization():
     torch.nn.functional.conv2d(torch.zeros(s, s, s, s, device=dev), torch.zeros(s, s, s, s, device=dev))
 
 def get_weights_from_ckpt(ckpt_path, network='conv6'):
-    if network == 'vgg16'
+    if network == 'vgg16':
         net = BigNet(num_classes=0, classnames=[], diversity = {'type': 'relative', 'ldop':'w_mean', 'pdop':'mean', 'k': -1, 'k_strat': 'closest'})
     else:
         net = Net(num_classes=0, classnames=[], diversity={'type': 'relative', 'ldop':'w_mean', 'pdop':'mean', 'k': -1, 'k_strat': 'closest'})

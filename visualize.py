@@ -64,8 +64,19 @@ def run():
     import_trained_filters()
     # print("visualizing all trained weight dist")
     # visualize_weight_dist(trained_filters)
-    print("getting indices from file")
+    # print("getting indices from file")
     indices = get_mutated_filter_indices_from_file()
+    
+    
+    runs_with_all_layers_mutated = []
+    for run_num in range(6):
+        ind_run = [ind for ind in indices if ind[0] == run_num]
+        if all(ele in [ind[1] for ind in ind_run] for ele in [0,1,2,3,4,5]):
+            runs_with_all_layers_mutated.append(run_num)
+            
+    print(runs_with_all_layers_mutated)
+            
+                
     # print("visualizing mutated trained weight dist")
     # visualize_weight_dist_only_mutated(trained_filters, indices)
     # print("visualizing non-mutated trained weight dist")
@@ -86,8 +97,8 @@ def run():
 
     # print("visualizing weight delta dist")
     # visualize_weight_delta_dist(all_filters)
-    print("visualizing weight delta dist for mutated filters")
-    visualize_weight_delta_dist_only_mutated(all_filters, indices)
+    # print("visualizing weight delta dist for mutated filters")
+    # visualize_weight_delta_dist_only_mutated(all_filters, indices)
     # print("visualizing weight delta dist for nonmutated filters")
     # visualize_weight_delta_dist_only_nonmutated(all_filters, indices)
 
@@ -546,10 +557,11 @@ def visualize_weight_dist(vis_filters):
             # Original plots
             # hist, bin_edges = np.histogram(filter_values_local, bins=num_bins_, density=True)
             # axes[layer].plot(bin_edges[1:], hist, alpha=.4)
-            ax.plot(filter_values_local_x, kde(filter_values_local_x))
+            ax.plot(filter_values_local_x, kde(filter_values_local_x), linewidth=2.5, label="Layer {}".format(layer+1))
             # axes[layer].set_title("PDF_{}".format(layer+1))
             
             print('mean: {} \t std: {}'.format(filter_values_local.mean(), filter_values_local.std()))
+        ax.legend()
         plt.tight_layout()
         plt.show()
 
@@ -561,7 +573,7 @@ def visualize_weight_dist_only_mutated(vis_filters, indices=None):
 
         # filters = [filters]
         num_runs = len(filters)
-        mutated_filter_indices = [(-1,-1,-1,-1) for j in range(10000)]
+        mutated_filter_indices = [(-1,-1,-1,-1) for j in range(1000000)]
         count = 0
         fig, ax = plt.subplots(figsize=(25, 15))
         handles, labels = ax.get_legend_handles_labels()
@@ -593,7 +605,7 @@ def visualize_weight_dist_only_mutated(vis_filters, indices=None):
                 
                 # Original plots
                 # axes[layer].hist(filter_values_local, bins=num_bins_, alpha=.4, density=True)
-                ax.plot(filter_values_local_x, kde(filter_values_local_x))
+                ax.plot(filter_values_local_x, kde(filter_values_local_x), linewidth=2.5, label="Layer {}".format(layer+1))
                 # axes[layer].set_title("PDF_{}".format(layer+1))
                 
                 print('mean: {} \t std: {}'.format(filter_values_local.mean(), filter_values_local.std()))
@@ -618,10 +630,11 @@ def visualize_weight_dist_only_mutated(vis_filters, indices=None):
                 
                 # Original plots
                 # axes[layer].hist(filter_values_local, bins=num_bins_, alpha=.4, density=True)
-                ax.plot(filter_values_local_x, kde(filter_values_local_x))
+                ax.plot(filter_values_local_x, kde(filter_values_local_x), linewidth=2.5, label="Layer {}".format(layer+1))
                 # axes[layer].set_title("PDF_{}".format(layer+1))
                 
                 print('mean: {} \t std: {}'.format(filter_values_local.mean(), filter_values_local.std()))
+        ax.legend()
         plt.tight_layout()
         plt.show()
 
@@ -668,7 +681,7 @@ def visualize_weight_dist_only_nonmutated(vis_filters, indices=None):
                 
                 # Original plots
                 # axes[layer].hist(filter_values_local, bins=num_bins_, alpha=.4, density=True)
-                ax.plot(filter_values_local_x, kde(filter_values_local_x))
+                ax.plot(filter_values_local_x, kde(filter_values_local_x), linewidth=2.5, label="Layer {}".format(layer+1))
                 # axes[layer].set_title("PDF_{}".format(layer+1))
                 
                 print('mean: {} \t std: {}'.format(filter_values_local.mean(), filter_values_local.std()))
@@ -696,11 +709,12 @@ def visualize_weight_dist_only_nonmutated(vis_filters, indices=None):
                 
                 # Original plots
                 # axes[layer].hist(filter_values_local, bins=num_bins_, alpha=.4, density=True)
-                ax.plot(filter_values_local_x, kde(filter_values_local_x))
+                ax.plot(filter_values_local_x, kde(filter_values_local_x), linewidth=2.5, label="Layer {}".format(layer+1))
                 # axes[layer].set_title("PDF_{}".format(layer+1))
                 
                 print('mean: {} \t std: {}'.format(filter_values_local.mean(), filter_values_local.std()))
-
+                
+        ax.legend()
         plt.tight_layout()
         plt.show()
 
@@ -733,10 +747,11 @@ def visualize_weight_delta_dist(vis_filters):
             # Original plots
             # hist, bin_edges = np.histogram(filter_values_local, bins=num_bins_, density=True)
             # axes[layer].plot(bin_edges[1:], hist, alpha=.4)
-            ax.plot(filter_values_local_x, kde(filter_values_local_x))
+            ax.plot(filter_values_local_x, kde(filter_values_local_x), linewidth=2.5, label="Layer {}".format(layer+1))
             # axes[layer].set_title("PDF_{}".format(layer+1))
             
             print('mean: {} \t std: {}'.format(filter_values_local.mean(), filter_values_local.std()))
+        ax.legend()
         plt.tight_layout()
         plt.show()
 
@@ -782,10 +797,11 @@ def visualize_weight_delta_dist_only_nonmutated(vis_filters, indices=None):
             
             # Original plots
             # axes[layer].hist(filter_values_local, bins=num_bins_, alpha=.4, density=True)
-            ax.plot(filter_values_local_x, kde(filter_values_local_x))
+            ax.plot(filter_values_local_x, kde(filter_values_local_x), linewidth=2.5, label="Layer {}".format(layer+1))
             # axes[layer].set_title("PDF_{}".format(layer+1))
             
             print('mean: {} \t std: {}'.format(filter_values_local.mean(), filter_values_local.std()))
+        ax.legend()
         plt.tight_layout()
         plt.show()
 
@@ -823,10 +839,11 @@ def visualize_weight_delta_dist_only_mutated(vis_filters, indices):
             
             # Original plots
             # axes[layer].hist(filter_values_local, bins=num_bins_, alpha=.4, density=True)
-            ax.plot(filter_values_local_x, kde(filter_values_local_x))
+            ax.plot(filter_values_local_x, kde(filter_values_local_x), linewidth=2.5, label="Layer {}".format(layer+1))
             # axes[layer].set_title("PDF_{}".format(layer+1))
             
             print('mean: {} \t std: {}'.format(filter_values_local.mean(), filter_values_local.std()))
+        ax.legend()
         plt.tight_layout()
         plt.show()
 
