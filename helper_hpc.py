@@ -517,6 +517,26 @@ def diversity_constant(acts):
         constants[i] = i
     return sum(constants)
 
+def choose_mutate_index_from_layer(filters, layer):
+    filters_in_layer = len(filters[layer].flatten())
+    count = sum([len(x.flatten()) for e, x in enumerate(filters) if e < layer])
+    rand_filter = random.randint(1, filters_in_layer) + count
+    selected_dims = [0,0]
+    
+    for i in range(len(filters[layer])):
+        if(len(filters[layer][i].flatten())) +count > rand_filter:
+            selected_dims[0] = i
+            break
+        count += len(filters[layer][i].flatten())
+    
+    for i in range(len(filters[layer][selected_dims[0]])):
+        if len(filters[layer][selected_dims[0]][i].flatten()) + count > rand_filter:
+            selected_dims[1] = i
+            break
+        count += len(filters[layer][selected_dims[0]][i].flatten())
+    
+    return (layer, selected_dims[0], selected_dims[1])
+
 def choose_mutate_index(filters, weighted_mut=False, weights_for_mut=None):
     if weighted_mut and not weights_for_mut:
         total_filters = sum([len(x.flatten()) for x in filters])
@@ -545,7 +565,7 @@ def choose_mutate_index(filters, weighted_mut=False, weights_for_mut=None):
         # print(selected_layer, selected_dims)
     elif weighted_mut and weights_for_mut:
         total_filters = int(sum([len(filters[i].flatten())*weights_for_mut[i] for i in range(len(filters))]))
-        rand_layer = random.randint(1, total_filters)
+        rand_layer = random.randint(0, total_filters-1)
         count = 0
         for i in range(len(weights_for_mut)):
             if weights_for_mut[i]*len(filters[i].flatten()) + count > rand_layer:
