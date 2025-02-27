@@ -20,6 +20,7 @@ parser.add_argument('--num_mutations', help='how many times to run the mutation 
 parser.add_argument('--gain', help='optional scaling factor for some of the technqiues', default=1.0, type=float)
 parser.add_argument('--weighted_mut', help="would we like for the mutation function to weight its selection based on number of filters in each layer", default=False, action='store_true')
 parser.add_argument('--weights_for_mut', help='specify weights for each layer during mutation', nargs=6, default=None, type=float)
+parser.add_argument('--ensure_mut_at_each_layer', help='use this option to ensure that at least 1 filter at each layer is perturbed', default=False, action='store_true')
 # parser.add_argument('--batch_size', help='Number of images to use for novelty metric, only 1 batch used', default=64, type=int)
 # parser.add_argument('--dataset', help='which dataset should be used for novelty metric, choices are: random, cifar-10', default='random')
 args = parser.parse_args()
@@ -80,7 +81,10 @@ def run():
             model.filters = copy.deepcopy(net.get_filters())
             mutated_filter_indices.append([])
             for k in range(args.num_mutations):
-                mutated_filter_indices[i].append(helper.choose_mutate_index(model.filters, args.weighted_mut, args.weights_for_mut))
+                if args.ensure_mut_at_each_layer and k<len(model.filters):
+                    mutated_filter_indices[i].append(helper.choose_mutate_index_from_layer(model.filters, k))
+                else:
+                    mutated_filter_indices[i].append(helper.choose_mutate_index(model.filters, args.weighted_mut, args.weights_for_mut))
                 model.filters = helper.mutate(model.filters, args.broad_mut, args.mr, mutated_filter_indices[i][k])
             net.set_filters(copy.deepcopy(model.filters))
         model.filters = net.get_filters()

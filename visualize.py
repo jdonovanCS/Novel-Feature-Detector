@@ -16,7 +16,7 @@ import pytorch_lightning as pl
 import re
 import copy
 from scipy import stats
-import seaborn as sns
+# import seaborn as sns
 import json
 
 # arguments
@@ -165,6 +165,10 @@ def setup_datamodules():
     global iterator
     iterator = iter(data_module_vis.val_dataloader())
     batch = next(iterator)
+
+    # print(len(data_module_vis.train_dataloader().dataset)) 40000
+    # print(len(data_module_vis.val_dataloader().dataset)) 10000
+    # print(len(data_module_vis.test_dataloader().dataset)) 10000
 
 # 5 and 19
 
