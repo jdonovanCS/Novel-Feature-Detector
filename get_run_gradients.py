@@ -38,26 +38,27 @@ def run():
         # search = 'val_acc' if not args.diversity else 'val_novelty'
         history = run.scan_history()
         
-        
-        for column in [row for row in history][0]:
-            if 'gradient' in column and 'weight' in column and counts.get(column) == None:
-                counts[column] = []
-                histogram_values[column] = []
-            if len(list(counts.keys())) > 3:
-                break
+        if i == 0:
+            for column in [row for row in history][0]:
+                if 'gradient' in column and 'weight' in column and counts.get(column) == None:
+                    counts[column] = []
+                    histogram_values[column] = []
+                # if len(list(counts.keys())) > 1:
+                #     break
         for layer in list(counts.keys()):
             # if gradient == "gradients/model.features.41.weight":
             #     print(gradient, len([(i, row[gradient]) for i, row in enumerate(history) if row[gradient] != None]))
             # print([row[layer] for row in history if row[layer] != None][0])
             print(layer)
-            grad_min = [row[layer]['packedBins']['min'] for row in history if row[layer] != None]
-            grad_size = [row[layer]['packedBins']['size'] for row in history if row[layer] != None]
+            grad_min = np.array([row[layer]['packedBins']['min'] for row in history if row[layer] != None])
+            grad_size = np.array([row[layer]['packedBins']['size'] for row in history if row[layer] != None])
+            grad_hist_len = [row[layer]['packedBins']['count'] for row in history if row[layer] != None][0]
             if counts[layer] == []:
                 histogram_values[layer] = [grad_min[i] + (grad_size[i] * i) for i in range(len(grad_min))]
                 counts[layer] = [row[layer]['values'] for row in history if row[layer] != None]
             else:
-                histogram_values[layer].extend([grad_min[i] + (grad_size[i] * i) for i in range(len(grad_min))])
-                counts[layer].extend([row[layer]['values'] for row in history if row[layer] != None])
+                histogram_values[layer] = histogram_values[layer] + np.array([grad_min[i] + (grad_size[i] * i) for i in range(len(grad_min))])
+                counts[layer] = counts[layer] + np.array([row[layer]['values'] for row in history if row[layer] != None])
             ref_grad = layer
 
     mean_gradients = {}
@@ -66,7 +67,7 @@ def run():
             mean_gradients[layer] = []
     for layer in counts.keys():
         for i in range(len(counts[layer])):
-            mean_gradients[layer].append(np.mean(np.array(counts[layer][i]).astype(int)*np.array(histogram_values[layer][i])))
+            mean_gradients[layer].append(np.mean(np.array(counts[layer][i]).astype(int)*np.array(histogram_values[layer][i])/len(args.run_ids_0)))
     # mean_gradients = {key: [np.mean(gradients[key][index]) for index in range(len(gradient[key]))] for key in gradients.keys()}
     # std_gradients = {key: np.std(gradients[key]) for key in gradients.keys()}
         
