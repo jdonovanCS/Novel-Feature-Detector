@@ -28,7 +28,7 @@ def run():
     values_0 = []
     values_1 = []
     
-
+    gradients = {}
     # log variables to config
     for i in range(len(args.run_ids_0)):
         run_id = args.run_ids_0[i]
@@ -36,16 +36,33 @@ def run():
         run = api.run("jdonovan/novel-feature-detectors/" + run_id)
         # search = 'val_acc' if not args.diversity else 'val_novelty'
         history = run.scan_history()
-        gradients = {}
+        
         for column in [row for row in history][0]:
-            if 'gradient' in column:
+            if 'gradient' in column and gradients.get(column) == None:
                 gradients[column] = []
-        for gradient in gradients:
+        for gradient in gradients.keys():
             # if gradient == "gradients/model.features.41.weight":
             #     print(gradient, len([(i, row[gradient]) for i, row in enumerate(history) if row[gradient] != None]))
-            gradients[gradient] = [row[gradient] for row in history if row[gradient] != None]
+            if gradients[gradient] == []:
+                gradients[gradient] = [row[gradient]['values'] for row in history if row[gradient] != None]
+            else:
+                gradients[gradient].extend([row[gradient]['values'] for row in history if row[gradient] != None])
+            ref_grad = gradient
+
+    mean_gradients = {}
+    for gradient in gradients.keys():
+        for i in range(len(gradients[gradient])):
+            mean_gradients[gradient] = []
+    for gradient in gradients.keys():
+        for i in range(len(gradients[gradient])):
+            mean_gradients[gradient].append(np.mean(gradients[gradient][i]))
+    # mean_gradients = {key: [np.mean(gradients[key][index]) for index in range(len(gradient[key]))] for key in gradients.keys()}
+    # std_gradients = {key: np.std(gradients[key]) for key in gradients.keys()}
         
-        print(gradients)
+    print(gradients)
+    print(mean_gradients)
+    # print(std_gradients)
+    # print(len(gradients[ref_grad]))
         # print(history['gradients/model.features.41.weight'][5])
         # values = [row[search] for row in history if not np.isnan(row[search])]
         # print(len(values))
