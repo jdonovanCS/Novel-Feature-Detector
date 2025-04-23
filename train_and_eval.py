@@ -25,6 +25,7 @@ parser.add_argument('--batch_size', help="batch size for training", type=int, de
 parser.add_argument('--lr', help='Learning rate for training', default=.001, type=float)
 parser.add_argument('--save_interval', help='How often (in epochs) should the model checkpoint be saved', default=None, type=int)
 parser.add_argument('--no_bn', help='Train networks without batchnorm layers', action='store_true')
+parser.add_argument('--log_activations', help="Log activation values as the network is trained", action='store_true')
 
 # used to link to evolution
 parser.add_argument('--experiment_name', help='experiment name for saving data related to training')
@@ -171,7 +172,7 @@ def run():
             helper.update_config()
             save_path = "trained_models/trained/conv{}_e{}_n{}_r{}_g{}.pth".format(not fixed_conv, experiment_name, name, run_num, n)
             print('Training and Evaluating: {} Gen: {} Run: {}'.format(name, n, run_num))
-            record_progress = helper.train_network(data_module=data_module, filters=stored_filters[run_num][n], epochs=epochs, lr=args.lr, save_path=save_path, fixed_conv=fixed_conv, novelty_interval=int(args.novelty_interval), val_interval=int(args.test_accuracy_interval), diversity=diversity, scaled=scaled, devices=args.devices, save_interval=args.save_interval, bn=not args.no_bn)
+            record_progress = helper.train_network(data_module=data_module, filters=stored_filters[run_num][n], epochs=epochs, lr=args.lr, save_path=save_path, fixed_conv=fixed_conv, novelty_interval=int(args.novelty_interval), val_interval=int(args.test_accuracy_interval), diversity=diversity, scaled=scaled, devices=args.devices, save_interval=args.save_interval, bn=not args.no_bn, log_activations=args.log_activations)
             helper.run(seed=False, rank=args.local_rank if args.local_rank > 0 else 0)
             helper.config['bn'] = not args.no_bn
             helper.config['dataset'] = args.dataset.lower()

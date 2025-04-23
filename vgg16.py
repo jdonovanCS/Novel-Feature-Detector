@@ -7,7 +7,7 @@ import torchvision.models as models
 
 
 class Net(pl.LightningModule):
-    def __init__(self, num_classes=10, classnames=None, diversity=None, lr=5e-5, bn=True):
+    def __init__(self, num_classes=10, classnames=None, diversity=None, lr=5e-5, bn=True, log_activations=False):
         super().__init__()
 
         self.save_hyperparameters()
@@ -28,15 +28,47 @@ class Net(pl.LightningModule):
         # self.activations = {}
         # for i in range(len(self.conv_layers)):
         #     self.activations[i] = []
+        self.log_activations = log_activations
+        if self.log_activations:
+            self.activations={}
+            count = 0
+            for i, m in enumerate(self.model.features.modules()):
+                if isinstance(m, (torch.nn.Conv2d)):
+                    self.model.features[i].register_forward_hook(self.get_activation(count))
+                    self.activations[count] = []
+                    count += 1
 
+    def get_activation(self, name):
+        def hook(model, input, output):
+            self.activations[name].append(output)
+        return hook
 
-    def forward(self, x):
+    def forward(self, x, get_activations=False):
+        # count = 0
+        # prev_m = None
+        # if get_activations:
+        #     for m in self.model.modules():
+        #         print('shape of input:', x.shape)
+        #         print('is conv2d:', isinstance(m, (torch.nn.Conv2d)))
+        #         print(m.named_parameters)
+        #         x = m(x)
+        #         if isinstance(prev_m, (torch.nn.Conv2d)) and (isinstance(m, (torch.nn.ReLU)) or m is None):
+        #             self.activations[count].append(x)
+        #             count += 1
+        #         prev_m = m
+        #     return x
+                    
+        # else:
+        
         return self.model.forward(x)
 
     def training_step(self, train_batch, batch_idx):
         x, y = train_batch
+        if self.log_activations:
+            for i in range(len(self.activations)):
+                self.activations[i] = []
 
-        logits = self.forward(x)
+        logits = self.forward(x, get_activations=self.log_activations)
 
         loss = self.cross_entropy_loss(logits, y)
         self.train_acc(logits, y)
@@ -44,10 +76,13 @@ class Net(pl.LightningModule):
         # log loss and acc
         self.log('train_loss', loss)
         self.log('train_acc', self.train_acc)
+        if self.log_activations:
+            for i in self.activations:
+                self.log('activation_{}'.format(i+1), torch.stack(self.activations[i]).flatten().mean())
         batch_dictionary={
 	            "train_loss": loss, "train_acc": self.train_acc, 'loss': loss
 	        }
-        
+                
         return batch_dictionary
 
     def training_epoch_end(self,outputs):

@@ -43,7 +43,7 @@ def create_random_images(num_images=200):
 #     train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=2)
 #     return train_loader
 from pytorch_lightning.plugins import DDPPlugin
-def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, fixed_conv=False, val_interval=1, novelty_interval=None, diversity={'type':'absolute', 'pdop':None, 'ldop':None, 'k': None, 'k_strat':True}, scaled=False, devices=1, save_interval=None, bn=True):
+def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, fixed_conv=False, val_interval=1, novelty_interval=None, diversity={'type':'absolute', 'pdop':None, 'ldop':None, 'k': None, 'k_strat':True}, scaled=False, devices=1, save_interval=None, bn=True, log_activations=False):
     # check which dataset and get the classes for it
     gc.collect()
     torch.cuda.empty_cache()
@@ -58,15 +58,16 @@ def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, 
     # check which network and instantiate it
     if scaled:
         total_devices = torch.cuda.device_count()
-        device = torch.device(glob_rank % total_devices)
-        torch.cuda.set_device(device)
+        device = torch.device(glob_rank % total_devices if torch.cuda.is_available() else "cpu")
+        if torch.cuda.is_available():
+            torch.cuda.set_device(device)
         # torch.distributed.init_process_group(backend='gloo',
         #                              init_method='env://')
         print(device)
-        net = vgg16(num_classes=data_module.num_classes, classnames=classnames, diversity=None, lr=lr, bn=bn)
+        net = vgg16(num_classes=data_module.num_classes, classnames=classnames, diversity=None, lr=lr, bn=bn, log_activations=log_activations)
         net = net.to(device)
     elif len(filters) == 6:
-        net = Net(num_classes=data_module.num_classes, classnames=classnames, diversity=diversity, lr=lr, bn=bn, data_dims=data_module.dims)
+        net = Net(num_classes=data_module.num_classes, classnames=classnames, diversity=diversity, lr=lr, bn=bn, data_dims=data_module.dims, log_activations=log_activations)
         # device = torch.device(0)
         # net = net.to(device)
     else:
@@ -105,23 +106,23 @@ def train_network(data_module, filters=None, epochs=2, lr=.001, save_path=None, 
 
     if save_path is None:
         save_path = PATH
-    callbacks=[]
+    callbacks=None
     if save_interval is not None:
-        callbacks=[pl.callbacks.ModelCheckpoint(every_n_epochs=val_interval,save_top_k=-1)]
+        callbacks=[pl.callbacks.ModelCheckpoint(every_n_epochs=save_interval,save_top_k=-1)]
 
     if not scaled:
-        wandb_logger = WandbLogger(log_model=True)
+        wandb_logger = WandbLogger(log_model=True, log_graph=False)
     else:
-        wandb_logger = WandbLogger(log_model=True)
+        wandb_logger = WandbLogger(log_model=True, log_graph=False)
     print((torch.cuda.device_count()))
     accelerator = "cpu" if torch.cuda.device_count() < 1 else 'gpu'
     # trainer = pl.Trainer(max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator="gpu", gpus=torch.cuda.device_count(), strategy='dp')
-    if scaled:
+    if torch.cuda.device_count() > 1:
         trainer = pl.Trainer(callbacks=callbacks,max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator=accelerator, devices=devices, plugins=DDPPlugin(find_unused_parameters=False))
     else:
-        trainer = pl.Trainer(callbacks=callbacks, max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator=accelerator if torch.cuda.device_count() < 1 else 'cpu')
-    wandb_logger.watch(net, log="all")
-    find_best_lr(trainer, net, data_module)
+        trainer = pl.Trainer(callbacks=callbacks, max_epochs=epochs, default_root_dir=save_path, logger=wandb_logger, check_val_every_n_epoch=val_interval, accelerator=accelerator)
+    wandb_logger.watch(net, log_graph=False)
+    # find_best_lr(trainer, net, data_module)
     # torch.cuda.empty_cache()
     trainer.fit(net, datamodule=data_module)
 

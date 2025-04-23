@@ -10,7 +10,7 @@ import time
 # DEFINE a CONV NN
 
 class Net(pl.LightningModule):
-    def __init__(self, num_classes=10, classnames=None, diversity=None, lr=.001, bn=True, data_dims=(3,32,32)):
+    def __init__(self, num_classes=10, classnames=None, diversity=None, lr=.001, bn=True, data_dims=(3,32,32), log_activations=False):
         super().__init__()
         self.save_hyperparameters()
         self.BatchNorm1 = nn.BatchNorm2d(32)
@@ -30,9 +30,15 @@ class Net(pl.LightningModule):
                             nn.Conv2d(128, 256, 3, padding=1), 
                             nn.Conv2d(256, 256, 3, padding=1)])
         
+        self.log_activations = log_activations
+        
         self.activations = {}
+        self.activations_after_nonlineararity = {}
         for i in range(len(self.conv_layers)):
             self.activations[i] = []
+
+        for i in range(len(self.conv_layers)):
+            self.activations_after_nonlineararity[i] = []
 
         self.classnames = classnames
         self.diversity = diversity
@@ -41,46 +47,58 @@ class Net(pl.LightningModule):
         # self.avg_novelty = 0
 
 
-    def forward(self, x, get_activations=False):
+    def forward(self, x, get_activations=False, get_activations_after_nonlinearity=False):
         conv_count = 0
         x = self.conv_layers[conv_count](x)
         if get_activations:
             self.activations[conv_count].append(x)
-        conv_count += 1
         if self.bn:
             x = self.BatchNorm1(x)
         x = F.relu(x)
+        if get_activations_after_nonlinearity:
+            self.activations_after_nonlineararity[conv_count].append(x)
+        conv_count += 1
         x = self.conv_layers[conv_count](x)
         if get_activations:
             self.activations[conv_count].append(x)
-        conv_count += 1
         x = F.relu(x)
+        if get_activations_after_nonlinearity:
+            self.activations_after_nonlineararity[conv_count].append(x)
+        conv_count += 1
         x = self.pool(x)
         x = self.conv_layers[conv_count](x)
         if get_activations:
             self.activations[conv_count].append(x)
-        conv_count += 1
         if self.bn:
             x = self.BatchNorm2(x)
         x = F.relu(x)
+        if get_activations_after_nonlinearity:
+            self.activations_after_nonlineararity[conv_count].append(x)
+        conv_count += 1
         x = self.conv_layers[conv_count](x)
         if get_activations:
             self.activations[conv_count].append(x)
-        conv_count += 1
         x = F.relu(x)
+        if get_activations_after_nonlinearity:
+            self.activations_after_nonlineararity[conv_count].append(x)
+        conv_count += 1
         x = self.pool(x)
         x = self.dropout1(x)
         x = self.conv_layers[conv_count](x)
         if get_activations:
             self.activations[conv_count].append(x)
-        conv_count += 1
         if self.bn:
             x = self.BatchNorm3(x)
         x = F.relu(x)
+        if get_activations_after_nonlinearity:
+            self.activations_after_nonlineararity[conv_count].append(x)
+        conv_count += 1
         x = self.conv_layers[conv_count](x)
         if get_activations:
             self.activations[conv_count].append(x)
         x = F.relu(x)
+        if get_activations_after_nonlinearity:
+            self.activations_after_nonlineararity[conv_count].append(x)
         x = self.pool(x)
         x = torch.flatten(x, 1)
         x = self.dropout2(x)
@@ -97,7 +115,10 @@ class Net(pl.LightningModule):
 
     def training_step(self, train_batch, batch_idx):
         x, y = train_batch
-        logits = self.forward(x)
+        if self.log_activations:
+            for i in range(len(self.conv_layers)):
+                self.activations_after_nonlineararity[i] = []
+        logits = self.forward(x, get_activations_after_nonlinearity=self.log_activations)
         # get loss
         loss = self.cross_entropy_loss(logits, y)
         # get acc
@@ -106,6 +127,9 @@ class Net(pl.LightningModule):
         # log loss and acc
         self.log('train_loss', loss)
         self.log('train_acc', acc)
+        if self.log_activations:
+            for i in range(len(self.conv_layers)):
+                self.log('activation_{}'.format(i+1), torch.stack(self.activations_after_nonlineararity[i]).flatten().mean())
         batch_dictionary={
 	            "train_loss": loss, "train_acc": acc, 'loss': loss
 	        }
@@ -169,6 +193,7 @@ class Net(pl.LightningModule):
     def validation_epoch_end(self, outputs):
         avg_loss = torch.stack([x['val_loss'] for x in outputs]).mean()
         avg_acc = torch.stack([x['val_acc'] for x in outputs]).mean()
+        print('val_acc_epoch', avg_acc)
         avg_class_acc = {}
         for x in outputs:
             for k, v in x['val_class_acc'].items():
@@ -218,8 +243,9 @@ class Net(pl.LightningModule):
             # get novelty score
             novelty_score = self.compute_feature_novelty()
             # clear out activations
-            for i in range(len(self.conv_layers)):
-                self.activations[i] = []
+            if self.log_activations:
+                for i in range(len(self.conv_layers)):
+                    self.activations[i] = []
             # log loss, acc, class acc, and novelty score
             self.log('test_loss', loss)
             self.log('test_acc', acc)

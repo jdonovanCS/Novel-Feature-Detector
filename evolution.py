@@ -46,7 +46,7 @@ parser.add_argument('--rand_tech', help='which random technique is used to initi
 parser.add_argument('--mr', help='mutation rate', default=1., type=float)
 parser.add_argument('--broad_mutation', help='mutate entire individual by small amount, versus a single filter', default=False, action='store_true')
 parser.add_argument('--weighted_mutation', help="weighted mutation function to choose filters weighted to how many are in each layer", default=False, action='store_true')
-parser.add_argument('--weights_for_mut', help="weights for each layer in the mutation operation", default=None, nargs=6)
+parser.add_argument('--weights_for_mut', help="weights for each layer in the mutation operation", default=None, nargs='+')
 
 # fitness params
 parser.add_argument('--evo_dataset_for_novelty', help='Dataset used for novelty computation during evolution and training', default='random')
@@ -55,6 +55,7 @@ parser.add_argument('--pairwise_diversity_op', default='mean', help='the functio
 parser.add_argument('--layerwise_diversity_op', default='w_mean', help='the function to use for calculating diversity metric with regard to layerwise comparisons (ie. mean, w_mean, sum)', type=str)
 parser.add_argument('--k', help='If using k-neighbors for metric calculation, how many neighbors', type=int, default=-1)
 parser.add_argument('--k_strat', help='If using k-neigbhors for metric, what strategy should be used? (ie. closest, furthest, random, etc.)', type=str, default='closest')
+parser.add_argument('--diversity_weights', help='If wanting to weigh diversity metric by layer', nargs='+', default=None)
 
 # batch size doesn't matter since no update
 parser.add_argument('--batch_size', help="batch size for computing novelty, only 1 batch is used", type=int, default=64)
@@ -152,9 +153,9 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
     for i in tqdm(range(population_size)): #while len(population) < population_size:
         model = Model()
         if args.network.lower() == "vgg16":
-            net = helper.BigNet(num_classes=len(classnames), classnames=classnames, diversity={"type": args.diversity_type, "pdop": args.pairwise_diversity_op, "ldop": args.layerwise_diversity_op, "k": args.k, "k_strat": args.k_strat})
+            net = helper.vgg16(num_classes=len(classnames), classnames=classnames, diversity={"type": args.diversity_type, "pdop": args.pairwise_diversity_op, "ldop": args.layerwise_diversity_op, "k": args.k, "k_strat": args.k_strat, 'weights': args.diversity_weights}, log_activations=True)
         else:
-            net = helper.Net(num_classes=len(classnames), classnames=classnames, diversity={"type": args.diversity_type, "pdop": args.pairwise_diversity_op, "ldop":args.layerwise_diversity_op, 'k': args.k, 'k_strat': args.k_strat})
+            net = helper.Net(num_classes=len(classnames), classnames=classnames, diversity={"type": args.diversity_type, "pdop": args.pairwise_diversity_op, "ldop":args.layerwise_diversity_op, 'k': args.k, 'k_strat': args.k_strat, 'weights': args.diversity_weights}, log_activations=True)
         if args.rand_tech == 'normal':
             helper.normalize(net)
         model.filters = net.get_filters()
@@ -165,6 +166,7 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
                 trainer.validate(net, dataloaders=data_module.train_dataloader(), verbose=False)
             else:
                 trainer.validate(net, dataloaders=data_module.val_dataloader(), verbose=False)
+        
         model.fitness =  net.avg_novelty
         population.append(model)
         helper.wandb.log({'gen': 0, 'individual': i, 'fitness': model.fitness})
@@ -190,9 +192,9 @@ def evolution(generations, population_size, num_children, tournament_size, num_w
             child = Model()
             mutate_indices = helper.choose_mutate_index(weighted_mut=args.weighted_mutation, weights_for_mut=args.weights_for_mut)
             if args.as_intended:
-                child.filters = helper.mutate(copy.deepcopy(parent.filters), broad_mutation=args.broad_mutation, mr=args.mr, mutate_indices)
+                child.filters = helper.mutate(copy.deepcopy(parent.filters), broad_mutation=args.broad_mutation, mr=args.mr, dims=mutate_indices)
             else:
-                child.filters = helper.mutate(parent.filters, broad_mutation=args.broad_mutation, mr=args.mr, mutate_indices)
+                child.filters = helper.mutate(parent.filters, broad_mutation=args.broad_mutation, mr=args.mr, dims=mutate_indices)
             net.set_filters(child.filters)
             if args.use_training_dataloader:
                 trainer.validate(net, dataloaders=data_module.train_dataloader(), verbose=False)

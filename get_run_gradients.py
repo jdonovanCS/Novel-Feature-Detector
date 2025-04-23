@@ -46,6 +46,11 @@ def run():
         #             histogram_values[column] = []
                 # if len(list(counts.keys())) > 1:
                 #     break
+        for column in [row for row in history[0]]:
+            if 'parameter' in column:
+                col_name = column
+                print(col_name)
+        # exit()
         
         for column in [row for row in history[0]]:
             if 'gradient' in column and 'weight' in column:

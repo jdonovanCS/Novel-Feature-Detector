@@ -65,16 +65,16 @@ def run():
     # print("visualizing all trained weight dist")
     # visualize_weight_dist(trained_filters)
     # print("getting indices from file")
-    indices = get_mutated_filter_indices_from_file()
+    # indices = get_mutated_filter_indices_from_file()
     
     
-    runs_with_all_layers_mutated = []
-    for run_num in range(6):
-        ind_run = [ind for ind in indices if ind[0] == run_num]
-        if all(ele in [ind[1] for ind in ind_run] for ele in [0,1,2,3,4,5]):
-            runs_with_all_layers_mutated.append(run_num)
+    # runs_with_all_layers_mutated = []
+    # for run_num in range(6):
+    #     ind_run = [ind for ind in indices if ind[0] == run_num]
+    #     if all(ele in [ind[1] for ind in ind_run] for ele in [0,1,2,3,4,5]):
+    #         runs_with_all_layers_mutated.append(run_num)
             
-    print(runs_with_all_layers_mutated)
+    # print(runs_with_all_layers_mutated)
             
                 
     # print("visualizing mutated trained weight dist")
@@ -86,14 +86,14 @@ def run():
     # print("visualizing low trained weight dist")
     # visualize_weight_dist_only_nonmutated(trained_filters)
 
-    print(init_filters.keys())
-    print(trained_filters.keys())
-    for k, v in init_filters.items():
-        for k2, v2 in trained_filters.items():
-            if k == k2:
-                all_filters[k] = {}
-                all_filters[k]['trained'] = v2
-                all_filters[k]['init'] = v
+    # print(init_filters.keys())
+    # print(trained_filters.keys())
+    # for k, v in init_filters.items():
+    #     for k2, v2 in trained_filters.items():
+    #         if k == k2:
+    #             all_filters[k] = {}
+    #             all_filters[k]['trained'] = v2
+    #             all_filters[k]['init'] = v
 
     # print("visualizing weight delta dist")
     # visualize_weight_delta_dist(all_filters)
@@ -101,6 +101,8 @@ def run():
     # visualize_weight_delta_dist_only_mutated(all_filters, indices)
     # print("visualizing weight delta dist for nonmutated filters")
     # visualize_weight_delta_dist_only_nonmutated(all_filters, indices)
+
+    validate_trained_model()
 
 
     
@@ -151,6 +153,11 @@ def setup_datamodules():
     data_module_vis.prepare_data()
     data_module_vis.setup()
     
+    global data_module_val
+    data_module_val = helper.get_data_module(args.dataset_vis, batch_size=64, workers=2)
+    data_module_val.prepare_data()
+    data_module_val.setup()
+
     global classnames
     classnames = list(data_module_vis.dataset_test.classes)
 
@@ -303,6 +310,20 @@ def visualize_activations(vis_filters):
             break
 
 
+def validate_trained_model():
+    trainer = pl.Trainer(accelerator="auto")
+    net = Net(num_classes=len(classnames), classnames=classnames, diversity={'type': 'relative', 'ldop':'w_mean', 'pdop':'mean', 'k': -1, 'k_strat': 'closest'})
+    
+    for filename in data['trained_models']:
+        print(filename)
+        net = net.load_from_checkpoint(filename)
+        trainer.validate(net, dataloaders=data_module_val.val_dataloader(), verbose=False)
+        filters = net.get_filters()
+        for layer in range(len(filters)):
+            print(len(filters[layer].flatten()))
+            print(len([val for val in filters[layer].flatten() if val != 0]))
+
+
 # weight dist
 # load filters from trained models?
 def old_visualize_weight_dist(vis_filters): 
@@ -396,8 +417,8 @@ def old_visualize_weight_dist_only_mutated(vis_filters, indices=None):
                         # could make this if a bit more efficient if I break out the np_equal
                         if ((indices is None) and (torch.sum(torch.abs(filter) > (1/np.sqrt(len(channel))) + .1) > 0)) or ((indices is not None) and (any(np.array_equal([run_num, layer, c, f], row) for row in indices))): 
                                 mutated_filter_indices.append((run_num, layer, c, f))
-                                for val in filter:
-                                    filter_values_local.append(val[0])
+                                for val in filter.flatten():
+                                    filter_values_local.append(val)
                                 
 
                 filter_values_local = np.array(filter_values_local)
@@ -485,8 +506,8 @@ def old_visualize_weight_dist_only_nonmutated(vis_filters, indices=None):
                 for c, channel in enumerate(filters_local[layer]):
                     for f, filter in enumerate(channel):
                         if (indices is None and torch.sum(torch.abs(filter) > (1/np.sqrt(len(channel))) + .1) == 0) or (indices is not None and not any(np.array_equal([run_num, layer, c, f], row) for row in indices)):
-                            for val in filter:
-                                filter_values_local.append(val[0])
+                            for val in filter.flatten():
+                                filter_values_local.append(val)
 
                 filter_values_local = np.array(filter_values_local)
                 if len(filter_values_local) == 0:
@@ -596,8 +617,8 @@ def visualize_weight_dist_only_mutated(vis_filters, indices=None):
                             if torch.sum(torch.abs(filter) > (1/np.sqrt(len(channel))) + .1) > 0:
                                     mutated_filter_indices[count] = ((run_num, layer, c, f))
                                     count += 1
-                                    for val in filter:
-                                        filter_values_local.append(val[0])
+                                    for val in filter.flatten():
+                                        filter_values_local.append(val)
 
                 print(len(filter_values_local))
                 if len(filter_values_local) == 0:
@@ -619,8 +640,8 @@ def visualize_weight_dist_only_mutated(vis_filters, indices=None):
                 filter_values_local = []
                 for ind_indices in indices:
                     if not all(np.equal(ind_indices, [-1,-1,-1,-1])) and ind_indices[1] == layer:
-                        for val in filters[ind_indices[0]][ind_indices[1]][ind_indices[2]][ind_indices[3]]:
-                            filter_values_local.append(val[0])
+                        for val in filters[ind_indices[0]][ind_indices[1]][ind_indices[2]][ind_indices[3]].flatten():
+                            filter_values_local.append(val)
             
 
             
@@ -673,10 +694,13 @@ def visualize_weight_dist_only_nonmutated(vis_filters, indices=None):
                         for f, filter in enumerate(channel):
                             # could make this if a bit more efficient if I break out the np_equal
                             if (indices is None and torch.sum(torch.abs(filter) > (1/np.sqrt(len(channel))) + .1) == 0) or (indices is not None and not any(np.array_equal([run_num, layer, c, f], row) for row in indices)):
-                                    for val in filter:
-                                        filter_values_local.append(val[0])
+                                    if sum(filter.flatten()) == 0:
+                                        continue
+                                    for val in filter.flatten():
+                                        filter_values_local.append(val)
                 
                 if len(filter_values_local) == 0:
+                    print("no filter values")
                     continue
 
                 filter_values_local = np.array(filter_values_local)
@@ -692,22 +716,31 @@ def visualize_weight_dist_only_nonmutated(vis_filters, indices=None):
 
         else:
             for layer in range(0, len(filters[0])):
+                print(len(filters[0][layer].flatten()))
+                # print('num layers', len(filters[0]))
+                # print('num channels', len(filters[0][layer]))
+                # print('num filters', len(filters[0][layer][0]))
                 filter_values_local = []
                 for run_num in range(num_runs):
                     filters_local = filters[run_num]
                     filter_values_local = np.append(filter_values_local, filters_local[layer].flatten())     
-            
+
                 indices_values = []
                 for ind_indices in indices:
-                    if not all(np.equal([-1,-1,-1,-1], ind_indices)) and ind_indices[1] == layer:
+                    if not all(np.equal([-1,-1,-1,-1], ind_indices)) and ind_indices[1] == layer and ind_indices[0] < num_runs:
                         indices_values = np.append(indices_values, filters[ind_indices[0]][ind_indices[1]][ind_indices[2]][ind_indices[3]].flatten())
+                print(len(indices_values))
                 for val in indices_values:
                     filter_values_local = np.delete(filter_values_local, np.where(np.around(filter_values_local, 2) == np.around(val, 2))[0][0])
-
-                if len(filter_values_local) == 0:
+        
+                filter_values_local = np.array(filter_values_local)
+                filter_values_local = filter_values_local[filter_values_local != 0]
+        
+                if len(filter_values_local) or np.array(filter_values_local).sum() == 0:
                     continue
 
                 filter_values_local = np.array(filter_values_local)
+                print(filter_values_local)
                 kde = stats.gaussian_kde(filter_values_local)
                 filter_values_local_x = np.linspace(filter_values_local.min(), filter_values_local.max(), 100)
                 
@@ -830,8 +863,8 @@ def visualize_weight_delta_dist_only_mutated(vis_filters, indices):
             filter_values_local = []
             for ind_indices in indices:
                 if not all(np.equal(ind_indices, [-1,-1,-1,-1])) and ind_indices[1] == layer:
-                    for val in filters['trained'][ind_indices[0]][ind_indices[1]][ind_indices[2]][ind_indices[3]]-filters['init'][ind_indices[0]][ind_indices[1]][ind_indices[2]][ind_indices[3]]:
-                        filter_values_local.append(val[0])
+                    for val in filters['trained'][ind_indices[0]][ind_indices[1]][ind_indices[2]][ind_indices[3]]-filters['init'][ind_indices[0]][ind_indices[1]][ind_indices[2]][ind_indices[3]].flatten():
+                        filter_values_local.append(val)
         
             print(len(filter_values_local))
             if len(filter_values_local) == 0:
