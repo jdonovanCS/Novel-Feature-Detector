@@ -7,13 +7,14 @@ import wandb
 from net import Net
 import numpy as np
 from scipy.stats import ranksums
+from tqdm import tqdm
 
 
 # arguments
 parser=argparse.ArgumentParser(description="Process some input files")
 parser.add_argument('--run_ids_0', nargs='+', type=str, help="enter id for first list of wandb experiments to link config")
 parser.add_argument('--run_ids_1', nargs='+', type=str, help="enter id for second list of wandb experiment to link config")
-# parser.add_argument('--val_acc_range', nargs=2, type=int, help='range of values to consider from array of val_acc')
+parser.add_argument('--epoch_range', nargs=2, type=int, help='range of values to consider from array of val_acc')
 # parser.add_argument('--diversity', help='run ranksums for diversity instead of accuracy', action='store_true', default=False)
 args = parser.parse_args()
 
@@ -22,53 +23,67 @@ def run():
     helper.run(seed=False)
 
     epoch_range = [0,None]
+    if args.epoch_range:
+        epoch_range[0] = int(args.epoch_range[0]*6.25)
+        epoch_range[1] = int(args.epoch_range[1]*6.25)
     # if args.val_acc_range:
     #     epoch_range = args.val_acc_range
 
-    values_0 = []
-    values_1 = []
-    
-    counts = {}
-    histogram_values = {}
     # log variables to config
-    for i in range(len(args.run_ids_0)):
+
+    mean_gradients = {}
+    std_gradients = {}
+
+
+    # for each run, fetch run data
+    for i in tqdm(range(len(args.run_ids_0))):
         run_id = args.run_ids_0[i]
         api = wandb.Api()
         run = api.run("jdonovan/novel-feature-detectors/" + run_id)
         # search = 'val_acc' if not args.diversity else 'val_novelty'
         hist = run.scan_history()
         history = [row for row in hist]
-        
-        # if i == 0:
-        #     for column in [row for row in history][0]:
-        #         if 'gradient' in column and 'weight' in column and counts.get(column) == None:
-        #             counts[column] = []
-        #             histogram_values[column] = []
-                # if len(list(counts.keys())) > 1:
-                #     break
-        for column in [row for row in history[0]]:
-            if 'parameter' in column:
-                col_name = column
-                print(col_name)
-        # exit()
-        
-        for column in [row for row in history[0]]:
-            if 'gradient' in column and 'weight' in column:
-                col_name = column.split('model.')[1]
-                if counts != None and col_name not in counts and counts.get(col_name) == None:
-                    counts[col_name] = []
-                    histogram_values[col_name] = []
+        counts = {}
+        histogram_intervals = {}
+        mean_gradients[i] = {}
+        std_gradients[i] = {}
 
-                grad_min = np.array([row[column]['packedBins']['min'] for row in history if row[column] != None])
-                grad_size = np.array([row[column]['packedBins']['size'] for row in history if row[column] != None])
+         
+        # for each layer in the network
+        for layer in sorted([row for row in history[0]]):
+            # filter out layers that are not convolutional
+            if ('gradient' in layer and 'weight' in layer and 'features' in layer) or ('gradient' in layer and 'conv' in layer and 'weight' in layer):
+                # make human readable layer name
+                layer_name = layer.split('weight')[0]
+                layer_name = layer.replace('model.', '')
+                # if dictionaries do not alrady have this layer, create the index for it
+                if counts != None and layer_name not in counts and counts.get(layer_name) == None:
+                    counts[layer_name] = []
+                    histogram_intervals[layer_name] = []
 
-                if counts[col_name] == []:
-                    histogram_values[col_name] = [grad_min[i] + (grad_size[i] * i) for i in range(len(grad_min))]
-                    counts[col_name] = [row[column]['values'] for row in history if row[column] != None]
-                else:
-                    histogram_values[col_name] = histogram_values[col_name] + np.array([grad_min[i] + (grad_size[i] * i) for i in range(len(grad_min))])
-                    counts[col_name] = counts[col_name] + np.array([row[column]['values'] for row in history if row[column] != None])
+                # store some data for this layer across all gradient steps into variables
+                grad_min = np.array([row[layer]['packedBins']['min'] for row in history if row[layer] != None])
+                grad_size = np.array([row[layer]['packedBins']['size'] for row in history if row[layer] != None])
+                grad_count = np.array([row[layer]['packedBins']['count'] for row in history if row[layer] != None])
+                
+                # get histogram intervals at each gradient step and add them to the dictionary for this layer
+                for step in range(len(grad_min)):
+                    histogram_intervals[layer_name].append(np.array([grad_min[step] + (grad_size[step] * j) for j in range(grad_count[step])]))
+
+                # get counts of gradients that fall within these histogram values at each step    
+                counts[layer_name] = np.array(np.array([row[layer]['values'] for row in history if row[layer] != None]))
+                histogram_intervals[layer_name] = np.array(histogram_intervals[layer_name])
+        for layer in counts.keys():
+            mean_gradients[i][layer] = []
+        for layer in counts.keys():
+            mean_gradients[i][layer] = np.mean(counts[layer].astype(int)*histogram_intervals[layer], axis=1)
+
+        for layer in counts.keys():
+            std_gradients[i][layer] = []
+        for layer in counts.keys():
+            std_gradients[i][layer] = np.std(counts[layer].astype(int)*histogram_intervals[layer], axis=1)
         
+
         # for layer in list(counts.keys()):
         #     # if gradient == "gradients/model.features.41.weight":
         #     #     print(gradient, len([(i, row[gradient]) for i, row in enumerate(history) if row[gradient] != None]))
@@ -78,28 +93,51 @@ def run():
         #     grad_size = np.array([row[layer]['packedBins']['size'] for row in history if row[layer] != None])
         #     grad_hist_len = [row[layer]['packedBins']['count'] for row in history if row[layer] != None][0]
         #     if counts[layer] == []:
-        #         histogram_values[layer] = [grad_min[i] + (grad_size[i] * i) for i in range(len(grad_min))]
+        #         histogram_intervals[layer] = [grad_min[i] + (grad_size[i] * i) for i in range(len(grad_min))]
         #         counts[layer] = [row[layer]['values'] for row in history if row[layer] != None]
         #     else:
-        #         histogram_values[layer] = histogram_values[layer] + np.array([grad_min[i] + (grad_size[i] * i) for i in range(len(grad_min))])
+        #         histogram_intervals[layer] = histogram_intervals[layer] + np.array([grad_min[i] + (grad_size[i] * i) for i in range(len(grad_min))])
         #         counts[layer] = counts[layer] + np.array([row[layer]['values'] for row in history if row[layer] != None])
         #     ref_grad = layer
 
-    mean_gradients = {}
+    mean_gradients_for_plotting = {}
+    std_gradients_for_plotting = {}
     for layer in counts.keys():
-        for i in range(len(counts[layer])):
-            mean_gradients[layer] = []
+        mean_gradients_for_plotting[layer] = np.mean(np.array([mean_gradients[k][layer] for k in range(len(args.run_ids_0))]), axis=0)[epoch_range[0]:epoch_range[1]]
+        plt.plot([x/6.25 for x in range(len(mean_gradients_for_plotting[layer]))], mean_gradients_for_plotting[layer], label=layer)
+    plt.xlabel("Training Epoch")
+    plt.ylabel('Mean Gradient Value')
+    plt.title("Mean Gradient vs Training Epoch for {} (cifar100)".format(run.config['experiment_name']))
+    plt.legend()
+    plt.show()
+        
     for layer in counts.keys():
-        for i in range(len(counts[layer])):
-            mean_gradients[layer].append(np.mean(np.array(counts[layer][i]).astype(int)*np.array(histogram_values[layer][i])/len(args.run_ids_0)))
+        std_gradients_for_plotting[layer] = np.mean(np.array([std_gradients[k][layer] for k in range(len(args.run_ids_0))]), axis=0)[epoch_range[0]:epoch_range[1]]
+        plt.plot([x/6.25 for x in range(len(std_gradients_for_plotting[layer]))], std_gradients_for_plotting[layer], label=layer)
+    plt.xlabel("Training Epoch")
+    plt.ylabel('Stand Deviation of Gradient Value')
+    plt.title("Std of Gradient vs Training Epoch for {} (cifar100)".format(run.config['experiment_name']))
+    plt.legend()
+    plt.show()
 
-    std_gradients = {}
-    for layer in counts.keys():
-        for i in range(len(counts[layer])):
-            std_gradients[layer] = []
-    for layer in counts.keys():
-        for i in range(len(counts[layer])):
-            std_gradients[layer].append(np.mean(np.array(np.std(counts[layer][i]).astype(int)*np.array(histogram_values[layer][i]))))
+    # mean_gradients = {}
+    # for layer in counts.keys():
+    #     for j in range(len(counts[layer])):
+    #         print(counts[layer][j])
+    #         print(histogram_intervals[layer][j])
+    #         exit()
+    #         mean_gradients[layer] = []
+    # for layer in counts.keys():
+    #     for j in range(len(counts[layer])):
+    #         mean_gradients[layer].append(np.mean(np.array(counts[layer][j]).astype(int)*np.array(histogram_intervals[layer][j])/len(args.run_ids_0)))
+
+    # std_gradients = {}
+    # for layer in counts.keys():
+    #     for j in range(len(counts[layer])):
+    #         std_gradients[layer] = []
+    # for layer in counts.keys():
+    #     for j in range(len(counts[layer])):
+    #         std_gradients[layer].append(np.mean(np.array(np.std(counts[layer][j]).astype(int)*np.array(histogram_intervals[layer][j]))))
 
     # mean_gradients = {key: [np.mean(gradients[key][index]) for index in range(len(gradient[key]))] for key in gradients.keys()}
     # std_gradients = {key: np.std(gradients[key]) for key in gradients.keys()}
@@ -107,15 +145,15 @@ def run():
     # print(counts)
     # print(mean_gradients)
 
-    for layer in counts.keys():
-        plt.plot(mean_gradients[layer], label=layer)
-    plt.legend()
-    plt.show()
+    # for layer in counts.keys():
+    #     plt.plot(mean_gradients[layer], label=layer)
+    #     plt.legend()
+    #     plt.show()
 
-    for layer in counts.keys():
-        plt.plot(std_gradients[layer], label=layer)
-    plt.legend()
-    plt.show()
+    # for layer in counts.keys():
+    #     plt.plot(std_gradients[layer], label=layer)
+    #     plt.legend()
+    #     plt.show()
     # print(std_gradients)
     # print(len(gradients[ref_grad]))
         # print(history['gradients/model.features.41.weight'][5])
