@@ -4,6 +4,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torchmetrics
 import torchvision.models as models
+import helper_hpc as helper
+
 
 
 class Net(pl.LightningModule):
@@ -79,6 +81,20 @@ class Net(pl.LightningModule):
         if self.log_activations:
             for i in self.activations:
                 self.log('activation_{}'.format(i+1), torch.stack(self.activations[i]).flatten().mean())
+        if self.log_activations:
+            for i in self.activations:
+                cov_matrix = self.get_activation_covariance(torch.cat(self.activations[i]))
+                C = cov_matrix.shape[0]
+                off_diag = cov_matrix[~torch.eye(C, dtype=bool)]
+                mean_cov = off_diag.mean().item()
+                self.log('activation_map_covariance{}'.format(i+1), mean_cov)
+        if self.log_activations:
+            for i in self.activations:
+                cosine_dist_matrix = self.get_activation_cosine_distance(torch.cat(self.activations[i]))
+                C = cosine_dist_matrix.shape[0]
+                off_diag = cosine_dist_matrix[~torch.eye(C, dtype=bool)]
+                mean_cosine_distance = off_diag.mean().item()
+                self.log('activation_map_cosine_distance{}'.format(i+1), mean_cosine_distance)
         batch_dictionary={
 	            "train_loss": loss, "train_acc": self.train_acc, 'loss': loss
 	        }
@@ -139,6 +155,12 @@ class Net(pl.LightningModule):
                 z = z.type_as(m.weight.data)
                 m.weight.data = z
                 count += 1
+
+    def get_activation_covariance(self, activations):
+        return helper.get_activation_covariance(activations)
+
+    def get_activation_cosine_distance(self, activations):
+        return helper.get_activation_cosine_distance(activations)
     
     # def get_filters(self, numpy=False):
     #     if numpy:

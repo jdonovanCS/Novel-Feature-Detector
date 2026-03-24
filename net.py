@@ -130,6 +130,21 @@ class Net(pl.LightningModule):
         if self.log_activations:
             for i in range(len(self.conv_layers)):
                 self.log('activation_{}'.format(i+1), torch.stack(self.activations_after_nonlineararity[i]).flatten().mean())
+        if self.log_activations:
+            for i in range(len(self.conv_layers)):
+                cov_matrix = self.get_activation_covariance(torch.cat(self.activations_after_nonlineararity[i]))
+                C = cov_matrix.shape[0]
+                off_diag = cov_matrix[~torch.eye(C, dtype=bool)]
+                mean_cov = off_diag.mean().item()
+                self.log('activation_map_covariance{}'.format(i+1), mean_cov)
+        if self.log_activations:
+            for i in range(len(self.conv_layers)):
+                cosine_dist_matrix = self.get_activation_cosine_distance(torch.cat(self.activations_after_nonlineararity[i]))
+                C = cosine_dist_matrix.shape[0]
+                off_diag = cosine_dist_matrix[~torch.eye(C, dtype=bool)]
+                mean_cosine_distance = off_diag.mean().item()
+                self.log('activation_map_cosine_distance{}'.format(i+1), mean_cosine_distance)
+        
         batch_dictionary={
 	            "train_loss": loss, "train_acc": acc, 'loss': loss
 	        }
@@ -193,7 +208,6 @@ class Net(pl.LightningModule):
     def validation_epoch_end(self, outputs):
         avg_loss = torch.stack([x['val_loss'] for x in outputs]).mean()
         avg_acc = torch.stack([x['val_acc'] for x in outputs]).mean()
-        print('val_acc_epoch', avg_acc)
         avg_class_acc = {}
         for x in outputs:
             for k, v in x['val_class_acc'].items():
@@ -305,6 +319,12 @@ class Net(pl.LightningModule):
     
     def get_activations(self):
         return self.activations
+
+    def get_activation_covariance(self, activations):
+        return helper.get_activation_covariance(activations)
+
+    def get_activation_cosine_distance(self, activations):
+        return helper.get_activation_cosine_distance(activations)
 
     def compute_feature_novelty(self):
         

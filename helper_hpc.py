@@ -26,6 +26,8 @@ import collections.abc
 import gc
 from vgg16 import Net as vgg16
 from v_net import Net as vNet
+import torch.nn.functional as F
+
 # from pl_bolts.utils.self_supervised import UnderReviewWarning
 
 
@@ -366,6 +368,37 @@ def cosine_dist(u:np.ndarray, v:np.ndarray):
     if uu!=0 and vv!=0:
         cos_theta=uv/np.sqrt(uu*vv)
     return 1-cos_theta
+
+# @numba.mjit(parallel=True, fastmath=True)
+def get_activation_covariance(activations):
+
+    B, C, H, W = activations.shape
+
+    # Reshape
+    fm = activations.view(B, C, -1)
+
+    cov_matrices = []
+    for b in range(B):
+        f = fm[b]
+        cov = f@f.T / (f.shape[1]-1)
+        cov_matrices.append(cov)
+
+    return torch.stack(cov_matrices).mean(dim=0)
+
+def get_activation_cosine_distance(activations):
+    B, C, H, W = activations.shape
+    fm = activations.view(B, C, -1)
+
+    fm_norm = F.normalize(fm, p=2, dim=2)
+
+    cosine_dist_matrices = []
+    for b in range(B):
+        f = fm_norm[b]
+        sim = f @ f.T
+        dist = 1 - sim
+        cosine_dist_matrices.append(dist)
+    
+    return torch.stack(cosine_dist_matrices).mean(dim=0)
 
 #TODO - orthonormalize filters to one another. Flipping dimensions may not be doing what we want. 
 # Google how to detemine of two matrices are orthognal. dotproduct and crossproduct or outer product.
